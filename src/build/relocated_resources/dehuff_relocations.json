@@ -1,0 +1,49 @@
+{
+  "original_base": "0x81d000",
+  "linked_base": "0x9f1268",
+  "binary_length": 1392,
+  "absolute_references_relocated": 172,
+  "first_relocations": [
+    [
+      "0x0",
+      "0x81d01c",
+      "0x9f1284"
+    ],
+    [
+      "0x4",
+      "0x81d00c",
+      "0x9f1274"
+    ],
+    [
+      "0x8",
+      "0x81d014",
+      "0x9f127c"
+    ],
+    [
+      "0x18",
+      "0x81d02c",
+      "0x9f1294"
+    ],
+    [
+      "0x1c",
+      "0x81d024",
+      "0x9f128c"
+    ],
+    [
+      "0x28",
+      "0x81d034",
+      "0x9f129c"
+    ],
+    [
+      "0x30",
+      "0x81d03c",
+      "0x9f12a4"
+    ],
+    [
+      "0x38",
+      "0x81d044",
+      "0x9f12ac"
+    ]
+  ],
+  "binary_sha256": "81ee7b6ff4b6c10e58ae2f5aebfc960444504ad3703a373d3a01a2bd0021278c"
+}

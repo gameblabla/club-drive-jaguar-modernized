@@ -1,0 +1,281 @@
+;
+; draw a "power ball" dot on the screen
+;
+	include	"tree.inc"
+
+destx	REGEQU	R0
+desty	REGEQU	R1
+count	REGEQU	R2
+radius	REGEQU	R3
+abort	REGEQU	R4
+sourcex	REGEQU	R5
+sourcey	REGEQU	R6
+finalx	REGEQU	R7
+finaly	REGEQU	R8
+dataHi	REGEQU	R9
+stack	REGEQU	R10
+maxx	REGEQU	R11
+maxy	REGEQU	R12
+xcount	REGEQU	R13
+ycount	REGEQU	R14
+inc	REGEQU	R15
+finc	REGEQU	R16
+step	REGEQU	R17
+fstep	REGEQU	R18
+spixel	REGEQU	R19
+sfpixel	REGEQU	R20
+i	REGEQU	R21		; normalized "inc"
+ie	REGEQU	R22		; normalization factor
+adivctrl REGEQU	R23
+bcmd	REGEQU	R24
+scrnaddr REGEQU	R25
+a1_base	REGEQU	R26
+
+draw_dot:
+; set up the right kind of division
+	movei	#G_DIVCTRL,adivctrl
+	moveq	#1,temp
+	store	temp,(adivctrl)
+
+	movei	#B_CMD,bcmd
+	movei	#A1_BASE,a1_base
+
+	movei	#ret_dot,abort
+	movei	#PWRBALLX,temp2
+	load	(temp2),destx
+	addqt	#4,temp2
+	load	(temp2),desty
+	addqt	#4,temp2
+	load	(temp2),temp
+	addqt	#4,temp2
+	cmpq	#1,temp			; if Z < 1, don't draw it
+	jump	MI,(abort)
+	nop
+
+		load	(temp2),radius
+		movei	#96,temp
+		mult	temp,radius
+		move	destx,finalx
+		move	desty,finaly
+		sub	radius,destx
+		sub	radius,desty
+		add	radius,finalx
+		add	radius,finaly
+		move	finalx,temp2
+		sub	destx,temp2
+		jump	MI,(abort)
+		nop
+		move	temp,inc		; "temp" still has 96 in it
+		shlq	#16,inc			; make into a 16.16 number
+		div	temp2,inc		; figure out increment, as a 16.16 number
+		movei	#DRAWRECT,temp2
+		load	(temp2),maxx
+.if 0
+		movei	#$8000,temp
+.else
+		moveq	#0,temp
+		bset	#15,temp
+.endif
+		add	temp,destx
+		add	temp,desty
+		add	temp,finalx
+		add	temp,finaly
+		move	maxx,maxy
+		shlq	#16,maxx
+		shrq	#16,maxy
+		shlq	#16,maxy
+
+		cmpq	#0,destx
+		jr	PL,plusx
+		moveq	#0,sourcex
+			move	destx,sourcex
+			moveq	#0,destx
+			neg	sourcex
+plusx:
+		cmpq	#0,desty
+		jr	PL,plusy
+		moveq	#0,sourcey
+			move	desty,sourcey
+			moveq	#0,desty
+			neg	sourcey
+plusy:
+		cmp	maxx,finalx
+		jr	MI,okx
+		nop
+			move	maxx,finalx
+
+okx:		cmp	maxy,finaly
+		jr	MI,oky
+		nop
+			move	maxy,finaly
+oky:
+		move	finalx,xcount
+		move	finaly,ycount
+		sub	destx,xcount
+		jump	MI,(abort)
+		nop
+		sub	desty,ycount
+		jump	MI,(abort)
+		nop
+		shrq	#16,ycount
+		jump	EQ,(abort)
+		nop
+		shrq	#16,xcount
+		jump	EQ,(abort)
+		nop
+		shlq	#16,ycount
+; figure out step value here, based on xcount
+; while we're at it, scale sourcex and sourcey
+		move	xcount,step
+		move	inc,i
+		normi	inc,ie
+		addqt	#9,ie
+		sha	ie,i
+		mult	i,step
+		shrq	#16,sourcex
+		shrq	#16,sourcey
+		mult	i,sourcex
+		mult	i,sourcey
+		neg	ie
+		sha	ie,step
+		sha	ie,sourcex
+		sha	ie,sourcey
+		or	ycount,xcount
+		neg	step
+; for now, "step" has the X step, and "inc" the Y step
+; break inc up into fractional and integer parts
+		move	inc,finc
+		shrq	#16,inc
+		shlq	#16,finc
+		shrq	#16,finc
+; break "step" up into fractional and integer parts
+		move	step,fstep
+		shrq	#16,step
+		shlq	#16,fstep
+		shrq	#16,fstep
+; now merge the Y step in with "step"
+		move	inc,temp
+		move	finc,temp2
+		shlq	#16,temp
+		shlq	#16,temp2
+		or	temp,step
+		or	temp2,fstep
+; figure out starting pixel values, based on sourceX and sourceY
+		move	sourcex,sfpixel
+		move	sourcex,spixel
+		shlq	#16,sfpixel
+		shrq	#16,spixel
+		shrq	#16,sfpixel
+		move	sourcey,temp2
+		shrq	#16,sourcey
+		shlq	#16,temp2
+		shlq	#16,sourcey
+		or	temp2,sfpixel
+		or	sourcey,spixel
+
+; wait for the blitter to become free
+_CDLOCAL_10_176:
+		load	(bcmd),temp
+		btst	#0,temp
+		jr	EQ,_CDLOCAL_10_176
+		nop
+; set up blitter windows
+; source is the current power ball image
+		movei	#dotimg,temp
+		load	(temp),temp
+		move	a1_base,temp2
+		store	temp,(temp2)
+		addqt	#4,temp2		; move to A1_FLAGS
+		movei	#PITCH1|PIXEL16|WID96|XADDINC,temp
+		store	temp,(temp2)
+		addqt	#8,temp2		; move to A1_PIXEL
+		store	spixel,(temp2)
+		addqt	#4,temp2		; move to A1_STEP
+		store	step,(temp2)
+		addqt	#4,temp2		; move to A1_FSTEP
+		store	fstep,(temp2)
+		addqt	#4,temp2		; move to A1_FPIXEL
+		store	sfpixel,(temp2)
+		addqt	#4,temp2		; move to A1_INC
+		store	inc,(temp2)
+		addqt	#4,temp2		; move to A1_FINC
+		store	finc,(temp2)
+		movei	#B_COUNT,temp2
+		store	xcount,(temp2)
+
+; destination is the current screen
+		movei	#A2_PIXEL,temp2
+		shrq	#16,desty
+		shrq	#16,destx
+		shlq	#16,desty
+		or	desty,destx
+		store	destx,(temp2)
+		movei	#screen_addr,temp
+		load	(temp),scrnaddr
+		movei	#A2_BASE,temp2
+		store	scrnaddr,(temp2)
+		movei	#PITCH1|PIXEL16|WID320|XADDPIX,temp
+		addqt	#4,temp2		; move to A2_FLAGS
+		store	temp,(temp2)
+		movei	#A2_STEP,temp2
+		move	xcount,temp
+		neg	temp
+		shlq	#16,temp
+		shrq	#16,temp
+		bset	#16,temp		; set Y step to 1
+		store	temp,(temp2)
+		moveq	#0,temp
+;;		movei	#$AA1CAA1C,temp		; background color
+		movei	#B_PATD,temp2
+		store	temp,(temp2)
+		addqt	#4,temp2
+		store	temp,(temp2)
+
+		movei	#SRCEN|UPDA1F|UPDA1|UPDA2|DSTA2|DCOMPEN|LFU_AN|LFU_A,temp
+
+		store	temp,(bcmd)
+		nop
+; wait for blitter to finish
+_CDLOCAL_20_238:
+		load	(bcmd),temp
+		btst	#0,temp
+		jr	EQ,_CDLOCAL_20_238
+		nop
+;
+; restore register windows
+;
+
+	move	a1_base,temp2
+	store	scrnaddr,(temp2)
+	movei	#PITCH1|PIXEL16|WID320|XADDPHR,temp
+	addqt	#4,temp2			; move to A1_FLAGS
+	store	temp,(temp2)
+
+ret_dot:
+	moveq	#0,temp
+	store	temp,(adivctrl)
+	RTS_TREE
+
+REGUNDEF	x
+REGUNDEF	y
+REGUNDEF	count
+REGUNDEF	radius
+REGUNDEF	dataHi
+REGUNDEF	stack
+REGUNDEF	abort
+REGUNDEF	sourcex
+REGUNDEF	sourcey
+REGUNDEF	finalx
+REGUNDEF	finaly
+REGUNDEF	maxx
+REGUNDEF	maxy
+REGUNDEF	xcount
+REGUNDEF	ycount
+REGUNDEF	inc
+REGUNDEF	finc
+REGUNDEF	step
+REGUNDEF	fstep
+REGUNDEF	spixel
+REGUNDEF	sfpixel
+REGUNDEF	i
+REGUNDEF	ie

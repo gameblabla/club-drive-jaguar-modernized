@@ -1,0 +1,42 @@
+{
+  "reference_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "resources": [
+    {
+      "symbol": "dehuff",
+      "original_filename": "dehuff.bin",
+      "start": 118784,
+      "slot_end": 120176,
+      "length": 1392,
+      "sha256": "3837bf0b6f36187f4ca7deb18879ac930496e436193c98e4a71363fc01e08835",
+      "evidence": "sys.s instruction relocation; independent neighboring original section boundary"
+    },
+    {
+      "symbol": "q75",
+      "original_filename": "q75.bin",
+      "start": 120176,
+      "slot_end": 120496,
+      "length": 320,
+      "sha256": "6a9d71616690481e11687e5de82bb75d14dcf47fe1d5eb3586075a595381f967",
+      "evidence": "sys.s instruction relocation; independent neighboring original section boundary"
+    },
+    {
+      "symbol": "q85",
+      "original_filename": "q85.bin",
+      "start": 120496,
+      "slot_end": 120816,
+      "length": 320,
+      "sha256": "278d4854e4692495b2d0d4b0b7a490dd33dce955aad08824300b74d30dfbf760",
+      "evidence": "sys.s instruction relocation; independent neighboring original section boundary"
+    },
+    {
+      "symbol": "dejagst",
+      "original_filename": "dejagst.bin",
+      "start": 339504,
+      "slot_end": 341992,
+      "length": 2488,
+      "sha256": "93451367e15bd6fff412072c214a2df6c69e465d6b990287ca3dcca8d5c53d2d",
+      "evidence": "sys.s instruction relocation; independent neighboring original section boundary"
+    }
+  ],
+  "note": "Retained native binaries are not yet reconstructed source. Exact offsets derived from CPU instructions."
+}

@@ -1,0 +1,211 @@
+;
+; Garage animation function
+; parameter block layout:
+;	0	drone car band pointer
+;	4	recording buffer start
+;	8	recording buffer end
+;	12	playback head
+;	16	elapsed time since last movement
+;
+	include "jaguar.inc"
+	include "blit.inc"
+
+	include "3d.inc"
+	include "68kequ.inc"
+	include	"3dds.inc"
+
+	ORG	Overlay
+
+; global register defines
+dronebnd	REGEQU	R0
+qstart		REGEQU	R1
+qend		REGEQU	R2
+qplay		REGEQU	R3
+mbandptr	REGEQU	R4
+curbnd		REGEQU	R5
+
+xhead		REGEQU	R6
+yhead		REGEQU	R7
+zhead		REGEQU	R8
+
+xrite		REGEQU	R9
+yrite		REGEQU	R10
+zrite		REGEQU	R11
+
+xdown		REGEQU	R12
+ydown		REGEQU	R13
+zdown		REGEQU	R14
+
+xposn		REGEQU	R15
+yposn		REGEQU	R16
+zposn		REGEQU	R17
+
+qtime		REGEQU	R18
+
+brloop		REGEQU	R19
+brend		REGEQU	R20
+
+playspeed	REGEQU	R21
+
+texture	REGEQU	R26
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+parambl	REGEQU	R30
+return	REGEQU	R31
+
+
+	movei	#playspd,playspeed
+	movei	#mbands,mbandptr
+	loadw	(playspeed),playspeed
+	movei	#animateparam,temp
+	load	(temp),parambl
+	or	parambl,parambl
+	load	(parambl),dronebnd
+	addqt	#4,parambl
+	load	(parambl),qstart
+	addqt	#4,parambl
+	load	(parambl),qend
+	addqt	#4,parambl
+	load	(parambl),qplay
+	addqt	#4,parambl
+	load	(parambl),qtime
+	movei	#player,temp2
+	movei	#loop,brloop
+	load	(temp2),temp2		; get pointer to current player
+	movei	#endloop,brend
+	movei	#CAR_FRAME,temp
+	add	temp,temp2
+	load	(temp2),temp2		; get elapsed time for current player's frame
+	sub	temp2,qtime		; subtract elapsed time from playback time
+	sharq	#1,playspeed		; double playback speed (yes, we halve this variable to double the real speed)
+
+loop:
+	cmpq	#0,qtime
+	jump	PL,(brend)
+	nop
+	add	playspeed,qtime
+;
+; load up the band and x,y,z positions
+;
+	loadw	(qplay),curbnd
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,curbnd
+	or	temp,curbnd
+	loadw	(qplay),xposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,xposn
+	or	temp,xposn
+	loadw	(qplay),yposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,yposn
+	or	temp,yposn
+	loadw	(qplay),zposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,zposn
+	or	temp,zposn
+
+	movei	#XORIG,temp2
+	add	dronebnd,temp2
+	store	xposn,(temp2)
+	addqt	#4,temp2
+	store	yposn,(temp2)
+	addqt	#4,temp2
+	store	zposn,(temp2)
+	addqt	#4,temp2
+
+;
+; load up the band matrix
+;
+	loadw	(qplay),xrite
+	addqt	#2,qplay
+	loadw	(qplay),xdown
+	addqt	#2,qplay
+	loadw	(qplay),yrite
+	addqt	#2,qplay
+	loadw	(qplay),ydown
+	addqt	#2,qplay
+	loadw	(qplay),zrite
+	addqt	#2,qplay
+	loadw	(qplay),zdown
+	addqt	#4,qplay			; skip 2 bytes of game data, too
+
+; calculate col. 3 as col. 1 X col. 2
+	move	xdown,xposn
+	move	ydown,yposn
+	move	zdown,zposn
+	neg	xposn
+	neg	yposn
+	neg	zposn
+	imultn	yrite,zdown
+	imacn	zrite,yposn
+	resmac	xhead
+	imultn	zrite,xdown
+	imacn	xrite,zposn
+	resmac	yhead
+	imultn	xrite,ydown
+	imacn	yrite,xposn
+	resmac	zhead
+	sharq	#14,xhead
+	sharq	#14,yhead
+	sharq	#14,zhead
+
+; store the matrix
+	movei	#BND_MATRIX,temp2
+	add	dronebnd,temp2
+	load	(temp2),temp2
+	or	temp2,temp2
+
+	storew	xrite,(temp2)
+	addq	#2,temp2
+	storew	xdown,(temp2)
+	addq	#2,temp2
+	storew	xhead,(temp2)
+	addq	#2,temp2
+	storew	yrite,(temp2)
+	addq	#2,temp2
+	storew	ydown,(temp2)
+	addq	#2,temp2
+	storew	yhead,(temp2)
+	addq	#2,temp2
+	storew	zrite,(temp2)
+	addq	#2,temp2
+	storew	zdown,(temp2)
+	addq	#2,temp2
+	storew	zhead,(temp2)
+
+	store	dronebnd,(mbandptr)
+	addqt	#4,mbandptr
+	bclr	#31,curbnd		; clear the "this is a good place" bit
+	store	curbnd,(mbandptr)
+	addqt	#4,mbandptr
+	moveq	#0,temp
+	store	temp,(mbandptr)
+	subqt	#8,mbandptr
+	cmp	qplay,qend
+	jr	NE,_CDLOCAL_10_196
+	nop
+		move	qstart,qplay
+_CDLOCAL_10_196:
+	jump	(brloop)
+	nop
+
+endloop:
+	store	qtime,(parambl)
+	subqt	#4,parambl
+	store	qplay,(parambl)
+
+; finish up
+; load pre-rendering routines
+	movei	#loadIt,temp2
+	movei	#prprog, temp
+	jump		(temp2)
+	nop

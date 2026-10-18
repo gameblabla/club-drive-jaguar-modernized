@@ -1,0 +1,197 @@
+{
+  "schema": "club-geometry-bsp",
+  "original": "CARS/BOX1.ASC",
+  "generated_from_asc_sha256": "1105acf6d5131151d75662b11fd8b8fc3ee57e612cb5885648377822c193f28a",
+  "provenance": "2026 geometry-derived BSP, NOT byte-compatible Jaguar .BND/.MDL or original mkbnd",
+  "limitations": [
+    "New geometry-based collision BSP only; existing runtime collision trees are not replaced.",
+    "No native divider normals, BSP CP records, polygon flags, or Jaguar linker offsets generated."
+  ],
+  "meshes": [
+    {
+      "name": "Object01",
+      "source_vertices": 8,
+      "source_faces": 8,
+      "nondegenerate_faces": 8,
+      "nodes": [
+        {
+          "type": "leaf",
+          "depth": 0,
+          "start": 0,
+          "count": 8
+        }
+      ],
+      "fragments": [
+        {
+          "source_face": 0,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              6708.2474,
+              7094.2955,
+              8749.6307
+            ],
+            [
+              6708.2474,
+              -1418.8587,
+              8749.6307
+            ],
+            [
+              -3979.0485,
+              -1418.8587,
+              8749.6307
+            ]
+          ]
+        },
+        {
+          "source_face": 1,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              -3979.0485,
+              7094.2955,
+              8749.6307
+            ],
+            [
+              6708.2474,
+              7094.2955,
+              8749.6307
+            ],
+            [
+              -3979.0485,
+              -1418.8587,
+              8749.6307
+            ]
+          ]
+        },
+        {
+          "source_face": 2,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              6708.2474,
+              -1418.8591,
+              0.0
+            ],
+            [
+              -3979.0485,
+              -1418.8591,
+              0.0
+            ],
+            [
+              -3979.0485,
+              -1418.8587,
+              8749.6307
+            ]
+          ]
+        },
+        {
+          "source_face": 3,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              6708.2474,
+              -1418.8587,
+              8749.6307
+            ],
+            [
+              6708.2474,
+              -1418.8591,
+              0.0
+            ],
+            [
+              -3979.0485,
+              -1418.8587,
+              8749.6307
+            ]
+          ]
+        },
+        {
+          "source_face": 4,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              -3979.0485,
+              7094.2955,
+              0.0
+            ],
+            [
+              6708.2474,
+              7094.2955,
+              0.0
+            ],
+            [
+              6708.2474,
+              7094.2955,
+              8749.6307
+            ]
+          ]
+        },
+        {
+          "source_face": 5,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              -3979.0485,
+              7094.2955,
+              8749.6307
+            ],
+            [
+              -3979.0485,
+              7094.2955,
+              0.0
+            ],
+            [
+              6708.2474,
+              7094.2955,
+              8749.6307
+            ]
+          ]
+        },
+        {
+          "source_face": 6,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              6708.2474,
+              7094.2955,
+              0.0
+            ],
+            [
+              -3979.0485,
+              7094.2955,
+              0.0
+            ],
+            [
+              -3979.0485,
+              -1418.8591,
+              0.0
+            ]
+          ]
+        },
+        {
+          "source_face": 7,
+          "material": "RED MATTE",
+          "vertices": [
+            [
+              6708.2474,
+              -1418.8591,
+              0.0
+            ],
+            [
+              6708.2474,
+              7094.2955,
+              0.0
+            ],
+            [
+              -3979.0485,
+              -1418.8591,
+              0.0
+            ]
+          ]
+        }
+      ],
+      "area_error_max": 0.0
+    }
+  ]
+}

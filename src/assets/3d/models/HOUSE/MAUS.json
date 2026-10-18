@@ -1,0 +1,859 @@
+{
+ "source": "HOUSE/MAUS.ASC",
+ "sha256": "aa408b3a0a4d6eb92361aa6758c374047987fca32e4c2dd91d4258974835470f",
+ "objects": [
+  {
+   "name": "Light01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light04",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light05",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light02",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light06",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "maus-bod",
+   "vertices": [
+    [
+     "73.027962",
+     "-0.545664",
+     "-2065.479004"
+    ],
+    [
+     "333.123169",
+     "-0.546397",
+     "-2138.223145"
+    ],
+    [
+     "73.026138",
+     "76.318382",
+     "-2138.223389"
+    ],
+    [
+     "-72.262634",
+     "-0.5464",
+     "-2138.223389"
+    ],
+    [
+     "73.026505",
+     "-77.410423",
+     "-2138.223145"
+    ],
+    [
+     "260.147247",
+     "-0.530336",
+     "-2117.812988"
+    ],
+    [
+     "277.541138",
+     "15.8789",
+     "-2138.222412"
+    ],
+    [
+     "277.544647",
+     "-16.938112",
+     "-2138.222412"
+    ],
+    [
+     "784.056519",
+     "-0.53033",
+     "-2102.190674"
+    ],
+    [
+     "-72.262627",
+     "-0.546395",
+     "-2064.593994"
+    ],
+    [
+     "29.084417",
+     "-0.54567",
+     "-2138.223145"
+    ],
+    [
+     "-72.262627",
+     "61.188065",
+     "-2138.223145"
+    ],
+    [
+     "-209.292938",
+     "-0.547862",
+     "-2138.223389"
+    ],
+    [
+     "-72.26265",
+     "-62.280861",
+     "-2138.223389"
+    ],
+    [
+     "-70.998482",
+     "-53.086742",
+     "-2009.963867"
+    ],
+    [
+     "-70.869102",
+     "-0.543476",
+     "-2065.562744"
+    ],
+    [
+     "-70.869095",
+     "-25.012426",
+     "-2095.070801"
+    ],
+    [
+     "-71.12822",
+     "-58.6441",
+     "-2098.902832"
+    ],
+    [
+     "-70.998108",
+     "-82.234879",
+     "-2060.310547"
+    ],
+    [
+     "-70.998505",
+     "-32.791092",
+     "-2053.210449"
+    ],
+    [
+     "-73.852531",
+     "-53.086742",
+     "-2009.963867"
+    ],
+    [
+     "-73.723503",
+     "-0.543476",
+     "-2065.562744"
+    ],
+    [
+     "-73.723145",
+     "-25.012426",
+     "-2095.070801"
+    ],
+    [
+     "-73.982437",
+     "-58.6441",
+     "-2098.902832"
+    ],
+    [
+     "-73.852707",
+     "-82.235611",
+     "-2060.310547"
+    ],
+    [
+     "-73.852554",
+     "-32.791096",
+     "-2053.210449"
+    ],
+    [
+     "-70.609215",
+     "51.753071",
+     "-2009.735107"
+    ],
+    [
+     "-70.86837",
+     "-0.545665",
+     "-2065.562744"
+    ],
+    [
+     "-70.86821",
+     "24.051035",
+     "-2094.964111"
+    ],
+    [
+     "-70.869102",
+     "57.698765",
+     "-2098.64917"
+    ],
+    [
+     "-70.609428",
+     "81.121643",
+     "-2059.954346"
+    ],
+    [
+     "-70.739159",
+     "31.64794",
+     "-2053.06958"
+    ],
+    [
+     "-73.463432",
+     "51.753078",
+     "-2009.735107"
+    ],
+    [
+     "-73.722588",
+     "-0.545666",
+     "-2065.562744"
+    ],
+    [
+     "-73.722771",
+     "24.051035",
+     "-2094.964111"
+    ],
+    [
+     "-73.72332",
+     "57.698765",
+     "-2098.64917"
+    ],
+    [
+     "-73.463432",
+     "81.121643",
+     "-2059.954346"
+    ],
+    [
+     "-73.593575",
+     "31.64794",
+     "-2053.06958"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      0,
+      1,
+      2
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      0,
+      2,
+      3
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      0,
+      3,
+      4
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      0,
+      4,
+      1
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      8,
+      6,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE2"
+    },
+    {
+     "vertices": [
+      5,
+      6,
+      8
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE2"
+    },
+    {
+     "vertices": [
+      7,
+      5,
+      8
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE2"
+    },
+    {
+     "vertices": [
+      9,
+      10,
+      11
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE3"
+    },
+    {
+     "vertices": [
+      9,
+      11,
+      12
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE3"
+    },
+    {
+     "vertices": [
+      9,
+      12,
+      13
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE3"
+    },
+    {
+     "vertices": [
+      9,
+      13,
+      10
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "MOUSE3"
+    },
+    {
+     "vertices": [
+      15,
+      14,
+      19
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      16,
+      15,
+      19
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      17,
+      16,
+      19
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      18,
+      17,
+      19
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      14,
+      18,
+      19
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      25,
+      20,
+      21
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      25,
+      21,
+      22
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      25,
+      22,
+      23
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      25,
+      23,
+      24
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      25,
+      24,
+      20
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      15,
+      21,
+      20
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      20,
+      14,
+      15
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      23,
+      22,
+      16
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      16,
+      17,
+      23
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      23,
+      17,
+      18
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      18,
+      24,
+      23
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      18,
+      14,
+      20
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      20,
+      24,
+      18
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      31,
+      26,
+      27
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      31,
+      27,
+      28
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      31,
+      28,
+      29
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      31,
+      29,
+      30
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      31,
+      30,
+      26
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "MOUSE1"
+    },
+    {
+     "vertices": [
+      33,
+      32,
+      37
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      34,
+      33,
+      37
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      35,
+      34,
+      37
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      36,
+      35,
+      37
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      32,
+      36,
+      37
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "PINK PLASTIC"
+    },
+    {
+     "vertices": [
+      36,
+      32,
+      26
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      26,
+      30,
+      36
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      35,
+      36,
+      30
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      30,
+      29,
+      35
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      29,
+      28,
+      34
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      34,
+      35,
+      29
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      27,
+      26,
+      32
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    },
+    {
+     "vertices": [
+      32,
+      33,
+      27
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "WHITE PLASTIC 2S"
+    }
+   ],
+   "declared_vertices": 38,
+   "declared_faces": 47
+  }
+ ],
+ "material_names": [
+  "MOUSE1",
+  "MOUSE2",
+  "MOUSE3",
+  "PINK PLASTIC",
+  "WHITE PLASTIC 2S"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

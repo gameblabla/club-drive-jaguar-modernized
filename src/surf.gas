@@ -1,0 +1,906 @@
+;----------------------------------------------------------------------------
+;	surf.gas
+;		Feeds blitter with shaded lines for a gon.
+;	Limitations (so far): phrase mode only, flatgons only
+;
+;
+;----------------------------------------------------------------------------
+
+NEVER	EQU	0
+
+LFU_REPLACE	EQU	(LFU_AN|LFU_A)
+
+TOP_O_WINDOW	EQU		$8	; a very small 17.15 number - no on-screen point that we care about will be less than this
+
+; wait for blitter completion (mostly stolen code)
+; must have address in command. Trashes temp, temp2
+MACRO waitForBlitter
+	blitwaitmacro:
+		load		(R11), temp
+		btst		#0, temp
+		jr		EQ, blitwaitmacro
+;		moveq	#0, temp2
+
+;		load		(temp2), temp
+;		add		temp, temp
+	ENDM
+
+; scan polygons -------------------------------------------------------------
+theEdge		REGEQU	R0	; address of an edge
+points		REGEQU	R30	; base address of point list
+tEdges		REGEQU	R31	; base address of transformed edge list
+a			REGEQU	R3	; token/pointer to first point in an edge
+b			REGEQU	R4	; token/pointer to second point in an edge
+xs			REGEQU	R5	; x coord of first point
+ys			REGEQU	R6	; y coord of first point
+aFirst		REGEQU	R7	; count for side retrieve
+numSides		REGEQU	R8	; 'traverse' iteration counter
+dataHi		REGEQU	R9	; address of high order data lword register
+stack		REGEQU	R10	; tree stack pointer
+polyPtr		REGEQU	R11	; pointer into poly list
+noWayA		REGEQU	R12	; address to skip past 'a' insert
+clr			REGEQU	R13	; color of the poly
+colors		REGEQU	R14	; base address of transformed color list
+bPrev		REGEQU	R15	; from last edge
+slp			REGEQU	R16	; sloop of edge
+dontDoItMan	REGEQU	R17	; for big if's inside loops
+polygon		REGEQU	R18	; working pointer for poly struct in local ram
+hiPoint		REGEQU	R19	; address of top point
+hiY			REGEQU	R20	; y value of top point so far
+hiIndex		REGEQU	R21	; index of top point so far
+noCorner		REGEQU	R22	; jump address for corner insert
+secIn		REGEQU	R23	; sector bits of previous b point
+secOut		REGEQU	R24	; sector bits of next a point
+corners		REGEQU	R25	; pointer to corner coords
+dividers		REGEQU	R26
+; global reg dudes 27-29
+polyflags		REGEQU	R1	; special flags for polygons
+edgeCrosses	REGEQU	R2	; size in bytes of tEDGE struct
+
+include "tree.inc" ; for RTS macro
+
+.align 4	; to align doTrap
+
+; code start -----------------------------------------------------------
+drawCP:
+; On ENTRY: "temp" has our parameter in it
+
+.if 0
+		movei	#GEO_BND_PTR,temp2
+		load	(temp2),temp2
+		nop
+.else
+		move	r12,temp2
+.endif
+		movei	#SURF_LIST, polyPtr
+		add	temp2,polyPtr
+		load		(polyPtr), polyPtr
+		add		temp, polyPtr		; add CP offset (our parameter)
+
+rlPolyLp:	; partial register reload entry point for polyLp
+		movei	#PATDSEL|DSTA2|UPDA2,tEdges	; doIt (used tEdges as temp)
+		moveta	tEdges, r5
+
+;		movei	#G_HIDATA,dataHi		; not necessary, done for us in tree.gas
+
+		movei	#tEDGES,tEdges
+		move	tEdges,dividers
+		addqt	#(tDIVIDERS-tEDGES),dividers
+		move	tEdges,points
+		addqt	#(tPNTS-tEDGES),points
+		add	temp2, dividers
+		move	tEdges,colors
+		subqt	#(tEDGES-tCOLORS),colors
+		load	(dividers), dividers
+		add	temp2, points
+		load	(points), points
+		subqt	#20, points	; back up to sector record
+		add	temp2, tEdges
+		load	(tEdges), tEdges
+
+		; for computed colors
+		add	temp2, colors
+		load	(colors), colors
+
+polyLp:	; read points, slps, colors
+		loadw	(polyPtr), numSides
+		addqt	#2, polyPtr	; point to divider record
+		move	numSides,polyflags
+
+;		cmpq		#1, numSides
+;		movei	#shadeTop, temp
+;		jump		EQ, (temp)
+;		btst		#15, numSides			; flag for line structure
+;		movei	#lineTop, temp
+;		jump		NE, (temp)
+
+		shlq	#28,numSides	; strip off flags
+		shrq	#28,numSides	; 
+
+;		or		numSides, numSides	; zero for end of CP
+		movei	#cpDone, temp
+		jump		EQ, (temp)
+		nop
+		; check for no normal or 2 sided poly
+;flatPoly:	;===========================================================================
+		loadw	(polyPtr), temp					; get normal
+		addqt	#2, polyPtr	; point to edge[0] record
+		movei	#nextEdge, dontDoItMan
+		add		dividers, temp
+		btst	#7,polyflags					; is this a "never drawn" poly?
+		jr	NE,backremove					; if so, always backface remove it
+		loadb	(temp), temp
+		btst		#0, temp
+		jr		NE, yesItIsGood
+		nop
+backremove:
+  			; this poly has turned its back on us
+			shlq		#1, numSides	; len in words
+
+			movei	#polyLp, temp
+;			subq		#1, numPolys
+			addqt	#2, polyPtr	; jump past color
+			jump		(temp)
+			add		numSides, polyPtr
+
+;			movei	#donePoly, temp
+;			jump		(temp)
+;			moveq	#1, numPolys	; this will finish us
+yesItIsGood:
+		movei	#(POLYGON+8), polygon ; point to slope
+		movei	#enterTrav, noWayA
+		movei	#CORNERS, corners ; address of corner list
+		movei	#doneCorn, noCorner
+		movei	#traverse, innerLoop
+
+		moveq	#0, edgeCrosses
+		loadw	(polyPtr), theEdge					; get first edge
+		moveq	#0, hiY	; init hiY to 1024 in 16.16 (part 1 of 2)
+findFirst:
+		addqt	#2, polyPtr	; point to edge[1] record
+		move		theEdge, temp2						; make edge address
+		bclr		#15, theEdge
+		shlq		#4, theEdge
+		add		tEdges, theEdge
+
+		shrq		#15, temp2	; if reverse bit set
+		loadp	(theEdge), aFirst 					; get first a, b
+		shlq		#4, temp2	; if reverse bit set
+
+		or		aFirst, aFirst
+		jr		NE, gotFirst ;(dontDoItMan)
+		load		(dataHi), temp
+
+		subq		#1, numSides
+		loadw	(polyPtr), theEdge					; get first a, b (or color)
+		jr		NE, findFirst ;(innerLoop)
+		or		temp, edgeCrosses
+
+		; there aren't any edges!! ------------ Is it full screen or offscreen?
+		cmpq		#15, edgeCrosses
+		movei	#polyLp, dontDoItMan
+		jump		NE, (dontDoItMan)	;NE
+		addqt	#2, polyPtr	; point to next gon record
+
+		; possible full screen polygon
+		movei	#fullScr, temp
+		jump		(temp)
+
+gotFirst:
+		move		polyPtr, edgeCrosses	; store for tex.gas retraverse
+		bset		#26, hiY	; init hiY to 1024 in 16.16 (part 2 of 2)
+		addqt	#12, theEdge
+		ror		temp2, aFirst		; swap a and b
+
+		; get the rest of the edge
+		load		(theEdge), slp
+
+		move		aFirst, b							; separate a, b
+		; compute addresses (don't allways need both, but it interleaves so well...)
+		shlq		#16, b
+		shrq		#16, aFirst
+		shrq		#11, b ; now shifted left 5
+		shlq		#5, aFirst
+		add		points, b
+		add		points, aFirst
+; compute normal here
+;	add	slp, temp
+		jump		(noWayA)
+		addqt	#12, b	; advance to xs,ys record - collect 200 dollars
+;	nop
+traverse:	;---------------------------------------------------------------------------
+		move		theEdge, temp2
+		bclr		#15, theEdge
+		shlq		#4, theEdge
+;		mult		edgeSize, theEdge
+		add		tEdges, theEdge
+		shrq		#15, temp2	; if reverse bit set
+		loadp	(theEdge), a
+		shlq		#4, temp2	; if reverse bit set
+		addqt	#12, theEdge
+		ror		temp2, a		; swap a and b
+		;nbkwrds:
+		or		a, a			; test if on screen edge
+		jump		EQ, (dontDoItMan)
+		; seperate
+		move		a, b
+
+		; get the rest of the edge
+		load		(theEdge), slp
+
+		; compute addresses (don't allways need both, but it interleaves so well...)
+		shrq		#16, a
+		shlq		#16, b
+		shlq		#5, a
+		shrq		#11, b ; now shifted left 5
+		add		points, a
+		add		points, b
+
+		cmp		bPrev, a		; is this a new point?
+		addqt	#12, b	; advance to xs,ys record - collect 200 dollars
+		jump		EQ, (noWayA)
+		moveq	#0, xs ; (not really xs!!!)
+			; check for corners
+			load		(a), secIn
+			addqt	#12, a	; advance to xs,ys record - collect 200 dollars
+			move		secOut, temp
+			and		secIn, temp	; check for edge differences
+			moveq	#31, temp2	; mask for wrap
+			jump		NE, (noCorner)
+			normi	secIn, secIn
+				normi	secOut, secOut
+				shlq		#3, secIn
+				shlq		#3, secOut
+				and		temp2, secIn		; wrap to 32 bits
+				; test for new corner being hiPoint
+				and		temp2, secOut		; test for zero (edge 3 - right side) - wrap to 32 bits
+				move		secIn, temp
+				jr		EQ, NewHi
+				move		polygon, temp2
+					shrq		#2, temp
+					or		secOut, temp
+					shrq		#1, temp
+					cmpq		#$e, temp
+					jr		NE, NoTopCorn
+					addqt	#16, temp2 ; back up to y
+						NewHi:
+						subqt	#4, temp2 ; move up to y
+						moveq	#TOP_O_WINDOW, hiY
+						move		temp2, hiIndex
+	
+				NoTopCorn:
+
+				moveq	#31, temp2	; mask for wrap of corner list
+
+
+				addCorner:
+					or		corners, secOut	; add base address
+					store	xs, (polygon)		; slp=0
+					subqt	#8, polygon		; back up to x
+					load		(secOut), temp	; get x
+					addqt	#4, secOut
+					store	temp, (polygon)	; xs
+					load		(secOut), temp
+					addqt	#4, secOut
+					addqt	#4, polygon
+					and		temp2, secOut		; wrap to 32 bytes
+					store	temp, (polygon)	; ys
+					cmp		secOut, secIn
+					jr		NE, addCorner
+					addqt	#20, polygon		; advance to n+1 slope
+			doneCorn:
+			; add the real point
+			loadp	(a), ys		; read point
+			store	xs, (polygon) ; sloope
+			subqt	#4, polygon ; back up to y
+			; check for hi y
+			cmp		ys, hiY
+			jr		MI, tooLow
+			store	ys, (polygon) ; y
+;				move		a, hiPoint
+				move		ys, hiY
+				move		polygon, hiIndex
+;				bset		#31, hiIndex
+			tooLow:
+			load		(dataHi), xs
+			subqt	#4, polygon ; back up to x
+			store	xs, (polygon) ; x
+			addqt	#24, polygon ; advance to n+1 slope
+
+enterTrav:
+		loadp	(b), ys		; read point
+		subqt	#12, b	; back up to sector record
+;		load		(b), secOut	; cant do it here!!!!
+		store	slp, (polygon) ; sloope
+		subqt	#4, polygon ; back up to y
+		; check for hi y
+		cmp		ys, hiY
+		jr		MI, tooLow2
+		store	ys, (polygon) ; y
+			move		b, hiPoint
+			move		ys, hiY
+			move		polygon, hiIndex
+		tooLow2:
+		load		(dataHi), xs
+		load		(b), secOut
+		subqt	#4, polygon ; back up to x
+		store	xs, (polygon) ; x
+		addqt	#24, polygon ; advance to n+1 slope
+
+nextEdge:
+		loadw	(polyPtr), theEdge
+		subq		#1, numSides
+		move		b, bPrev		; store old b
+		jump		NE, (innerLoop)
+		addqt	#2, polyPtr	; point to next edge record
+;--- optional install aFirst
+	; check for NULL aFirst
+	or		aFirst, aFirst
+	movei	#didIt, temp
+	jump		EQ, (temp)
+	; check for different aFirst
+	cmp		aFirst, b
+;	addqt	#12, aFirst	; advance to xs,ys record - collect 200 dollars
+	movei	#doneCornL, noCorner
+	jump		EQ, (temp) ;didIt
+	moveq	#0, xs ; (not really xs!!!)
+		; check for corners
+		load		(aFirst), secIn
+		addqt	#12, aFirst	; advance to xs,ys record - collect 200 dollars
+		move		secOut, temp
+		and		secIn, temp	; check for edge differences
+		moveq	#31, temp2	; mask for wrap of corner list
+		jump		NE, (noCorner)
+		normi	secIn, secIn
+			normi	secOut, secOut
+			shlq		#3, secIn
+			shlq		#3, secOut
+			and		temp2, secIn		; wrap to 32 bits
+			; test for new corner being hiPoint
+			and		temp2, secOut		; test for zero (edge 3 - right side) - wrap to 32 bits
+			move		secIn, temp
+			jr		EQ, lNewHi
+			move		polygon, temp2
+				shrq		#2, temp
+				or		secOut, temp
+				shrq		#1, temp
+				cmpq		#$e, temp
+				jr		NE, lNoTopCorn
+				addqt	#16, temp2 ; move up to next
+					lNewHi:
+					subqt	#4, temp2 ; back up to y
+					moveq	#TOP_O_WINDOW, hiY
+					move		temp2, hiIndex
+
+			lNoTopCorn:
+
+			moveq	#31, temp2	; mask for wrap of corner list
+			addCornerL:
+				or		corners, secOut	; add base address
+				store	xs, (polygon)		; slp=0
+				subqt	#8, polygon		; back up to x
+				load		(secOut), temp	; get x
+				addqt	#4, secOut
+				store	temp, (polygon)	; xs
+				load		(secOut), temp
+				addqt	#4, secOut
+				addqt	#4, polygon
+				and		temp2, secOut		; wrap to 32 bits
+				store	temp, (polygon)	; ys
+				cmp		secOut, secIn
+				jr		NE, addCornerL
+				addqt	#20, polygon		; advance to n+1 slope
+		doneCornL:
+		loadp	(aFirst), ys		; read point
+		store	xs, (polygon) ; sloope
+		subqt	#4, polygon ; back up to y
+		; check for hi y
+		cmp		ys, hiY
+		jr		MI, tooLow3
+		store	ys, (polygon) ; y
+			move		a, hiPoint
+			move		ys, hiY
+			move		polygon, hiIndex
+;			bset		#31, hiIndex
+		tooLow3:
+		load		(dataHi), xs
+		subqt	#4, polygon ; back up to x
+		store	xs, (polygon) ; x
+		addqt	#24, polygon ; advance to n+1 slope
+didIt:
+	nop
+		; check for texture mapped poly
+		btst		#bTEXTURE, polyflags			; flag for texture mapping structure
+		movei	#texTop, temp
+		jump		NE, (temp)
+;-------------------------------------------------------------------------------------
+; we now have the polygon struct filled
+		; get clr
+theColor	REGEQU	theEdge	; theEdge has the color already
+
+		; check for color type
+		btst	#bFLASH,polyflags	; NULL for fixed object
+		jr		EQ, _CDLOCAL_10_429
+		nop
+			shlq		#1, theColor	; word address
+			add		colors, theColor
+			; load color
+			loadw	(theColor), theColor
+			nop
+_CDLOCAL_10_429:
+		; replicate color to long word
+		move		theColor, clr
+		shlq		#16, theColor
+		or		theColor, clr
+	; get hiSectors
+	; switch hiSectors|type
+;--
+rPtr		REGEQU	noWayA
+overPtr	REGEQU	aFirst
+iters	REGEQU	numSides
+lPtr		REGEQU	hiIndex
+lSlp		REGEQU	slp
+startLine	REGEQU	hiY
+dontLeft	REGEQU	bPrev
+polyStart	REGEQU	a
+numLines	REGEQU	b
+lX		REGEQU	xs
+;ys		REGEQU	ys
+rX		REGEQU	noCorner	; x-coord for right side
+rSlp		REGEQU	secIn	;*
+lCount	REGEQU	secOut	;*
+rCount	REGEQU	corners	;*
+
+;	REGEQU	
+
+	; set jump addrs
+;	movei	#donePoly, overPtr
+	movei	#polyLp, overPtr
+	movei	#nextPoint, innerLoop
+fetchTrap:
+	; set line - just use hiY
+	; set lPtr, rPtr
+	subqt	#4, lPtr	; back up to beginning
+	move		lPtr, rPtr
+	; set lCount, rCount, numLines, iters
+	moveq	#0, lCount
+	moveq	#0, rCount
+	moveq	#0, numLines
+;doThePoly:
+	; set polygon, polyStart
+	movei	#(POLYGON+8), polyStart	; point at first slope
+	move		polygon, iters
+	sub		polyStart, iters
+	subqt	#20, polygon			; point at last ys in GRAM polygon
+	addqt	#16, iters
+.if 0
+										movei	#$1700c, temp
+										store	iters, (temp)
+										addqt	#16, temp
+										store	lPtr, (temp)
+										nop
+.endif
+	; set jump addrs
+;	movei	#donePoly, overPtr
+;	movei	#nextPoint, innerLoop
+	movei	#rightOK, dontDoItMan
+	movei	#chkRight, dontLeft
+nextPoint:
+	sub		numLines, lCount
+	jump		NE, (dontLeft)
+	nop
+		; check for completion
+		subq		#16, iters	; size of point data in GRAM polygon
+		jump		EQ, (overPtr)
+		nop
+		; left
+		load		(lPtr), lX
+		addqt	#4, lPtr
+		load		(lPtr), ys
+		; inc lPtr
+		cmp		lPtr, polygon	; polygon is set to address of final ys
+		addqt	#20, lPtr		; advance to n+1 slope
+		jr		NE, noWrap
+		nop
+			move	polyStart, lPtr
+		noWrap:
+		load		(lPtr), lSlp
+		subqt	#4, lPtr
+		; calc starting x		mult lSlp, (1 - y Frac)
+		move		ys, lCount	; use lCount as a temp for (1 - y frac)
+		move		lSlp, temp	; normalize lSlp into temp(mantissa) and temp2(exponent)
+		abs		temp
+		neg		lCount
+		normi	temp, temp2
+		shrq		#1, lCount
+		addqt	#9, temp2
+		bclr		#15, lCount
+		move		lSlp, temp
+		sha		temp2, temp
+		neg		temp2
+		imult	temp, lCount	; multiply the mantissas
+		addqt	#15, temp2	; add the exponents
+		sha		temp2, lCount	; convert float back to int
+		add		lCount, lX
+		; calc lCount
+		load		(lPtr), lCount	; the y of Christmas yet-to-be
+
+		subqt	#4, lPtr		; to xs
+		shrq		#16, ys
+		shrq		#16, lCount
+		sub		ys, lCount
+chkRight:
+	sub		numLines, rCount
+	jump		NE, (dontDoItMan)
+	nop
+		; check for completion
+		subq		#16, iters	; size of point data in GRAM polygon
+		jump		EQ, (overPtr)
+		nop
+		; right =
+		load		(rPtr), rX
+		addqt	#4, rPtr
+		load		(rPtr), ys
+		addqt	#4, rPtr
+		load		(rPtr), rSlp
+		; dec rPtr
+		cmp		rPtr, polyStart	; polygon set to address of first ys
+		subqt	#20, rPtr			; back to n-1 ys
+		jr		NE, noWrap2
+		move		ys, rCount	; use rCount as a temp
+			move	polygon, rPtr
+			;addqt	#4, rPtr
+		noWrap2:
+		; calc starting x
+		move		rSlp, temp
+		abs		temp
+		neg		rCount
+		normi	temp, temp2
+		shrq		#1, rCount
+		addqt	#9, temp2
+		bclr		#15, rCount
+		move		rSlp, temp
+		sha		temp2, temp
+		neg		temp2
+		imult	temp, rCount
+		addqt	#15, temp2
+		sha		temp2, rCount
+		add		rCount, rX
+		; calc rCount
+		load		(rPtr), rCount	; the y of Christmas yet-to-be
+		subqt	#4, rPtr		; back to the start
+		shrq		#16, ys
+		shrq		#16, rCount
+		sub		ys, rCount
+rightOK:
+		; check lCount, rCount (old cutItOut 1 and 2)
+		btst		#15, rCount
+		movei	#polyLp, temp
+		jump		NE, (temp)
+		btst		#15, lCount
+		jump		NE, (temp)
+		; watch the next instruction
+
+	cmp		lCount, rCount
+	jr		CS, floor
+	move		rCount, numLines
+		move		lCount, numLines
+floor: ; aka got the lowest value
+	or		numLines, numLines ; if anything to do..
+	jump		EQ, (innerLoop)
+	nop
+									btst		#31, lX
+									;jr		EQ, weCheckedIte
+									jump		NE, (innerLoop)
+									;nop
+									;	cutItOut 14
+									;weCheckedIte:
+									btst		#31, rX
+									jump		NE, (innerLoop)
+									;jr		EQ, weCheckedItf
+									nop
+									;	cutItOut 15
+									;weCheckedItf:
+									;	movei	#230, temp
+									;cmp		temp, numLines
+									;jr		MI, weCheckedIt6
+									;nop
+									;	;movei	#$17008, temp
+									;	;store	lCount, (temp)
+									;	;addqt	#4, temp
+									;	;nopCity
+									;	;store	rCount, (temp)
+									;	;nop ;City
+									;	cutItOut 7
+									;weCheckedIt6:
+; do trap	
+doTrap:		
+; things to be set for a trapazoid
+;	line left right iLeft iChange numLines
+;	dLeft dRight dILeft dIChange
+
+		; set alternate bank	: Why? - because someday, I want to write the blitter loop as an interrupt routine and have the rest of the renderrrer code use register bank 1. The bank switch would be for free.(sortof)
+		movei	#G_FLAGS, temp
+		load		(temp), temp2
+		bset		#14, temp2	; REG_PAGE
+		store	temp2, (temp)
+		nop
+		nop
+
+;- Inner loop register defines ----------------------------------------------
+
+; blitter data
+count	REGEQU	R0	; for B_COUNT
+intInc	REGEQU	R1	; for B_IINC
+start	REGEQU	R2	; for A1_PTR
+strtIf	REGEQU	R3	; for B_SRCD ; fractional intensity
+strtI	REGEQU	R4	; for B_PATD : color + integer intensity
+doIt		REGEQU	R5	; for B_CMD
+; blitter addresses (for the previous 6 registers respectivly)
+aCount	REGEQU	R6	; B_COUNT
+aIntInc	REGEQU	R7	; B_IINC
+aStart	REGEQU	R8	; A1_PTR
+aStrtIf	REGEQU	R9	; B_SRCD ; fractional intensity
+aStrtI	REGEQU	R10	; B_PATD : color + integer intensity
+command	REGEQU	R11	; B_CMD
+
+; totals
+left		REGEQU	R12
+right	REGEQU	R13
+iLeft	REGEQU	R14
+iChange	REGEQU	R15
+; increments
+dLeft	REGEQU	R16
+dRight	REGEQU	R17
+dILeft	REGEQU	R18
+dIChange	REGEQU	R19
+
+line		REGEQU	R20 ; y coord of line in MSW
+trapLines	REGEQU	R21 ; # of lines until the next vertex
+aLine	REGEQU	R22 ; constant: $10000
+
+lowMask	REGEQU	R23 ; $ffff
+lpStart	REGEQU	R24 ; address for loop branch
+incMask	REGEQU	R25 ; clear color (MSB) portion of incMask
+;r		REGEQU	R26
+;r		REGEQU	R27
+;temp		REGEQU	R28
+;temp2	REGEQU	R29
+;polyflags	REGEQU	R30
+
+;----------------------------------------------------------------------------
+; blitter has been setup by 68K (A1BASE, A1FLAGS, A1CLIP)
+; preset some addresses
+		movei	#B_COUNT,	aCount
+
+		movei	#A2_PIXEL,aStart
+		movei	#B_PATD,	aStrtI
+		movei	#B_CMD,	command
+; and some constants
+
+.if 0	; ZBUFFERING
+		movei	#B_Z3,	aStrtZ
+		movei	#DSTEN|DSTENZ|DSTWRZ|ZMODEGT|ZMODEEQ|PATDSEL|DSTA2, doIt
+.else
+		movei	#B_IINC,	aIntInc
+		movei	#B_SRCD,	aStrtIf
+;		movei	#PATDSEL|DSTA2,doIt
+.endif
+		movei	#$10000,		aLine
+		movei	#$ffff,		lowMask
+		movei	#$ffffff,		incMask
+
+;----------------------------------------------------------------------------
+		; give color to blitter
+		waitForBlitter
+		movefa	polyflags,temp2
+		movefa	clr, temp
+		btst	#15,temp2			; transparent polygon??
+		jr	EQ,solidfill
+		nop
+;***WARNING:
+;after we've reloaded doIt, the rest of the CP will come out glass!
+			move	aStrtIf, aStrtI
+			movei	#DSTEN|ADDDSEL|DSTA2, doIt
+solidfill:
+		store	temp,	(aStrtI)
+		addqt	#4, aStrtI
+		store	temp,	(aStrtI)
+		subqt	#4, aStrtI
+
+.if 0 ; ZBUFFERING
+		; set up Z values
+		movefa	largeZ,StrtZ
+		store	StrtZ,(aStrtZ)
+		addqt	#4,aStrtZ
+		store	StrtZ,(aStrtZ)
+		addqt	#4,aStrtZ
+		store	StrtZ,(aStrtZ)
+		addqt	#4,aStrtZ
+		store	StrtZ,(aStrtZ)
+		subqt	#12,aStrtZ
+.endif
+
+; preset initial values
+;	line, trapLines, left, right, iLeft, iChange
+;	dLeft, dRight, dILeft, dIChange
+
+		movefa	startLine, line
+;		add		lowMask, line
+		shrq		#16, line	; strip x portion clean
+		shlq		#16, line
+;		and		lowMask, startLine
+
+		movefa	lX, left
+		movefa	rX, right
+		movefa	numLines, trapLines
+
+		movefa	lSlp, dLeft
+		movefa	rSlp, dRight
+
+;trap:	;It's a trap!!! Run for it!!!
+;														btst		#31, left
+;														jr		EQ, weCheckedIt2
+;														nop
+;															cutItOut 3
+;														weCheckedIt2:
+;
+;														;cmp		left, right
+;														;jr		PL, weCheckedIt3
+;														;nop
+;														;	cutItOut 4
+;														;weCheckedIt3:
+;														btst		#15, trapLines
+;														jr		EQ, weCheckedIt4
+;														nop
+;															cutItOut 5
+;														weCheckedIt4:
+;														movei	#230, temp
+;														cmp		temp, trapLines
+;														jr		MI, weCheckedIt5
+;														nop
+;															cutItOut 6
+;														weCheckedIt5:
+		or		trapLines, trapLines	; make shoor trapLines != 0
+		movei	#endTrap, temp
+		jump		EQ, (temp)
+		nop
+
+;	setBorder $a00000
+
+;- the inner loop -----------------------------------------------------------
+
+		movei	#doLine, lpStart
+
+doLine:
+; pack blitter	data registers (optimized version)
+		move		right, temp
+		move		left, start
+		shrq		#16, start
+		shrq		#16, temp
+		move		start, count
+		sub		temp, count
+
+		jr	PL, skpTheLn			; check for zero or negative line len
+		neg	count
+
+		or		line, start
+		bset		#16, count		; give it some thickness
+
+; wait for blitter completion (mostly stolen code)
+waitLp:
+		load		(command), temp
+		btst		#0, temp
+		jr		EQ, waitLp
+		nop
+
+; feed the blitter
+		store	count,	(aCount)
+		store	start,	(aStart)
+		store	doIt,	(command)	; it's away
+skpTheLn:
+		; next line
+		add		dLeft,	left		
+		add		dRight,	right	
+
+		subq		#1, trapLines
+		jump		NE, (lpStart) ;doLine
+		add		aLine, line
+;----------------------------------------------------------------------------
+
+endTrap:
+		; so we can start where we left off
+		moveta	line, startLine
+		moveta	left, lX
+		moveta	right, rX
+
+		nop
+;----------------------------------------------------------------------------
+		; set primary bank
+		movei	#G_FLAGS, temp
+		load		(temp), temp2
+		bclr		#14, temp2	; REG_PAGE
+		store	temp2, (temp)
+		nop
+		jump		(innerLoop)
+		nop
+
+;donePoly:
+;		movei	#polyLp, temp
+;		jump		(temp)
+;		nop
+cpDone:
+		RTS_TREE
+
+
+;check for full screen poly subroutine --------------------------------------
+fullScr:
+		; robust check for on screenness
+		.include	"full.gas"
+		; draw the full screen
+		theColor	REGEQU	theEdge	; theEdge has the color already
+.if 0
+		; check for color type
+		btst	#bFLASH,polyflags
+		jr		EQ, _CDLOCAL_10_851
+		nop
+			; load color
+			shlq		#1, theColor	; word address
+			add	colors, theColor
+			loadw	(theColor), theColor
+			nop
+		_CDLOCAL_10_851:
+.endif
+		; replicate color to long word
+		move		theColor, clr
+		shlq		#16, theColor
+		or		theColor, clr
+
+		REGUNDEF	theColor
+		anAddr	REGEQU	theEdge	; theEdge is empty now
+
+		movei	#B_CMD, temp2
+
+		waitLpf:					; wait for blitter
+			load		(temp2), temp
+			btst		#0, temp
+			jr		EQ, waitLpf
+			move		temp2, anAddr
+		addqt	#30, anAddr
+		addqt	#((B_PATD-B_CMD)-30), anAddr
+		store	clr,	(anAddr)
+		addqt	#4, anAddr
+		store	clr,	(anAddr)
+
+		; feed the blitter
+.if 0
+		movei	#$b80140, temp
+.else
+		movei	#DRAWRECT,temp
+		load	(temp),temp			; get screen size
+.endif
+		addqt	#(B_COUNT-B_CMD), temp2
+		store	temp,	(temp2)
+		subqt	#(B_COUNT-A2_PIXEL), temp2
+		moveq	#0, temp
+		store	temp,	(temp2)
+		addqt	#(A2_STEP-A2_PIXEL), temp2
+		movei	#$1fec0, temp
+		store	temp,	(temp2)
+
+		movefa	r5, temp ; doIt
+;	movei	#PATDSEL|DSTA2, temp
+		addqt	#(B_CMD-A2_STEP), temp2
+		jump		(dontDoItMan)
+		store	temp,	(temp2)	; it's away
+
+;		waitLpg:					; wait for blitter
+;			load		(temp2), temp
+;			btst		#0, temp
+;			jr		EQ, waitLpg
+;			nop
+;		jump		(dontDoItMan)
+;	nop
+		REGUNDEF	anAddr
+;----------------------------------------------------------------------------
+include "tex.gas"

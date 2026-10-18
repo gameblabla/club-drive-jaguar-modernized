@@ -1,0 +1,79 @@
+;
+; first of the "sky" modules: fill the screen with background color so that the rotated bitmap won't leave "holes"
+;
+
+	include "jaguar.inc"
+	include	"blit.inc"
+	include	"3dds.inc"
+	include	"68kequ.inc"
+
+
+; make sure blitter is free
+color0	REGEQU	r0
+color1	REGEQU	r1
+
+	movefa	ALTbcmd,temp2
+_CDLOCAL_9_15:
+	load	(temp2),temp
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_9_15
+	nop
+
+	movei	#screen_addr,temp
+	load	(temp),temp
+	movefa	ALTa1base,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2		; move to A1_FLAGS
+	movei	#PITCH1|PIXEL16|WID320|XADDPHR,temp
+	store	temp,(temp2)
+
+	addqt	#8,temp2		; move to A1_PIXEL
+	moveq	#0,temp
+	store	temp,(temp2)
+
+	addqt	#4,temp2		; move to A1_STEP
+	movei	#$0001FEC0,temp
+	store	temp,(temp2)
+
+	addqt	#4,temp2		; move to A1_FSTEP
+	moveq	#0,temp
+	store	temp,(temp2)
+
+	addqt	#4,temp2		; move to A1_FPIXEL
+	store	temp,(temp2)
+
+	addqt	#4,temp2		; move to A1_INC
+	moveq	#1,temp
+	store	temp,(temp2)
+
+	addqt	#4,temp2		; move to A1_FINC
+	moveq	#0,temp
+	store	temp,(temp2)
+
+.if 0
+	movei	#$005f0140,temp
+.else
+	movei	#DRAWRECT,temp		; screen size
+	load	(temp),temp
+.endif
+	movei	#B_COUNT,temp2
+	store	temp,(temp2)
+
+	movei	#SKY,temp
+	load	(temp),color0		; get sky color from 1st four pixels of sky data
+	addqt	#4,temp
+	load	(temp),color1
+	movei	#B_PATD,temp2
+	store	color0,(temp2)
+	addqt	#4,temp2
+	store	color1,(temp2)
+
+	movefa	ALTbcmd,temp2
+	movei	#PATDSEL|UPDA1,temp
+	store	temp,(temp2)
+
+
+nosky1:
+
+REGUNDEF	color0
+REGUNDEF	color1

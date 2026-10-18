@@ -1,0 +1,1007 @@
+;
+; Check for car collision with a polygon
+;
+; how it works:
+; we're passed 2 pointers to a polygon; one (in
+; "poly1") points to the traditional world coordinate
+; system; the other (in "poly2") points to additional
+; information like the radius of the polygon, its center,
+; and a list of edge normals
+; We assume that the radius and other "cheap" tests have already
+; been performed; we do the expensive processing here,
+; checking the car control lines against the polygon. If the
+; endpoints of a line are on opposite sides of the polygon,
+; and if the line's intersection is inside the polygon (as
+; determined by the edge normals of the poly), then we have
+; a collision, and the CAR_FORCE and CAR_TORQUE variables
+; are updated accordingly
+
+; set THROWOUT to 1 if cars should be violently ejected from inside polygons
+THROWOUT EQU 1
+
+; set TORQUE to 1 if we should calculate torques
+TORQUE	EQU 1
+cMOI	EQU 1
+
+; to convert a 16.16 to 20.12, shift right by this much
+
+	CAR_RSHFT	EQU	4
+
+; each subsequent edge intersection contributes this much less to the force
+; so the larger the number, the less elasticity: use at least 1
+	FORCE_RSHFT	EQU	2
+	INIT_FSHFT	EQU	4
+
+poly1	REGEQU	R0	; BEWARE: this is put in the alternate register bank
+poly2	REGEQU	R1	;         so is this!
+ae	REGEQU	R0	; BEWARE: this is the same as "poly1"
+be	REGEQU	R1	; BEWARE: this is the same as "poly2"
+
+ax	REGEQU	R2	; first endpoint
+ay	REGEQU	R3
+az	REGEQU	R4
+
+bx	REGEQU	R5	; second endpoint
+by	REGEQU	R6
+bz	REGEQU	R7
+
+nx	REGEQU	R8	; polygon normal
+ny	REGEQU	R9
+nz	REGEQU	R10
+
+an	REGEQU	R11	; dot product of a and n
+bn	REGEQU	R12	; dot product of b and n
+
+edgenorms	REGEQU	R13	; pointer to edge normals
+divider		REGEQU	R14	; pointer to polygon divider
+adjust		REGEQU	R14	; polygon divider constant	; BEWARE: this is the same as "divider"!!!!!!!
+vectors		REGEQU	R15	; pointer to world vectors
+
+car_numedges	REGEQU	R16	; number of car edges
+caredges	REGEQU	R17	; pointer to car edges
+
+tempptr		REGEQU	R18	; temporary pointer
+
+ix		REGEQU	R19	; point of intersection
+iy		REGEQU	R20
+iz		REGEQU	R21
+
+user		REGEQU	R22	; pointer to user
+count		REGEQU	R23	; temporary counter
+
+;ox		REGEQU	R24	; car origin: defined in close.gas
+;oy		REGEQU	R25	; 
+;oz		REGEQU	R26	; 
+
+; registers 27-29 reserved for global use
+skiploop	REGEQU	R30
+edgeloop	REGEQU	R31
+
+; some stuff put into alternate registers (only)
+; poly1		REGEQU	R0
+; poly2		REGEQU	R1
+points		REGEQU	R2
+edges		REGEQU	R3
+poly_numedges	REGEQU	R4
+force_shift	REGEQU	R5	; scaling factor for force
+poly_flags	REGEQU	R6	; flags for polygons
+
+fx		REGEQU	R7	; force
+fy		REGEQU	R8	;
+fz		REGEQU	R9
+
+tx		REGEQU	R10	; torque
+ty		REGEQU	R11
+tz		REGEQU	R12
+
+vx		REGEQU	R13	; velocity
+vy		REGEQU	R14
+vz		REGEQU	R15
+
+wx		REGEQU	R16	; rotational velocity
+wy		REGEQU	R17
+wz		REGEQU	R18
+
+; ix		REGEQU	R19	; point of intersection
+; iy		REGEQU	R20
+; iz		REGEQU	R21
+
+dispfrac	REGEQU	R22	; displacement fraction
+portptr		REGEQU	R23	; pointer to CUR_PORTAL part of the car structure
+
+geoband		REGEQU	R29	; global .bnd pointer
+
+;
+; set up 16.16 division
+;
+	moveta	poly2,poly2			;  save poly2
+	moveta	poly1,poly1			;  save poly1
+
+	movei	#G_DIVCTRL,temp
+	moveq	#1,temp2
+	store	temp2,(temp)
+
+; set up various global variables
+	movefa	ALTplayer,user
+
+	movei	#CUR_PORTAL,temp
+	add	user,temp
+	moveta	temp,portptr
+
+	moveq	#(CAR_NUM_PNTS/2),car_numedges
+
+	movefa	ALTband,temp2
+	movei	#DIVIDER_LIST, divider
+	add	temp2,divider
+	moveta	temp2,geoband
+
+	load	(divider),divider
+	moveq	#NUM_PNTS,temp
+	add	temp2,temp
+	loadw	(temp),temp			; get number of points
+	moveq	#6,count
+	mult	count,temp			; multiply number of points by sizeof(point)
+	movei	#ROTPNT_LIST, vectors
+	add	temp2,vectors
+	load	(vectors),vectors		; get base of point list
+	moveta	vectors,points			; save PNT_LIST
+	add	temp,vectors			; point to start of vectors
+
+	movei	#CAR_POSNS,caredges
+	add	user,caredges			; "caredges" now points to the list of transformed car points
+
+	movei	#EDGE_LIST,temp
+	add	temp2,temp
+	load	(temp),temp
+	moveta	temp,edges
+
+
+	loadw	(poly1),temp			; get number of edges
+	addqt	#2,poly1
+	moveta	temp,poly_flags			; save edges+flags
+	shlq	#28,temp			; strip flags
+	shrq	#28,temp
+	moveta	temp,poly_numedges
+	loadw	(poly1),temp			; get divider number
+	addqt	#2,poly1			; and move poly1 to point to the edges
+
+	shlq	#2,temp				; multiply divider number by sizeof(divider)
+	add	temp,divider			; point to divider
+
+	moveq	#6,temp2
+	loadw	(divider),temp			; get divider point number
+	addqt	#2,divider
+	mult	temp2,temp			; multiply by sizeof(points) (6)
+	movefa	points,tempptr
+	add	temp,tempptr
+	loadw	(divider),temp			; get divider vector number
+	subqt	#2,divider
+	mult	temp2,temp			; multiply by sizeof(vector)
+	add	temp,vectors			; add to vector list base
+
+; here we want:
+; (1) vectors to point to the polygon plane normal
+; (2) tempptr to point to the point on the plane
+	loadw	(vectors),nx			; load up the polygon normal
+	addqt	#2,vectors
+	loadw	(vectors),ny
+	addqt	#2,vectors
+	loadw	(vectors),nz
+	loadw	(tempptr),ix			; get divider point
+	addqt	#2,tempptr
+	shlq	#16,ix
+	sharq	#CAR_RSHFT,ix
+	loadw	(tempptr),iy
+	addqt	#2,tempptr
+	shlq	#16,iy
+	sharq	#CAR_RSHFT,iy
+	loadw	(tempptr),iz
+	shlq	#16,iz
+	sharq	#CAR_RSHFT,iz
+
+
+; I contains an initial point on the plane right now: use it to calculate the D in Ax+By+Cz-D = 0
+	move	ix,temp2
+	abs	temp2
+	move	iy,temp
+	abs	temp
+	or	temp,temp2
+	move	iz,temp
+	abs	temp
+	or	temp,temp2
+	normi	temp2,temp			; calculate exponent for I
+	addqt	#9,temp
+	sha	temp,ix
+	sha	temp,iy
+	sha	temp,iz
+	imultn	ix,nx				; calculate constant value for plane equation
+	imacn	iy,ny				; (this will be 30 bits)
+	imacn	iz,nz
+	resmac	adjust
+	neg	temp
+	addqt	#15,temp
+	sha	temp,adjust			; normalize (the normal vector is a 15 bit signed number)
+
+;
+; load up car forces and torques
+;
+	moveq	#(CAR_FORCE-32),temp2
+	addqt	#32,temp2
+	add	user,temp2
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,fx
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,fy
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,fz
+
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,tx
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,ty
+	load	(temp2),temp
+	movei	#skipcrash,skiploop
+	moveta	temp,tz
+
+; load up car velocity and rotation
+
+	move	user,temp2
+	addqt	#CAR_VELOCITY,temp2
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,vx
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,vy
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,vz
+
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,wx
+	load	(temp2),temp
+	addqt	#4,temp2
+	moveta	temp,wy
+	load	(temp2),temp
+	movei	#crashedge,edgeloop
+	moveta	temp,wz
+
+	movei	#crashlp,innerLoop
+
+	moveq	#INIT_FSHFT,temp
+	moveta	temp,force_shift
+
+	moveq	#0,temp
+	moveta	temp,dispfrac			; initially 0 displacement required
+
+crashlp:
+	loadw	(caredges),ax			; load initial point into a
+	addqt	#2,caredges
+	loadw	(caredges),ay
+	addqt	#2,caredges
+	loadw	(caredges),az
+	addqt	#2,caredges
+
+	shlq	#16,ax
+	shlq	#16,ay
+	sharq	#CAR_RSHFT,ax
+	sharq	#CAR_RSHFT,ay
+	add	ox,ax
+	add	oy,ay
+	shlq	#16,az
+	sharq	#CAR_RSHFT,az
+	add	oz,az
+						; calculate exponent for a
+	move	ax,temp2
+	abs	temp2
+	move	ay,temp
+	abs	temp
+	or	temp,temp2
+	move	az,temp
+	abs	temp
+	or	temp,temp2
+	normi	temp2,ae
+	addqt	#9,ae
+	sha	ae,ax				; normalize A
+	sha	ae,ay
+	sha	ae,az
+
+	loadw	(caredges),bx
+	addqt	#2,caredges
+	shlq	#16,bx
+	sharq	#CAR_RSHFT,bx
+	add	ox,bx
+	loadw	(caredges),by
+	addqt	#2,caredges
+	shlq	#16,by
+	sharq	#CAR_RSHFT,by
+	add	oy,by
+	loadw	(caredges),bz
+	addqt	#2,caredges
+	shlq	#16,bz
+	sharq	#CAR_RSHFT,bz
+	add	oz,bz
+; calculate exponent for b
+	move	bx,temp2
+	abs	temp2
+	move	by,temp
+	abs	temp
+	or	temp,temp2
+	move	bz,temp
+	abs	temp
+	or	temp,temp2
+	normi	temp2,be
+	addqt	#9,be
+	sha	be,bx			; normalize B
+	sha	be,by
+	sha	be,bz
+
+	imultn	ax,nx
+	imacn	ay,ny
+	imacn	az,nz
+	resmac	an
+
+	moveq	#15,temp
+	sub		ae,temp
+	moveq	#15,temp2
+	sub		be,temp2
+
+	sha	temp,an
+
+	imultn	bx,nx
+	imacn	by,ny
+	imacn	bz,nz
+	resmac	bn
+	sha	temp2,bn
+
+	sub	adjust,an
+	sub	adjust,bn
+	move	an,count
+	xor	bn,count
+	btst	#31,count
+	jump	EQ,(skiploop)	; if A and B are on the same side of the plane, forget it
+	nop
+		; if A and B are on opposite sides, then A + |An|/|An+Bn| (B-A) is the point on the plane
+		move	an,count	; save original sign of an
+		abs	bn		; neat math: it doesn't matter that an and bn are 32 bit numbers, since
+		abs	an		; (an/65536)/(bn/65536) == an/bn!
+		add	an,bn
+		div	bn,an		; now an is a 16.16 unsigned number < 1
+; remember, ax and bx have been normalized to 16 bits
+		neg	ae
+		sha	ae,ax		; un-normalize A
+		sha	ae,ay
+		sha	ae,az
+		neg	be
+		move	bx,ix		; un-normalize B (but store it in I, since we will want the normalized B later)
+		move	by,iy
+		move	bz,iz
+		sha	be,ix
+		sha	be,iy
+		sha	be,iz
+
+; note: an is an unsigned 16 bit fraction; since I is a signed vector, we want to do signed
+; multiplication; so we turn an into a positive signed 16 bit fraction by dividing by 2 
+		shrq	#1,an		; make sure an is non-negative and in 0.15 form
+		btst	#31,count
+		jr	NE, anplus
+		move	an,be		; save the fraction "behind the plane" into be
+			neg	be
+			shlq	#17,be
+			shrq	#17,be
+anplus:
+		sub	ax,ix
+		sub	ay,iy
+		sub	az,iz
+; now normalize B-A
+		move	ix,temp
+		abs	temp
+		move	iy,temp2
+		abs	temp2
+		or	temp,temp2
+		move	iz,temp
+		abs	temp
+		or	temp,temp2
+		normi	temp2,temp
+		addqt	#9,temp
+		sha	temp,ix
+		sha	temp,iy
+		sha	temp,iz
+
+		imult	an,ix
+		imult	an,iy
+		imult	an,iz
+; now unnormalize ix,iy,iz into 32 bit numbers
+		neg	temp
+		addqt	#15,temp		; IS 15 CORRECT?? SHOULD BE
+		sha	temp,ix
+		sha	temp,iy
+		sha	temp,iz
+		add	ax,ix
+		add	ay,iy
+		add	az,iz
+		moveta	ix,ix			; save I, so that we can subtract stuff from it
+		moveta	iy,iy
+		moveta	iz,iz
+;
+;	Now: for each edge normal A, see if (I - Edge point).A is positive; if not, the point is on the wrong side
+;
+		movefa	poly2,edgenorms			
+		movefa	poly_numedges,count
+		movefa	poly1,tempptr			; get pointer to polygon stuff
+		addqt	#10,edgenorms			; skip: radius (4 bytes), center (6 bytes)
+		addqt	#4,tempptr			; skip number of edges and divider
+	crashedge:
+			movefa	edges,temp
+			loadw	(tempptr),temp2		; get polygon edge description
+			addqt	#2,tempptr
+			bclr	#15,temp2		; we don't care if the edge is reversed
+			shlq	#2,temp2		; multiply by 4 (=sizeof(edge))
+			add	temp2,temp		; now "temp" points to the edge description
+			loadw	(temp),temp2		; get the first point in the edge
+			moveq	#6,temp
+			subqt	#1,temp2		; points are 1 based in the edge array!
+			mult	temp,temp2		; multiply point number by sizeof(point)
+			movefa	points,temp
+			nop
+			add	temp2,temp		; now temp points to the x,y,z of the edge point
+			loadw	(temp),temp2
+			addqt	#2,temp
+			shlq	#16,temp2		; sign extend edge x
+			sharq	#CAR_RSHFT,temp2
+			sub	temp2,ix
+			loadw	(temp),temp2
+			addqt	#2,temp
+			shlq	#16,temp2		; sign extend edge y
+			sharq	#CAR_RSHFT,temp2
+			sub	temp2,iy
+			loadw	(temp),temp2
+			shlq	#16,temp2		; sign extend edge z
+			sharq	#CAR_RSHFT,temp2
+			sub	temp2,iz
+
+			loadw	(edgenorms),ax		; now get the edge normal into A (it's 0.15)
+			addqt	#2,edgenorms
+			loadw	(edgenorms),ay
+			addqt	#2,edgenorms
+			loadw	(edgenorms),az
+			addqt	#2,edgenorms
+
+			move	ix,temp			; normalize (I-E)
+			abs	temp
+			move	iy,temp2
+			abs	temp2
+			or	temp2,temp
+			move	iz,temp2
+			abs	temp2
+			or	temp2,temp
+			normi	temp,ae
+			addqt	#9,ae
+			sha	ae,ix
+			sha	ae,iy
+			sha	ae,iz
+
+			imultn	ax,ix
+			imacn	ay,iy
+			imacn	az,iz
+			resmac	bn
+	;	neg		ae
+	;	addqt	#15+10,ae
+	;	sha		ae,bn
+	;	addq		#16,bn
+			cmpq	#0,bn
+			jump	MI,(skiploop)		; if on wrong side of edge, abort the whole test
+			nop
+			movefa	ix,ix			; restore I
+			movefa	iy,iy
+			movefa	iz,iz
+			subq	#1,count
+			jump	NZ,(edgeloop)
+			nop
+	; we get here if I is inside the polygon
+	; now we have to figure out force and torque on the car
+	; for now, the force is just the projection of the
+	; car's velocity onto the polygon's normal
+	; NOTE: the last four "edges" are the car shocks, and are handled differently
+
+	; first, note which band we are in, *if* this is a band that we can be "on" (we can't be
+	; "on" moving bands, unless we are in a tag game)
+		movefa	ALTbndflags,temp
+.if TAGGAME
+		btst	#17,temp			; is this another car?
+		movei	#notcar,temp2
+		jump	EQ,(temp2)			; no, don't worry
+		nop
+		; at this point, we're going to bail on all further collisions
+		; so we can trash reggies if we want...
+		; see if the other guy can tag us
+			movei	#(PLAYER1^PLAYER2),bn
+			move	bn,temp2
+			xor	user,temp2		; now iy is the other player
+
+			movei	#WAIT_TIME,temp
+			add	temp,temp2
+			load	(temp2),temp		; has the other guy got a timer going
+			cmpq	#0,temp
+			jump	NE,(skiploop)		; yes: no tags allowed
+			nop
+			movei	#itCar,temp2
+			load	(temp2),ix		; ix now points to the taggee
+			move	ix,temp
+			xor	bn,temp			; flip the it car
+			store	temp,(temp2)		; and save it
+			move	ix,temp2
+			addqt	#CAR_VELOCITY,temp2
+			moveq	#0,temp			; zero taggee's velocity
+			store	temp,(temp2)
+			addqt	#4,temp2
+			store	temp,(temp2)
+			addqt	#4,temp2
+			store	temp,(temp2)
+			movei	#WAIT_TIME,temp2
+			add	ix,temp2
+			movei	#600,temp
+			store	temp,(temp2)		; make a 2 second delay for the taggee
+			cmp	user,ix			; were we the one tagged
+			movei	#thatsAllFolks,temp2
+			jump	EQ,(temp2)		; yes == time to stop everything!
+			nop
+			movei	#drvloop,temp2		; otherwise, go check other bands
+			jump	(temp2)
+			nop
+
+notcar:
+.endif
+		btst	#16,temp
+		jr	NE,noton
+		nop
+
+		movei	#NEW_FLOOR,temp
+		add	user,temp
+		movefa	geoband,temp2
+		store	temp2,(temp)
+noton:
+	; get a pointer to the special surface structure
+		movei	#notspec,iz				; NOTE: ix, iy, iz are unused at this point
+		movefa	poly_flags,temp
+		movei	#mSPSURF,temp2
+		btst	#bSPSURF,temp
+		jump	EQ,(iz)
+		moveq	#0,ix
+			movei	#PROP_LIST,iy
+			and	temp2,temp
+			movefa	geoband,temp2
+			add	iy,temp2
+			load	(temp2),ix		; get pointer to special surface list
+			shrq	#(8-5),temp		; special surface structure is 32 bytes
+			add	temp,ix			; ix is now a pointer to the specific structure
+
+			movefa	portptr,temp2
+			load	(ix),temp	; check for a portal
+			addqt	#16,ix
+			cmpq	#0,temp		; is there a portal?
+			jr	EQ,maybesnd
+			moveq	#0,temp
+				subqt	#16,ix
+				store	ix,(temp2)		; store the portal
+				moveta	temp,dispfrac
+				moveta	temp,fx
+				moveta	temp,fy
+				moveta	temp,fz
+				moveta	temp,tx
+				moveta	temp,ty
+				jump	(skiploop)		; we're done with collisions
+				moveta	temp,tz
+maybesnd:
+			load	(ix),temp	; check for special sound
+			addqt	#4,ix
+			cmpq	#0,temp
+			movei	#notspec,iz
+			jump	EQ,(iz)
+			addqt	#4,temp2	; temp2 still contains user+CUR_PORTAL
+.if RACEGAME
+;
+; the start line is indicated by a "sound" of -2; the finish line by a "sound" of -1
+;
+				movei	#plussnd,tempptr
+				jump	PL,(tempptr)
+				nop
+					move	temp2,tempptr
+					neg	temp
+					addqt	#(GAME_DATA-CUR_SOUND),tempptr
+ 					subqt	#1,temp
+					loadw	(tempptr),count
+					nop
+					move	count,temp2
+					shlq	#31,temp2
+					shrq	#31,temp2
+					cmp	temp2,temp
+					jump	EQ,(iz)			; no: nothing more to do
+					addqt	#1,count
+					storew	count,(tempptr)		; save new lap number
+					addqt	#(SCORE-GAME_DATA),tempptr
+					load	(tempptr),count		; get current score
+					movei	#scoreinc,temp
+					load	(temp),temp		; get amount to score per lap
+					add	temp,count
+					store	count,(tempptr)
+					subqt	#(SCORE-WAIT_TIME),tempptr
+					movei	#1500,temp		; 5 second timer delay
+					jump	(iz)			; don't bother with sound (td.s does it)
+					store	temp,(tempptr)
+plussnd:
+.endif
+				load	(temp2),iy		; currently played sound
+				cmp	temp,iy			; is this sound more important?
+				jump	PL,(iz)
+				moveq	#1,iy			; for volume
+					store	temp,(temp2)
+					addqt	#4,temp2
+					shlq	#14,iy
+					subqt	#1,iy		; make iy $3fff
+					store	iy,(temp2)	; set sound volume
+					addqt	#4,temp2
+					store	iy,(temp2)	; set sound X coordinate
+notspec:
+	; now, see if it's an edge or a shock
+		movei	#edgehit,temp
+		cmpq	#5,car_numedges
+		jump	PL,(temp)
+		nop
+			movei	#CAR_SHOCKS,temp
+			move	car_numedges,temp2
+			subqt	#1,temp2
+			shlq	#2,temp2		; multiply by 4
+			add	user,temp
+			add	temp2,temp		; keep temp2 as an index
+			load	(temp),iy		; get current shock value
+			cmp	iy,an
+			jump	MI,(skiploop)		; if larger than an, ignore this collision
+			nop
+				cmpq	#0,ix		; is there a special surface??
+				jump	EQ,(skiploop)
+				store	an,(temp)
+					movei	#CAR_SURFDATA,temp
+					add	user,temp
+					add	temp2,temp
+		; we already adjust ix above, otherwise we would: addqt	#SURF_PROP,ix
+					load	(ix),ix		; get surface properties
+					cmpq	#0,ix		; if 0, no special properties
+					jump	EQ,(skiploop)
+					nop
+					jump	(skiploop)
+					store	ix,(temp)	; save special surface data
+
+edgehit:
+.if TORQUE
+	; get the car's rotational velocity ***
+		movefa	wx,ax
+		movefa	wy,ay
+		movefa	wz,az
+	; get the point of impact, in terms of the car
+	; coordinate system
+		movefa	ix,ix
+		movefa	iy,iy
+		movefa	iz,iz
+		sub	ox,ix
+		sub	oy,iy
+		sub	oz,iz
+		sharq	#(16-CAR_RSHFT),ix
+		sharq	#(16-CAR_RSHFT),iy
+		sharq	#(16-CAR_RSHFT),iz
+		moveta	ix,ix		; save 0.16 car coordinates
+		moveta	iy,iy
+		moveta	iz,iz
+
+	; linear velocity at this point is (rotation X point)
+		rorq	#16,ax
+		rorq	#16,ay
+		rorq	#16,az
+
+		neg	iy
+		imultn	ay,iz
+		imacn	az,iy
+		resmac	temp
+
+		neg	iz
+		imultn	az,ix
+		imacn	ax,iz
+		resmac	temp2
+
+		neg	ix
+		imultn	ax,iy
+		imacn	ay,ix
+		resmac	az
+		neg	az
+
+		sharq	#1,temp
+		sharq	#1,temp2
+		sharq	#1,az
+.endif
+
+	; get the car's velocity
+		movefa	vx,ix
+		movefa	vy,iy
+		movefa	vz,iz
+
+.if TORQUE
+		add	temp,ix
+		add	temp2,iy
+		add	az,iz
+.endif
+
+	; normalize it
+		move	ix,temp
+		move	iy,temp2
+		abs	temp
+		abs	temp2
+		or	temp,temp2
+		move	iz,temp
+		abs	temp
+		or	temp,temp2
+		jump	EQ,(skiploop)
+		nop				; skip if 0 velocity
+		normi	temp2,ae
+		addqt	#9,ae
+		sha	ae,ix
+		sha	ae,iy
+		sha	ae,iz
+	; project onto the normal
+		imultn	nx,ix
+		imacn	ny,iy
+		imacn	nz,iz
+		resmac	bn
+
+	; if the velocity points in the same direction as the polygon normal, no force should be added
+		cmpq	#0,bn
+		jump	PL,(skiploop)
+		nop
+			neg	ae
+			addqt	#15,ae
+			sha	ae,bn
+		; find magnitude of bn
+			move	bn,temp
+			abs	temp
+			normi	temp,ae
+			addqt	#9,ae
+			move	nx,ix
+			move	ny,iy
+			move	nz,iz
+			sha	ae,bn
+		; finish finding the projection of velocity onto the normal; this will be the force
+			imult	bn,ix
+			imult	bn,iy
+			imult	bn,iz
+			neg	ae
+			addqt	#15,ae
+		; the first intersection has full effect; subsequent intersections contribute less and less to the
+		; final force on the car, so that we can control the elasticity of the collision (indeed, without
+		; this adjustment collisions could be *more* than elastic!
+			movefa	force_shift,temp
+			add	temp,ae
+.if INIT_FSHFT = 0
+			addqt	#FORCE_RSHFT,temp
+			moveta	temp,force_shift
+.endif
+			sha	ae,ix
+			sha	ae,iy
+			sha	ae,iz
+
+		; now (ix,iy,iz) contains the new force
+			movefa	fx,ax
+			movefa	fy,ay
+			movefa	fz,az
+			sub	ix,ax
+			sub	iy,ay
+			sub	iz,az
+			moveta	ax,fx
+			moveta	ay,fy
+			moveta	az,fz
+.if TORQUE
+		; re-normalize force
+			move	ix,temp
+			move	iy,temp2
+			abs	temp
+			abs	temp2
+			or	temp2,temp
+			move	iz,temp2
+			abs	temp2
+			or	temp2,temp
+			normi	temp,ae
+			addqt	#9,ae
+
+			sha	ae,ix
+			sha	ae,iy
+			sha	ae,iz
+
+			neg	ae
+.if cMOI
+			subqt	#cMOI,ae
+.endif
+		; retrieve the point of intersection (in 0.16 car coordinates)
+			movefa	ix,ax
+			movefa	iy,ay
+			movefa	iz,az
+
+		; torque = point X force
+			movefa	tx,temp2
+			imultn	ay,iz
+			imacn	az,iy
+			resmac	temp
+			sha	ae,temp
+			add	temp, temp2
+			movefa	ty,temp
+			moveta	temp2,tx
+
+			neg	iz
+			imultn	ax,iz
+			imacn	az,ix
+			resmac	temp2
+			sha	ae,temp2
+			add	temp2,temp
+			movefa	tz,temp2
+			moveta	temp,ty
+
+			imultn	ax,iy
+			imacn	ay,ix
+			resmac	temp
+			sha	ae,temp
+			add	temp,temp2
+			movefa	dispfrac,temp
+			moveta	temp2,tz
+.endif
+		; see if we should play a crash
+			movefa	portptr,temp2
+			or	temp2,temp2
+			addqt	#4,temp2
+			movefa	fx,ix		; get force magnitude
+			movefa	fy,iy
+			movefa	fz,iz
+			abs	ix
+			abs	iy
+			abs	iz
+			load	(temp2),temp		; current sound
+			add	iy,ix
+			add	iz,ix
+			cmpq	#0,temp
+			jr	NE,nocrsnd
+			moveq	#1,temp
+				store	temp,(temp2)	; crash sound
+				addqt	#4,temp2
+				shlq	#14,temp
+				subqt	#1,temp		; temp now contains 0x3fff
+				shlq	#1,ix
+				sat16	ix
+				shrq	#1,ix
+				store	ix,(temp2)	; store volume
+				addqt	#4,temp2
+				store	temp,(temp2)	; store position (0x3fff)
+nocrsnd:
+		; finally, update the displacement fraction (current is in "be")
+			cmp	temp,be
+			jr	MI,notnew
+			nop
+				moveta	be,dispfrac
+notnew:
+
+skipcrash:
+
+	subq	#1,car_numedges
+	jump	NZ,(innerLoop)
+	nop
+
+;
+; update car forces, etc.
+;
+	moveq	#(CAR_FORCE-32),temp2
+	addqt	#32,temp2
+	add	user,temp2
+	movefa	fx,ax
+	movefa	fy,ay
+	movefa	fz,az
+	store	ax,(temp2)
+	addqt	#4,temp2
+	store	ay,(temp2)
+	addqt	#4,temp2
+	store	az,(temp2)
+	addqt	#4,temp2
+	movefa	tx,ax
+	movefa	ty,ay
+	movefa	tz,az
+	store	ax,(temp2)
+	addqt	#4,temp2
+	store	ay,(temp2)
+	addqt	#4,temp2
+	store	az,(temp2)
+
+.if THROWOUT
+; update car position
+	movefa	dispfrac,temp
+	movei	#abortall,temp2
+	cmpq	#0,temp
+	jump	EQ,(temp2)
+	nop
+		shrq	#7,temp
+		imult	temp,nx
+		imult	temp,ny
+		imult	temp,nz
+		sharq	#(CAR_RSHFT+3),nx
+		sharq	#(CAR_RSHFT+3),ny
+		sharq	#(CAR_RSHFT+3),nz
+.if CAR_POSN
+		moveq	#CAR_POSN,temp
+		add	user,temp
+.else
+		move	user,temp
+.endif
+		load	(temp),ax
+		addqt	#4,temp
+		load	(temp),ay
+		addqt	#4,temp
+		load	(temp),az
+		subqt	#8,temp
+		add	nx,ax
+		add	ny,ay
+		add	nz,az
+		store	ax,(temp)
+		addqt	#4,temp
+		store	ay,(temp)
+		addqt	#4,temp
+		store	az,(temp)
+.endif	;; THROWOUT
+
+abortall:
+;
+; cancel 16.16 division
+;
+	movei	#G_DIVCTRL,temp
+	moveq	#0,temp2
+	store	temp2,(temp)
+
+	movefa	poly1, poly1
+	movefa	poly2, poly2
+
+REGUNDEF poly1
+REGUNDEF poly2
+REGUNDEF ax
+REGUNDEF ay
+REGUNDEF az
+REGUNDEF bx
+REGUNDEF by
+REGUNDEF bz
+REGUNDEF nx
+REGUNDEF ny
+REGUNDEF nz
+REGUNDEF an
+REGUNDEF bn
+REGUNDEF ae
+REGUNDEF be
+REGUNDEF edgenorms
+REGUNDEF divider
+REGUNDEF adjust
+REGUNDEF vectors
+REGUNDEF car_numedges
+REGUNDEF caredges
+REGUNDEF poly_numedges
+REGUNDEF ix
+REGUNDEF iy
+REGUNDEF iz
+REGUNDEF user
+REGUNDEF ox
+REGUNDEF oy
+REGUNDEF oz
+REGUNDEF count
+REGUNDEF skiploop
+REGUNDEF edgeloop
+REGUNDEF points
+REGUNDEF edges
+REGUNDEF geoband
+REGUNDEF portptr
+REGUNDEF dispfrac
+

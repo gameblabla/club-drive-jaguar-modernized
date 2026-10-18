@@ -1,0 +1,65 @@
+;
+; definition for timing macros:
+;
+; StartTimer addr:	starts a timer running
+;	uses: temp, temp2
+;
+; SaveTimer addr:	saves the timer value into a specific memory location
+;	uses: temp, temp2
+;
+; RestoreTimer addr:	restarts a timer previously saved by SaveTimer
+;	uses:	temp, temp2
+
+.if 0
+
+MACRO	StartTimer
+	moveq	#1,temp
+	movei	#PIT0,temp2
+	neg	temp
+	store	temp,(temp2)
+ENDM
+
+MACRO	SaveTimer
+	movei	#PIT0,temp2
+	load	(temp2),temp
+	movei	#@1+TIMEARRAY,temp2
+	rorq	#16,temp
+	neg	temp
+	store	temp,(temp2)
+ENDM
+
+MACRO	RestoreTimer
+	movei	#@1,temp2
+	load	(temp2),temp
+	movei	#PIT0,temp2
+	neg	temp
+	rorq	#16,temp
+	store	temp,(temp2)
+ENDM
+
+MACRO	Mark
+	movei	#MARKADDR,temp2
+	moveq	#@1,temp
+	store	temp,(temp2)
+ENDM
+
+.else
+
+MACRO	StartTimer
+	nop
+ENDM
+
+MACRO	SaveTimer
+	nop
+ENDM
+
+MACRO	RestoreTimer
+	nop
+ENDM
+
+MACRO	Mark
+	nop
+ENDM
+
+.endif
+

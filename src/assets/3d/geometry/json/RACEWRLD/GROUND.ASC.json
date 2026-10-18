@@ -1,0 +1,53 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "RACEWRLD/GROUND.ASC",
+  "template_sha256": "1d78b486dfe6e2df0f8f81b627d437622de5844526a18bd1bed9a217d422cb70",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 18,
+      "mesh": "GROUND",
+      "index": 0,
+      "xyz": [
+        -21220.001953,
+        -21220.240234,
+        -773.350464
+      ]
+    },
+    {
+      "line": 19,
+      "mesh": "GROUND",
+      "index": 1,
+      "xyz": [
+        21220.0,
+        -21220.240234,
+        -773.350464
+      ]
+    },
+    {
+      "line": 20,
+      "mesh": "GROUND",
+      "index": 2,
+      "xyz": [
+        21220.0,
+        21029.884766,
+        -773.361328
+      ]
+    },
+    {
+      "line": 21,
+      "mesh": "GROUND",
+      "index": 3,
+      "xyz": [
+        -21220.001953,
+        21029.884766,
+        -773.361328
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

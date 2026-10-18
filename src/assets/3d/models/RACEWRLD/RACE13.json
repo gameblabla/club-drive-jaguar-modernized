@@ -1,0 +1,296 @@
+{
+ "source": "RACEWRLD/RACE13.ASC",
+ "sha256": "a8b8e79356e9d01f9f115c722c099db6a26bb31f70054373fd251b1ee50af8b8",
+ "objects": [
+  {
+   "name": "Light01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Camera01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "nuspeedway",
+   "vertices": [
+    [
+     "-5738.863281",
+     "-4911.134277",
+     "-711.063965"
+    ],
+    [
+     "-5738.855469",
+     "-4911.145996",
+     "-744.748108"
+    ],
+    [
+     "-6329.136719",
+     "-4911.145996",
+     "-744.748108"
+    ],
+    [
+     "-6329.115234",
+     "-4911.134277",
+     "-711.063965"
+    ],
+    [
+     "-6375.679688",
+     "-4911.134277",
+     "-711.063965"
+    ],
+    [
+     "-6378.748047",
+     "-4911.157715",
+     "-776.612732"
+    ],
+    [
+     "-5687.246094",
+     "-4911.157715",
+     "-776.606628"
+    ],
+    [
+     "-5691.207031",
+     "-4911.134277",
+     "-711.063965"
+    ],
+    [
+     "-6208.805664",
+     "-12558.113281",
+     "-711.063965"
+    ],
+    [
+     "-6208.813477",
+     "-12558.101563",
+     "-744.748108"
+    ],
+    [
+     "-5618.571289",
+     "-12558.101563",
+     "-744.748108"
+    ],
+    [
+     "-5618.592773",
+     "-12558.113281",
+     "-711.063965"
+    ],
+    [
+     "-5572.02832",
+     "-12558.113281",
+     "-711.063965"
+    ],
+    [
+     "-5568.959961",
+     "-12558.089844",
+     "-776.612732"
+    ],
+    [
+     "-6260.422852",
+     "-12558.089844",
+     "-776.606628"
+    ],
+    [
+     "-6256.461914",
+     "-12558.113281",
+     "-711.063965"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      8,
+      9,
+      2
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      8,
+      2,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      9,
+      10,
+      1
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      9,
+      1,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      10,
+      11,
+      0
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      10,
+      0,
+      1
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      11,
+      12,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      11,
+      7,
+      0
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      12,
+      13,
+      6
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      12,
+      6,
+      7
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      14,
+      15,
+      4
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      14,
+      4,
+      5
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      15,
+      8,
+      3
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      15,
+      3,
+      4
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "DARK GRAY MATTE"
+    }
+   ],
+   "declared_vertices": 16,
+   "declared_faces": 14
+  }
+ ],
+ "material_names": [
+  "DARK GRAY MATTE",
+  "ORANGE MATTE"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

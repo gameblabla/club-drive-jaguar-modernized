@@ -1,0 +1,1251 @@
+{
+ "source": "RACEWRLD/RACE10A.ASC",
+ "sha256": "1471e5085f2edca6f4fd796e7401148a75fdb3c82421fd6dc569b360efde33a1",
+ "objects": [
+  {
+   "name": "Light01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Camera01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "nuspeedway",
+   "vertices": [
+    [
+     "15056.037109",
+     "-18348.001953",
+     "190.597656"
+    ],
+    [
+     "15706.519531",
+     "-17663.521484",
+     "106.692627"
+    ],
+    [
+     "15056.037109",
+     "-18348.001953",
+     "-167.95163"
+    ],
+    [
+     "15706.519531",
+     "-17663.521484",
+     "-252.965149"
+    ],
+    [
+     "15056.037109",
+     "-18348.001953",
+     "-773.51709"
+    ],
+    [
+     "16159.783203",
+     "-15881.076172",
+     "-225.251419"
+    ],
+    [
+     "16142.332031",
+     "-16757.470703",
+     "-32.523575"
+    ],
+    [
+     "16159.783203",
+     "-15881.076172",
+     "-497.787659"
+    ],
+    [
+     "16142.332031",
+     "-16757.470703",
+     "-392.181427"
+    ],
+    [
+     "16159.783203",
+     "-15881.076172",
+     "-773.517151"
+    ],
+    [
+     "14386.0625",
+     "-17580.072266",
+     "-522.867004"
+    ],
+    [
+     "14386.0625",
+     "-17580.072266",
+     "-562.297668"
+    ],
+    [
+     "14333.632813",
+     "-17519.462891",
+     "-773.505676"
+    ],
+    [
+     "14359.820313",
+     "-17549.291016",
+     "-522.280396"
+    ],
+    [
+     "15010.744141",
+     "-17080.990234",
+     "-559.837341"
+    ],
+    [
+     "15010.744141",
+     "-17080.990234",
+     "-599.394348"
+    ],
+    [
+     "14939.679688",
+     "-17030.525391",
+     "-773.516052"
+    ],
+    [
+     "14971.476563",
+     "-17052.177734",
+     "-559.687256"
+    ],
+    [
+     "15274.679688",
+     "-16493.861328",
+     "-589.001953"
+    ],
+    [
+     "15274.679688",
+     "-16493.861328",
+     "-628.560181"
+    ],
+    [
+     "15192.417969",
+     "-16460.884766",
+     "-773.517212"
+    ],
+    [
+     "15237.242188",
+     "-16478.853516",
+     "-588.853333"
+    ],
+    [
+     "15360.816406",
+     "-15856.654297",
+     "-624.945007"
+    ],
+    [
+     "15361.365234",
+     "-15856.376953",
+     "-659.514771"
+    ],
+    [
+     "15275.345703",
+     "-15847.666016",
+     "-773.51709"
+    ],
+    [
+     "15316.359375",
+     "-15851.919922",
+     "-624.357788"
+    ],
+    [
+     "15706.519531",
+     "-17663.521484",
+     "-773.51709"
+    ],
+    [
+     "16142.332031",
+     "-16757.470703",
+     "-773.517212"
+    ],
+    [
+     "15459.641602",
+     "-14238.822266",
+     "-711.063965"
+    ],
+    [
+     "15459.633789",
+     "-14238.810547",
+     "-744.748108"
+    ],
+    [
+     "16049.875",
+     "-14238.810547",
+     "-744.748108"
+    ],
+    [
+     "16049.853516",
+     "-14238.822266",
+     "-711.063965"
+    ],
+    [
+     "16096.417969",
+     "-14238.822266",
+     "-711.063965"
+    ],
+    [
+     "16099.486328",
+     "-14238.798828",
+     "-776.612732"
+    ],
+    [
+     "15408.024414",
+     "-14238.798828",
+     "-776.606628"
+    ],
+    [
+     "15411.985352",
+     "-14238.822266",
+     "-711.063965"
+    ],
+    [
+     "15459.74707",
+     "-14924.634766",
+     "-627.749268"
+    ],
+    [
+     "15415.540039",
+     "-14924.634766",
+     "-627.749268"
+    ],
+    [
+     "15459.692383",
+     "-14924.611328",
+     "-695.382202"
+    ],
+    [
+     "15408.02832",
+     "-14924.716797",
+     "-776.606628"
+    ],
+    [
+     "16049.880859",
+     "-14924.611328",
+     "-695.382202"
+    ],
+    [
+     "16049.644531",
+     "-14924.634766",
+     "-627.749268"
+    ],
+    [
+     "16092.072266",
+     "-14924.634766",
+     "-627.749268"
+    ],
+    [
+     "16099.486328",
+     "-14924.716797",
+     "-776.612732"
+    ],
+    [
+     "13974.619141",
+     "-18763.835938",
+     "-773.516052"
+    ],
+    [
+     "13731.951172",
+     "-17787.921875",
+     "-522.097595"
+    ],
+    [
+     "13732.013672",
+     "-17787.910156",
+     "-484.076874"
+    ],
+    [
+     "13720.945313",
+     "-17745.099609",
+     "-484.076355"
+    ],
+    [
+     "13712.492188",
+     "-17707.630859",
+     "-773.515991"
+    ],
+    [
+     "13974.619141",
+     "-18763.839844",
+     "-136.207901"
+    ],
+    [
+     "13974.619141",
+     "-18763.839844",
+     "230.374023"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      0,
+      1,
+      3
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      0,
+      3,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      45,
+      49,
+      2
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      11,
+      45,
+      2
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      11,
+      2,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      15,
+      11,
+      3
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      49,
+      44,
+      2
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      44,
+      4,
+      2
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      8,
+      6,
+      5
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      8,
+      5
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      40,
+      38
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      38,
+      23
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      8,
+      7,
+      23
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      8,
+      23,
+      19
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      41,
+      40
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      42,
+      41
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      43,
+      42
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      9,
+      43
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      8,
+      19,
+      15
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      15,
+      3,
+      8
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      6,
+      8
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      8,
+      3,
+      1
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      46,
+      45,
+      10
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      12,
+      48,
+      47
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      47,
+      13,
+      12
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      10,
+      45,
+      11
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      13,
+      47,
+      46
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      46,
+      10,
+      13
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      10,
+      11,
+      14
+     ],
+     "edges": [
+      0,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      16,
+      12,
+      13
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      13,
+      17,
+      16
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      14,
+      11,
+      15
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      17,
+      13,
+      10
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      10,
+      14,
+      17
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      14,
+      15,
+      18
+     ],
+     "edges": [
+      0,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      20,
+      16,
+      17
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      17,
+      21,
+      20
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      18,
+      15,
+      19
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      21,
+      17,
+      14
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      14,
+      18,
+      21
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      18,
+      23,
+      22
+     ],
+     "edges": [
+      0,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      25,
+      24,
+      20
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      20,
+      21,
+      25
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      19,
+      23,
+      18
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      22,
+      25,
+      21
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      21,
+      18,
+      22
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      22,
+      38,
+      36
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      37,
+      39,
+      24
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      24,
+      25,
+      37
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      23,
+      38,
+      22
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      36,
+      37,
+      25
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      25,
+      22,
+      36
+     ],
+     "edges": [
+      0,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      49,
+      50,
+      0
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      49,
+      0
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      4,
+      3
+     ],
+     "edges": [
+      0,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      4,
+      26,
+      3
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      26,
+      8
+     ],
+     "edges": [
+      0,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      26,
+      27,
+      8
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      8,
+      27,
+      7
+     ],
+     "edges": [
+      0,
+      0,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      27,
+      9,
+      7
+     ],
+     "edges": [
+      1,
+      0,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      31,
+      30,
+      40
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      31,
+      40,
+      41
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      30,
+      29,
+      38
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      30,
+      38,
+      40
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      29,
+      28,
+      36
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      29,
+      36,
+      38
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      28,
+      35,
+      37
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      28,
+      37,
+      36
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      35,
+      34,
+      39
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      35,
+      39,
+      37
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      33,
+      32,
+      42
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      33,
+      42,
+      43
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      32,
+      31,
+      41
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK GRAY MATTE"
+    },
+    {
+     "vertices": [
+      32,
+      41,
+      42
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "DARK GRAY MATTE"
+    }
+   ],
+   "declared_vertices": 51,
+   "declared_faces": 74
+  }
+ ],
+ "material_names": [
+  "DARK GRAY MATTE",
+  "ORANGE MATTE"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

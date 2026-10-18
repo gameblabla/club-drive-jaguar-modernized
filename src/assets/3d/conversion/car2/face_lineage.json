@@ -1,0 +1,2968 @@
+{
+  "schema": "club-bnd-mdl-lineage",
+  "interpretation": "Conservative native face/leaf correspondence from saved intermediate and compiled geometry, not solid/empty semantics",
+  "models": {
+    "CARS/CAR2.BND": {
+      "source": "CARS/CAR2.BND",
+      "runtime": "CARS/CAR2.MDL",
+      "source_polygon_count": 60,
+      "runtime_polygon_count": 60,
+      "matched_geometry": 60,
+      "matched_flags": 60,
+      "matched_cyclic_winding": 60,
+      "matched_flags_and_material": 60,
+      "source_group_to_runtime_leaf": [
+        {
+          "bnd_group": 1,
+          "mdl_cp": 1,
+          "polygons": 48
+        },
+        {
+          "bnd_group": 2,
+          "mdl_cp": 2,
+          "polygons": 12
+        }
+      ],
+      "unmatched_source_faces": [],
+      "unmatched_runtime_faces": [],
+      "runtime_tree_leaves": 2,
+      "runtime_tree_nodes": 3,
+      "face_correspondence": [
+        {
+          "vertices": [
+            1,
+            4,
+            5,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 43,
+          "mdl_cp": 1,
+          "mdl_face": 43,
+          "source_divider": 0,
+          "native_divider": 0,
+          "source_color": 0,
+          "native_color": 0,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            1,
+            4,
+            13,
+            14
+          ],
+          "bnd_group": 1,
+          "bnd_face": 39,
+          "mdl_cp": 1,
+          "mdl_face": 39,
+          "source_divider": 13,
+          "native_divider": 13,
+          "source_color": 8,
+          "native_color": 8,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            1,
+            5,
+            13
+          ],
+          "bnd_group": 1,
+          "bnd_face": 21,
+          "mdl_cp": 1,
+          "mdl_face": 21,
+          "source_divider": 26,
+          "native_divider": 26,
+          "source_color": 21,
+          "native_color": 21,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            3,
+            9,
+            10
+          ],
+          "bnd_group": 1,
+          "bnd_face": 42,
+          "mdl_cp": 1,
+          "mdl_face": 42,
+          "source_divider": 7,
+          "native_divider": 7,
+          "source_color": 2,
+          "native_color": 2,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            3,
+            13,
+            14
+          ],
+          "bnd_group": 1,
+          "bnd_face": 40,
+          "mdl_cp": 1,
+          "mdl_face": 40,
+          "source_divider": 13,
+          "native_divider": 13,
+          "source_color": 8,
+          "native_color": 8,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            6,
+            11,
+            13
+          ],
+          "bnd_group": 1,
+          "bnd_face": 18,
+          "mdl_cp": 1,
+          "mdl_face": 18,
+          "source_divider": 8,
+          "native_divider": 8,
+          "source_color": 3,
+          "native_color": 3,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            9,
+            11
+          ],
+          "bnd_group": 1,
+          "bnd_face": 19,
+          "mdl_cp": 1,
+          "mdl_face": 19,
+          "source_divider": 9,
+          "native_divider": 9,
+          "source_color": 4,
+          "native_color": 4,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            7,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 30,
+          "mdl_cp": 1,
+          "mdl_face": 30,
+          "source_divider": 28,
+          "native_divider": 28,
+          "source_color": 23,
+          "native_color": 23,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            7,
+            10
+          ],
+          "bnd_group": 1,
+          "bnd_face": 29,
+          "mdl_cp": 1,
+          "mdl_face": 29,
+          "source_divider": 12,
+          "native_divider": 12,
+          "source_color": 7,
+          "native_color": 7,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            8,
+            14
+          ],
+          "bnd_group": 1,
+          "bnd_face": 31,
+          "mdl_cp": 1,
+          "mdl_face": 31,
+          "source_divider": 29,
+          "native_divider": 29,
+          "source_color": 24,
+          "native_color": 24,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            4,
+            8,
+            14
+          ],
+          "bnd_group": 1,
+          "bnd_face": 32,
+          "mdl_cp": 1,
+          "mdl_face": 32,
+          "source_divider": 30,
+          "native_divider": 30,
+          "source_color": 25,
+          "native_color": 25,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 0,
+          "mdl_cp": 1,
+          "mdl_face": 0,
+          "source_divider": 1,
+          "native_divider": 1,
+          "source_color": 1,
+          "native_color": 1,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            5,
+            6,
+            13
+          ],
+          "bnd_group": 1,
+          "bnd_face": 20,
+          "mdl_cp": 1,
+          "mdl_face": 20,
+          "source_divider": 27,
+          "native_divider": 27,
+          "source_color": 22,
+          "native_color": 22,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            6,
+            7,
+            11,
+            12
+          ],
+          "bnd_group": 1,
+          "bnd_face": 1,
+          "mdl_cp": 1,
+          "mdl_face": 1,
+          "source_divider": 2,
+          "native_divider": 2,
+          "source_color": 1,
+          "native_color": 1,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            7,
+            10,
+            12
+          ],
+          "bnd_group": 1,
+          "bnd_face": 28,
+          "mdl_cp": 1,
+          "mdl_face": 28,
+          "source_divider": 11,
+          "native_divider": 11,
+          "source_color": 6,
+          "native_color": 6,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "bnd_group": 1,
+          "bnd_face": 41,
+          "mdl_cp": 1,
+          "mdl_face": 41,
+          "source_divider": 10,
+          "native_divider": 10,
+          "source_color": 5,
+          "native_color": 5,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            15,
+            16,
+            17,
+            18
+          ],
+          "bnd_group": 2,
+          "bnd_face": 6,
+          "mdl_cp": 2,
+          "mdl_face": 6,
+          "source_divider": 14,
+          "native_divider": 14,
+          "source_color": 9,
+          "native_color": 9,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            15,
+            17,
+            25
+          ],
+          "bnd_group": 2,
+          "bnd_face": 7,
+          "mdl_cp": 2,
+          "mdl_face": 7,
+          "source_divider": 18,
+          "native_divider": 18,
+          "source_color": 13,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            15,
+            24,
+            25
+          ],
+          "bnd_group": 2,
+          "bnd_face": 8,
+          "mdl_cp": 2,
+          "mdl_face": 8,
+          "source_divider": 19,
+          "native_divider": 19,
+          "source_color": 14,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            16,
+            18,
+            23
+          ],
+          "bnd_group": 2,
+          "bnd_face": 9,
+          "mdl_cp": 2,
+          "mdl_face": 9,
+          "source_divider": 21,
+          "native_divider": 21,
+          "source_color": 16,
+          "native_color": 16,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            17,
+            18,
+            25,
+            26
+          ],
+          "bnd_group": 2,
+          "bnd_face": 0,
+          "mdl_cp": 2,
+          "mdl_face": 0,
+          "source_divider": 25,
+          "native_divider": 25,
+          "source_color": 20,
+          "native_color": 20,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            18,
+            23,
+            26
+          ],
+          "bnd_group": 2,
+          "bnd_face": 10,
+          "mdl_cp": 2,
+          "mdl_face": 10,
+          "source_divider": 22,
+          "native_divider": 22,
+          "source_color": 17,
+          "native_color": 17,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            19,
+            20,
+            21,
+            22
+          ],
+          "bnd_group": 2,
+          "bnd_face": 11,
+          "mdl_cp": 2,
+          "mdl_face": 11,
+          "source_divider": 23,
+          "native_divider": 23,
+          "source_color": 18,
+          "native_color": 18,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            19,
+            20,
+            25,
+            26
+          ],
+          "bnd_group": 2,
+          "bnd_face": 3,
+          "mdl_cp": 2,
+          "mdl_face": 3,
+          "source_divider": 24,
+          "native_divider": 24,
+          "source_color": 19,
+          "native_color": 19,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            19,
+            21,
+            24
+          ],
+          "bnd_group": 2,
+          "bnd_face": 4,
+          "mdl_cp": 2,
+          "mdl_face": 4,
+          "source_divider": 15,
+          "native_divider": 15,
+          "source_color": 10,
+          "native_color": 10,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            19,
+            24,
+            25
+          ],
+          "bnd_group": 2,
+          "bnd_face": 1,
+          "mdl_cp": 2,
+          "mdl_face": 1,
+          "source_divider": 17,
+          "native_divider": 17,
+          "source_color": 12,
+          "native_color": 12,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            20,
+            22,
+            26
+          ],
+          "bnd_group": 2,
+          "bnd_face": 5,
+          "mdl_cp": 2,
+          "mdl_face": 5,
+          "source_divider": 16,
+          "native_divider": 16,
+          "source_color": 11,
+          "native_color": 11,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            22,
+            23,
+            26
+          ],
+          "bnd_group": 2,
+          "bnd_face": 2,
+          "mdl_cp": 2,
+          "mdl_face": 2,
+          "source_divider": 20,
+          "native_divider": 20,
+          "source_color": 15,
+          "native_color": 15,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            27,
+            28,
+            81,
+            82
+          ],
+          "bnd_group": 1,
+          "bnd_face": 5,
+          "mdl_cp": 1,
+          "mdl_face": 5,
+          "source_divider": 51,
+          "native_divider": 51,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            27,
+            34,
+            35,
+            82
+          ],
+          "bnd_group": 1,
+          "bnd_face": 3,
+          "mdl_cp": 1,
+          "mdl_face": 3,
+          "source_divider": 31,
+          "native_divider": 31,
+          "source_color": 26,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            28,
+            29,
+            36,
+            81
+          ],
+          "bnd_group": 1,
+          "bnd_face": 4,
+          "mdl_cp": 1,
+          "mdl_face": 4,
+          "source_divider": 35,
+          "native_divider": 35,
+          "source_color": 28,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            28,
+            35,
+            36,
+            82
+          ],
+          "bnd_group": 1,
+          "bnd_face": 2,
+          "mdl_cp": 1,
+          "mdl_face": 2,
+          "source_divider": 3,
+          "native_divider": 3,
+          "source_color": 27,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            37
+          ],
+          "bnd_group": 1,
+          "bnd_face": 35,
+          "mdl_cp": 1,
+          "mdl_face": 35,
+          "source_divider": 39,
+          "native_divider": 39,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            29,
+            36,
+            37
+          ],
+          "bnd_group": 1,
+          "bnd_face": 34,
+          "mdl_cp": 1,
+          "mdl_face": 34,
+          "source_divider": 41,
+          "native_divider": 41,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            33,
+            34,
+            35,
+            36,
+            37
+          ],
+          "bnd_group": 1,
+          "bnd_face": 33,
+          "mdl_cp": 1,
+          "mdl_face": 33,
+          "source_divider": 40,
+          "native_divider": 40,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            38,
+            39,
+            40,
+            41,
+            46
+          ],
+          "bnd_group": 1,
+          "bnd_face": 38,
+          "mdl_cp": 1,
+          "mdl_face": 38,
+          "source_divider": 42,
+          "native_divider": 42,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            38,
+            45,
+            46
+          ],
+          "bnd_group": 1,
+          "bnd_face": 37,
+          "mdl_cp": 1,
+          "mdl_face": 37,
+          "source_divider": 44,
+          "native_divider": 44,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            38,
+            45,
+            92,
+            93
+          ],
+          "bnd_group": 1,
+          "bnd_face": 8,
+          "mdl_cp": 1,
+          "mdl_face": 8,
+          "source_divider": 36,
+          "native_divider": 36,
+          "source_color": 28,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46
+          ],
+          "bnd_group": 1,
+          "bnd_face": 36,
+          "mdl_cp": 1,
+          "mdl_face": 36,
+          "source_divider": 43,
+          "native_divider": 43,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            43,
+            44,
+            91,
+            94
+          ],
+          "bnd_group": 1,
+          "bnd_face": 7,
+          "mdl_cp": 1,
+          "mdl_face": 7,
+          "source_divider": 32,
+          "native_divider": 32,
+          "source_color": 26,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            44,
+            45,
+            93,
+            94
+          ],
+          "bnd_group": 1,
+          "bnd_face": 6,
+          "mdl_cp": 1,
+          "mdl_face": 6,
+          "source_divider": 4,
+          "native_divider": 4,
+          "source_color": 27,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            47,
+            48,
+            53,
+            54,
+            55
+          ],
+          "bnd_group": 1,
+          "bnd_face": 22,
+          "mdl_cp": 1,
+          "mdl_face": 22,
+          "source_divider": 47,
+          "native_divider": 47,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            47,
+            54,
+            84,
+            85
+          ],
+          "bnd_group": 1,
+          "bnd_face": 12,
+          "mdl_cp": 1,
+          "mdl_face": 12,
+          "source_divider": 37,
+          "native_divider": 37,
+          "source_color": 28,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            55
+          ],
+          "bnd_group": 1,
+          "bnd_face": 23,
+          "mdl_cp": 1,
+          "mdl_face": 23,
+          "source_divider": 48,
+          "native_divider": 48,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            52,
+            53,
+            55
+          ],
+          "bnd_group": 1,
+          "bnd_face": 24,
+          "mdl_cp": 1,
+          "mdl_face": 24,
+          "source_divider": 47,
+          "native_divider": 47,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            52,
+            53,
+            83,
+            86
+          ],
+          "bnd_group": 1,
+          "bnd_face": 11,
+          "mdl_cp": 1,
+          "mdl_face": 11,
+          "source_divider": 33,
+          "native_divider": 33,
+          "source_color": 26,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            53,
+            54,
+            85,
+            86
+          ],
+          "bnd_group": 1,
+          "bnd_face": 10,
+          "mdl_cp": 1,
+          "mdl_face": 10,
+          "source_divider": 5,
+          "native_divider": 5,
+          "source_color": 27,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            56,
+            57,
+            61,
+            62,
+            63,
+            64
+          ],
+          "bnd_group": 1,
+          "bnd_face": 25,
+          "mdl_cp": 1,
+          "mdl_face": 25,
+          "source_divider": 49,
+          "native_divider": 49,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            56,
+            63,
+            88,
+            89
+          ],
+          "bnd_group": 1,
+          "bnd_face": 16,
+          "mdl_cp": 1,
+          "mdl_face": 16,
+          "source_divider": 38,
+          "native_divider": 38,
+          "source_color": 28,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            57,
+            58,
+            59,
+            60,
+            64
+          ],
+          "bnd_group": 1,
+          "bnd_face": 26,
+          "mdl_cp": 1,
+          "mdl_face": 26,
+          "source_divider": 50,
+          "native_divider": 50,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            60,
+            61,
+            64
+          ],
+          "bnd_group": 1,
+          "bnd_face": 27,
+          "mdl_cp": 1,
+          "mdl_face": 27,
+          "source_divider": 49,
+          "native_divider": 49,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            61,
+            62,
+            87,
+            90
+          ],
+          "bnd_group": 1,
+          "bnd_face": 15,
+          "mdl_cp": 1,
+          "mdl_face": 15,
+          "source_divider": 34,
+          "native_divider": 34,
+          "source_color": 26,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            62,
+            63,
+            89,
+            90
+          ],
+          "bnd_group": 1,
+          "bnd_face": 14,
+          "mdl_cp": 1,
+          "mdl_face": 14,
+          "source_divider": 6,
+          "native_divider": 6,
+          "source_color": 27,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            65,
+            66,
+            67,
+            68
+          ],
+          "bnd_group": 1,
+          "bnd_face": 44,
+          "mdl_cp": 1,
+          "mdl_face": 44,
+          "source_divider": 53,
+          "native_divider": 53,
+          "source_color": 31,
+          "native_color": 31,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            69,
+            70,
+            71,
+            72
+          ],
+          "bnd_group": 1,
+          "bnd_face": 45,
+          "mdl_cp": 1,
+          "mdl_face": 45,
+          "source_divider": 53,
+          "native_divider": 53,
+          "source_color": 31,
+          "native_color": 31,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            73,
+            74,
+            75,
+            76
+          ],
+          "bnd_group": 1,
+          "bnd_face": 46,
+          "mdl_cp": 1,
+          "mdl_face": 46,
+          "source_divider": 53,
+          "native_divider": 53,
+          "source_color": 31,
+          "native_color": 31,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            77,
+            78,
+            79,
+            80
+          ],
+          "bnd_group": 1,
+          "bnd_face": 47,
+          "mdl_cp": 1,
+          "mdl_face": 47,
+          "source_divider": 53,
+          "native_divider": 53,
+          "source_color": 31,
+          "native_color": 31,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            83,
+            84,
+            85,
+            86
+          ],
+          "bnd_group": 1,
+          "bnd_face": 13,
+          "mdl_cp": 1,
+          "mdl_face": 13,
+          "source_divider": 45,
+          "native_divider": 45,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            87,
+            88,
+            89,
+            90
+          ],
+          "bnd_group": 1,
+          "bnd_face": 17,
+          "mdl_cp": 1,
+          "mdl_face": 17,
+          "source_divider": 46,
+          "native_divider": 46,
+          "source_color": 29,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            91,
+            92,
+            93,
+            94
+          ],
+          "bnd_group": 1,
+          "bnd_face": 9,
+          "mdl_cp": 1,
+          "mdl_face": 9,
+          "source_divider": 52,
+          "native_divider": 52,
+          "source_color": 30,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        }
+      ]
+    },
+    "CARS/CAR3.BND": {
+      "source": "CARS/CAR3.BND",
+      "runtime": "CARS/CAR3.MDL",
+      "source_polygon_count": 60,
+      "runtime_polygon_count": 59,
+      "matched_geometry": 58,
+      "matched_flags": 58,
+      "matched_cyclic_winding": 58,
+      "matched_flags_and_material": 10,
+      "source_group_to_runtime_leaf": [
+        {
+          "bnd_group": 1,
+          "mdl_cp": 1,
+          "polygons": 11
+        },
+        {
+          "bnd_group": 1,
+          "mdl_cp": 2,
+          "polygons": 5
+        },
+        {
+          "bnd_group": 2,
+          "mdl_cp": 1,
+          "polygons": 1
+        },
+        {
+          "bnd_group": 3,
+          "mdl_cp": 3,
+          "polygons": 12
+        },
+        {
+          "bnd_group": 4,
+          "mdl_cp": 2,
+          "polygons": 1
+        },
+        {
+          "bnd_group": 5,
+          "mdl_cp": 1,
+          "polygons": 7
+        },
+        {
+          "bnd_group": 6,
+          "mdl_cp": 1,
+          "polygons": 7
+        },
+        {
+          "bnd_group": 7,
+          "mdl_cp": 1,
+          "polygons": 7
+        },
+        {
+          "bnd_group": 8,
+          "mdl_cp": 1,
+          "polygons": 7
+        }
+      ],
+      "unmatched_source_faces": [
+        {
+          "group": 1,
+          "index": 3,
+          "vertices": [
+            2,
+            6,
+            11
+          ],
+          "flags": 8192,
+          "divider": 7,
+          "color": 3
+        },
+        {
+          "group": 1,
+          "index": 9,
+          "vertices": [
+            13,
+            6,
+            2,
+            21
+          ],
+          "flags": 8192,
+          "divider": 14,
+          "color": 10
+        }
+      ],
+      "unmatched_runtime_faces": [
+        {
+          "cp": 1,
+          "index": 18,
+          "vertices": [
+            21,
+            13,
+            6,
+            11,
+            2
+          ],
+          "flags": 8192,
+          "divider": 7,
+          "color": 3
+        }
+      ],
+      "runtime_tree_leaves": 3,
+      "runtime_tree_nodes": 5,
+      "face_correspondence": [
+        {
+          "vertices": [
+            1,
+            4,
+            5,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 0,
+          "mdl_cp": 2,
+          "mdl_face": 1,
+          "source_divider": 0,
+          "native_divider": 0,
+          "source_color": 0,
+          "native_color": 0,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            1,
+            4,
+            13,
+            14
+          ],
+          "bnd_group": 4,
+          "bnd_face": 0,
+          "mdl_cp": 2,
+          "mdl_face": 0,
+          "source_divider": 12,
+          "native_divider": 12,
+          "source_color": 8,
+          "native_color": 8,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            1,
+            5,
+            6,
+            13
+          ],
+          "bnd_group": 1,
+          "bnd_face": 8,
+          "mdl_cp": 1,
+          "mdl_face": 20,
+          "source_divider": 13,
+          "native_divider": 13,
+          "source_color": 9,
+          "native_color": 9,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            3,
+            9,
+            10
+          ],
+          "bnd_group": 1,
+          "bnd_face": 13,
+          "mdl_cp": 1,
+          "mdl_face": 40,
+          "source_divider": 6,
+          "native_divider": 6,
+          "source_color": 2,
+          "native_color": 2,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            3,
+            13,
+            14,
+            21,
+            22
+          ],
+          "bnd_group": 2,
+          "bnd_face": 0,
+          "mdl_cp": 1,
+          "mdl_face": 39,
+          "source_divider": 39,
+          "native_divider": 38,
+          "source_color": 32,
+          "native_color": 31,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            3,
+            15,
+            16
+          ],
+          "bnd_group": 3,
+          "bnd_face": 0,
+          "mdl_cp": 3,
+          "mdl_face": 6,
+          "source_divider": 18,
+          "native_divider": 17,
+          "source_color": 14,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            9,
+            11
+          ],
+          "bnd_group": 1,
+          "bnd_face": 4,
+          "mdl_cp": 1,
+          "mdl_face": 19,
+          "source_divider": 8,
+          "native_divider": 8,
+          "source_color": 4,
+          "native_color": 4,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            15,
+            19
+          ],
+          "bnd_group": 3,
+          "bnd_face": 1,
+          "mdl_cp": 3,
+          "mdl_face": 7,
+          "source_divider": 22,
+          "native_divider": 21,
+          "source_color": 18,
+          "native_color": 17,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            19,
+            21
+          ],
+          "bnd_group": 3,
+          "bnd_face": 2,
+          "mdl_cp": 3,
+          "mdl_face": 8,
+          "source_divider": 23,
+          "native_divider": 22,
+          "source_color": 19,
+          "native_color": 18,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            7,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 10,
+          "mdl_cp": 1,
+          "mdl_face": 29,
+          "source_divider": 15,
+          "native_divider": 14,
+          "source_color": 11,
+          "native_color": 10,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            7,
+            10
+          ],
+          "bnd_group": 1,
+          "bnd_face": 7,
+          "mdl_cp": 1,
+          "mdl_face": 28,
+          "source_divider": 11,
+          "native_divider": 11,
+          "source_color": 7,
+          "native_color": 7,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            8,
+            14,
+            22
+          ],
+          "bnd_group": 1,
+          "bnd_face": 11,
+          "mdl_cp": 1,
+          "mdl_face": 30,
+          "source_divider": 16,
+          "native_divider": 15,
+          "source_color": 12,
+          "native_color": 11,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            16,
+            22
+          ],
+          "bnd_group": 3,
+          "bnd_face": 3,
+          "mdl_cp": 3,
+          "mdl_face": 9,
+          "source_divider": 25,
+          "native_divider": 24,
+          "source_color": 21,
+          "native_color": 20,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            4,
+            8,
+            14
+          ],
+          "bnd_group": 1,
+          "bnd_face": 12,
+          "mdl_cp": 1,
+          "mdl_face": 31,
+          "source_divider": 17,
+          "native_divider": 16,
+          "source_color": 13,
+          "native_color": 12,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 1,
+          "mdl_cp": 1,
+          "mdl_face": 0,
+          "source_divider": 2,
+          "native_divider": 2,
+          "source_color": 1,
+          "native_color": 1,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            6,
+            7,
+            11,
+            12
+          ],
+          "bnd_group": 1,
+          "bnd_face": 2,
+          "mdl_cp": 1,
+          "mdl_face": 1,
+          "source_divider": 3,
+          "native_divider": 3,
+          "source_color": 1,
+          "native_color": 1,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            7,
+            10,
+            12
+          ],
+          "bnd_group": 1,
+          "bnd_face": 6,
+          "mdl_cp": 1,
+          "mdl_face": 27,
+          "source_divider": 10,
+          "native_divider": 10,
+          "source_color": 6,
+          "native_color": 6,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "bnd_group": 1,
+          "bnd_face": 5,
+          "mdl_cp": 1,
+          "mdl_face": 38,
+          "source_divider": 9,
+          "native_divider": 9,
+          "source_color": 5,
+          "native_color": 5,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            13,
+            14,
+            17,
+            18
+          ],
+          "bnd_group": 3,
+          "bnd_face": 11,
+          "mdl_cp": 3,
+          "mdl_face": 11,
+          "source_divider": 27,
+          "native_divider": 26,
+          "source_color": 23,
+          "native_color": 22,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            13,
+            17,
+            21
+          ],
+          "bnd_group": 3,
+          "bnd_face": 9,
+          "mdl_cp": 3,
+          "mdl_face": 4,
+          "source_divider": 19,
+          "native_divider": 18,
+          "source_color": 15,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            14,
+            18,
+            20
+          ],
+          "bnd_group": 3,
+          "bnd_face": 10,
+          "mdl_cp": 3,
+          "mdl_face": 5,
+          "source_divider": 20,
+          "native_divider": 19,
+          "source_color": 16,
+          "native_color": 15,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            14,
+            20,
+            22
+          ],
+          "bnd_group": 3,
+          "bnd_face": 7,
+          "mdl_cp": 3,
+          "mdl_face": 2,
+          "source_divider": 24,
+          "native_divider": 23,
+          "source_color": 20,
+          "native_color": 19,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            15,
+            16,
+            19,
+            20
+          ],
+          "bnd_group": 3,
+          "bnd_face": 5,
+          "mdl_cp": 3,
+          "mdl_face": 0,
+          "source_divider": 29,
+          "native_divider": 28,
+          "source_color": 25,
+          "native_color": 24,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            16,
+            20,
+            22
+          ],
+          "bnd_group": 3,
+          "bnd_face": 4,
+          "mdl_cp": 3,
+          "mdl_face": 10,
+          "source_divider": 26,
+          "native_divider": 25,
+          "source_color": 22,
+          "native_color": 21,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            17,
+            18,
+            19,
+            20
+          ],
+          "bnd_group": 3,
+          "bnd_face": 8,
+          "mdl_cp": 3,
+          "mdl_face": 3,
+          "source_divider": 28,
+          "native_divider": 27,
+          "source_color": 24,
+          "native_color": 23,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            17,
+            19,
+            21
+          ],
+          "bnd_group": 3,
+          "bnd_face": 6,
+          "mdl_cp": 3,
+          "mdl_face": 1,
+          "source_divider": 21,
+          "native_divider": 20,
+          "source_color": 17,
+          "native_color": 16,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            23,
+            24,
+            28,
+            29,
+            30,
+            31
+          ],
+          "bnd_group": 6,
+          "bnd_face": 3,
+          "mdl_cp": 1,
+          "mdl_face": 21,
+          "source_divider": 34,
+          "native_divider": 33,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            23,
+            30,
+            83,
+            86
+          ],
+          "bnd_group": 6,
+          "bnd_face": 2,
+          "mdl_cp": 1,
+          "mdl_face": 16,
+          "source_divider": 32,
+          "native_divider": 31,
+          "source_color": 28,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            24,
+            25,
+            26,
+            27,
+            31
+          ],
+          "bnd_group": 6,
+          "bnd_face": 4,
+          "mdl_cp": 1,
+          "mdl_face": 22,
+          "source_divider": 34,
+          "native_divider": 33,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            27,
+            28,
+            31
+          ],
+          "bnd_group": 6,
+          "bnd_face": 5,
+          "mdl_cp": 1,
+          "mdl_face": 23,
+          "source_divider": 34,
+          "native_divider": 33,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            28,
+            29,
+            84,
+            85
+          ],
+          "bnd_group": 6,
+          "bnd_face": 1,
+          "mdl_cp": 1,
+          "mdl_face": 15,
+          "source_divider": 30,
+          "native_divider": 29,
+          "source_color": 26,
+          "native_color": 25,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            29,
+            30,
+            85,
+            86
+          ],
+          "bnd_group": 6,
+          "bnd_face": 0,
+          "mdl_cp": 1,
+          "mdl_face": 14,
+          "source_divider": 4,
+          "native_divider": 4,
+          "source_color": 27,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            32,
+            33,
+            37,
+            38,
+            39,
+            40
+          ],
+          "bnd_group": 7,
+          "bnd_face": 3,
+          "mdl_cp": 1,
+          "mdl_face": 24,
+          "source_divider": 35,
+          "native_divider": 34,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            32,
+            39,
+            79,
+            82
+          ],
+          "bnd_group": 7,
+          "bnd_face": 2,
+          "mdl_cp": 1,
+          "mdl_face": 12,
+          "source_divider": 33,
+          "native_divider": 32,
+          "source_color": 28,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            33,
+            34,
+            35,
+            36,
+            40
+          ],
+          "bnd_group": 7,
+          "bnd_face": 4,
+          "mdl_cp": 1,
+          "mdl_face": 25,
+          "source_divider": 35,
+          "native_divider": 34,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            36,
+            37,
+            40
+          ],
+          "bnd_group": 7,
+          "bnd_face": 5,
+          "mdl_cp": 1,
+          "mdl_face": 26,
+          "source_divider": 35,
+          "native_divider": 34,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            37,
+            38,
+            80,
+            81
+          ],
+          "bnd_group": 7,
+          "bnd_face": 1,
+          "mdl_cp": 1,
+          "mdl_face": 11,
+          "source_divider": 31,
+          "native_divider": 30,
+          "source_color": 26,
+          "native_color": 25,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            38,
+            39,
+            81,
+            82
+          ],
+          "bnd_group": 7,
+          "bnd_face": 0,
+          "mdl_cp": 1,
+          "mdl_face": 10,
+          "source_divider": 5,
+          "native_divider": 5,
+          "source_color": 27,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            49
+          ],
+          "bnd_group": 8,
+          "bnd_face": 6,
+          "mdl_cp": 1,
+          "mdl_face": 37,
+          "source_divider": 37,
+          "native_divider": 36,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            41,
+            48,
+            49
+          ],
+          "bnd_group": 8,
+          "bnd_face": 5,
+          "mdl_cp": 1,
+          "mdl_face": 36,
+          "source_divider": 37,
+          "native_divider": 36,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            41,
+            48,
+            75,
+            78
+          ],
+          "bnd_group": 8,
+          "bnd_face": 2,
+          "mdl_cp": 1,
+          "mdl_face": 8,
+          "source_divider": 33,
+          "native_divider": 32,
+          "source_color": 28,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            45,
+            46,
+            47,
+            48,
+            49
+          ],
+          "bnd_group": 8,
+          "bnd_face": 4,
+          "mdl_cp": 1,
+          "mdl_face": 35,
+          "source_divider": 37,
+          "native_divider": 36,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            46,
+            47,
+            76,
+            77
+          ],
+          "bnd_group": 8,
+          "bnd_face": 1,
+          "mdl_cp": 1,
+          "mdl_face": 7,
+          "source_divider": 31,
+          "native_divider": 30,
+          "source_color": 26,
+          "native_color": 25,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            47,
+            48,
+            77,
+            78
+          ],
+          "bnd_group": 8,
+          "bnd_face": 0,
+          "mdl_cp": 1,
+          "mdl_face": 6,
+          "source_divider": 5,
+          "native_divider": 5,
+          "source_color": 27,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            50,
+            51,
+            52,
+            53,
+            54,
+            58
+          ],
+          "bnd_group": 5,
+          "bnd_face": 6,
+          "mdl_cp": 1,
+          "mdl_face": 34,
+          "source_divider": 37,
+          "native_divider": 36,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            50,
+            57,
+            58
+          ],
+          "bnd_group": 5,
+          "bnd_face": 5,
+          "mdl_cp": 1,
+          "mdl_face": 33,
+          "source_divider": 37,
+          "native_divider": 36,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            50,
+            57,
+            87,
+            90
+          ],
+          "bnd_group": 5,
+          "bnd_face": 2,
+          "mdl_cp": 1,
+          "mdl_face": 4,
+          "source_divider": 32,
+          "native_divider": 31,
+          "source_color": 28,
+          "native_color": 27,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            54,
+            55,
+            56,
+            57,
+            58
+          ],
+          "bnd_group": 5,
+          "bnd_face": 4,
+          "mdl_cp": 1,
+          "mdl_face": 32,
+          "source_divider": 37,
+          "native_divider": 36,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            55,
+            56,
+            88,
+            89
+          ],
+          "bnd_group": 5,
+          "bnd_face": 1,
+          "mdl_cp": 1,
+          "mdl_face": 3,
+          "source_divider": 30,
+          "native_divider": 29,
+          "source_color": 26,
+          "native_color": 25,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            56,
+            57,
+            89,
+            90
+          ],
+          "bnd_group": 5,
+          "bnd_face": 0,
+          "mdl_cp": 1,
+          "mdl_face": 2,
+          "source_divider": 4,
+          "native_divider": 4,
+          "source_color": 27,
+          "native_color": 26,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            59,
+            60,
+            61,
+            62
+          ],
+          "bnd_group": 1,
+          "bnd_face": 14,
+          "mdl_cp": 2,
+          "mdl_face": 2,
+          "source_divider": 1,
+          "native_divider": 1,
+          "source_color": 31,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            63,
+            64,
+            65,
+            66
+          ],
+          "bnd_group": 1,
+          "bnd_face": 15,
+          "mdl_cp": 2,
+          "mdl_face": 3,
+          "source_divider": 1,
+          "native_divider": 1,
+          "source_color": 31,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            67,
+            68,
+            69,
+            70
+          ],
+          "bnd_group": 1,
+          "bnd_face": 16,
+          "mdl_cp": 2,
+          "mdl_face": 4,
+          "source_divider": 1,
+          "native_divider": 1,
+          "source_color": 31,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            71,
+            72,
+            73,
+            74
+          ],
+          "bnd_group": 1,
+          "bnd_face": 17,
+          "mdl_cp": 2,
+          "mdl_face": 5,
+          "source_divider": 1,
+          "native_divider": 1,
+          "source_color": 31,
+          "native_color": 30,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            75,
+            76,
+            77,
+            78
+          ],
+          "bnd_group": 8,
+          "bnd_face": 3,
+          "mdl_cp": 1,
+          "mdl_face": 9,
+          "source_divider": 36,
+          "native_divider": 35,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            79,
+            80,
+            81,
+            82
+          ],
+          "bnd_group": 7,
+          "bnd_face": 6,
+          "mdl_cp": 1,
+          "mdl_face": 13,
+          "source_divider": 38,
+          "native_divider": 37,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            83,
+            84,
+            85,
+            86
+          ],
+          "bnd_group": 6,
+          "bnd_face": 6,
+          "mdl_cp": 1,
+          "mdl_face": 17,
+          "source_divider": 38,
+          "native_divider": 37,
+          "source_color": 30,
+          "native_color": 29,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            87,
+            88,
+            89,
+            90
+          ],
+          "bnd_group": 5,
+          "bnd_face": 3,
+          "mdl_cp": 1,
+          "mdl_face": 5,
+          "source_divider": 36,
+          "native_divider": 35,
+          "source_color": 29,
+          "native_color": 28,
+          "same_winding": true,
+          "same_polygon_flags": true
+        }
+      ]
+    },
+    "CARS/DRONE.BND": {
+      "source": "CARS/DRONE.BND",
+      "runtime": "CARS/DRONE.MDL",
+      "source_polygon_count": 35,
+      "runtime_polygon_count": 35,
+      "matched_geometry": 35,
+      "matched_flags": 35,
+      "matched_cyclic_winding": 35,
+      "matched_flags_and_material": 35,
+      "source_group_to_runtime_leaf": [
+        {
+          "bnd_group": 1,
+          "mdl_cp": 1,
+          "polygons": 30
+        },
+        {
+          "bnd_group": 2,
+          "mdl_cp": 2,
+          "polygons": 5
+        }
+      ],
+      "unmatched_source_faces": [],
+      "unmatched_runtime_faces": [],
+      "runtime_tree_leaves": 2,
+      "runtime_tree_nodes": 3,
+      "face_correspondence": [
+        {
+          "vertices": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "bnd_group": 1,
+          "bnd_face": 13,
+          "mdl_cp": 1,
+          "mdl_face": 13,
+          "source_divider": 0,
+          "native_divider": 0,
+          "source_color": 0,
+          "native_color": 0,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            1,
+            2,
+            5,
+            6
+          ],
+          "bnd_group": 1,
+          "bnd_face": 14,
+          "mdl_cp": 1,
+          "mdl_face": 14,
+          "source_divider": 2,
+          "native_divider": 2,
+          "source_color": 1,
+          "native_color": 1,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            1,
+            4,
+            5,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 17,
+          "mdl_cp": 1,
+          "mdl_face": 17,
+          "source_divider": 17,
+          "native_divider": 7,
+          "source_color": 4,
+          "native_color": 4,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            2,
+            3,
+            6,
+            7
+          ],
+          "bnd_group": 1,
+          "bnd_face": 15,
+          "mdl_cp": 1,
+          "mdl_face": 15,
+          "source_divider": 9,
+          "native_divider": 4,
+          "source_color": 2,
+          "native_color": 2,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            7,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 16,
+          "mdl_cp": 1,
+          "mdl_face": 16,
+          "source_divider": 10,
+          "native_divider": 5,
+          "source_color": 3,
+          "native_color": 3,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "bnd_group": 1,
+          "bnd_face": 0,
+          "mdl_cp": 1,
+          "mdl_face": 0,
+          "source_divider": 18,
+          "native_divider": 8,
+          "source_color": 5,
+          "native_color": 5,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "bnd_group": 2,
+          "bnd_face": 0,
+          "mdl_cp": 2,
+          "mdl_face": 0,
+          "source_divider": 1,
+          "native_divider": 1,
+          "source_color": 0,
+          "native_color": 0,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            9,
+            10,
+            13,
+            14
+          ],
+          "bnd_group": 2,
+          "bnd_face": 1,
+          "mdl_cp": 2,
+          "mdl_face": 1,
+          "source_divider": 23,
+          "native_divider": 10,
+          "source_color": 6,
+          "native_color": 6,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            9,
+            12,
+            13,
+            16
+          ],
+          "bnd_group": 2,
+          "bnd_face": 4,
+          "mdl_cp": 2,
+          "mdl_face": 4,
+          "source_divider": 26,
+          "native_divider": 13,
+          "source_color": 9,
+          "native_color": 9,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            10,
+            11,
+            14,
+            15
+          ],
+          "bnd_group": 2,
+          "bnd_face": 2,
+          "mdl_cp": 2,
+          "mdl_face": 2,
+          "source_divider": 24,
+          "native_divider": 11,
+          "source_color": 7,
+          "native_color": 7,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            11,
+            12,
+            15,
+            16
+          ],
+          "bnd_group": 2,
+          "bnd_face": 3,
+          "mdl_cp": 2,
+          "mdl_face": 3,
+          "source_divider": 25,
+          "native_divider": 12,
+          "source_color": 8,
+          "native_color": 8,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            17,
+            20,
+            21,
+            28
+          ],
+          "bnd_group": 1,
+          "bnd_face": 10,
+          "mdl_cp": 1,
+          "mdl_face": 10,
+          "source_divider": 31,
+          "native_divider": 16,
+          "source_color": 12,
+          "native_color": 12,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            18,
+            19,
+            26,
+            27
+          ],
+          "bnd_group": 1,
+          "bnd_face": 6,
+          "mdl_cp": 1,
+          "mdl_face": 6,
+          "source_divider": 27,
+          "native_divider": 14,
+          "source_color": 10,
+          "native_color": 10,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            19,
+            20,
+            27,
+            28
+          ],
+          "bnd_group": 1,
+          "bnd_face": 2,
+          "mdl_cp": 1,
+          "mdl_face": 2,
+          "source_divider": 19,
+          "native_divider": 9,
+          "source_color": 11,
+          "native_color": 11,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            29
+          ],
+          "bnd_group": 1,
+          "bnd_face": 24,
+          "mdl_cp": 1,
+          "mdl_face": 24,
+          "source_divider": 11,
+          "native_divider": 5,
+          "source_color": 13,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            21,
+            28,
+            29
+          ],
+          "bnd_group": 1,
+          "bnd_face": 26,
+          "mdl_cp": 1,
+          "mdl_face": 26,
+          "source_divider": 13,
+          "native_divider": 5,
+          "source_color": 13,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "bnd_group": 1,
+          "bnd_face": 25,
+          "mdl_cp": 1,
+          "mdl_face": 25,
+          "source_divider": 12,
+          "native_divider": 5,
+          "source_color": 13,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            30,
+            32,
+            39,
+            63
+          ],
+          "bnd_group": 1,
+          "bnd_face": 11,
+          "mdl_cp": 1,
+          "mdl_face": 11,
+          "source_divider": 32,
+          "native_divider": 17,
+          "source_color": 12,
+          "native_color": 12,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            31,
+            37,
+            38,
+            64
+          ],
+          "bnd_group": 1,
+          "bnd_face": 7,
+          "mdl_cp": 1,
+          "mdl_face": 7,
+          "source_divider": 28,
+          "native_divider": 15,
+          "source_color": 10,
+          "native_color": 10,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            40
+          ],
+          "bnd_group": 1,
+          "bnd_face": 27,
+          "mdl_cp": 1,
+          "mdl_face": 27,
+          "source_divider": 14,
+          "native_divider": 6,
+          "source_color": 13,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            32,
+            39,
+            40
+          ],
+          "bnd_group": 1,
+          "bnd_face": 29,
+          "mdl_cp": 1,
+          "mdl_face": 29,
+          "source_divider": 16,
+          "native_divider": 6,
+          "source_color": 13,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "bnd_group": 1,
+          "bnd_face": 28,
+          "mdl_cp": 1,
+          "mdl_face": 28,
+          "source_divider": 15,
+          "native_divider": 6,
+          "source_color": 13,
+          "native_color": 13,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            38,
+            39,
+            63,
+            64
+          ],
+          "bnd_group": 1,
+          "bnd_face": 3,
+          "mdl_cp": 1,
+          "mdl_face": 3,
+          "source_divider": 20,
+          "native_divider": 9,
+          "source_color": 11,
+          "native_color": 11,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            41,
+            42,
+            46,
+            47,
+            48,
+            49
+          ],
+          "bnd_group": 1,
+          "bnd_face": 18,
+          "mdl_cp": 1,
+          "mdl_face": 18,
+          "source_divider": 3,
+          "native_divider": 3,
+          "source_color": 14,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            41,
+            48,
+            65,
+            68
+          ],
+          "bnd_group": 1,
+          "bnd_face": 9,
+          "mdl_cp": 1,
+          "mdl_face": 9,
+          "source_divider": 33,
+          "native_divider": 16,
+          "source_color": 12,
+          "native_color": 12,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            42,
+            43,
+            44,
+            45,
+            49
+          ],
+          "bnd_group": 1,
+          "bnd_face": 22,
+          "mdl_cp": 1,
+          "mdl_face": 22,
+          "source_divider": 4,
+          "native_divider": 3,
+          "source_color": 14,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            45,
+            46,
+            49
+          ],
+          "bnd_group": 1,
+          "bnd_face": 23,
+          "mdl_cp": 1,
+          "mdl_face": 23,
+          "source_divider": 5,
+          "native_divider": 3,
+          "source_color": 14,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            46,
+            47,
+            66,
+            67
+          ],
+          "bnd_group": 1,
+          "bnd_face": 5,
+          "mdl_cp": 1,
+          "mdl_face": 5,
+          "source_divider": 29,
+          "native_divider": 14,
+          "source_color": 10,
+          "native_color": 10,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            47,
+            48,
+            67,
+            68
+          ],
+          "bnd_group": 1,
+          "bnd_face": 1,
+          "mdl_cp": 1,
+          "mdl_face": 1,
+          "source_divider": 21,
+          "native_divider": 9,
+          "source_color": 11,
+          "native_color": 11,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            50,
+            51,
+            55,
+            56,
+            57,
+            62
+          ],
+          "bnd_group": 1,
+          "bnd_face": 19,
+          "mdl_cp": 1,
+          "mdl_face": 19,
+          "source_divider": 6,
+          "native_divider": 3,
+          "source_color": 14,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            50,
+            57,
+            58,
+            61
+          ],
+          "bnd_group": 1,
+          "bnd_face": 12,
+          "mdl_cp": 1,
+          "mdl_face": 12,
+          "source_divider": 34,
+          "native_divider": 17,
+          "source_color": 12,
+          "native_color": 12,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            51,
+            52,
+            53,
+            54,
+            62
+          ],
+          "bnd_group": 1,
+          "bnd_face": 20,
+          "mdl_cp": 1,
+          "mdl_face": 20,
+          "source_divider": 7,
+          "native_divider": 3,
+          "source_color": 14,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            54,
+            55,
+            62
+          ],
+          "bnd_group": 1,
+          "bnd_face": 21,
+          "mdl_cp": 1,
+          "mdl_face": 21,
+          "source_divider": 8,
+          "native_divider": 3,
+          "source_color": 14,
+          "native_color": 14,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            55,
+            56,
+            59,
+            60
+          ],
+          "bnd_group": 1,
+          "bnd_face": 8,
+          "mdl_cp": 1,
+          "mdl_face": 8,
+          "source_divider": 30,
+          "native_divider": 15,
+          "source_color": 10,
+          "native_color": 10,
+          "same_winding": true,
+          "same_polygon_flags": true
+        },
+        {
+          "vertices": [
+            56,
+            57,
+            60,
+            61
+          ],
+          "bnd_group": 1,
+          "bnd_face": 4,
+          "mdl_cp": 1,
+          "mdl_face": 4,
+          "source_divider": 22,
+          "native_divider": 9,
+          "source_color": 11,
+          "native_color": 11,
+          "same_winding": true,
+          "same_polygon_flags": true
+        }
+      ]
+    }
+  },
+  "car3_specific_findings": {
+    "removed_source_normal_index": 10,
+    "inserted_runtime_normal_index": 30,
+    "inserted_runtime_normal": [
+      0,
+      -4874,
+      -32402
+    ],
+    "retained_shifted_normals": 20,
+    "removed_source_color_index": 10,
+    "source_to_runtime_color_rule": "0..10 unchanged; 11..32 decrement by one (observed matching polygons only)",
+    "source_merge_faces": [
+      {
+        "group": 1,
+        "index": 3,
+        "vertices": [
+          2,
+          6,
+          11
+        ],
+        "color": 3
+      },
+      {
+        "group": 1,
+        "index": 9,
+        "vertices": [
+          13,
+          6,
+          2,
+          21
+        ],
+        "color": 10
+      }
+    ],
+    "merged_runtime_face": {
+      "cp": 1,
+      "index": 18,
+      "vertices": [
+        21,
+        13,
+        6,
+        11,
+        2
+      ],
+      "color": 3
+    },
+    "source_merged_area": 3007.0,
+    "runtime_merged_area": 3007.0,
+    "area_difference": 0.0,
+    "unresolved": "Native divider ordering, branching/solid semantics, original material conversion algorithm"
+  }
+}

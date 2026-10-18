@@ -1,0 +1,20 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl MOUSE1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: MOUSE1
+
+newmtl MOUSE2
+Kd 0.7 0.7 0.7
+# Original 1994 material name: MOUSE2
+
+newmtl MOUSE3
+Kd 0.7 0.7 0.7
+# Original 1994 material name: MOUSE3
+
+newmtl PINK_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PINK PLASTIC
+
+newmtl WHITE_PLASTIC_2S
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE PLASTIC 2S

@@ -1,0 +1,243 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "HOUSE/FMLYR_L3.ASC",
+  "template_sha256": "01a06b37281f911abb0e165304525ef712aa2e5454f8dce28768177f34ddc7d0",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 42,
+      "mesh": "fmlyroom",
+      "index": 0,
+      "xyz": [
+        -10770.868164,
+        -2997.269043,
+        1843.996582
+      ]
+    },
+    {
+      "line": 43,
+      "mesh": "fmlyroom",
+      "index": 1,
+      "xyz": [
+        -7999.104492,
+        -2997.268799,
+        1843.996582
+      ]
+    },
+    {
+      "line": 44,
+      "mesh": "fmlyroom",
+      "index": 2,
+      "xyz": [
+        -10770.867188,
+        -2997.268555,
+        -2172.476318
+      ]
+    },
+    {
+      "line": 45,
+      "mesh": "fmlyroom",
+      "index": 3,
+      "xyz": [
+        -15412.494141,
+        -10854.478516,
+        2812.454834
+      ]
+    },
+    {
+      "line": 46,
+      "mesh": "fmlyroom",
+      "index": 4,
+      "xyz": [
+        -15412.495117,
+        -10854.458984,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 47,
+      "mesh": "fmlyroom",
+      "index": 5,
+      "xyz": [
+        -13663.099609,
+        -10854.458984,
+        -512.466309
+      ]
+    },
+    {
+      "line": 48,
+      "mesh": "fmlyroom",
+      "index": 6,
+      "xyz": [
+        -6192.361328,
+        -10854.458008,
+        -512.465698
+      ]
+    },
+    {
+      "line": 49,
+      "mesh": "fmlyroom",
+      "index": 7,
+      "xyz": [
+        -13663.099609,
+        -10854.458984,
+        1854.224487
+      ]
+    },
+    {
+      "line": 50,
+      "mesh": "fmlyroom",
+      "index": 8,
+      "xyz": [
+        -6192.361328,
+        -10854.458008,
+        1854.223389
+      ]
+    },
+    {
+      "line": 51,
+      "mesh": "fmlyroom",
+      "index": 9,
+      "xyz": [
+        -7999.10498,
+        -3129.264404,
+        -2172.476318
+      ]
+    },
+    {
+      "line": 52,
+      "mesh": "fmlyroom",
+      "index": 10,
+      "xyz": [
+        -10770.868164,
+        -3129.265137,
+        1843.996582
+      ]
+    },
+    {
+      "line": 53,
+      "mesh": "fmlyroom",
+      "index": 11,
+      "xyz": [
+        -7999.094727,
+        -3129.264648,
+        1843.996582
+      ]
+    },
+    {
+      "line": 54,
+      "mesh": "fmlyroom",
+      "index": 12,
+      "xyz": [
+        -15412.495117,
+        -3129.265381,
+        2812.454346
+      ]
+    },
+    {
+      "line": 55,
+      "mesh": "fmlyroom",
+      "index": 13,
+      "xyz": [
+        -10770.867188,
+        -3129.264648,
+        -2172.476318
+      ]
+    },
+    {
+      "line": 56,
+      "mesh": "fmlyroom",
+      "index": 14,
+      "xyz": [
+        -15412.493164,
+        -3129.264648,
+        -2172.476563
+      ]
+    },
+    {
+      "line": 57,
+      "mesh": "fmlyroom",
+      "index": 15,
+      "xyz": [
+        -4468.737793,
+        -3129.264893,
+        2812.454834
+      ]
+    },
+    {
+      "line": 58,
+      "mesh": "fmlyroom",
+      "index": 16,
+      "xyz": [
+        -4468.737305,
+        -3129.26416,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 59,
+      "mesh": "fmlyroom",
+      "index": 17,
+      "xyz": [
+        -7999.104492,
+        -2997.268799,
+        1843.996582
+      ]
+    },
+    {
+      "line": 60,
+      "mesh": "fmlyroom",
+      "index": 18,
+      "xyz": [
+        -7999.10498,
+        -2997.268311,
+        -2172.476318
+      ]
+    },
+    {
+      "line": 66,
+      "mesh": "fmlyroom",
+      "index": 19,
+      "xyz": [
+        -7999.094727,
+        -3129.264648,
+        1843.996582
+      ]
+    },
+    {
+      "line": 67,
+      "mesh": "fmlyroom",
+      "index": 20,
+      "xyz": [
+        -7999.10498,
+        -3129.264404,
+        -2172.476318
+      ]
+    },
+    {
+      "line": 68,
+      "mesh": "fmlyroom",
+      "index": 21,
+      "xyz": [
+        -4468.737305,
+        -10854.478516,
+        2812.455322
+      ]
+    },
+    {
+      "line": 69,
+      "mesh": "fmlyroom",
+      "index": 22,
+      "xyz": [
+        -4468.736816,
+        -10854.458008,
+        -2172.475586
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

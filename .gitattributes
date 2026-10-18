@@ -1,0 +1,14 @@
+*.s text
+*.gas text
+*.inc text
+*.c text
+*.h text
+*.py text
+*.sh text eol=lf
+*.wav binary
+*.mid binary
+*.f16 binary
+*.scr binary
+*.j64 binary
+*.png binary
+*.gz binary

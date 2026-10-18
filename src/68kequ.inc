@@ -1,0 +1,45 @@
+; the definitions given here must agree with the table
+; in gpufix.s!!!
+
+SYMBOL		EQU	$543b0700
+bgpprog       	EQU	SYMBOL+0
+cgpprog       	EQU	SYMBOL+1
+egpprog       	EQU	SYMBOL+2
+rgpprog       	EQU	SYMBOL+3
+sn       	EQU	SYMBOL+4
+sqrtTabM512    	EQU	SYMBOL+5	; sqrtTab - 512
+car_dat       	EQU	SYMBOL+6
+player       	EQU	SYMBOL+7
+screen_addr	EQU	SYMBOL+8
+SKY		EQU	SYMBOL+9
+atanTab		EQU	SYMBOL+10
+itCar		EQU	SYMBOL+11
+twoplayer	EQU	SYMBOL+12
+framecnt	EQU	SYMBOL+13
+gametype	EQU	SYMBOL+14
+dash		EQU	SYMBOL+15
+digitfont	EQU	SYMBOL+16
+cmpssfont	EQU	SYMBOL+17
+mapscale	EQU	SYMBOL+18
+maporig		EQU	SYMBOL+19
+speedfont	EQU	SYMBOL+20
+scoreinc	EQU	SYMBOL+21
+dotloc		EQU	SYMBOL+22
+dotimg		EQU	SYMBOL+23
+tnyfont		EQU	SYMBOL+24
+pbprog		EQU	SYMBOL+25
+showcoord	EQU	SYMBOL+26
+pcprog		EQU	SYMBOL+27
+debugflg	EQU	SYMBOL+28
+prprog		EQU	SYMBOL+29
+animateprg	EQU	SYMBOL+30
+animateparam	EQU	SYMBOL+31
+mbands		EQU	SYMBOL+32
+gameover	EQU	SYMBOL+33
+splitscrn	EQU	SYMBOL+34
+gpu_do		EQU	SYMBOL+35
+TPNTADDR	EQU	SYMBOL+36
+ENDTPNTS	EQU	SYMBOL+37
+SKYHIGH		EQU	SYMBOL+38
+fps		EQU	SYMBOL+39
+playspd		EQU	SYMBOL+40

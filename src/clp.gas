@@ -1,0 +1,474 @@
+;----------------------------------------------------------------------------
+;	clip.gas
+;		Edge cut computations
+;
+;----------------------------------------------------------------------------
+
+; edge cut --------------------------------------------------------------
+
+edges		REGEQU	R0	; uncut edges
+points		REGEQU	R1	; tPoints
+tEdges		REGEQU	R2	; for cut edges
+a			REGEQU	R3	; address of tPoint a
+b			REGEQU	R4	; address of tPoint b
+xa			REGEQU	R5	; \
+ya			REGEQU	R6	;  \
+za			REGEQU	R7	;    data from tPoint a
+xaza			REGEQU	R8	;  /
+yaza			REGEQU	R9	; /
+xb			REGEQU	R10	; \
+yb			REGEQU	R11	;  \
+zb			REGEQU	R12	;    data from tPoint b
+xazb			REGEQU	R13	;  /
+yazb			REGEQU	R14	; /
+dataHi		REGEQU	R15	; address of gpu data hi word register
+numEdges		REGEQU	R16	; the loop counter
+qa			REGEQU	R17	; \
+qb			REGEQU	R18	; vars for computing cut
+oldab		REGEQU	R19	; initial index values for a, b
+numTPoints	REGEQU	R20	; new cut points start at this value
+sectorA		REGEQU	R21	; sector bits for point a
+sectorX		REGEQU	R22	; sector cross - sector bits for difference (edge crossings)
+ta			REGEQU	R23	; 'best' t value to date for a
+tb			REGEQU	R24	; 'best' t value to date for b
+
+fillTEdge		REGEQU	R25	; jump around clip for totally on screen edge
+fillEEdge		REGEQU	R26	; jump around clip for totally off screen edge
+
+sliceA		REGEQU	R30	; which edge cut created ta
+sliceB		REGEQU	R31	; which edge cut created tb
+
+; alternate register storage
+endAInsert	REGEQU	R0	; jump address
+endBInsert	REGEQU	R1	; 
+skpLeft		REGEQU	R2	; jump around left clip
+skpTop		REGEQU	R3	; jump around top clip
+skpBottom		REGEQU	R4	; you get the message
+skpRight		REGEQU	R5	; ditto
+
+	nop
+		;change to 16.16 div
+		movei	#G_DIVCTRL, temp
+		moveq	#1, temp2
+		store	temp2, (temp)
+
+		nop
+		movefa	ALTband,temp2
+		moveq	#NUM_EDGES, temp
+		add	temp2,temp
+		loadw	(temp), numEdges
+		movei	#EDGE_LIST, temp
+		add	temp2,temp
+		load		(temp), edges
+.if 0
+		movei	#tPNTS, points
+		add	temp2,points
+		load		(points),points
+.else
+		movefa	ALTtpntbase,points
+.endif
+		subqt	#24, points	; move to sector-z record[-1]
+
+		movei	#tEDGES, tEdges
+		add	temp2,tEdges
+		load		(tEdges),tEdges
+		moveq	#NUM_PNTS, temp
+		add	temp2,temp
+		loadw	(temp), numTPoints
+		addqt	#1, numTPoints	; the list starts from 1
+
+		movei	#didAInsert, temp
+		moveta	temp, endAInsert
+		movei	#didBInsert, temp
+		moveta	temp, endBInsert
+		movei	#doneRInsert, temp
+		moveta	temp, skpRight
+		movei	#doneBInsert, temp
+		moveta	temp, skpBottom
+		movei	#doneLInsert, temp
+		moveta	temp, skpLeft
+		movei	#doneTInsert, temp
+		moveta	temp, skpTop
+
+		movei	#edgeGone, fillEEdge
+		movei	#G_HIDATA, dataHi
+		movei	#clipLp, innerLoop
+		movei	#donePack, fillTEdge
+clipLp:
+		load		(edges), b
+		addqt	#4, edges
+		move		b, oldab
+		move		b, a
+		shrq		#16, a
+		shlq		#16, b
+		shlq		#5, a		; make into point address - size to phrase
+		shrq		#11, b
+		add		points, a
+		add		points, b
+		; get sectors
+		loadp	(a), sectorA	; read sector, zs
+		subqt	#8, a		; move to x-y record
+		move		sectorA, temp
+		load		(dataHi), za
+
+		; get the rest of point a while we're here(in this page) - xa, ya, xaz, yaz
+		loadp	(a), xa		; get x-y
+		addqt	#16, a	; move to xaz-yaz record
+	cmp	xa, temp
+		load		(dataHi), ya
+		loadp	(a), xaza
+	cmp	xaza, temp
+		load		(dataHi), yaza
+		; now switch to point b page
+		loadp	(b), sectorX	; read sector, zs
+		subqt	#8, b		; move to x-y record
+		and		sectorX, temp	; and sectorA, sectorB (is the edge trivially off screen)
+		moveq	#0, tb		; set initial endpoints
+		jump		NE, (fillEEdge)	; not alive (zero out edge)
+		xor		sectorA, sectorX	; sector cross bits
+			moveq	#0, ta		; set initial endpoints
+			jump		EQ, (fillTEdge)	; if any crossings to compute, compute 'em
+			bset		#16, tb		; set initial endpoints
+				; finish reading point b
+				load		(dataHi), zb
+
+				loadp	(b), xb		; get x-y
+				addqt	#16, b	; move to xaz-yaz record
+				cmp xb, temp	;--- sync for hidata
+				load		(dataHi), yb
+				loadp	(b), xazb
+				cmp xazb, temp	;--- sync for hidata
+				load		(dataHi), yazb
+				; cut this one? right ----------------------------
+				btst		#RIGHT_EDGE, sectorX
+				movefa	skpRight, temp
+				jump	EQ, (temp)	;nextClip
+					; compute the t
+					move	xa, qa
+					sub	xaza, qa
+					move	qa, qb	;*
+					sub	xb, qb
+					abs	qa
+					add	xazb, qb
+					abs	qb		;*
+					; normalize - turn result from 16.16 div into a 0.15 result
+					shlq	#1, qb	; this is OK because qb was a signed long before the abs and will now only be used by div(unsigned)
+					div	qb, qa	;*
+					; insert result
+					btst	#RIGHT_EDGE, sectorA
+					jr	EQ, bIsBad
+					nop	; cause we gota wait for the div anyway
+						cmp	ta, qa		; if ta<qa then ta=qa
+						jr	CS, doneRInsert
+						nop
+							move		qa, ta
+							moveq	#(1<<RIGHT_EDGE), sliceA
+						jr	doneRInsert
+					bIsBad:
+						cmp	tb, qa		; if tb>qa then tb=qa
+						jr	CC, doneRInsert
+						nop
+							move		qa, tb
+							moveq	#(1<<RIGHT_EDGE), sliceB
+					doneRInsert:
+				; cut this one? left -----------------------------
+				btst		#LEFT_EDGE, sectorX
+				movefa	skpLeft, temp
+				jump	EQ, (temp)	;nextClip
+					; compute the t
+					move	xa, qa
+					add	xaza, qa
+					move	qa, qb	;*
+					sub	xb, qb
+					abs	qa
+					sub	xazb, qb
+					abs	qb		;*
+					; normalize
+					shlq	#1, qb
+					div	qb, qa	;*
+					; insert result
+					btst	#LEFT_EDGE, sectorA
+					jr	EQ, bIsBadL
+					nop	; cause we gota wait for the div anyway
+						cmp	ta, qa		; if ta<qa then ta=qa
+						jr	CS, doneLInsert
+						nop
+							move		qa, ta
+							moveq	#(1<<LEFT_EDGE), sliceA
+						jr	doneLInsert
+					bIsBadL:
+						cmp	tb, qa		; if tb>qa then tb=qa
+						jr	CC, doneLInsert
+						nop
+							move		qa, tb
+							moveq	#(1<<LEFT_EDGE), sliceB
+					doneLInsert:
+				; cut this one? bottom ---------------------------
+				btst		#BOTTOM_EDGE, sectorX
+				movefa	skpBottom, temp
+				jump	EQ, (temp)	;nextClip
+					; compute the t
+					move	ya, qa
+					sub	yaza, qa
+					move	qa, qb	;*
+					sub	yb, qb
+					abs	qa
+					add	yazb, qb
+					abs	qb		;*
+					; normalize
+					shlq	#1, qb
+					div	qb, qa	;*
+					; insert result
+					btst	#BOTTOM_EDGE, sectorA
+					jr	EQ, bIsBadB
+					nop	; cause we gota wait for the div anyway
+						cmp	ta, qa		; if ta<qa then ta=qa
+						jr	CS, doneBInsert
+						nop
+							move		qa, ta
+							moveq	#(1<<BOTTOM_EDGE), sliceA
+						jr	doneBInsert
+					bIsBadB:
+						cmp	tb, qa		; if tb>qa then tb=qa
+						jr	CC, doneBInsert
+						nop
+							move		qa, tb
+							moveq	#(1<<BOTTOM_EDGE), sliceB
+					doneBInsert:
+				; cut this one? top ------------------------------
+				btst		#TOP_EDGE, sectorX
+				movefa	skpTop, temp
+				jump	EQ, (temp)	;nextClip
+					; compute the t
+					move	ya, qa
+					add	yaza, qa
+					move	qa, qb	;*
+					sub	yb, qb
+					abs	qa
+					sub	yazb, qb
+					abs	qb		;*
+					; normalize
+					shlq	#1, qb
+					div	qb, qa	;*
+					; insert result
+					btst	#TOP_EDGE, sectorA
+					jr	EQ, bIsBadT
+					nop	; cause we gota wait for the div anyway
+						cmp	ta, qa		; if ta<qa then ta=qa
+						jr	CS, doneTInsert
+						nop
+							move		qa, ta
+							moveq	#(1<<TOP_EDGE), sliceA
+						jr	doneTInsert
+					bIsBadT:
+						cmp	tb, qa		; if tb>qa then tb=qa
+						jr	CC, doneTInsert
+						nop
+							move		qa, tb
+							moveq	#(1<<TOP_EDGE), sliceB
+					doneTInsert:
+					;fix 'a' cutItOut - change ta=8000 to 7fff
+					shlq		#1, ta
+					sat16	ta
+					shrq		#1, ta
+														;btst		#15, ta
+														;jr		EQ, weCheckedIt10
+														;nop
+														;	cutItOut 10
+														;weCheckedIt10:
+														;btst		#15, tb
+														;jr		EQ, weCheckedIt11
+														;nop
+														;	cutItOut 11
+														;weCheckedIt11:
+				; test edge existance and zero out if offscreen
+				cmp		ta, tb
+				jump		MI, (fillEEdge)	; not alive (zero out edge)
+					; next instr wont hurt
+				; compute new point coords
+					; reuse some newly worthless registers
+					edx			REGEQU	xaza	; line delta exponent
+					edy			REGEQU	yaza	; 
+					edz			REGEQU	xazb	; 
+
+					wx			REGEQU	yazb	; copys of line delta mantissa
+					wy			REGEQU	qa	; 
+					wz			REGEQU	qb	; 
+					; normalize dx, dy, dz
+					sub		xa, xb
+					sub		ya, yb
+					move		xb, temp
+					abs		temp
+					move		yb, temp2
+					abs		temp2
+					normi	temp, edx
+					normi	temp2, edy
+					addqt	#9, edx
+					addqt	#9, edy
+					sha		edx, xb
+					sha		edy, yb
+					neg		edx
+
+					sub		za, zb
+					neg		edy
+					move		zb, temp
+					abs		temp
+					normi	temp, edz
+					addqt	#15, edy
+					addqt	#9, edz
+					addqt	#15, edx
+					sha		edz, zb
+					neg		edz
+					; test sectors
+					move		sectorX, temp2
+					xor		sectorA, temp2	; is point b bad?
+					movefa	endBInsert, temp
+					jump		EQ, (temp)
+					addqt	#15, edz
+						move		numTPoints, b	; get new b
+						shrq		#16, oldab	; move over rover to strip b
+						addqt	#1, numTPoints	; the list gets bigger
+						shlq		#16, oldab	; realign
+						or		b, oldab
+						shlq		#5, b		; size of point struct
+						add		points, b		; add tPoints start
+
+						move		zb, wz
+						imult	tb, wz
+						sha		edz, wz
+						add		za, wz
+						store	wz, (dataHi)
+						storep	sliceB, (b)
+						subqt	#8, b
+
+						move		yb, wy		; compute new x,y,z
+						move		xb, wx
+						imult	tb, wy
+						imult	tb, wx
+						sha		edy, wy
+						sha		edx, wx
+						add		ya, wy
+						add		xa, wx
+						store	wy, (dataHi)
+						storep	wx, (b)
+						didBInsert:
+					or		sectorA, sectorA	; is point a bad?
+					movefa	endAInsert, temp
+					jump		EQ, (temp)
+					move		numTPoints, a		; get new a
+						shlq		#16, oldab	; move over rover to allow insertion of new a
+						addqt	#1, numTPoints	; the list gets bigger
+						or		a, oldab
+						rorq		#16, oldab	; realign
+						shlq		#5, a		; size of point struct
+						add		points, a		; add tPoints start
+
+						imult	ta, zb		; compute new x,y,z
+						sha		edz, zb
+						add		za, zb
+						store	zb, (dataHi)
+						storep	sliceA, (a)
+						subqt	#8, a
+
+						imult	ta, yb
+						imult	ta, xb
+						sha		edy, yb
+						sha		edx, xb
+						add		ya, yb
+						add		xa, xb
+						store	yb, (dataHi)
+						storep	xb, (a)
+						didAInsert:
+donePack:
+		; pack ta,tb
+		shlq		#16, ta
+		or		tb, ta
+		; store a,b
+		store	sectorX, (dataHi)
+		subq		#1, numEdges
+		storep	oldab, (tEdges)
+		addqt	#8, tEdges		; t record
+		store	ta, (tEdges)
+		jump		NE, (innerLoop)
+		addqt	#8, tEdges		; next tEDGE
+		jr		edgesDone
+edgeGone:	; an alternate end to this loop
+		; store a,b as NULL
+		store	sectorX, (dataHi)
+		moveq	#0, oldab
+		subq		#1, numEdges
+		storep	oldab, (tEdges)
+		jump		NE, (innerLoop)
+		addqt	#16, tEdges		; next tEDGE
+
+edgesDone:
+		; write final number of tPoints
+		subqt	#1, numTPoints
+
+		movefa	ALTband,temp2
+		movei	#tNUM_EXTRAS, temp
+		add	temp2,temp
+		storew	numTPoints, (temp)
+
+		; update tPNTS array
+		movefa	ALTtpntbase,temp
+		shlq	#5,numTPoints		; multiply by 32
+		add	numTPoints,temp
+		moveta	temp,ALTtpntbase
+
+		; check for overflow of TPNTs array
+		movei	#ENDTPNTS,temp2
+		cmp	temp,temp2
+		jr	PL,nooflow
+		nop
+			cutItOut 20
+
+nooflow:
+		;change from 16.16 div
+		movei	#G_DIVCTRL, temp
+		moveq	#0, temp2
+		store	temp2, (temp)
+; - heap -----------------------------------------------------------
+;					; set up for cut
+;					move		xa, qa
+;					move		xb, qb
+;					; compute the t
+;					sub	xaza, qa
+;					sub	xazb, qb
+;					move	qa, qaza
+;					sub	qb, qaza
+;					; normalize
+;					abs	qa
+;					abs	qaza
+
+;						neg	qaza
+;						neg	qazb
+;				; compute the t
+;				sub	qaza, qa
+;				sub	qazb, qb
+;				move	qa, qaza
+;				sub	qb, qaza
+;				; normalize
+;				abs	qa
+;				abs	qaza
+;				div	qaza, qa
+;				; insert
+;				btst	#1, sectorA
+;				jr	EQ, bIsBad
+;				nop
+;					cmp	a, qa
+;					jr	, aIsOk
+;					nop
+;						move	qa, a
+;					aIsOK:
+;
+;				bIsBad:
+;					cmp	b, qa
+;					jr	, bIsOk
+;					nop
+;						move	qa, b
+;					bIsOK:
+;
+;
+;
+

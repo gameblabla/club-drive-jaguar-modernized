@@ -1,0 +1,73 @@
+IPATH	=	..\include
+
+.SUFFIXES: .mdl .bnd .asc
+
+.asc.mdl:
+	mkbnd $*.asc race.clr -l jag.lyt -t 80
+	findbg -bground 200000 -cpdelta 256000 $*.bnd $*.bnd
+	bnd2mdl -split -sky -link race.lnk $*.bnd $*.mdl
+	rm $*.bnd
+
+.bnd.mdl:
+	bnd2mdl -split -sky -link race.lnk $*.bnd $*.mdl
+
+all:	ground.mdl\
+	race1.mdl\
+	race2.mdl\
+	race3a.mdl\
+	race3b.mdl\
+	race4.mdl\
+	race5a.mdl\
+	race5b.mdl\
+	race6.mdl\
+	race7a.mdl\
+	race7b.mdl\
+	race8.mdl\
+	race9.mdl\
+	race10a.mdl\
+	race10b.mdl\
+	race11.mdl\
+	race12a.mdl\
+	race12b.mdl\
+	race13.mdl\
+	race14a.mdl\
+	race14b.mdl\
+	race15.mdl\
+	race16a.mdl\
+	race16b.mdl
+
+#
+# some pieces don't need the -split flag to draw right
+#
+race1.mdl: race1.asc
+	mkbnd $*.asc race.clr -l jag.lyt -t 80
+	findbg -bground 200000 -cpdelta 256000 $*.bnd $*.bnd
+	bnd2mdl -sky -link race.lnk $*.bnd $*.mdl
+	rm $*.bnd
+
+race8.mdl: race8.asc
+	mkbnd $*.asc race.clr -l jag.lyt -t 80
+	findbg -bground 200000 -cpdelta 256000 $*.bnd $*.bnd
+	bnd2mdl -sky -link race.lnk $*.bnd $*.mdl
+	rm $*.bnd
+
+race9.mdl: race9.asc
+	mkbnd $*.asc race.clr -l jag.lyt -t 80
+	findbg -bground 200000 -cpdelta 256000 $*.bnd $*.bnd
+	bnd2mdl -sky -link race.lnk $*.bnd $*.mdl
+	rm $*.bnd
+
+race11.mdl: race11.asc
+	mkbnd $*.asc race.clr -l jag.lyt -t 80
+	findbg -bground 200000 -cpdelta 256000 $*.bnd $*.bnd
+	bnd2mdl -sky -link race.lnk $*.bnd $*.mdl
+	rm $*.bnd
+
+
+race13.mdl: race13.asc
+	mkbnd $*.asc race.clr -l jag.lyt -t 80
+	findbg -bground 200000 -cpdelta 256000 $*.bnd $*.bnd
+	bnd2mdl -sky -link race.lnk $*.bnd $*.mdl
+	rm $*.bnd
+
+

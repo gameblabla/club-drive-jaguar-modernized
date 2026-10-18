@@ -1,0 +1,1249 @@
+; drive.gas
+;
+;	add forces from
+;		drag: Cd * v^3
+;		thrust: throttle * head
+;		lateral gription: normal * mu * (velocity dot* left)
+;		crash: reflect around wall normal and multiply by energy loss factor
+;		normal force: K/distance from surface + hysterysis
+;		gravity: mg
+;	into a single force vector
+
+; define PROACTIVE to be 0 if thrust and gravity are already done for us, 1 otherwise
+PROACTIVE 	EQU	1
+GRAVITY		EQU	3500
+ANALOG_STEERING EQU 1
+
+	.include "..\include\joypad.inc"
+
+	MUs	equ	22	; static coef of friction
+	MUd	equ	11	; dynamic coef of friction
+	MUm	equ	31	; coef of friction mask (this is max)
+	MOI	equ	2	; moment of inertia	WAS 6
+	BRAKE_POWER	equ	$7000	; horsePower equivalent for the brakes
+	ENGINE_POWER	equ	2700 ;5400
+	SPIN_THRESHOLD	equ	$4000000
+
+;- Register defines ----------------------------------------------
+
+vx			REGEQU	R0	; velocity x
+vy			REGEQU	R1	; velocity y
+vz			REGEQU	R2	; velocity z
+horsePower	REGEQU	R3	; engine force mag
+Cd			REGEQU	R3	; coef of drag
+want			REGEQU	R3	; needed acc
+
+fx			REGEQU	R4	; force x
+fy			REGEQU	R5	; force y
+fz			REGEQU	R6	; force z
+tx			REGEQU	R7	; torque x
+ty			REGEQU	R8	; torque y
+tz			REGEQU	R9	; torque z
+
+; rotation matrix
+xrite		REGEQU	r10
+yrite		REGEQU	r11
+zrite		REGEQU	r12
+xdown		REGEQU	r13
+ydown		REGEQU	r14
+zdown		REGEQU	r15
+xhead		REGEQU	r16
+yhead		REGEQU	r17
+zhead		REGEQU	r18
+
+; 3d temps
+tempx		REGEQU	R19	; temp x
+tempy		REGEQU	R20	; temp y
+tempz		REGEQU	R21	; temp z
+
+LA			REGEQU	R22	; latteral acceleration
+nf			REGEQU	R23	; normal force
+wheel		REGEQU	R24	; loop counter for wheel loop
+
+wx			REGEQU	R25	; rot velocity x
+wy			REGEQU	R26	; rot velocity y
+wz			REGEQU	R27	; rot velocity z
+
+; no 28, 29 - temps
+
+le			REGEQU	R30	; a flr
+FA			REGEQU	R31	; 300ths since last animation
+
+; resused
+groundProp	REGEQU	tx	; data about the ground under each tire from CAR_SURFDATA
+tirePtr		REGEQU	ty
+attempt		REGEQU	tz
+t2x			REGEQU	xdown	; a third temp vector
+t2y			REGEQU	ydown
+t2z			REGEQU	zdown
+
+; alternate register usage
+; temp addresses
+ta1			REGEQU	r0	; addresses for jump
+ta2			REGEQU	r1
+ta3			REGEQU	r2
+ta4			REGEQU	r3
+ta5			REGEQU	r4
+
+; alternate matrix r10-r18
+;db			REGEQU	r12
+;xdown		REGEQU	r13
+;ydown		REGEQU	r14
+;zdown		REGEQU	r15
+thePlayer		REGEQU	ALTplayer
+thrust		REGEQU	r20
+brakePower	REGEQU	r21
+newTireSpd	REGEQU	r22
+plyrPtr		REGEQU	r28
+
+.if 0
+;DEBUG - put fake surfdata in player struct
+		movefa	ALTplayer, temp
+		movei	#CAR_SURFDATA,temp2
+		add		temp2, temp
+		movei	#$540b16, temp2
+		store	temp2, (temp)
+		addqt	#4, temp
+		store	temp2, (temp)
+		addqt	#4, temp
+		store	temp2, (temp)
+		addqt	#4, temp
+		store	temp2, (temp)
+.endif
+
+;regPlay:
+		; load matrix
+		movefa	ALTplayer, temp
+		addqt	#CAR_MATRIX,temp	; 12 to the start of the matrix
+
+;		loadw	(temp),xrite		; Fetch Turtle into registers
+;		addq		#2,temp
+;		loadw	(temp),xdown
+;		addq		#2,temp
+;		loadw	(temp),xhead
+;		addq		#2,temp
+;		loadw	(temp),yrite
+;		addq		#2,temp
+;		loadw	(temp),ydown
+;		addq		#2,temp
+;		loadw	(temp),yhead
+;		addq		#2,temp
+;		loadw	(temp),zrite
+;		addq		#2,temp
+;		loadw	(temp),zdown
+;		addq		#2,temp
+;		loadw	(temp),zhead
+
+		loadw	(temp),xrite		; Fetch Turtle into registers
+		addq		#2,temp
+		loadw	(temp),yrite
+		addq		#2,temp
+		loadw	(temp),zrite
+		addq		#2,temp
+		loadw	(temp),xdown
+		addq		#2,temp
+		loadw	(temp),ydown
+		addq		#2,temp
+		loadw	(temp),zdown
+		addq		#2,temp
+		loadw	(temp),xhead
+		addq		#2,temp
+		loadw	(temp),yhead
+		addq		#2,temp
+		loadw	(temp),zhead
+
+		;load verocity vector
+;		movefa	thePlayer, temp
+;		addqt	#CAR_VELOCITY,temp
+; RETAIL COMPAT: car-velocity base is already addressed at this point.
+;		addqt	#32,temp
+		addqt	#4,temp
+
+		load		(temp), vx
+		addqt	#4,temp
+		load		(temp), vy
+		addqt	#4,temp
+		load		(temp), vz
+		
+		;load rotational verocity vector
+;		movefa	thePlayer, temp
+;		addqt	#32,temp
+;		addqt	#(CAR_OMEGA-32), temp
+		addqt	#(CAR_OMEGA-CAR_VELOCITY-8), temp
+		load		(temp), wx
+		addqt	#4,temp
+		load		(temp), wy
+		addqt	#4,temp
+		load		(temp), wz
+
+		;load force vector
+;		movefa	thePlayer, temp
+;		addqt	#32,temp
+;		addqt	#(CAR_FORCE-32), temp
+		addqt	#(CAR_FORCE-CAR_OMEGA-8), temp
+		load		(temp), fx
+		addqt	#4,temp
+		load		(temp), fy
+		addqt	#4,temp
+		load		(temp), fz
+
+		; check for spinout
+		or		fy, fy		; ;onloy add if touching the ground
+		subqt	#(CAR_FORCE+8-CAR_SPIN), temp
+		jr		EQ, _CDLOCAL_10_203
+		load		(temp), tempx
+			; add rotational total
+			move		wx, tempy
+			abs		tempy
+			move		wy, tempz
+			abs		tempz
+			add		tempz, tempy
+			move		wz, tempz
+			abs		tempz
+			add		tempz, tempy
+			add		tempy, tempx
+			store	tempx, (temp)
+		_CDLOCAL_10_203:
+		movei	#SPIN_THRESHOLD, tempy
+		cmp		tempx, tempy
+		jr		PL, _CDLOCAL_20_217
+			; add a rotational drag
+			move	wx, tx
+			move	wy, ty
+			move	wz, tz
+			sharq	#4,tx
+			sharq	#4,ty
+			sharq	#4,tz
+			sub	tx,wx
+			sub	ty,wy
+			sub	tz,wz
+		_CDLOCAL_20_217:
+
+		; load the torque vector
+		addqt	#(CAR_TORQUE-CAR_SPIN), temp
+;		addqt	#4,temp
+		load		(temp), tx
+		addqt	#4,temp
+		load		(temp), ty
+		addqt	#4,temp
+		load		(temp), tz
+
+		add		tx,wx
+		add		ty,wy
+		add		tz,wz
+.if PROACTIVE
+		; add gravity
+		movei	#GRAVITY, temp2
+		add		temp2, vy
+.endif
+		; compute drag force vector
+		move		vx, tempx
+		move		vy, tempy
+		move		vz, tempz
+		sharq	#6, tempx	; tone it down a bit
+		sharq	#6, tempy
+		sharq	#6, tempz
+		neg		tempx
+		neg		tempy
+		neg		tempz
+		add		tempx, fx
+		add		tempy, fy
+		add		tempz, fz
+
+;		imultn	vx, vx	; magnitude squared
+;		imacn	vy, vy
+;		imacn	vz, vz
+;		resmac	fx
+;
+;;		moveq	#16, Cd	; based on surface
+;		sharq	#8, fx	; tone it down a bit
+;		neg		fx		; drag is in the opposite direction as velocity
+;;		imult	Cd, fx
+;		move		fx, fy
+;		move		fx, fz
+;
+;		imult	vx, fx
+;		imult	vy, fy
+;		imult	vz, fz
+;		sharq	#4, fx	; tone it down a bit
+;		sharq	#4, fy
+;		sharq	#4, fz
+
+
+		; compute steer vector (rotate rite vector)
+
+		; sum tire forces -----------------------------------------------------
+
+		; save some registers
+		moveta	xdown, xdown		; used for more variables
+		moveta	ydown, ydown
+		moveta	zdown, zdown
+		moveta	xhead, xhead		; store while main bank matrix is steered
+		moveta	yhead, yhead
+		moveta	zhead, zhead
+		moveta	xrite, xrite
+		moveta	yrite, yrite
+		moveta	zrite, zrite
+		; load steer amount
+;		addqt	#(CAR_TURN-CAR_TORQUE), temp
+;		movei	#(CAR_TURN-CAR_TORQUE),temp2
+		movei	#(CAR_TURN), temp	; after last point
+		movefa	thePlayer, temp2
+		add		temp2, temp
+		moveta	r4, r9				; push r4
+.if INTERPOLATE
+		load	(temp), r4			; r4 is defined as yaw in turt.gas
+.else
+		loadw	(temp), r4			; r4 is defined as yaw in turt.gas
+.endif
+		moveta	temp,plyrPtr
+		JSR_ROTY
+	add r4, r31
+		movefa	r9, r4				; pop r4
+		movefa	plyrPtr,temp			; pop temp
+
+; do axial accel setup in alternate registers ---------------------------------
+		; check buttons
+;		movefa	thePlayer, temp
+.if ANALOG_STEERING
+;		movei	#CAR_GAS,temp2
+;		add		temp2, temp
+		addqt	#(CAR_GAS-CAR_TURN), temp
+		loadw	(temp), temp2
+
+		movei	#ENGINE_POWER, horsePower ; 5400 4640
+		imult	horsePower, temp2
+		sharq	#7, temp2
+		moveta	temp2, thrust
+.else
+;		movei	#CAR_CTRL,temp2
+		subqt	#(CAR_GAS-CAR_CTRL), temp
+;		add		temp2, temp
+		load		(temp), temp2
+
+		movei	#5400, horsePower ; 5400 4640
+		move		temp2, wheel
+		move		temp2, temp
+		shlq		#(31-FIRE_B), temp
+		shlq		#(31-FIRE_C), temp2
+		shrq		#31, temp
+		sharq	#31, temp2
+		add		temp2, temp
+		imult	horsePower, temp
+		movei	#BRAKE_POWER, horsePower
+		moveta	temp, thrust
+		shlq		#(31-FIRE_A), wheel
+		sharq	#31, wheel
+		imult	horsePower, wheel
+		moveta	wheel, brakePower
+.endif
+		;figure out the brakes
+		subqt	#(CAR_GAS-CAR_CTRL), temp
+		load		(temp), temp2
+
+		movei	#BRAKE_POWER, horsePower
+		shlq		#(31-FIRE_A), temp2
+		sharq	#31, temp2
+		imult	horsePower, temp2
+		shlq		#3, temp2
+		moveta	temp2, brakePower
+
+; do axial accel setup in alternate register ---------------------------------
+
+		;change to 16.16 div
+		movei	#G_DIVCTRL, temp
+		moveq	#1, temp2
+		store	temp2, (temp)
+
+		; for wheel := 0 to 3
+		moveq	#4, wheel
+wheelLp:
+			; compute vTire ------------------------
+				; load wheel posn
+				movei	#(CAR_POSNS + (CAR_NUM_PNTS*6) + 6), temp	; after last point
+				movefa	thePlayer, temp2
+				add		temp2, temp
+				moveq	#12, temp2	; size of wheel - twin points
+				mult		wheel, temp2
+				sub		temp2, temp
+				loadw	(temp), t2x
+				addqt	#2, temp
+				loadw	(temp), t2y
+				addqt	#2, temp
+				loadw	(temp), t2z
+
+			rorq	#16, wx
+			rorq	#16, wy
+			rorq	#16, wz
+				move		vx, tempx
+				move		vy, tempy
+				; x velocity
+				imultn	t2y, wz
+				imacn	t2z, wy
+				resmac	temp
+				; y velocity
+				imultn	t2z, wx
+				imacn	t2x, wz
+				resmac	temp2
+				; convert to radians - motibi by 12.5 (12.56637)
+				shlq		#2, temp
+				shlq		#2, temp2
+				add		temp, tempx
+				sub		temp2, tempy
+				shlq		#1, temp
+				shlq		#1, temp2
+				add		temp, tempx
+				sub		temp2, tempy
+				sharq	#4, temp
+				sharq	#4, temp2
+				add		temp, tempx
+				sub		temp2, tempy
+				; z velocity
+				neg		t2x
+				imultn	t2y, wx
+				imacn	t2x, wy
+				resmac	temp
+
+				neg		t2z
+				shlq		#2, temp
+				move		vz, tempz
+				add		temp, tempz
+				shlq		#1, temp
+				add		temp, tempz
+				sharq	#4, temp
+				add		temp, tempz
+			rorq	#16, wx
+			rorq	#16, wy
+			rorq	#16, wz
+
+				; end vTire compute  ------------------------
+			; compute needed lateral accel
+				; normalize vTire
+				move		tempx, temp2
+				abs		temp2
+				move		tempy, temp
+				abs		temp
+				or		temp2, temp
+				move		tempz, temp2
+				abs		temp2
+				or		temp2, temp
+				normi	temp, le
+				addqt	#9, le
+				sha		le, tempz
+				sha		le, tempx
+				sha		le, tempy
+
+			; compute lateral velocity
+			imultn	tempx, xrite	; R dot vTire
+			imacn	tempy, yrite
+			imacn	tempz, zrite
+			resmac	LA			; in 10.22 format?
+			; compute forward velocity
+			imultn	tempx, xhead	; F dot vTire
+			imacn	tempy, yhead
+			imacn	tempz, zhead
+			resmac	FA			; in 10.22 format?
+
+			neg		le			; restore shift amount
+			addqt	#12, le		; 2 bits short of restoring matrix mults
+			sha		le, FA		; shift to 18.14 (velocity 20.12)
+			addqt	#2, le		; divide lateral by 4 (num of wheels)
+			sha		le, LA
+
+			; compute normal force
+			movei	#(CAR_SHOCKS-4), tirePtr	; load from player struct
+			movefa	thePlayer, tempx
+			add		tempx, tirePtr
+			move		wheel, tempx			; index into shock array :: player.CAR_SHOCKS[wheel]
+			shlq		#2, tempx
+			;sharq	#2, LA				; divide needed LA by 4 (# of tires)
+			add		tempx, tirePtr
+			load		(tirePtr), nf
+			addqt	#(CAR_OSHOCKS-CAR_SHOCKS), tirePtr
+			load		(tirePtr), temp2		; temp2 <= previous shock position
+			sub		nf, temp2				; shock movement
+			store	nf, (tirePtr)
+			neg		temp2
+			addqt	#(CAR_TIRE_SPD-CAR_OSHOCKS), tirePtr	; get tire speed while we're here
+			shlq		#1, temp2
+			load		(tirePtr), tempy		; tempy <= previous tire speed
+			add		temp2, nf
+			sat24	nf					; normal force can not be negative (near maximum shock extention and velocity would produce this)
+			moveq	#5, temp2				; k => temp2
+			mult		temp2, nf				; the normal force => nf
+			; compute torque to apply to tireSpeed
+			movefa	thrust, temp2
+			moveta	FA, newTireSpd
+			sub		tempy, FA				; difference between wheel and ground speed
+			sharq	#4, FA				; half energy loss
+			neg		FA
+			add		temp2, FA
+			move		FA, attempt
+;			movefa	brakePower, temp2
+;			add		temp2, tempy
+
+;			movefa	thrust, FA			; this is the official attempted forward force (negated)
+			; get surface properties
+			move		tirePtr, temp			; don't malumate tirePtr	
+			addqt	#(CAR_SURFDATA-CAR_TIRE_SPD), temp	;
+			load		(temp), groundProp		; groundProp <= surface drag | MUs | MUd
+			; prepare LA, FA for multiplication
+			move		FA, tempz
+			move		LA, temp
+			abs		temp
+			abs		tempz
+			or		temp, tempz
+			normi	tempz, temp2
+			addqt	#9, temp2
+			move		FA, tempz
+			sha		temp2, tempz
+			sha		temp2, temp
+
+			neg		temp2		; FNe
+			; compute total needed acceleration from FA and LA
+			imultn	tempz, tempz
+			imacn	temp, temp
+			resmac	want				; the square of the total attempted force
+
+			; compute maximum static friction force
+			moveq	#MUm, tempz			; us - static friction coef
+			and		groundProp, tempz
+			sharq	#5, nf				; turn nf into 16 bits - force is nf e 15?
+			mult		nf, tempz
+			; compare needed lateral with max static - decide between forces
+			shlq		#1, temp2
+			addqt	#12, temp2
+
+			; square maximum static force (temp)
+			normi	tempz, tempx
+			addqt	#9, tempx
+			sh		tempx, tempz
+			neg		tempx
+			mult		tempz, tempz
+			shlq		#1, tempx
+			addqt	#14, tempx
+
+			sh		temp2, want
+			sh		tempx, tempz
+
+;	move		wheel, temp2
+;	subqt	#1, temp2
+;	shlq		#4, temp2
+;	movei	#$17040, tempx
+;	add		temp2, tempx
+;	store	LA, (tempx)
+;	addqt	#4, tempx
+;	store	want, (tempx)
+;	addqt	#4, tempx
+;	store	temp, (tempx)
+;	nop
+			; prepare LA, FA for multiplication
+			move		FA, temp2
+			move		LA, temp
+			abs		temp
+			abs		temp2
+			normi	temp, le
+			normi	temp2, temp2
+			addqt	#9, le
+			addqt	#9, temp2
+			sha		le, LA
+			sha		temp2, FA
+
+			neg		le
+			addqt	#16, le
+			neg		temp2	; Fe
+;			addqt	#16, temp2
+
+			; decide between forces
+			cmp		want, tempz			; cmp	neededf, maxf
+			movei	#useLA, tempx
+			jump		HI, (tempx) ;useLA -- original retail condition
+;			jump		(tempx) ;useLA
+			moveq	#0, tempz
+				moveta	temp, temp
+				moveta	temp2, temp2
+;	movei	#$17010, tempx
+;	store	want, (tempx)
+;	addqt	#4, tempx
+				;sqrt:
+					normi	want, temp2
+					movei	#(sqrtTabM512), temp
+					addqt	#13, temp2	; size to 1K max word entries
+					bset		#0, temp2		; shift an even amount only
+					sh		temp2, want
+					neg		temp2		; shift amount for return flight
+					add		temp, want
+					sharq	#1, temp2		; return shift is half as big
+					bclr		#0, want
+					addqt	#11, temp2	; scale of table
+					loadw	(want), want
+					sh		temp2, want
+
+				shlq		#6, want
+				shrq		#8, groundProp		; move ud to front of surfprop word
+				moveq	#MUm, tempz		; ud - dynamic friction coef
+				and		groundProp, tempz
+				shrq		#8, groundProp		; move surfdrag to front of surfprop word
+				imult	nf, tempz
+;	store	want, (tempx)
+;	addqt	#4, tempx
+;	store	tempz, (tempx)
+				div		want, tempz		; wanted/getting is the scaling factor
+;	addqt	#4, tempx
+;	store	want, (tempx)
+				; bring em back
+				movefa	temp, temp
+				movefa	temp2, temp2
+				shrq		#1, tempz			; make result .15
+				imult	tempz, LA
+				imult	tempz, FA
+				sharq	#15, LA
+				sharq	#15, FA
+
+useLA:
+			; compute next tireSpeed
+;			shlq		#1, attempt
+			move		FA, temp
+			sha		temp2, temp
+			sub		temp, attempt		; hey, FA is normi'ed
+			shlq		#4, attempt
+			add		temp, attempt
+			movefa	newTireSpd, temp
+			add		temp, attempt
+			move		attempt, temp		; axle drag
+			abs		temp
+			normi	temp, tempx
+			move		attempt, temp
+			addqt	#9, tempx
+			sha		tempx, temp
+			move		temp, tempy
+			neg		tempx
+			imult	temp, temp
+			moveq	#3, want
+			sharq	#16, temp
+			imult	want, tempx
+			imult	tempy, temp	; cubed
+			addqt	#31, tempx
+			sha		tempx, temp
+			sub		temp, attempt
+			move		attempt, temp		; axle drag
+			sharq	#8, temp
+			sub		temp, attempt
+			;brakes anyone?
+			move	attempt, temp
+			abs	attempt
+			movefa	brakePower,tempx
+			add	tempx,attempt
+			jr	PL, _CDLOCAL_22_637
+			btst	#31, temp
+				moveq	#0,attempt	;don't brake beyond 0
+			_CDLOCAL_22_637:
+			jr	EQ, _CDLOCAL_24_641
+			neg		tempz	; moved from skid sound stuf
+				neg	attempt
+			_CDLOCAL_24_641:
+			;end brakes
+			store	attempt, (tirePtr)			; write out next tireSpeed as FV
+			addqt	#16, temp2
+			; skid sound stuf
+			;neg		tempz	; moved up 8 lines
+			addqt	#(CAR_SLIDE-CAR_TIRE_SPD), tirePtr	; get tire speed while we're here
+			store	tempz, (tirePtr)			; write out next skid amount
+			; add surfdrag
+			mult		nf, groundProp	; maximum drag force
+
+			; FA is now the proper forward acc
+			move		xhead, tempx	; force is along head vector
+			move		yhead, tempy
+			move		zhead, tempz
+			imult	FA, tempx
+			imult	FA, tempy
+			imult	FA, tempz
+			; shift
+			sha		temp2, tempx
+			sha		temp2, tempy
+			sha		temp2, tempz
+
+			add		tempx, fx		; add to total force
+			add		tempy, fy
+			add		tempz, fz
+
+			; add thrust torque
+
+			; LA is now the proper lateral acc
+			move		xrite, tempx	; force is along right vector
+			move		yrite, tempy
+			move		zrite, tempz
+			imult	LA, tempx
+			imult	LA, tempy
+			imult	LA, tempz
+			; shift
+			sha		le, tempx
+			sha		le, tempy
+			sha		le, tempz
+
+			sub		tempx, fx		; add to total force
+			sub		tempy, fy
+			sub		tempz, fz
+
+			; add gription torque
+			; x torque
+			imultn	t2y, tempz
+			imacn	t2z, tempy
+			resmac	temp
+
+			; y torque
+			neg		t2z
+			imultn	t2x, tempz
+			imacn	t2z, tempx
+			resmac	temp2
+.if MOI
+			shlq		#MOI, temp		; shift to 16.16
+			shlq		#MOI, temp2		; shift to 16.16
+.endif
+			sub		temp, wx
+			sub		temp2, wy
+			; z torque
+			imultn	t2x, tempy
+			imacn	t2y, tempx
+			resmac	temp
+.if MOI
+			shlq		#MOI, temp		; shift to 16.16
+.endif
+			sub		temp, wz
+
+			; add tire normal force
+			movefa	xdown, tempx	; force is along up vector
+			movefa	ydown, tempy
+			movefa	zdown, tempz
+			imult	nf, tempx
+			imult	nf, tempy
+			imult	nf, tempz
+			; shift
+			sharq	#14, tempx
+			sharq	#14, tempy
+			sharq	#14, tempz
+
+			sub		tempx, fx		; add to total force
+			sub		tempy, fy
+			sub		tempz, fz
+
+			; add normal force torque
+			; y torque
+			imultn	t2x, tempz
+			imacn	t2z, tempx
+			resmac	temp
+			; z torque
+;			neg		tempx
+			imultn	t2x, tempy
+			imacn	t2y, tempx
+			resmac	temp2
+.if MOI
+			shlq		#MOI, temp		; shift to 16.16
+			shlq		#MOI, temp2		; shift to 16.16
+.endif
+			sub		temp, wy
+			sub		temp2, wz
+
+			; x torque
+			neg		t2z
+			;move		tempy, temp	; so that the second term is subtracted
+;			neg		t2z
+			imultn	t2y, tempz
+			imacn	t2z, tempy
+			resmac	temp
+.if MOI
+			shlq		#MOI, temp		; shift to 16.16
+.endif
+			sub		temp, wx
+
+		; end for wheel
+		btst		#0, wheel
+		movei	#wheelLp, temp
+		jump		EQ, (temp)
+		subq		#1, wheel
+
+		movefa	xhead, xhead		; return primary matrix to main reg
+		movefa	yhead, yhead		; bank now that front wheels are done
+		movefa	zhead, zhead
+		movefa	xrite, xrite
+		movefa	yrite, yrite
+		movefa	zrite, zrite
+
+		jump		NE, (temp)		; if more wheels to do
+		nop
+
+;			; load tire coord
+;			; load a fake 'up' pNormal
+;			; dot tire vector with normal
+
+
+		; -----------------------------------------------------------------------------
+
+		; dampen velocities and rotations
+			; manhaten magnatude
+			move		wx, temp
+			abs		temp
+			move		wz, temp2
+			abs		temp2
+			add		temp2, temp
+;			move		wy, temp2
+;			abs		temp2
+;			add		temp2, temp
+			; check magnatude
+			shrq		#19, temp
+			jr		NE, _CDLOCAL_58_797
+			nop
+				sharq	#2,wx
+;				sharq	#2,wy
+				sharq	#2,wz
+			_CDLOCAL_58_797:
+		; compute new posn, roll, yaw, pitch
+		movefa	thePlayer, temp
+		addqt	#CAR_VELOCITY,temp
+		addqt	#8,temp
+;		load		(temp), vx
+;		addqt	#4,temp
+;		load		(temp), vy
+;		addqt	#4,temp
+;		load		(temp), vz
+
+		add		fx, vx
+		add		fy, vy
+		add		fz, vz
+
+.if 1
+		;;; kill small velocities
+		sharq	#8,vx
+		sharq	#8,vy
+		sharq	#8,vz
+		rorq	#24,vx
+		rorq	#24,vy
+		rorq	#24,vz
+
+		;;; ditto for small rotations
+;		sharq	#17,wx
+		sharq	#16,wy
+;		sharq	#17,wz
+;		rorq	#15,wx
+		rorq	#16,wy
+;		rorq	#15,wz
+.endif
+		store	vz, (temp)
+		subqt	#4,temp
+		store	vy, (temp)
+		subqt	#4,temp
+		store	vx, (temp)
+
+		; move position according to velocity
+		movefa	thePlayer, temp
+		;addqt	#CAR_POSN,temp
+		;movei	#ROT_MATRIX, temp	; load posn
+		load		(temp), tempx
+		addqt	#4,temp
+		load		(temp), tempy
+		addqt	#4,temp
+		load		(temp), tempz
+
+		add		vx, tempx
+		add		vy, tempy
+		add		vz, tempz
+
+		store	tempz, (temp)
+		subqt	#4,temp
+		store	tempy, (temp)
+		subqt	#4,temp
+		store	tempx, (temp)
+		
+		; rotate stuf
+;		movefa	thePlayer, temp
+;		movei	#CAR_OMEGA, temp2	; load posn
+;		add		temp2, temp
+		addqt	#32, temp
+		addqt	#CAR_OMEGA-32, temp
+		store	wx, (temp)
+		addqt	#4,temp
+		store	wy, (temp)
+		addqt	#4,temp
+		store	wz, (temp)
+
+		;change to 32.0 div
+		movei	#G_DIVCTRL, temp
+		moveq	#0, temp2
+		store	temp2, (temp)
+;	movei	#$17010, temp
+;	store	wx, (temp)
+;	addqt	#4,temp
+;	store	wy, (temp)
+;	addqt	#4,temp
+;	store	wz, (temp)
+
+; ----------------------------------------------------------------------
+; cleanup
+REGUNDEF	vx
+REGUNDEF	vy
+REGUNDEF	vz
+REGUNDEF	horsePower
+REGUNDEF	Cd
+REGUNDEF	want
+REGUNDEF	fx
+REGUNDEF	fy
+REGUNDEF	fz
+REGUNDEF	tx
+REGUNDEF	ty
+REGUNDEF	tz
+
+REGUNDEF	xrite
+REGUNDEF	yrite
+REGUNDEF	zrite
+REGUNDEF	xdown
+REGUNDEF	ydown
+REGUNDEF	zdown
+REGUNDEF	xhead
+REGUNDEF	yhead
+REGUNDEF	zhead
+
+REGUNDEF	tempx
+REGUNDEF	tempy
+REGUNDEF	tempz
+
+REGUNDEF	LA
+REGUNDEF	nf
+REGUNDEF	wheel
+REGUNDEF	wx
+REGUNDEF	wy
+REGUNDEF	wz
+REGUNDEF	le
+REGUNDEF	FA
+
+REGUNDEF	groundProp
+REGUNDEF	t2x
+REGUNDEF	t2y
+REGUNDEF	t2z
+
+REGUNDEF	ta1
+REGUNDEF	ta2
+REGUNDEF	ta3
+REGUNDEF	ta4
+REGUNDEF	ta5
+REGUNDEF	thePlayer
+REGUNDEF	thrust
+REGUNDEF	brakePower
+
+; heap ----------------------------
+		; add gravity
+		
+		; compute steer vector
+		
+		; sum tire forces
+			; crash force?
+;		movei	#(PLAYER1 + CAR_VELOCITY + 8), temp
+			; compute normal force scalar
+			; compute gription vector
+			; add normal force
+
+		; sum body point forces
+			; crash force?
+			; add normal force
+			; drag gription vector
+
+;		; fill jump address registers
+;		movei	#fndFlr, temp
+;		moveta	temp, ta1	; ta1 contains fndflr:
+;		movei	#chkEx, temp
+;		moveta	temp, ta2
+;		movei	#doCrash, temp
+;		moveta	temp, ta3
+;		movei	#nextCPoint, temp
+;		moveta	temp, ta4
+;		movei	#sumPnts, temp
+;		moveta	temp, ta5
+;
+;		moveq	#4, temp ;#CAR_NUM_PNTS, temp
+;		moveta	temp, numCPpoints
+;		movei	#(PLAYER1 + CAR_POSNS), temp
+;		movei	#(PLAYER1 + FLOOR_PTR), flrs
+;		sumPnts:
+;			; load point coord
+;			loadw	(temp), tempx
+;			addqt	#2, temp	; to y
+;			loadw	(temp), tempy
+;			addqt	#2, temp	; to z
+;			loadw	(temp), tempz
+;			addqt	#2, temp	; to next x
+;
+;			; find correct floor
+;			load		(flrs), flr	; load address of last used floor
+;			moveta	temp, temp	; put away until next control point
+;			moveta	flrs, aFlrs	; put away until next control point
+;			fndFlr:
+;				addqt	#FLR_N_EXITS, flr	; advance to n_exits field
+;				loadw	(flr), temp2	; number of sides to floor volume
+;				addqt	#4, flr	; advance two records to exit info
+;;	movei	#$17040, return
+;;	store	temp2, (return)
+;;	nop
+;;	addqt	#16, return
+;;	store	flr, (return)
+;;	nop
+;;	addqt	#16, return
+;;	store	flrs, (return)
+;;	nop
+;;	nop
+;				chkEx:
+;					loadw	(flr), pnt
+;					; load point
+;					mult		six, pnt
+;					add		points, pnt
+;					loadw	(pnt), t2x
+;					addqt	#2, pnt	; to y
+;					sub		tempx, t2x
+;					loadw	(pnt), t2y
+;					addqt	#2, pnt	; to z
+;					sub		tempy, t2y
+;					loadw	(pnt), t2z
+;
+;					addqt	#2, flr	; advance to normal num
+;					sub		tempz, t2z
+;					loadw	(flr), pnt
+;					mult		six, pnt
+;					add		normals, pnt
+;					loadw	(pnt), t3x
+;					addqt	#2, pnt	; to y
+;					loadw	(pnt), t3y
+;					addqt	#2, pnt	; to z
+;					loadw	(pnt), t3z
+;
+;;	movei	#$17038, return
+;;	store	t2x, (return)
+;;	nop
+;;	addqt	#16, return
+;;	store	t2y, (return)
+;;	nop
+;;	addqt	#16, return
+;;	store	t2z, (return)
+;;	nop
+;;	movei	#$17030, return
+;;	store	t3x, (return)
+;;	nop
+;;	addqt	#16, return
+;;	store	t3y, (return)
+;;	nop
+;;	addqt	#16, return
+;;	store	t3z, (return)
+;;	nop
+;;	nop
+;					imultn	t2x, t3x	;
+;					imacn	t2y, t3y	;
+;					imacn	t2z, t3z	;
+;					resmac	t2x		;
+;					btst		#31, t2x
+;					jr		EQ, thisExOK
+;					nop
+;					;subq		#1, temp2
+;						; we are NOT in this flours' space (<= British spelling of floor)
+;						; try next field
+;;						subqt	#4, flr		; back up to FLR_NEXT field
+;;						loadw	(flr), flr	; load address of next floor
+;;						or		flr, flr		; check edge type - is there a floor or a wall there?
+;;	cutItOut $1e
+;						movefa	ta3, temp		; ta3 contains doCrash:
+;						jump		(temp)	; crash
+;;						;jump		EQ, (temp)	; crash
+;						nop
+;;						; no crash
+;;						store	flr, (flrs)	; save for future use
+;;						movefa	ta1, temp		; ta1 contains fndflr:
+;;						jump		(temp)
+;;						nop
+;;
+;					thisExOK:	; we are INSIDE this normal
+;					subq		#1, temp2
+;					movefa	ta2, temp	; ta2 = chkEx:
+;;					jump		NE, (temp)
+;					addqt	#4, flr	; advance two records to exit info
+;					
+;
+;				; floor checks out
+;			; add normal force
+;			
+;			; compute normal force scalar
+;			; compute gription vector
+;;			sub	vx, fx
+;			; crash force?
+;
+;		; sum body point forces
+;			; crash force?
+;			; add normal force
+;			; drag gription vector
+;		nextCPoint:
+;		movefa	aFlrs, flrs	; get address of next points floor ptr
+;	; store new current floor
+;		addqt	#4, flrs		; next control points last used floor
+;		movefa	numCPpoints, temp
+;		subq		#1, temp
+;		movefa	ta5, temp2	; ta5 = sumPnts:
+;		moveta	temp, numCPpoints
+;;		jump		NE, (temp2)
+;		movefa	temp, temp	; get address of next point coords
+.if 0
+		; fake shock set
+		movefa	thePlayer, temp
+		addqt	#4, temp
+		load		(temp), temp2			; car y posn
+		movei	#$475000, temp			; starting y from mkmat
+		sub		temp, temp2
+		movei	#$8000, temp
+		add		temp, temp2
+		sat16	temp2				; trim to shock len
+		movei	#CAR_SHOCKS, temp		; store in struct
+		movefa	thePlayer, tempx
+		add		tempx, temp
+		storew	temp2, (temp)
+
+
+				sharq	#31, LA			; preserve sign somehow
+				bset		#0, LA
+				moveq	#MUd, tempz		; ud - dynamic friction coef
+				imult	tempz, LA			; restore sign (result is still 16 bit)
+				imult	nf, LA
+;				moveq	#0, le
+				move		LA, le
+				abs		le
+				normi	le, le
+				addqt	#9, le
+				sha		le, LA
+				neg		le
+				addqt	#16, le
+
+.endif
+
+	; TAG stuf !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;cool			REGEQU	r0
+;	; check waitTime
+;	movei	#waitTime, temp
+;	loadw	(temp), temp2
+;	subq		#1, temp2
+;	movei	#chkyD, innerLoop
+;	jump		MI, (innerLoop)	; if waitTime
+;	nop
+;		; waitTime--
+;		storew	temp2, (temp)
+;		; if player!=itCar
+;		movei	#player, temp2
+;		load		(temp2), temp
+;		moveta	temp, thePlayer
+;		movei	#itCar, temp2
+;		load		(temp2), temp
+;		movefa	thePlayer, temp2
+;		cmp		temp, temp2
+;		movei	#regPlay, innerLoop
+;		jump		EQ, (innerLoop)
+;		moveq	#0, cool
+;			; velocity = omega = 0
+;			movei	#CAR_VELOCITY, temp
+;			add		temp2, temp
+;			store	cool, (temp)
+;			addqt	#4, temp
+;			store	cool, (temp)
+;			addqt	#4, temp
+;			store	cool, (temp)
+;			movei	#CAR_OMEGA, temp
+;			add		temp2, temp
+;			store	cool, (temp)
+;			addqt	#4, temp
+;			store	cool, (temp)
+;			addqt	#4, temp
+;			movei	#thatsAllFolks, innerLoop
+;			jump		(innerLoop)
+;			store	cool, (temp)
+;		; else
+;			; drive!
+;	; else
+;		; check distance
+;		chkyD:
+;		movei	#(PLAYER1 + CAR_POSN), temp
+;		load		(temp), vx
+;		addqt	#4, temp
+;		load		(temp), vy
+;		addqt	#4, temp
+;		load		(temp), vz
+;		movei	#(PLAYER2 + CAR_POSN), temp
+;		load		(temp), fx
+;		addqt	#4, temp
+;		load		(temp), fy
+;		addqt	#4, temp
+;		load		(temp), fz
+;
+;		sub		vx, fx
+;		sub		vy, fy
+;		sub		vz, fz
+;
+;		abs		fx
+;		abs		fy
+;		move		fx, temp2
+;		or		fy, temp2
+;		abs		fz
+;		or		fz, temp2
+;		normi	temp2, temp
+;		addqt	#9, temp
+;		sha		temp, fx
+;		sha		temp, fy
+;		sha		temp, fz
+;
+;		imultn	fx, fx
+;		imacn	fy, fy
+;		imacn	fz, fz
+;		resmac	temp2
+;
+;		shlq		#1, temp
+;		movei	#$c000000, cool	; this is the distance
+;		subq		#13, temp
+;		movei	#itCar, tempx
+;		jr		PL, regPlay
+;		neg		temp
+;			sh		temp, temp2
+;			cmp		temp2, cool
+;			jr		MI, regPlay
+;			moveq	#16, cool
+;				movei	#(PLAYER1 ^ PLAYER2), temp
+;				shlq		#2, cool
+;				load		(tempx), temp2
+;				xor		temp, temp2
+;				store	temp2, (tempx)
+;				addqt	#4, tempx		; waitTime follows itCar
+;				storew	cool, (tempx)
+;		; drive!
+;
+;REGUNDEF	cool
+
+;		; check throttle button
+;		movefa	thePlayer, temp
+;		movei	#CAR_CTRL,temp2
+;		add		temp2, temp
+;		load		(temp), temp2
+;		btst		#FIRE_B, temp2
+;		movei	#580, horsePower	; it wouldn't fit in the if
+;		jr		NE, pedelDown
+;		shlq		#4, horsePower
+;		btst		#FIRE_C, temp2
+;		jr		NE, pedelDown
+;		neg		horsePower
+;		jr		noThrottle
+;pedelDown:
+;			; add thrust vector
+;			move		xhead, tx
+;			move		yhead, ty
+;			move		zhead, tz
+;			imult	horsePower, tx
+;			imult	horsePower, ty
+;			imult	horsePower, tz
+;			sharq	#14, tx
+;			sharq	#14, ty
+;			sharq	#14, tz
+;			add		tx, fx
+;			add		ty, fy
+;			add		tz, fz
+;
+;noThrottle:
+

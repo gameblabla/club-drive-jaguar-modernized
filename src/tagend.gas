@@ -1,0 +1,5 @@
+TAGGAME		EQU	1
+CASGAME		EQU	0
+RACEGAME	EQU	0
+
+	.include	"3dend.gas"

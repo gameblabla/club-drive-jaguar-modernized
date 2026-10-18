@@ -1,0 +1,52 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BLACK_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK MATTE
+
+newmtl BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BROWN MATTE
+
+newmtl CHIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: CHIC
+
+newmtl DARK_BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN MATTE
+
+newmtl DARK_GRAY_MATTE1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK GRAY MATTE1
+
+newmtl GRAY_BROWN
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY BROWN
+
+newmtl GROUND
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GROUND
+
+newmtl PORTAL8
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTAL8
+
+newmtl PORTAL9
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTAL9
+
+newmtl PORTALA
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTALA
+
+newmtl PORTALB
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTALB
+
+newmtl SALOON
+Kd 0.7 0.7 0.7
+# Original 1994 material name: SALOON
+
+newmtl WEST_HILLS
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WEST HILLS

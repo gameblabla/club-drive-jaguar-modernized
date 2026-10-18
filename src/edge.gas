@@ -1,0 +1,101 @@
+;----------------------------------------------------------------------------
+;	edge.gas
+;		Edge cut and slope computations
+;
+;----------------------------------------------------------------------------
+
+; edge stuf(v) --------------------------------------------------------------
+
+;edges	REGEQU	R0
+points	REGEQU	R1
+tEdges	REGEQU	R2
+a		REGEQU	R3
+b		REGEQU	R4
+xa		REGEQU	R5
+ya		REGEQU	R6
+xb		REGEQU	R7
+yb		REGEQU	R8
+destHi	REGEQU	R9
+numEdges	REGEQU	R10
+theSign	REGEQU	R11
+
+;innerLoop	REGEQU	r27
+
+	nop
+	nop
+		movefa	ALTband,temp2
+		movei	#NUM_EDGES, temp
+		add	temp2,temp
+		loadw	(temp), numEdges
+
+		movei	#tPNTS, points
+		add	temp2,points
+		load		(points),points
+		movei	#tEDGES, tEdges
+		add	temp2,tEdges
+		load		(tEdges),tEdges
+
+		subqt	#8, points	; move to 2d-coords record[-1]
+		;change to 16.16 div
+		movei	#G_DIVCTRL, temp
+		moveq	#1, temp2
+		store	temp2, (temp)
+
+		movei	#G_HIDATA, destHi
+		movei	#edgeLp, innerLoop
+
+		addqt	#4, tEdges
+edgeLp:
+		load		(tEdges), a
+		addqt	#8, tEdges
+		move		a, b
+		shlq		#16, b
+		shrq		#16, a
+		shrq		#11, b
+
+		shlq		#5, a		; make into point address - size to phrase
+		add		points, b
+		add		points, a
+		loadp	(b), yb		; read point
+	cmp yb,yb
+		load		(destHi), xb
+		loadp		(a), ya
+		sub		ya, yb		; compute deltas
+		load		(destHi), xa
+		sub		xa, xb
+		; compute sloop using div
+		; store sign
+		move		yb, theSign
+		xor		xb, theSign
+
+		abs		yb
+		abs		xb
+
+;		shrq		#10, yb	; until 16.16 div is available
+;		shlq		#6, xb
+		div		yb, xb
+		; restore sign
+
+		btst		#31, theSign
+		jr		EQ, noNeg
+		nop
+		neg		xb
+noNeg:		
+		subq		#1, numEdges
+		store	xb, (tEdges)
+		jump		NE, (innerLoop)
+		addqt	#8, tEdges		; next tEDGE
+
+		;change from 16.16 div
+;		movei	#G_DIVCTRL, temp
+		moveq	#0, temp2
+		store	temp2, (temp)
+
+;
+REGUNDEF	edges
+REGUNDEF	numEdges
+REGUNDEF	theSign
+REGUNDEF	destHi
+;
+;
+;

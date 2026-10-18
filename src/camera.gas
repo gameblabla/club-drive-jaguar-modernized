@@ -1,0 +1,814 @@
+;
+; camera.gas: set up camera position
+;
+; camera modes (as stored in "camflag"):
+; 0 = inside the car
+; 1 = chase camera
+; 2 = fixed camera
+; 3 = swooping from 1 to 2
+; 4 = camera on a stick (beside car)
+; 5 = camera on a stick (behind car)
+; 6 = dropped camera
+;
+camera		REGEQU	R0
+savemat		REGEQU	R1
+camflag		REGEQU	R2
+thePlayer	REGEQU	R3
+nextbr		REGEQU	R4
+tx		REGEQU	R5	; temporary x,y,z for calculations
+ty		REGEQU	R6
+tz		REGEQU	R7
+mag		REGEQU	R8
+normrout	REGEQU	R9
+
+xrite	REGEQU	r10
+yrite	REGEQU	r11
+zrite	REGEQU	r12
+xdown	REGEQU	r13
+ydown	REGEQU	r14
+zdown	REGEQU	r15
+;
+; WARNING WARNING WARNING: dual use reggies
+;
+qstart	REGEQU	r10
+qend	REGEQU	r11
+qhead	REGEQU	r12
+qtail	REGEQU	r13
+qplay	REGEQU	r14
+qtemp	REGEQU	r15
+
+; END WARNING
+
+xhead	REGEQU	r16
+yhead	REGEQU	r17
+zhead	REGEQU	r18
+xposn	REGEQU	r19
+yposn	REGEQU	r20
+zposn	REGEQU	r21
+
+floorbnd REGEQU	R22
+
+camx	REGEQU	R23
+camy	REGEQU	R24
+camz	REGEQU	R25
+
+camerabnd REGEQU	R26
+
+; R27-R31 reserved
+temp3	REGEQU	innerLoop
+
+; ALTERNATE REGISTERS USED
+;tx		REGEQU	R5	; temporary x,y,z for calculations
+;ty		REGEQU	R6
+;tz		REGEQU	R7
+
+MACRO	JSR_NORM
+	move	PC,return
+	jump	(normrout)
+	addqt	#6,return
+ENDM
+
+	movei	#G_DIVCTRL,temp2		; use 16.16 division
+	moveq	#1,temp
+	store	temp,(temp2)
+
+	movei	#nrmlize,normrout
+	movei	#player,thePlayer
+	load	(thePlayer),thePlayer
+
+	movei	#FLOOR_MODEL,temp2
+	add	thePlayer,temp2
+	load	(temp2),floorbnd
+
+	movei	#CAMERA_MODEL,camera
+	add	thePlayer,camera
+	movei	#CAMERA_FLAG,camflag
+	add	thePlayer,camflag
+	loadw	(camflag),camflag
+	movei	#saveit,savemat
+
+	bclr	#7,camflag			; clear the "always draw last" flag
+
+	move	thePlayer,temp2
+	load	(temp2),tx
+	addqt	#4,temp2
+	load	(temp2),ty
+	addqt	#4,temp2
+	load	(temp2),tz
+	addqt	#4,temp2
+
+	move	floorbnd,camerabnd
+
+	cmpq	#0,camflag
+	movei	#fixedpos,nextbr
+	jump	NE,(nextbr)
+	nop
+;
+; standard "inside the car" camera view
+;
+	move	tx,xposn
+	move	ty,yposn
+	move	tz,zposn
+	loadw	(temp2),xrite
+	addqt	#2,temp2
+	loadw	(temp2),yrite
+	addqt	#2,temp2
+	loadw	(temp2),zrite
+	addqt	#2,temp2
+	loadw	(temp2),xdown
+	addqt	#2,temp2
+	loadw	(temp2),ydown
+	addqt	#2,temp2
+	loadw	(temp2),zdown
+	addqt	#2,temp2
+	loadw	(temp2),xhead
+	addqt	#2,temp2
+	loadw	(temp2),yhead
+	addqt	#2,temp2
+	loadw	(temp2),zhead
+;
+; subtract some of the "down" vector
+;
+	move	xdown,temp
+	move	ydown,temp2
+	shlq	#16,temp
+	shlq	#16,temp2
+	sharq	#14,temp
+	sharq	#14,temp2
+	sub	temp,xposn
+	move	zdown,temp
+	sub	temp2,yposn
+	shlq	#16,temp
+	sharq	#14,temp
+	jump	(savemat)
+	sub	temp,zposn
+
+fixedpos:
+	cmpq	#1,camflag	
+	movei	#backpos,nextbr
+	jump	EQ,(nextbr)
+	nop
+	cmpq	#4,camflag
+	movei	#stickpos,nextbr
+	jump	PL,(nextbr)
+	nop
+;
+; fixed camera position
+; 
+; special case: if camflag is 3, we're switching from a chase
+; camera view to a fixed view, and so we should do a "swoop"
+; to get to the position
+;
+; to actually find the camera coordinates: there are 2 cases
+; (1) the CAMERA field in the band header is 0; then the
+;     camera is located at the origin of the band
+; (2) the CAMERA field in the band header is non-zero; then
+;     this points at a list of camera positions. This list
+;     consists of (for each possible position):
+;	(1) A plane equation (4 longs: Ax+By+Cz+D=0)
+;	    if the evaluated equation at the car's position
+;	    is >= 0, we use this camera. In particular, if
+;	    A = B = C = D = 0, we will always use this camera
+;	    note that the car's (x,y,z) are converted to 0.16
+;	    numbers by right shifting by 16, so D should actually
+;	    be /16
+;	(2) camera band
+;	(3) X,Y,Z of camera (3 longs)
+;
+		movei	#CAMERA,temp2
+		add	floorbnd,temp2
+		load	(temp2),temp2
+		movei	#default,nextbr
+		cmpq	#0,temp2
+		jump	EQ,(nextbr)
+		nop
+		movei	#camloop,nextbr
+		move	tx,camx
+		move	ty,camy
+		move	tz,camz
+		sharq	#16,camx
+		sharq	#16,camy
+		sharq	#16,camz
+camloop:
+		load	(temp2),xposn
+		addqt	#4,temp2
+		load	(temp2),yposn
+		addqt	#4,temp2
+		load	(temp2),zposn
+		addqt	#4,temp2
+		load	(temp2),temp
+		addqt	#4,temp2
+		load	(temp2),camerabnd
+		addqt	#4,temp2
+		imultn	xposn,camx
+		imacn	yposn,camy
+		imacn	zposn,camz
+		resmac	xposn
+		add	temp,xposn
+		cmpq	#0,xposn
+		jr	PL,loadit
+		nop
+		jump	(nextbr)
+		addqt	#12, temp2
+default:
+		move	floorbnd,camerabnd
+		moveq	#XORIG,temp2
+		add	floorbnd,temp2
+loadit:
+		load	(temp2),xposn
+		addqt	#4,temp2
+		load	(temp2),yposn
+		addqt	#4,temp2
+		load	(temp2),zposn
+gotposn:
+		movei	#docalcs,nextbr
+		cmpq	#3,camflag		; if it's 2, don't do a swoop
+		jump	NE,(nextbr)
+		nop
+
+; here we're still in the "swoop" for the camera
+		move	xposn,camx
+		move	yposn,camy
+		move	zposn,camz
+		movei	#CAMERA_POSN,temp2
+		add	thePlayer,temp2
+		load	(temp2),xposn
+		addqt	#4,temp2
+		load	(temp2),yposn
+		addqt	#4,temp2
+		load	(temp2),zposn
+		; move the camera from the old position towards the new position
+		; xposn has the current camera position, camx the new position
+		sub	xposn,camx
+		sub	yposn,camy
+		sub	zposn,camz
+		
+		sharq	#2,camx			; find the "velocity" vector for the camera
+		sharq	#2,camy
+		sharq	#2,camz
+
+		move	camx,temp		; check its magnitude; if small enough, we're done the swoop
+		move	camy,temp2
+		abs	temp
+		abs	temp2
+		add	temp2,temp
+		move	camz,temp2
+		abs	temp2
+		add	temp2,temp
+		shrq	#2,temp
+		cmpq	#15,temp
+		jr	PL,_CDLOCAL_10_266			; still pretty big: keep going
+		nop
+			movei	#CAMERA_FLAG,temp2
+			moveq	#2,camflag
+			add	thePlayer,temp2
+			jump	(nextbr)
+			store	camflag,(temp2)
+_CDLOCAL_10_266:
+
+		add	camx,xposn
+		add	camy,yposn
+		add	camz,zposn
+
+		jump	(nextbr)	; go do the camera calculations
+		nop
+;
+; we get here for camera values 4,5,6
+;
+stickpos:
+	cmpq	#6,camflag		; dropped camera?
+	movei	#specialpos,temp
+	jump	EQ,(temp)		; no == must be dropped camera
+	nop
+;
+; "camera on a stick" view; there are two of these; 4 = beside the car,
+; 5 = behind the car
+;
+	move	tx,xposn
+	move	ty,yposn
+	move	tz,zposn
+	loadw	(temp2),xrite
+	addqt	#2,temp2
+	loadw	(temp2),yrite
+	addqt	#2,temp2
+	loadw	(temp2),zrite
+	addqt	#2,temp2
+	loadw	(temp2),xdown
+	addqt	#2,temp2
+	loadw	(temp2),ydown
+	addqt	#2,temp2
+	loadw	(temp2),zdown
+	addqt	#2,temp2
+	loadw	(temp2),xhead
+	addqt	#2,temp2
+	loadw	(temp2),yhead
+	addqt	#2,temp2
+	loadw	(temp2),zhead
+
+;
+; subtract some of the "head" vector (so we end up behind the car)
+;
+	move	xhead,temp
+	move	yhead,temp2
+	move	zhead,temp3
+
+	shlq	#16,temp
+	shlq	#16,temp2
+	shlq	#16,temp3
+
+	cmpq	#4,camflag
+	jr	NE,behindcar
+	nop
+		neg	temp		; go in front of the car instead of behind
+		neg	temp2
+		neg	temp3
+behindcar:
+	sharq	#10,temp
+	sharq	#10,temp2
+	sharq	#10,temp3
+
+	sub	temp,xposn
+	sub	temp2,yposn
+	sub	temp3,zposn
+	sharq	#1,temp
+	sharq	#1,temp2
+	sharq	#1,temp3
+	sub	temp,xposn
+	sub	temp2,yposn
+	sub	temp3,zposn
+;
+; then move up a bit
+;
+	movei	#$28000,temp
+	sub	temp,yposn
+
+; now go do the calculations to point the camera at the car
+	movei	#docalcs,temp
+	jump	(temp)
+	nop
+
+specialpos:
+
+	move	camera,temp2
+	load	(temp2),camerabnd
+	addqt	#4,temp2
+	load	(temp2),xposn
+	addqt	#4,temp2
+	load	(temp2),yposn
+	addqt	#4,temp2
+	load	(temp2),zposn
+	movei	#docalcs,temp2
+	jump	(temp2)
+	nop
+
+backpos:
+
+;
+; "chase" camera position: we find this by looking
+; back about 1/3 second in the playback buffer;
+; if that position is "far enough" away, start moving
+; the camera towards it by averaging the current
+; camera position and that camera position
+; if the camera is "too close", move it slightly away from
+; the car
+	move	camera,temp2
+	load	(temp2),camerabnd
+	addqt	#4,temp2
+	load	(temp2),xposn
+	addqt	#4,temp2
+	load	(temp2),yposn
+	addqt	#4,temp2
+	load	(temp2),zposn
+
+	movei	#QSTART,temp2
+	add	thePlayer,temp2
+
+	load	(temp2),qstart
+	addqt	#4,temp2
+	load	(temp2),qend
+	addqt	#4,temp2
+	load	(temp2),qhead
+	addqt	#4,temp2
+	load	(temp2),qtail
+	addqt	#4,temp2
+	load	(temp2),qplay
+; the "120" is for 120/300'th of a second
+	movei	#(120*QENTRYSIZ)/QUANTUM,qtemp
+	sub	qtemp,qplay
+	cmp	qstart,qplay
+	jr	PL,_CDLOCAL_10_402
+	nop
+		sub	qstart,qplay
+		add	qend,qplay
+_CDLOCAL_10_402:
+; possible cases:
+; CASE I: qtail <= qhead: then qplay is valid if qtail <= qplay < qhead
+; CASE 2: qhead < qtail: then qplay is valid if !(qhead <= qplay < qtail)
+;			 	i.e. if qplay < qhead || qplay >= qtail
+; if qplay is not valid, don't change the camera band or position
+;
+	moveta	tx,tx		; save these variables so they can be restored at "tooclose"
+	moveta	ty,ty
+	moveta	tz,tz
+
+	movei	#restoret,nextbr
+	cmp	qtail,qhead
+	movei	#case2,temp
+	jump	MI,(temp)
+	nop
+		cmp	qtail,qplay
+		jr	PL,_CDLOCAL_25_423
+		nop
+			jump	(nextbr)		; go to restoret
+			nop
+_CDLOCAL_25_423:
+		cmp	qhead,qplay
+		jr	MI,_CDLOCAL_30_429
+		nop
+			jump	(nextbr)		; go to restoret
+			nop
+_CDLOCAL_30_429:
+		movei	#validqplay,temp
+		jump	(temp)
+		nop
+case2:
+		cmp	qplay,qhead
+		jr	PL,validqplay
+		nop
+		cmp	qtail,qplay
+		jr	PL,validqplay
+		nop
+			jump	(nextbr)		; go to restoret
+			nop
+validqplay:
+	movei	#tooclose,nextbr
+	loadw	(qplay),floorbnd		; possible new camera band
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,floorbnd
+	or	temp,floorbnd
+
+	loadw	(qplay),camx	; load up the possible new position: note that it's not long aligned!
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,camx
+	or	temp,camx
+	loadw	(qplay),camy
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,camy
+	or	temp,camy
+	loadw	(qplay),camz
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	shlq	#16,camz
+	or	temp,camz
+
+	movei	#$1c000,temp	; make the camera a little bit higher
+	sub	temp,camy
+	move	camera,temp2	; load the old position
+
+	addqt	#4,temp2	; skip camera band
+	load	(temp2),xposn
+	addqt	#4,temp2
+	load	(temp2),yposn
+	addqt	#4,temp2
+	load	(temp2),zposn
+
+	; move the camera from the old position towards the new position
+	; xposn has the current camera position, camx the new position
+	sub	xposn,camx
+	sub	yposn,camy
+	sub	zposn,camz
+		
+	sharq	#2,camx
+	sharq	#2,camy
+	sharq	#2,camz
+
+	add	xposn,camx
+	add	yposn,camy
+	add	zposn,camz
+
+	sub	camx,tx			; check distance from car to new point
+	sub	camy,ty			; "tx" is now a vector pointing from the camera to the car
+	sub	camz,tz
+	sharq	#12,tx
+	sharq	#12,ty
+	sharq	#12,tz
+	imultn	tx,tx
+	imacn	ty,ty
+	imacn	tz,tz
+	resmac	qtemp
+	movei	#$c000,temp
+	cmp	temp,qtemp
+	jump	MI,(nextbr)		; go to tooclose
+	nop
+		move	camx,xposn
+		move	camy,yposn
+		move	camz,zposn
+		movei	#restoret,temp2
+		cmpq	#0,floorbnd	; if the new camera band is going to be 0, don't use it
+		jump	EQ,(temp2)
+		nop
+		move	floorbnd,camerabnd
+		jump	(temp2)
+		nop
+tooclose:
+.if 1
+;
+; if the camera is too close to the car, push it away
+; a little bit
+;
+	movefa	tx,tx
+	movefa	ty,ty
+	movefa	tz,tz
+	sub	xposn,tx
+	sub	yposn,ty
+	sub	zposn,tz
+	sharq	#12,tx
+	sharq	#12,ty
+	sharq	#12,tz
+	imultn	tx,tx
+	imacn	ty,ty
+	imacn	tz,tz
+	resmac	qtemp
+
+	movei	#$8000,temp
+	cmp	temp,qtemp
+	movei	#restoret,nextbr
+	jump	PL,(nextbr)
+	nop
+		JSR_NORM		; normalize the vector pointing away from the car
+		shlq	#2,tx
+		shlq	#2,ty
+		shlq	#2,tz
+		sub	tx,xposn	; push the camera away
+		sub	ty,yposn
+		sub	tz,zposn
+.endif
+
+restoret:
+
+	movefa	tx,tx
+	movefa	ty,ty
+	movefa	tz,tz
+
+;
+; tx,ty,tz were loaded up with the car's position earlier;
+; use them to find a vector pointing from the camera to
+; the car
+;
+docalcs:
+;
+; the "head" vector points at the car
+;
+	sub	xposn,tx
+	sub	yposn,ty
+	sub	zposn,tz
+	JSR_NORM
+	move	tx,xhead
+	move	ty,yhead
+	move	tz,zhead
+;
+; now find a "down" vector for the matrix
+; this should have a positive y component,
+; and be orthogonal to the "head" vector
+; (-yx, x^2+z^2, -yz) works well for this,
+; if x and z are not both zero; otherwise
+; punt with (1,0,0)
+
+	imultn	xhead,xhead
+	imacn	zhead,zhead
+	resmac	temp
+	cmpq	#0,temp
+	jr	NE,notzero
+	nop
+		moveq	#0,tx			; cross product computation below assumes tx = xdown, ty = ydown, etc.
+		bset	#14,tx
+		move	tx,xdown
+		moveq	#0,ty
+		move	ty,ydown
+		movei	#donedown,temp2
+		moveq	#0,tz
+		jump	(temp2)
+		move	tz,zdown
+notzero:
+	move	temp,ty
+	imult	yhead,tx
+	imult	yhead,tz
+	neg	tx
+	neg	tz
+	JSR_NORM
+	move	tx,xdown
+	move	ty,ydown
+	move	tz,zdown
+
+donedown:
+; finally, calculate the "rite" vector as the cross product head X down
+; a copy of "down" is still in tx,ty,tz
+	neg	tx
+	neg	ty
+	neg	tz
+
+	imultn	yhead,zdown
+	imacn	zhead,ty
+	resmac	xrite
+	sharq	#14,xrite
+
+	imultn	zhead,xdown
+	imacn	xhead,tz
+	resmac	yrite
+	sharq	#14,yrite
+
+	imultn	xhead,ydown
+	imacn	yhead,tx
+	resmac	zrite
+	sharq	#14,zrite
+
+	neg	xrite		; oops: we did the cross product in the wrong order
+	neg	yrite
+	neg	zrite
+
+	jump	(savemat)
+	nop
+;
+; Subroutine: normalize the vector in (tx,ty,tz)
+; assumes that we're given something that's already signed
+; Does this by first finding an approximation to the magnitude
+; This approximation (from Graphics Gems) is
+;  mag ~= abs(max) + abs(med)/4 + abs(min)/4
+; where max,med,min are the sorted x,y,z components of the vector
+; Registers destroyed: temp,temp2,temp3,tx,ty,tz,mag
+;
+nrmlize:
+	move	tx,temp
+	move	ty,temp2
+	move	tz,mag
+
+	abs	temp
+	abs	temp2
+	abs	mag
+
+	move	temp,temp3
+	or	temp2,temp3
+	or	mag,temp3
+	normi	temp3,temp3
+	addqt	#10,temp3
+	sha	temp3,temp
+	sha	temp3,temp2
+	sha	temp3,mag
+	sha	temp3,tx
+	sha	temp3,ty
+	sha	temp3,tz
+
+	cmp	temp,mag
+	jr	PL,_CDLOCAL_10_672
+	nop
+		move	mag,temp3
+		move	temp,mag
+		move	temp3,temp
+_CDLOCAL_10_672:
+	cmp	temp2,mag
+	jr	PL,_CDLOCAL_15_679
+	nop
+		move	mag,temp3
+		move	temp2,mag
+		move	temp3,temp2
+_CDLOCAL_15_679:
+	sharq	#2,temp		; divide by 4
+	sharq	#2,temp2
+	add	temp,mag
+	add	temp2,mag	; mag should now be relatively close to the magnitude
+	
+; save the signs of tx,ty,tz in "temp3"
+; bit 0 is tx, bit 1 is ty, bit 2 is tz
+	move	tx,temp3
+	move	ty,temp2
+	move	tz,temp
+	shrq	#31,temp3
+	shrq	#31,temp2
+	shrq	#31,temp
+	shlq	#1,temp2
+	shlq	#2,temp
+	or	temp2,temp3
+	or	temp,temp3
+
+	abs	tx
+	div	mag,tx
+	abs	ty
+	div	mag,ty
+	sharq	#2,tx		; convert back to 0.14
+	abs	tz
+	sharq	#2,ty
+	div	mag,tz
+	sharq	#2,tz
+;
+; now normalize again using the trick described in ortho.gas:
+; (1+x)^2 ~= 1+2x for small x, where "x" is the amount over 1
+;
+	imultn	tx,tx
+	imacn	ty,ty
+	imacn	tz,tz
+	resmac	mag
+	moveq	#1,temp		; make "temp" = 1 (in 28.4 bits)
+	shlq	#28,temp
+	sub	temp,mag	; find (mag-1)
+	sharq	#1,mag		; divide by 2
+	add	temp,mag	; add 1 again
+	div	mag,temp	; find inverse of magnitude
+	shrq	#2,temp
+	mult	temp,tx
+	mult	temp,ty
+	mult	temp,tz
+	shrq	#14,tx
+	shrq	#14,ty
+	shrq	#14,tz
+; now restore the signs of tx,ty,and tz from temp3
+	btst	#0,temp3
+	jr	EQ, _CDLOCAL_30_733
+	nop
+		neg	tx
+_CDLOCAL_30_733:
+	btst	#1,temp3
+	jr	EQ,_CDLOCAL_31_738
+	nop
+		neg	ty
+_CDLOCAL_31_738:
+	btst	#2,temp3
+	jump	EQ,(return)
+	nop
+	jump	(return)
+	neg	tz
+
+saveit:
+	bclr	#31,camerabnd	; flag for "good position"; we can ignore this
+	subqt	#4,camera		; move to NEW_CAMERA
+	store	camerabnd,(camera)
+	addqt	#8,camera		; skip CAMERA_MODEL
+	store	xposn,(camera)
+	addqt	#4,camera
+	store	yposn,(camera)
+	addqt	#4,camera
+	store	zposn,(camera)
+	addqt	#4,camera
+
+	storew	xrite,(camera)
+	addqt	#2,camera
+	storew	yrite,(camera)
+	addqt	#2,camera
+	storew	zrite,(camera)
+	addqt	#2,camera
+	storew	xdown,(camera)
+	addqt	#2,camera
+	storew	ydown,(camera)
+	addqt	#2,camera
+	storew	zdown,(camera)
+	addqt	#2,camera
+	storew	xhead,(camera)
+	addqt	#2,camera
+	storew	yhead,(camera)
+	addqt	#2,camera
+	storew	zhead,(camera)
+
+droppedpos:
+
+	movei	#G_DIVCTRL,temp2
+	moveq	#0,temp
+	store	temp,(temp2)
+
+REGUNDEF	camera
+REGUNDEF	camflag
+REGUNDEF	savemat
+REGUNDEF	thePlayer
+REGUNDEF	nextbr
+REGUNDEF	tx
+REGUNDEF	ty
+REGUNDEF	tz
+REGUNDEF	mag
+REGUNDEF	normrout
+
+REGUNDEF	xhead
+REGUNDEF	yhead
+REGUNDEF	zhead
+REGUNDEF	xrite
+REGUNDEF	yrite
+REGUNDEF	zrite
+REGUNDEF	xdown
+REGUNDEF	ydown
+REGUNDEF	zdown
+
+REGUNDEF	temp3
+REGUNDEF	camx
+REGUNDEF	camy
+REGUNDEF	camz
+REGUNDEF	qstart
+REGUNDEF	qend
+REGUNDEF	qhead
+REGUNDEF	qtail
+REGUNDEF	qplay
+REGUNDEF	qtemp
+
+REGUNDEF	camerabnd

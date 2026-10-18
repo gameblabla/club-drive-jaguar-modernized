@@ -1,0 +1,168 @@
+;
+; powerball point transformation code
+;
+
+	.include "rot.inc"
+
+	movei	#dotloc,temp2
+	load	(temp2),temp
+	addqt	#4,temp2
+	cmpq	#0,temp
+	movei	#noballs,temp2
+	jump	EQ,(temp2)
+	nop
+
+	movefa	ALTplayer,source
+	movei	#CAMERA_POSN,temp
+	add	temp,source
+	load		(source), xo
+	addq	#4, source
+	load		(source), yo
+	addq	#4, source
+	load		(source), zo
+	addq	#4, source
+
+	loadw	(source), m0
+	addqt	#2, source
+	loadw	(source), m1
+	addqt	#2, source
+	loadw	(source), m2
+	addqt	#2, source
+	loadw	(source), m3
+	addqt	#2, source
+	loadw	(source), m4
+	addqt	#2, source
+	loadw	(source), m5
+	addqt	#2, source
+	loadw	(source), m6
+	addqt	#2, source
+	loadw	(source), m7
+	addqt	#2, source
+	loadw	(source), m8
+
+	movei	#dotloc,source
+	addqt	#4,source
+	load	(source),x
+	addqt	#4,source
+	load	(source),y
+	addqt	#4,source
+	load	(source),z
+	sub	xo,x
+	sub	yo,y
+	sub	zo,z
+
+	movei	#PWRBALLX,dest
+
+	; make 16 bits
+	move		x, temp
+	abs		temp
+	move		y, temp2
+	abs		temp2
+	or		temp2, temp
+	move		z, temp2
+	abs		temp2
+	or		temp2, temp
+	normi	temp, temp2
+	addqt	#9, temp2
+	sha		temp2, x
+	sha		temp2, y
+	sha		temp2, z
+	neg		temp2
+	addqt	#12, temp2
+
+	; do multiply
+	imultn	m3, x	;
+	imacn	m4, y	;
+	imacn	m5, z	;
+	resmac	resultY	;
+	sha		temp2, resultY	; back to 17.15
+
+	imultn	m0, x	;
+	imacn	m1, y	;
+	imacn	m2, z	;
+	resmac	resultX	;
+	sha		temp2, resultX	; back to 17.15
+
+	imultn	m6, x	;
+	imacn	m7, y	;
+	imacn	m8, z	;
+	resmac	resultZ	;
+	sha		temp2, resultZ	; back to 17.15
+
+; do perspective calculations
+Dm	REGEQU	m0
+De	REGEQU	m1
+ze	REGEQU	m2
+D	REGEQU	m3
+xe	REGEQU	m4
+ye	REGEQU	m5
+tempz	REGEQU	m6
+
+	movei	#277, Dm
+	normi	Dm,De
+	subqt	#8,De
+	sh	De,Dm
+	neg	De
+	subqt	#16,De
+
+	movei	#XCENTER,temp
+	load	(temp),x
+	addqt	#4,temp
+	load	(temp),y
+
+	btst	#31,resultZ
+	movei	#storeit,temp2
+	jump	NE,(temp2)
+	normi	resultZ,ze
+
+	move	resultZ,tempz
+
+	addqt	#6,ze
+	sh	ze,tempz
+	move	Dm,D
+	div	tempz,D
+
+	add	De,ze
+	move	resultX,temp
+	move	resultY,temp2
+	abs	temp
+	abs	temp2
+	normi	temp,xe
+	normi	temp2,ye
+	addqt	#9,xe
+	addqt	#9,ye
+	sha	xe,resultX
+	sha	ye,resultY
+	neg	xe
+	neg	ye
+	add	ze,xe
+	add	ze,ye
+
+	imult	D,resultX
+	imult	D,resultY
+	sha	xe,resultX
+	sha	ye,resultY
+	add	x,resultX
+	add	y,resultY
+storeit:
+	movei	#PWRBALLX,dest
+	store	resultX,(dest)
+	addqt	#4,dest
+	store	resultY,(dest)
+	addqt	#4,dest
+	store	resultZ,(dest)
+	addqt	#4,dest
+	subqt	#12,ze
+	sha	ze,D
+	store	D,(dest)
+
+noballs:
+	.include "rotc.inc"
+
+REGUNDEF	Dm
+REGUNDEF	De
+REGUNDEF	ze
+REGUNDEF	D
+REGUNDEF	xe
+REGUNDEF	ye
+

@@ -1,0 +1,233 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "HOUSE/STAIR_L1.ASC",
+  "template_sha256": "411dcf8d5c468b8da3f97d18f5d31060247f72a82656cd1d58f93a1478ee2b0c",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 41,
+      "mesh": "strwy",
+      "index": 0,
+      "xyz": [
+        -6526.92334,
+        -2863.967285,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 42,
+      "mesh": "strwy",
+      "index": 1,
+      "xyz": [
+        -6526.92334,
+        -2863.967285,
+        2812.45459
+      ]
+    },
+    {
+      "line": 43,
+      "mesh": "strwy",
+      "index": 2,
+      "xyz": [
+        -6526.92334,
+        2639.716064,
+        2812.45459
+      ]
+    },
+    {
+      "line": 44,
+      "mesh": "strwy",
+      "index": 3,
+      "xyz": [
+        -4604.37207,
+        -2863.967285,
+        2812.45459
+      ]
+    },
+    {
+      "line": 45,
+      "mesh": "strwy",
+      "index": 4,
+      "xyz": [
+        -4604.37207,
+        -2863.967285,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 46,
+      "mesh": "strwy",
+      "index": 5,
+      "xyz": [
+        -4604.37207,
+        -135.88736,
+        -1786.129883
+      ]
+    },
+    {
+      "line": 47,
+      "mesh": "strwy",
+      "index": 6,
+      "xyz": [
+        -4604.37207,
+        2639.716064,
+        -1786.129639
+      ]
+    },
+    {
+      "line": 48,
+      "mesh": "strwy",
+      "index": 7,
+      "xyz": [
+        -4604.37207,
+        -135.88736,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 49,
+      "mesh": "strwy",
+      "index": 8,
+      "xyz": [
+        -4604.37207,
+        -135.887421,
+        2812.45459
+      ]
+    },
+    {
+      "line": 50,
+      "mesh": "strwy",
+      "index": 9,
+      "xyz": [
+        -4606.946289,
+        -2862.168701,
+        530.902588
+      ]
+    },
+    {
+      "line": 51,
+      "mesh": "strwy",
+      "index": 10,
+      "xyz": [
+        -6526.920898,
+        -2862.168701,
+        530.903687
+      ]
+    },
+    {
+      "line": 52,
+      "mesh": "strwy",
+      "index": 11,
+      "xyz": [
+        -4604.37207,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 53,
+      "mesh": "strwy",
+      "index": 12,
+      "xyz": [
+        -6526.92334,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 54,
+      "mesh": "strwy",
+      "index": 13,
+      "xyz": [
+        -4468.734375,
+        -135.88736,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 55,
+      "mesh": "strwy",
+      "index": 14,
+      "xyz": [
+        -4468.734375,
+        -135.887421,
+        2812.45459
+      ]
+    },
+    {
+      "line": 56,
+      "mesh": "strwy",
+      "index": 15,
+      "xyz": [
+        -4468.734375,
+        2639.716064,
+        2812.45459
+      ]
+    },
+    {
+      "line": 57,
+      "mesh": "strwy",
+      "index": 16,
+      "xyz": [
+        -4468.734375,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 58,
+      "mesh": "strwy",
+      "index": 17,
+      "xyz": [
+        -6526.922363,
+        -1637.788818,
+        2812.46875
+      ]
+    },
+    {
+      "line": 59,
+      "mesh": "strwy",
+      "index": 18,
+      "xyz": [
+        -6526.92334,
+        -2863.967285,
+        2812.45459
+      ]
+    },
+    {
+      "line": 60,
+      "mesh": "strwy",
+      "index": 19,
+      "xyz": [
+        -4604.37207,
+        -2863.967285,
+        2812.45459
+      ]
+    },
+    {
+      "line": 66,
+      "mesh": "strwy",
+      "index": 20,
+      "xyz": [
+        -6526.92334,
+        2639.716064,
+        2812.45459
+      ]
+    },
+    {
+      "line": 67,
+      "mesh": "strwy",
+      "index": 21,
+      "xyz": [
+        -4604.37207,
+        2639.716064,
+        2812.45459
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

@@ -1,0 +1,357 @@
+{
+  "schema": "club-geometry-bsp",
+  "original": "CARS/INT-YEL.ASC",
+  "generated_from_asc_sha256": "17f5aa3b4327f629a1e7235b617acc1134d5f54dfa60eac0aaf003017c146262",
+  "provenance": "2026 geometry-derived BSP, NOT byte-compatible Jaguar .BND/.MDL or original mkbnd",
+  "limitations": [
+    "New geometry-based collision BSP only; existing runtime collision trees are not replaced.",
+    "No native divider normals, BSP CP records, polygon flags, or Jaguar linker offsets generated."
+  ],
+  "meshes": [
+    {
+      "name": "roof",
+      "source_vertices": 19,
+      "source_faces": 10,
+      "nondegenerate_faces": 10,
+      "nodes": [
+        {
+          "type": "leaf",
+          "depth": 0,
+          "start": 0,
+          "count": 10
+        }
+      ],
+      "fragments": [
+        {
+          "source_face": 0,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12163.324219,
+              1455.182983,
+              1457.049438
+            ],
+            [
+              12248.195313,
+              1455.175293,
+              1444.069946
+            ],
+            [
+              12248.195313,
+              1561.961182,
+              1444.069946
+            ]
+          ]
+        },
+        {
+          "source_face": 1,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12163.324219,
+              1455.182983,
+              1457.049438
+            ],
+            [
+              12248.195313,
+              1561.961182,
+              1444.069946
+            ],
+            [
+              12163.324219,
+              1561.953491,
+              1457.049438
+            ]
+          ]
+        },
+        {
+          "source_face": 2,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12151.90918,
+              1455.182983,
+              1456.922852
+            ],
+            [
+              12131.229492,
+              1471.787476,
+              1479.441772
+            ],
+            [
+              12163.324219,
+              1455.182983,
+              1457.049438
+            ]
+          ]
+        },
+        {
+          "source_face": 3,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12124.285156,
+              1471.881348,
+              1479.38269
+            ],
+            [
+              12131.229492,
+              1471.787476,
+              1479.441772
+            ],
+            [
+              12151.90918,
+              1455.182983,
+              1456.922852
+            ]
+          ]
+        },
+        {
+          "source_face": 4,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12163.324219,
+              1561.953491,
+              1457.049438
+            ],
+            [
+              12131.229492,
+              1544.619141,
+              1479.437866
+            ],
+            [
+              12151.90918,
+              1561.953491,
+              1456.922852
+            ]
+          ]
+        },
+        {
+          "source_face": 5,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12131.229492,
+              1544.619141,
+              1479.437866
+            ],
+            [
+              12124.285156,
+              1544.492432,
+              1479.380737
+            ],
+            [
+              12151.90918,
+              1561.953491,
+              1456.922852
+            ]
+          ]
+        },
+        {
+          "source_face": 6,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12053.368164,
+              1561.953491,
+              1455.799194
+            ],
+            [
+              12062.77832,
+              1544.580322,
+              1478.232666
+            ],
+            [
+              12042.420898,
+              1562.095337,
+              1455.799194
+            ]
+          ]
+        },
+        {
+          "source_face": 7,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12072.192383,
+              1544.429321,
+              1478.806641
+            ],
+            [
+              12062.77832,
+              1544.580322,
+              1478.232666
+            ],
+            [
+              12053.368164,
+              1561.953491,
+              1455.799194
+            ]
+          ]
+        },
+        {
+          "source_face": 8,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12062.77832,
+              1471.97522,
+              1478.232666
+            ],
+            [
+              12072.192383,
+              1471.928223,
+              1478.807617
+            ],
+            [
+              12053.368164,
+              1455.182983,
+              1455.799194
+            ]
+          ]
+        },
+        {
+          "source_face": 9,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12042.420898,
+              1455.041138,
+              1455.799194
+            ],
+            [
+              12062.77832,
+              1471.97522,
+              1478.232666
+            ],
+            [
+              12053.368164,
+              1455.182983,
+              1455.799194
+            ]
+          ]
+        }
+      ],
+      "area_error_max": 0.0
+    },
+    {
+      "name": "roof1",
+      "source_vertices": 4,
+      "source_faces": 2,
+      "nondegenerate_faces": 2,
+      "nodes": [
+        {
+          "type": "leaf",
+          "depth": 0,
+          "start": 0,
+          "count": 2
+        }
+      ],
+      "fragments": [
+        {
+          "source_face": 0,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12062.77832,
+              1544.580322,
+              1478.232666
+            ],
+            [
+              12131.229492,
+              1544.619141,
+              1479.437866
+            ],
+            [
+              12131.229492,
+              1471.787476,
+              1479.441772
+            ]
+          ]
+        },
+        {
+          "source_face": 1,
+          "material": "YELLOW PLASTIC",
+          "vertices": [
+            [
+              12062.77832,
+              1544.580322,
+              1478.232666
+            ],
+            [
+              12131.229492,
+              1471.787476,
+              1479.441772
+            ],
+            [
+              12062.77832,
+              1471.97522,
+              1478.232666
+            ]
+          ]
+        }
+      ],
+      "area_error_max": 0.0
+    },
+    {
+      "name": "inside",
+      "source_vertices": 4,
+      "source_faces": 2,
+      "nondegenerate_faces": 2,
+      "nodes": [
+        {
+          "type": "leaf",
+          "depth": 0,
+          "start": 0,
+          "count": 2
+        }
+      ],
+      "fragments": [
+        {
+          "source_face": 0,
+          "material": "BLACK MATTE",
+          "vertices": [
+            [
+              12042.351563,
+              1561.677368,
+              1455.839478
+            ],
+            [
+              12163.337891,
+              1561.734497,
+              1457.044678
+            ],
+            [
+              12163.337891,
+              1454.671875,
+              1457.048584
+            ]
+          ]
+        },
+        {
+          "source_face": 1,
+          "material": "BLACK MATTE",
+          "vertices": [
+            [
+              12042.351563,
+              1561.677368,
+              1455.839478
+            ],
+            [
+              12163.337891,
+              1454.671875,
+              1457.048584
+            ],
+            [
+              12042.351563,
+              1454.947876,
+              1455.839478
+            ]
+          ]
+        }
+      ],
+      "area_error_max": 0.0
+    }
+  ]
+}

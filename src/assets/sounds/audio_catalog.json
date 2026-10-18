@@ -1,0 +1,399 @@
+{
+  "format": "Club Drive audio_portable sidecar format",
+  "preview_hz": 22050,
+  "midi_ppq": 480,
+  "assets": [
+    {
+      "file": "woo1.f16",
+      "kind": "f16",
+      "original_sha256": "83857df824ec408e5e8684d254518b365b9109bce376de6a96e0d6bc528e9f64",
+      "native_size": 9387,
+      "portable_file": "wav/woo1.wav",
+      "export_sha256": "20956f6d1cb7eefe976e18b686b8df2c100b8f2c585660a84789f39f1054ea16"
+    },
+    {
+      "file": "aescrash.f16",
+      "kind": "f16",
+      "original_sha256": "63ed9afd17af9796e7975af8c31cc07896517534164f5cd6e317a77333c8ee3c",
+      "native_size": 21255,
+      "portable_file": "wav/aescrash.wav",
+      "export_sha256": "a579562dbd49cb2d21d08db883cda61b3c36d7d58f3de5758ebf8758e3e709e9"
+    },
+    {
+      "file": "right7.f16",
+      "kind": "f16",
+      "original_sha256": "5abc695effd2a17884bb05f58378e3d2f8cdc4dbd22eb2df2d33b3ea2111fb03",
+      "native_size": 13504,
+      "portable_file": "wav/right7.wav",
+      "export_sha256": "d98965581d183503a3836633e26aca0ee2aa55d5e4343352a68f6298d693bed6"
+    },
+    {
+      "file": "yes1.f16",
+      "kind": "f16",
+      "original_sha256": "f5016a820f2e408be6e06b0201df9cb15ca684e1430012c9282e784e858b8e52",
+      "native_size": 7672,
+      "portable_file": "wav/yes1.wav",
+      "export_sha256": "2a2dab11732e011d2f7b735513f66b573ce51355acf8f987479b8bc68ff0e83f"
+    },
+    {
+      "file": "flush20k.f16",
+      "kind": "f16",
+      "original_sha256": "4e9b5f09f168fb52f75eee475129afae02efd5474e67d315e80d734b7a90f4de",
+      "native_size": 56011,
+      "portable_file": "wav/flush20k.wav",
+      "export_sha256": "580860a9af41cf5eda776289a540a21a69a8241d7ffb746bb6fed2bdde4bd720"
+    },
+    {
+      "file": "pno2_20k.f16",
+      "kind": "f16",
+      "original_sha256": "f4a13961eec03d9b53b369cd0cb7413d11b03a6087fba23c6afee27faa9860e7",
+      "native_size": 8370,
+      "portable_file": "wav/pno2_20k.wav",
+      "export_sha256": "9154f4e960874b2dfd9a16e42de34b2ce9c1595eaee7c2996e4630a78707b215"
+    },
+    {
+      "file": "meow30k.f16",
+      "kind": "f16",
+      "original_sha256": "4a9662ee3fff7177f13e484009d28327b93e5a58cd395144e78f63ad643334be",
+      "native_size": 22409,
+      "portable_file": "wav/meow30k.wav",
+      "export_sha256": "fcc2e3131ee5d497b5427208dcb039821c85de84396eebf53c3bb16ccf39f12b"
+    },
+    {
+      "file": "mouse20k.f16",
+      "kind": "f16",
+      "original_sha256": "d5fb08550f501973dcfa5bd15d9f6e8404e11179d010a3e27fed37616f920653",
+      "native_size": 2142,
+      "portable_file": "wav/mouse20k.wav",
+      "export_sha256": "d0dc79604a07cfac5533dfadc0b984323490b50ba1cb70783703f80e3e63ab90"
+    },
+    {
+      "file": "door_20k.f16",
+      "kind": "f16",
+      "original_sha256": "bd6634b9bbcc52cc0b543ba6882ff349d73f8a18ea52396c8cb5e973f3621840",
+      "native_size": 24254,
+      "portable_file": "wav/door_20k.wav",
+      "export_sha256": "bd00e131d22d56cd18396f555a3e9d6d67f238627451ebb5301662db07f318f3"
+    },
+    {
+      "file": "ouch_17k.f16",
+      "kind": "f16",
+      "original_sha256": "d01b61566aa1e1ca5ea9772757ed2900b0ea9b259e8276c4cfde44c31d21971c",
+      "native_size": 20941,
+      "portable_file": "wav/ouch_17k.wav",
+      "export_sha256": "5f25421d8ec066ed0f45309ecf555feffbe4b0bc8fec871d2ca3b89cd79c599a"
+    },
+    {
+      "file": "conga.scr",
+      "kind": "scr",
+      "original_sha256": "7220286b02414b6e0baf27bd844fccf4e637c0c90b30af415155772e05a3d8b0",
+      "native_size": 13596,
+      "portable_file": "../music/midi/conga.mid",
+      "export_sha256": "c16e73c3f69b313a1b8c26c050f2f06b6e783eb3e0df7ce9429a52f0a7441c5e"
+    },
+    {
+      "file": "brushsnr.f16",
+      "kind": "f16",
+      "original_sha256": "b3f75d56480315bf9b597e3762c9da1a93bacff54fe642eb77922e5e78fb13bc",
+      "native_size": 4780,
+      "portable_file": "wav/brushsnr.wav",
+      "export_sha256": "86399d95643a33ef426251304d7f11030e357d72c24882fe2759cfc55cc0fba8"
+    },
+    {
+      "file": "conga.f16",
+      "kind": "f16",
+      "original_sha256": "e6c540c61feaf90086e5dd994a5e9e995336ed684da6bfae1bb5b570c6009789",
+      "native_size": 4127,
+      "portable_file": "wav/conga.wav",
+      "export_sha256": "4032db8c64774a30756314fa40fcab54eb75e9387c30321970c024c4e0c0d9f0"
+    },
+    {
+      "file": "kick2.f16",
+      "kind": "f16",
+      "original_sha256": "984ebd50ac152bbb143d34d324b524e99634a1ed83fdaebe4800dcfb058261e2",
+      "native_size": 2431,
+      "portable_file": "wav/kick2.wav",
+      "export_sha256": "1e4ea42c8e3603c1fa074fa61a457143880b3eac7ad4e207af2339219e2e9d67"
+    },
+    {
+      "file": "marimba2.f16",
+      "kind": "f16",
+      "original_sha256": "6fcb5f6519286b83d78820cee978518e9cc94863c062775dc8de2b16d07aba78",
+      "native_size": 12032,
+      "portable_file": "wav/marimba2.wav",
+      "export_sha256": "483beafa1404b9c7e84be570f2ddfdcec3a270957e9b699d91abc4779a46b761"
+    },
+    {
+      "file": "honky.scr",
+      "kind": "scr",
+      "original_sha256": "24919cea182084d49e7b717b1b67e6cdf9370ad64397b88e59239ec5716993f0",
+      "native_size": 10988,
+      "portable_file": "../music/midi/honky.mid",
+      "export_sha256": "7aa0a6482a5070f0f96055c667df623c4860369d12a971174468a0ddc1821b88"
+    },
+    {
+      "file": "honkyc2.f16",
+      "kind": "f16",
+      "original_sha256": "c361c9c8ecb774efae4c9aca242da5ba5d51dc999035964f2a3799bf37d422d5",
+      "native_size": 14861,
+      "portable_file": "wav/honkyc2.wav",
+      "export_sha256": "5686a74c9da87106b1d6ff785fb16ef022a2b6b6dfb1239b9f264d67b00882e6"
+    },
+    {
+      "file": "honkyc3.f16",
+      "kind": "f16",
+      "original_sha256": "bbd137192cbf33d2e77c5e3820013184bfeb3e51b8707298ce6098b55b414143",
+      "native_size": 12884,
+      "portable_file": "wav/honkyc3.wav",
+      "export_sha256": "275fce963e6f058d6ebf8f47af87f8c0c6fe0dacb084868c54e71fb770256467"
+    },
+    {
+      "file": "honkyc4.f16",
+      "kind": "f16",
+      "original_sha256": "0b4714f034bf996995b49ea91f18a30799aaca1d2ac38c4d1e143de2801c3ad4",
+      "native_size": 12575,
+      "portable_file": "wav/honkyc4.wav",
+      "export_sha256": "957806c2e0626158c1596ecc258df83307069c29e6889f9dd137029475552333"
+    },
+    {
+      "file": "pnotri.f16",
+      "kind": "f16",
+      "original_sha256": "ef20016e05e38accb3e3e10afe2fcc30e64edb0eccc6e03051e99ab2573d9a82",
+      "native_size": 5852,
+      "portable_file": "wav/pnotri.wav",
+      "export_sha256": "898cf259975cc5b3b47cab48735eb1204de6f61aee47601c8daca06c8cd3a84a"
+    },
+    {
+      "file": "sfjazz.scr",
+      "kind": "scr",
+      "original_sha256": "f65304e263ac46aa313a38c73f27f4982abd0827f50c8f24891a1533433c8786",
+      "native_size": 19420,
+      "portable_file": "../music/midi/sfjazz.mid",
+      "export_sha256": "bd38bfb0c9c4d67555b05b7d6a4807ccb845b13cba97ba3f61e9507a3b413e4f"
+    },
+    {
+      "file": "kick.f16",
+      "kind": "f16",
+      "original_sha256": "55ba72fec11f61d3f891bd1aae227a135bc995a8d0f17ef28fb11f96f973187f",
+      "native_size": 10935,
+      "portable_file": "wav/kick.wav",
+      "export_sha256": "077bb2926e658bbbb03dce4629ca3afe5e203e6bc6e3de891f474ad517753344"
+    },
+    {
+      "file": "bass.f16",
+      "kind": "f16",
+      "original_sha256": "c8294f3a96b6316472d57f6bccfc734a4c2a5e93cc2645ed1099e02ff1a53b27",
+      "native_size": 11773,
+      "portable_file": "wav/bass.wav",
+      "export_sha256": "a1eb4f8aab46092ce9c1639ad777d8d657b87fd1275fe6329374e5e9951840f3"
+    },
+    {
+      "file": "trumpet.f16",
+      "kind": "f16",
+      "original_sha256": "3351e893adae893a6eb0c183c635066b302fc6d9061f230a5183c685862af11d",
+      "native_size": 11753,
+      "portable_file": "wav/trumpet.wav",
+      "export_sha256": "d2949b93b4c25d36a46c17ee0f28ebc74f4f5283821c7ce458684250505de433"
+    },
+    {
+      "file": "clsd_hat.f16",
+      "kind": "f16",
+      "original_sha256": "732e43911bf9a96b98d9925cf5feab38e271defe64fdf1f8c1437c590914f7a1",
+      "native_size": 4488,
+      "portable_file": "wav/clsd_hat.wav",
+      "export_sha256": "7f5e30e50f032ee8ee9e92daaf5f2c8ea0c2da43098e8e60a4a38a143c30075d"
+    },
+    {
+      "file": "open_hat.f16",
+      "kind": "f16",
+      "original_sha256": "8ef5adba36f3ecf855f9cc2b1d74ba4e489f41abdaea08e7f80f650c10a8b518",
+      "native_size": 5520,
+      "portable_file": "wav/open_hat.wav",
+      "export_sha256": "3ae4f37c93f31738f6f704e70dbebc93e40a21171a42f95d41fe34d194ac3d8d"
+    },
+    {
+      "file": "snare.f16",
+      "kind": "f16",
+      "original_sha256": "d0dc182717192e62dea46e5037d4258013492d04c90b124402c957a451021b32",
+      "native_size": 16059,
+      "portable_file": "wav/snare.wav",
+      "export_sha256": "ae6a4601dee3e753f97fc29593b6180064ca53aadd97e36cbcace5e3fefbb6f5"
+    },
+    {
+      "file": "ride.f16",
+      "kind": "f16",
+      "original_sha256": "d3de28da46083dc7ca449ad7d6ccf3eb1ca638ec6d5b49d61b5a123a705989a8",
+      "native_size": 43051,
+      "portable_file": "wav/ride.wav",
+      "export_sha256": "586fb6d436d2566d1608c454acefec4d839c327e0e12e3ea48c6c8b9e6cd2bd1"
+    },
+    {
+      "file": "rim.f16",
+      "kind": "f16",
+      "original_sha256": "2be4ac3fc67e837550584d738c742cd88f66d15db0fdc8bb00f01c93144f11e0",
+      "native_size": 2715,
+      "portable_file": "wav/rim.wav",
+      "export_sha256": "b9ab59f7c826fc686b9bbcafaa6a69d045c5ca2dfb9050f3d2bdfaa898a282b6"
+    },
+    {
+      "file": "toms.f16",
+      "kind": "f16",
+      "original_sha256": "d2087b5126701da13bbff0c07207b7e73a3e76a72de269508e6b89e08f2b9e75",
+      "native_size": 16916,
+      "portable_file": "wav/toms.wav",
+      "export_sha256": "52854d34f3a813c02dab982478b450a2867edd0da369af1529934fef41308a27"
+    },
+    {
+      "file": "techno.scr",
+      "kind": "scr",
+      "original_sha256": "4cd46bad056f178099566df2b7d3d7fa8a11f85bbb34586d5a7e24277c5e89de",
+      "native_size": 11724,
+      "portable_file": "../music/midi/techno.mid",
+      "export_sha256": "22512bd547de1eae32b9a50eb8966f3499212ec9af51840f80c76646435b699e"
+    },
+    {
+      "file": "gang.scr",
+      "kind": "scr",
+      "original_sha256": "03158b3f63318420ef617654e54bed0a09cd6c5bacf31c276a0f79298b5be0c6",
+      "native_size": 12924,
+      "portable_file": "../music/midi/gang.mid",
+      "export_sha256": "556eab76f772131646507adc4d190cf827cea2710362aa0404983ef004bfc722"
+    },
+    {
+      "file": "balloon.f16",
+      "kind": "f16",
+      "original_sha256": "e4bb1c580a68438526e4d882ea62d1d6c704728bd3a38f6e8e9d95813e017fc4",
+      "native_size": 23329,
+      "portable_file": "wav/balloon.wav",
+      "export_sha256": "29de15a9b03b61d2ae684f9c61de330000a1f93d3c0f074767ef80d95da4b285"
+    },
+    {
+      "file": "raphat.f16",
+      "kind": "f16",
+      "original_sha256": "6473d845fae9e61b512b9ef3b7f417e4c31f19845caa0374549143d82242534c",
+      "native_size": 1879,
+      "portable_file": "wav/raphat.wav",
+      "export_sha256": "7a42a463002e8d6ada0e8199e6aab254408ca2a63ad771d680241e845368c845"
+    },
+    {
+      "file": "rapkick.f16",
+      "kind": "f16",
+      "original_sha256": "0f3d1129f018b7f0b18b7b9ab3b08094f8511e334dfd8ec603d272d511cdb538",
+      "native_size": 2568,
+      "portable_file": "wav/rapkick.wav",
+      "export_sha256": "4813b3af22b39811048ebb42cad7a088e4390c6de25a592ca5bcaa1a7ae5e834"
+    },
+    {
+      "file": "rappiano.f16",
+      "kind": "f16",
+      "original_sha256": "2fc0977c0aa2115d5207a62b9e37c7705cf268d940c20e9471b01dfa64f2ec0e",
+      "native_size": 19397,
+      "portable_file": "wav/rappiano.wav",
+      "export_sha256": "20727e7cdc3ff179da6bee7d9386728b8a1fb4a7ba2ce6f3032d1430478495da"
+    },
+    {
+      "file": "rapsnr1.f16",
+      "kind": "f16",
+      "original_sha256": "3e76c3caa2f2608bf656f12d423c67ca92d057dbeed7bcd6f0caf8150d7b2fac",
+      "native_size": 2203,
+      "portable_file": "wav/rapsnr1.wav",
+      "export_sha256": "563e5508e8a604ecd56444da7463b2ff6aa0a624c7c4ff4a8fb08afd9a8e8804"
+    },
+    {
+      "file": "rapsnr2.f16",
+      "kind": "f16",
+      "original_sha256": "9e5e2e7b6fd7e88f4ba4f648bef33241c3bd3db6813e2505bdfef2e3ea74528e",
+      "native_size": 2418,
+      "portable_file": "wav/rapsnr2.wav",
+      "export_sha256": "82390bfab0f0bef3b31a27c718f5a7fde9a8bbecdec35e8447afb5143f882253"
+    },
+    {
+      "file": "sax.f16",
+      "kind": "f16",
+      "original_sha256": "3837d315e572f2d7be52b0fe9bf0b50ca7da6b95de1ef7a9562c6a2ba7478aad",
+      "native_size": 20778,
+      "portable_file": "wav/sax.wav",
+      "export_sha256": "502eede401adf3369b1371a1b39678d00b25cb4c209fed16c0ca1dcc3bc3bcd1"
+    },
+    {
+      "file": "wahguitr.f16",
+      "kind": "f16",
+      "original_sha256": "78ef9b8d4f5df9b5c04a93ff663d3c14589398115ccc5e614ce0f3e53da2d786",
+      "native_size": 3902,
+      "portable_file": "wav/wahguitr.wav",
+      "export_sha256": "9819b022b39faaa9b90a2b431a2a25fd0ad9661289228c44a369af02282ea7f1"
+    },
+    {
+      "file": "reggae.scr",
+      "kind": "scr",
+      "original_sha256": "abcf319bc358c1de3f2b957c640077b186524f19a58e9b755f65d145725e5855",
+      "native_size": 5964,
+      "portable_file": "../music/midi/reggae.mid",
+      "export_sha256": "8d9cd8b6da25a578086627b793cd31e8b646a278c5acadff318c87fd4fa8bae7"
+    },
+    {
+      "file": "chord1.f16",
+      "kind": "f16",
+      "original_sha256": "be46013f3bd4ed2114bdd2c7d9324119a97b56e37f9b67ede61aece3df0eaee8",
+      "native_size": 7913,
+      "portable_file": "wav/chord1.wav",
+      "export_sha256": "49412245ee8c7aaf2466ee1eb2a9bfae633fa1a0c46d8d781adeef599f6bbce3"
+    },
+    {
+      "file": "chord2.f16",
+      "kind": "f16",
+      "original_sha256": "59c3a11164e2744e9905dbcd326f15567ee874de7a051ba5665b82020f9045fc",
+      "native_size": 4555,
+      "portable_file": "wav/chord2.wav",
+      "export_sha256": "92fb220901241dde5d6a378da7bd859336e01a639bd8fa8ad47d848baa0fd102"
+    },
+    {
+      "file": "cabassa1.f16",
+      "kind": "f16",
+      "original_sha256": "1b6d6bb71be90598e59db22ac3c2aef2ceebbe0eb96297780fd5ef11244e7148",
+      "native_size": 3468,
+      "portable_file": "wav/cabassa1.wav",
+      "export_sha256": "e88178f021b94b159ea24b4da17e6efa16eeb4a28ddd141269bfba181b3d6e2c"
+    },
+    {
+      "file": "cabassa3.f16",
+      "kind": "f16",
+      "original_sha256": "5af22cd668cdc022f550c28b3f2cd8aeea70aa4d2c028f12c12ec957b79f4818",
+      "native_size": 3468,
+      "portable_file": "wav/cabassa3.wav",
+      "export_sha256": "77510ff83f33968b81830524a28cf85e4e39a938cba2022158488490ad3696f4"
+    },
+    {
+      "file": "clubwave.scr",
+      "kind": "scr",
+      "original_sha256": "e77bb80f794c176343e6491fbd5c60af3033e83764868cfc38b2c711b9ee487b",
+      "native_size": 17436,
+      "portable_file": "../music/midi/clubwave.mid",
+      "export_sha256": "f5ef0251ca2a93e702ac4f95f22858c70ea688d29395080825df6d7e4590960c"
+    },
+    {
+      "file": "sawwave2.f16",
+      "kind": "f16",
+      "original_sha256": "b5bf3d552c3ac843b34fa31941ee623d501115df5b5eed6a4d3e4f40c78f47f9",
+      "native_size": 7418,
+      "portable_file": "wav/sawwave2.wav",
+      "export_sha256": "285a417971f4d2c3f38e0b42324f865678a63810359cf5517fe9fdcb72138dea"
+    },
+    {
+      "file": "roksnare.f16",
+      "kind": "f16",
+      "original_sha256": "459ba876ce0cd01db9c0cfc8473ffee10cadd3ac8b1ba176fb1778ad545297e5",
+      "native_size": 9406,
+      "portable_file": "wav/roksnare.wav",
+      "export_sha256": "88339f82e1aed39b922a5da3b4630b60657130ac6c0b09f20247b60bf6c8fa89"
+    },
+    {
+      "file": "rockkick.f16",
+      "kind": "f16",
+      "original_sha256": "82272029372b5a20b53021b9674a10333034db90b9b804c0d951eaa9dace2038",
+      "native_size": 3321,
+      "portable_file": "wav/rockkick.wav",
+      "export_sha256": "adfbb718b8e7d70258f91977ce30e2778c0a62267c46d7701a73a28e9747c482"
+    }
+  ]
+}

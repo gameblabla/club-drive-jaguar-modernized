@@ -1,0 +1,148 @@
+--- a/src/tom/gpu.c
++++ b/src/tom/gpu.c
+@@ -2682,6 +2682,9 @@
+ 
+ // Main GPU execution core
+ 
++#ifdef VJ_HEADLESS
++extern void V30ContactPC(uint32_t pc);
++#endif
+ void GPUExec(int32_t cycles)
+ {
+    /* Slice-invariant settings, cached in locals for the exec loop (issue
+@@ -2820,6 +2823,9 @@
+ #endif
+ 
+       pcThis = gpu_pc;
++#ifdef VJ_HEADLESS
++      V30ContactPC(pcThis);
++#endif
+ #ifdef VJ_HEADLESS
+       if (GPUTrapReservedFetch(pcThis))
+       {
+--- a/standalone/headless.c
++++ b/standalone/headless.c
+@@ -293,6 +293,83 @@
+ static const char *cd_bios_path;
+ static const char *screenshot_path;
+ static const char *trace_path;
++/* V30 Club Drive collision-entry recorder. Emulator-side only, no ROM changes.
++ * Probe PCs come from RMAC -l listings reproduced byte-exactly against
++ * the distributed original GPU images. The runtime overlay is classified
++ * by stable opcode bytes (not relocated movei operands). */
++static const char *v30_contact_trace_path;
++static FILE *v30_contact_trace;
++static unsigned long long v30_counts[4][10];
++static unsigned long long v30_nonzero[4];
++static int32_t v30_first_fx[4][3];
++static const char *v30_modes[4]={"casend","racend","tagend","comp"};
++static const char *v30_names[4][10]={
++  {"drvloop","closetop","closeLp","crashlp","crashedge","edgehit","enterclose","doneclose","drvloopend","force_store"},
++  {"drvloop","closetop","closeLp","crashlp","crashedge","edgehit","enterclose","doneclose","drvloopend","force_store"},
++  {"drvloop","closetop","closeLp","crashlp","crashedge","edgehit","enterclose","doneclose","drvloopend","force_store"},
++  {"initit","forlp","innerfor","endforlp",},
++};
++static const uint32_t v30_pcs[4][10]={
++  {0xF03160u,0xF03228u,0xF03252u,0xF033C4u,0xF034D2u,0xF03608u,0xF037E8u,0xF0382Eu,0xF03838u,0xF0375Eu},
++  {0xF03160u,0xF03228u,0xF03252u,0xF033C4u,0xF034D2u,0xF03648u,0xF03828u,0xF0386Eu,0xF03878u,0xF0379Eu},
++  {0xF03176u,0xF0323Eu,0xF03268u,0xF033DAu,0xF034E8u,0xF03688u,0xF03868u,0xF038AEu,0xF038B8u,0xF037DEu},
++  {0xF031B0u,0xF03230u,0xF032ACu,0xF0341Cu,},
++};
++static const int v30_lengths[4]={10,10,10,4};
++static int v30_overlay_id(void) {
++   /* e400 9802 is shared by cas/race/tag 3D-end kernels. A stable
++    * instruction at offset +14 distinguishes case vs race. */
++   const unsigned char *p = GPUGetRAM() + 0x38;
++   if (p[0]==0xE4 && p[1]==0 && p[2]==0x98 && p[3]==2 && p[8]==0xA4 && p[9]==0x42) {
++      if (p[10]==0x90 && p[11]==0x5E && p[12]==0x98 && p[13]==0x1B) {
++         if (p[14]==0x3E && p[15]==0x76) return 0;
++         if (p[14]==0x3E && p[15]==0xB6) return 1;
++      }
++      if (p[10]==0x98 && p[11]==0x1C) return 2;
++   }
++   if(p[0]==0x98 && p[1]==0x1C && p[6]==0x93 && p[7]==0x9A) return 3;
++   return -1;
++}
++void V30ContactPC(uint32_t pc) {
++   int k,j;
++   if (!v30_contact_trace_path) return;
++   /* Short-circuit most instructions without sampling the overlay. */
++   for(k=0;k<4;k++)for(j=0;j<v30_lengths[k];j++)if(v30_pcs[k][j]==pc) {
++      if (v30_overlay_id()==k) {
++         v30_counts[k][j]++;
++         if(k<3 && !strcmp(v30_names[k][j],"force_store")) {
++            int32_t fx=(int32_t)GPUGetReg(2),fy=(int32_t)GPUGetReg(3),fz=(int32_t)GPUGetReg(4);
++            if(fx || fy || fz) {
++               if(!v30_nonzero[k]) {v30_first_fx[k][0]=fx;v30_first_fx[k][1]=fy;v30_first_fx[k][2]=fz;}
++               v30_nonzero[k]++;
++            }
++         }
++      }
++   }
++}
++static int v30_contact_init(void) {
++   if(!v30_contact_trace_path)return 1;
++   v30_contact_trace=fopen(v30_contact_trace_path,"w");
++   if(!v30_contact_trace){perror("V30 contact trace");return 0;}
++   fprintf(v30_contact_trace,"field,overlay,probe,pc,hits,nonzero_force_stores,first_nonzero_fx,first_nonzero_fy,first_nonzero_fz\n");
++   return 1;
++}
++static void v30_contact_field(uint64_t field) {
++   int k,j;
++   if(!v30_contact_trace)return;
++   for(k=0;k<4;k++)for(j=0;j<v30_lengths[k];j++) {
++      fprintf(v30_contact_trace,"%" PRIu64 ",%s,%s,0x%06X,%llu,%llu,%d,%d,%d\n",field,v30_modes[k],v30_names[k][j],v30_pcs[k][j],v30_counts[k][j],
++         (!strcmp(v30_names[k][j],"force_store") ? v30_nonzero[k] : 0ull),
++         (!strcmp(v30_names[k][j],"force_store") ? v30_first_fx[k][0] : 0),
++         (!strcmp(v30_names[k][j],"force_store") ? v30_first_fx[k][1] : 0),
++         (!strcmp(v30_names[k][j],"force_store") ? v30_first_fx[k][2] : 0));
++      v30_counts[k][j]=0;
++   }
++   for(k=0;k<4;k++) {
++      v30_nonzero[k]=0;
++      memset(v30_first_fx[k],0,sizeof(v30_first_fx[k]));
++   }
++}
+ static const char *symbols_path;
+ static const char *disasm_spec;
+ static const char *debug_bundle_dir;
+@@ -415,6 +492,7 @@
+       JaguarExecuteNew();
+       SoundCallback(NULL, sampleBuffer, region_pal ? 1920 : 1600);
+       fields++; frames_presented++;
++      v30_contact_field(fields);
+       if(wav.failed) {interrupted=1;break;}
+       if(realtime_pacing) {
+          double deadline=start_seconds+(double)fields/JaguarGetFieldRateHz();
+@@ -630,6 +708,7 @@
+       "  --cd-bios retail|dev|FILE  CD BIOS (FILE must be 256 KB)\n"
+       "  --pal, --pal50        PAL 50 Hz emulation (NTSC default)\n"
+       "  --deinterlace bob|weave  Interlaced presentation (default bob)\n"
++      "  --contact-trace FILE  Club Drive GPU entry hit counts by field (v30)\n"
+       "  --trace FILE          Binary VJTR trace (with --watch)\n"
+       "  --watch A[:LEN][:r|w|rw]  RAM watch interval (hex address)\n"
+       "  --gpu-pipeline-timing Enable experimental GPU + DSP scoreboard and bus timing\n"
+@@ -883,6 +962,7 @@
+          }
+          if(!strcmp(arg,"--symbols")) { symbols_path=val;i++;continue; }
+          if(!strcmp(arg,"--trace")) { trace_path=val;i++;continue; }
++         if(!strcmp(arg,"--contact-trace")) {v30_contact_trace_path=val;i++;continue;}
+          if(!strcmp(arg,"--debug-bundle")) {debug_bundle_dir=val;gpu_history_enabled=1;i++;continue;}
+          if(!strcmp(arg,"--disasm")) { disasm_spec=val;i++;continue; }
+          if(!strcmp(arg,"--gdb-port")) { gdb_port=atoi(val);i++;continue; }
+@@ -999,6 +1079,7 @@
+    }
+    if(symbols_path && !export_symbols(symbols_path)) {exitcode=3;goto done;}
+    if(disasm_spec && !parse_disasm(disasm_spec)) {fprintf(stderr,"invalid --disasm\n");exitcode=2;goto done;}
++   if (!v30_contact_init()) {exitcode=3;goto done;}
+    start_seconds=monotonic_seconds(); last_fps_seconds=start_seconds;
+    if(repl_mode) repl(); else step_frames(max_frames);
+    if(screenshot_path && !write_png(screenshot_path)) exitcode=3;
+@@ -1008,6 +1089,7 @@
+    if(trace_path && vjtrace_dump(trace_path)<0) {fprintf(stderr,"Trace dump failed: %s\n",trace_path);exitcode=3;}
+ #endif
+  done:
++   if(v30_contact_trace && fclose(v30_contact_trace))exitcode=3;
+    if(!wav_stop())exitcode=3;
+ #ifdef __linux__
+    for(i=0;i<2;i++)if(joy[i].fd>=0)close(joy[i].fd);

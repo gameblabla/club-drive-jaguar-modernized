@@ -1,0 +1,51 @@
+{
+  "schema": "club-bsp",
+  "source_model": "CARS/DRONE.MDL",
+  "source_template_sha256": "04eba007f9389398b89856ec0b84a990c1ba6eaa31a151d1c5b2f606b40b9700",
+  "provenance": "2026 symbolic reconstruction from surviving original .MDL tree comments and header",
+  "limitations": [
+    "BSP splitter selection and polygon repartitioning are NOT derived from 3D geometry",
+    "Only existing node types and record sizes are editable",
+    "Leaves reference offsets of existing collision polygon lists, not vertex IDs"
+  ],
+  "valid_cp_offsets": {
+    "0": 1,
+    "438": 2
+  },
+  "divider_count": 18,
+  "nodes": [
+    {
+      "offset": 0,
+      "type": "split",
+      "divider": 0,
+      "first_child": 16,
+      "second_child": 8,
+      "line": 241
+    },
+    {
+      "offset": 8,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 0,
+      "line": 243,
+      "long_line": 244
+    },
+    {
+      "offset": 16,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 438,
+      "line": 246,
+      "long_line": 247
+    }
+  ],
+  "statistics": {
+    "nodes": 3,
+    "splits": 1,
+    "leaves": 2,
+    "cp_indices": [
+      2,
+      1
+    ]
+  }
+}

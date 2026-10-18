@@ -1,0 +1,363 @@
+{
+  "csv_rows": 61200,
+  "evidence": "real-BIOS Virtual Jaguar GPU instruction-and-register trace",
+  "fields": 1800,
+  "input_script_sha256": "82d9edb1f0a6483a653e62a0b006e20c0aa4350986259b5b8558734937c2c2a7",
+  "limitations": [
+    "GPU register samples are pre-store fixed-point integers, not calibrated physical units",
+    "Only x/y/z force register inputs are sampled; torque and memory-commit values are not traced",
+    "Emulator execution is not independently verified physical Jaguar hardware execution",
+    "The runtime is unmodified and no changed-collision cartridge has been tested"
+  ],
+  "nonzero_force_vectors": [
+    {
+      "count": 1,
+      "field": 1065,
+      "overlay": "casend",
+      "raw_xyz": [
+        0,
+        -30815,
+        0
+      ]
+    },
+    {
+      "count": 1,
+      "field": 1067,
+      "overlay": "casend",
+      "raw_xyz": [
+        0,
+        -5598,
+        0
+      ]
+    }
+  ],
+  "probe_targets": 34,
+  "probes": [
+    {
+      "active_fields": 411,
+      "first_field": 979,
+      "instruction_entries": 68226,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF03252",
+      "probe": "closeLp"
+    },
+    {
+      "active_fields": 411,
+      "first_field": 979,
+      "instruction_entries": 793,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF03228",
+      "probe": "closetop"
+    },
+    {
+      "active_fields": 369,
+      "first_field": 1063,
+      "instruction_entries": 5980,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF034D2",
+      "probe": "crashedge"
+    },
+    {
+      "active_fields": 382,
+      "first_field": 1037,
+      "instruction_entries": 7258,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF033C4",
+      "probe": "crashlp"
+    },
+    {
+      "active_fields": 411,
+      "first_field": 979,
+      "instruction_entries": 822,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF0382E",
+      "probe": "doneclose"
+    },
+    {
+      "active_fields": 411,
+      "first_field": 979,
+      "instruction_entries": 1233,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF03160",
+      "probe": "drvloop"
+    },
+    {
+      "active_fields": 411,
+      "first_field": 979,
+      "instruction_entries": 411,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF03838",
+      "probe": "drvloopend"
+    },
+    {
+      "active_fields": 4,
+      "first_field": 1065,
+      "instruction_entries": 20,
+      "last_field": 1071,
+      "overlay": "casend",
+      "pc": "0xF03608",
+      "probe": "edgehit"
+    },
+    {
+      "active_fields": 411,
+      "first_field": 979,
+      "instruction_entries": 68637,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF037E8",
+      "probe": "enterclose"
+    },
+    {
+      "active_fields": 382,
+      "first_field": 1037,
+      "instruction_entries": 382,
+      "last_field": 1799,
+      "overlay": "casend",
+      "pc": "0xF0375E",
+      "probe": "force_store"
+    },
+    {
+      "active_fields": 1,
+      "first_field": 977,
+      "instruction_entries": 39,
+      "last_field": 977,
+      "overlay": "comp",
+      "pc": "0xF0341C",
+      "probe": "endforlp"
+    },
+    {
+      "active_fields": 1,
+      "first_field": 977,
+      "instruction_entries": 205,
+      "last_field": 977,
+      "overlay": "comp",
+      "pc": "0xF03230",
+      "probe": "forlp"
+    },
+    {
+      "active_fields": 823,
+      "first_field": 977,
+      "instruction_entries": 824,
+      "last_field": 1800,
+      "overlay": "comp",
+      "pc": "0xF031B0",
+      "probe": "initit"
+    },
+    {
+      "active_fields": 1,
+      "first_field": 977,
+      "instruction_entries": 664,
+      "last_field": 977,
+      "overlay": "comp",
+      "pc": "0xF032AC",
+      "probe": "innerfor"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF03252",
+      "probe": "closeLp"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF03228",
+      "probe": "closetop"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF034D2",
+      "probe": "crashedge"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF033C4",
+      "probe": "crashlp"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF0386E",
+      "probe": "doneclose"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF03160",
+      "probe": "drvloop"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF03878",
+      "probe": "drvloopend"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF03648",
+      "probe": "edgehit"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF03828",
+      "probe": "enterclose"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "racend",
+      "pc": "0xF0379E",
+      "probe": "force_store"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF03268",
+      "probe": "closeLp"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF0323E",
+      "probe": "closetop"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF034E8",
+      "probe": "crashedge"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF033DA",
+      "probe": "crashlp"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF038AE",
+      "probe": "doneclose"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF03176",
+      "probe": "drvloop"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF038B8",
+      "probe": "drvloopend"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF03688",
+      "probe": "edgehit"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF03868",
+      "probe": "enterclose"
+    },
+    {
+      "active_fields": 0,
+      "first_field": null,
+      "instruction_entries": 0,
+      "last_field": null,
+      "overlay": "tagend",
+      "pc": "0xF037DE",
+      "probe": "force_store"
+    }
+  ],
+  "raw_trace_sha256": "fa885c084ca48ada0cb003e5497b512e268d5e7103ab1ace0df70eeb8d7e55d1",
+  "rom_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "scope": "original contact_audit ROM; unchanged original collision geometry",
+  "uninstrumented_screenshot_parity": [
+    {
+      "field": 600,
+      "identical": true,
+      "sha256": "ac27a0ad483a9b9de53b32af07c7768e77b01791389d5aac0690a97c81828050"
+    },
+    {
+      "field": 1200,
+      "identical": true,
+      "sha256": "2b21bf5edc7a30a56ca88c2f72eab6ff3ab946e933f3f1683a584f4a00a5bca1"
+    },
+    {
+      "field": 1800,
+      "identical": true,
+      "sha256": "b56878f54e90795e4abd0fc76036e6f8ddbc95b85036117130790a94619df15a"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "reference_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "resources": [
+    {
+      "symbol": "ttlcar",
+      "start": 205592,
+      "code_reference_offset": 13128,
+      "evidence": "title.s/play.s source-matched 68000 immediate pointer",
+      "uncompressed_bytes": 36864,
+      "source_raw_file": "assets/native/resources/packed/032318_auxiliary_image_0.bin",
+      "original_filename": "ttlcar.z",
+      "format": "gzip",
+      "slot_end": 211331,
+      "length": 5739,
+      "sha256": "0389c4d8677e326c59b0b0814427d8c5c99436b6d5f744f48ccdf597327d6549"
+    },
+    {
+      "symbol": "o_ldtext",
+      "start": 2038744,
+      "code_reference_offset": 41624,
+      "evidence": "title.s/play.s source-matched 68000 immediate pointer",
+      "uncompressed_bytes": 6144,
+      "source_raw_file": "assets/native/resources/packed/1F1BD8_short_graphic_1.bin",
+      "original_filename": "ldtext.z",
+      "format": "gzip",
+      "slot_end": 2040416,
+      "length": 1672,
+      "sha256": "a6a6d31886fb42829a79dd195f8c49070e816bec1829be78df922245937bf25d"
+    },
+    {
+      "symbol": "o_coltxt",
+      "start": 2040416,
+      "code_reference_offset": 41928,
+      "evidence": "title.s/play.s source-matched 68000 immediate pointer",
+      "uncompressed_bytes": 6144,
+      "source_raw_file": "assets/native/resources/packed/1F2260_short_graphic_2.bin",
+      "original_filename": "coltext.z",
+      "format": "gzip",
+      "slot_end": 2042747,
+      "length": 2331,
+      "sha256": "8e515f16ec7fe1abf253f87fe8fb28d36cda6a246bdba738e62539bbafca7cf0"
+    },
+    {
+      "symbol": "o_p2txt",
+      "start": 2042752,
+      "code_reference_offset": 41698,
+      "evidence": "title.s/play.s source-matched 68000 immediate pointer",
+      "original_filename": "p2txt",
+      "format": "raw",
+      "slot_end": 2048896,
+      "length": 6144,
+      "sha256": "1215ca59107d1ac4f90fbab7f8c73c4f124a5991d487d28d43b44a215ed2150e"
+    },
+    {
+      "symbol": "gameovr",
+      "start": 2050992,
+      "code_reference_offset": 45348,
+      "evidence": "title.s/play.s source-matched 68000 immediate pointer",
+      "uncompressed_bytes": 33280,
+      "source_raw_file": "assets/native/resources/packed/1F4BB0_gameover_cry16.bin",
+      "original_filename": "gameovr.z",
+      "format": "gzip",
+      "slot_end": 2063083,
+      "length": 12091,
+      "sha256": "d3f7498feef0c51314b1f25c7f9099df2058f8547eade739b330506c3012179a"
+    },
+    {
+      "symbol": "REWIND",
+      "start": 2063088,
+      "code_reference_offset": 41122,
+      "evidence": "title.s/play.s source-matched 68000 immediate pointer",
+      "original_filename": "rewind.cry",
+      "format": "raw",
+      "slot_end": 2065136,
+      "length": 2048,
+      "sha256": "14edd6eeaed9890ee563b6757891ad6c8267858765f91fd70b12fab0d206ebe7"
+    }
+  ],
+  "note": "Proven original runtime cartridge addresses; native packed/raw assets preserved. Source JPEG/JAG converters are still unavailable."
+}

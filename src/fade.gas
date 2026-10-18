@@ -1,0 +1,347 @@
+;for fade GPU code
+FADE_PRG		equ	$F03800			;start of program
+FADE_START	equ	$F03FE8			;holds starting address of area to fade
+FADE_END		equ	$F03FEC			;end address for data
+FADE_DEST		equ	$F03FF0			;where to write the new data
+BRIGHTNESS	equ	$F03FF4			;brightness level (0-16)
+FADE_DONE		equ	$F03FF8			;1 when fade is done
+	include "jaguar.inc"
+
+doneadr			REGEQU	r0		;0 when program is running, 1 when program is done
+cur_adr			REGEQU	r3		;current address in source data
+end_adr			REGEQU	r4		;address of the end of the source data
+
+destaddr			REGEQU	r5		;current destination address
+
+origcolors		REGEQU	r8
+newcolors			REGEQU	r10		;first 2 pixels of phrase
+newcolors2		REGEQU	r11		;last 2 pixels of phrase
+
+do_write			REGEQU	r14		;address of writepix label
+loop				REGEQU	r15
+
+mask1			REGEQU	r20
+mask2			REGEQU	r21
+mask4			REGEQU	r22
+mask8			REGEQU	r23
+
+bright			REGEQU	r25		;level of brightness
+
+jump_addr			REGEQU	r27		;address of loop for current brightness level
+
+g_hi				REGEQU	r29		;holds high 32 bits for phrase write
+
+temp				REGEQU	r30
+
+	ORG	FADE_PRG
+
+		movei	#FADE_DONE,doneadr
+		moveq	#0,temp
+		store	temp,(doneadr)				;initialize done flag
+
+		movei	#FADE_START,temp
+		load		(temp),cur_adr				;get the start address
+		addq		#4,temp
+		load		(temp),end_adr				;get the end address
+		addq		#4,temp
+		load		(temp),destaddr			;get the destination address
+		addq		#4,temp
+		load		(temp),bright				;get the level of brightness
+		shlq		#2,bright
+
+		movei	#%01111011110111110111101111011111,mask8
+		movei	#%00111001110011110011100111001111,mask4
+		movei	#%00011000110001110001100011000111,mask2
+		movei	#%00001000010000110000100001000011,mask1
+
+		movei	#G_HIDATA,g_hi
+		movei	#writepix,do_write
+		movei	#jump_table,temp
+		add		bright,temp				;add bright * 4
+		load		(temp),jump_addr
+		rorq		#16,jump_addr				;swap the words
+fadeloop:
+		load		(cur_adr),newcolors			;get 2 pixels to change
+		addq		#4,cur_adr
+		load		(cur_adr),newcolors2		;get 2 more pixels to change
+		jump		(jump_addr)
+		nop
+writepix:
+		store	newcolors,(g_hi)			;get high 32 bits ready for phrase write
+		storep	newcolors2,(destaddr)
+		cmp		end_adr,cur_adr			;see if at end address yet
+		jr		CS,fadeloop				;if not, change next pixel
+		addq		#8,destaddr				;go to next pixel (this can be here instead of NOP)
+
+		movei	#1,temp
+		store	temp,(doneadr)				;1 indicates program is finished
+
+;stop the GPU
+		movei	#$00000008,R30
+		movei	#G_CTRL,R31
+		store	R30,(R31)
+
+		nop
+		nop
+		nop
+		nop
+
+MACRO	done
+		jump		(do_write)
+		addq		#4,cur_adr				;go to next pixel
+ENDM
+
+loop0:
+		movei	#0,newcolors
+		move		newcolors,newcolors2
+		done
+loop1:
+		shrq		#4,newcolors				;get 1/16
+		shrq		#4,newcolors2
+		and		mask1,newcolors
+		and		mask1,newcolors2
+		done
+loop2:
+		shrq		#3,newcolors				;get 2/16
+		shrq		#3,newcolors2				;get 2/16
+		and		mask2,newcolors
+		and		mask2,newcolors2
+		done
+loop3:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#3,newcolors				;get 3/16
+		shrq		#4,origcolors
+		and		mask2,newcolors
+		and		mask1,origcolors
+		add		origcolors,newcolors
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#3,newcolors2				;get 3/16
+		shrq		#4,origcolors
+		and		mask2,newcolors2
+		and		mask1,origcolors
+		add		origcolors,newcolors2
+		done
+loop4:
+		shrq		#2,newcolors				;get 4/16
+		shrq		#2,newcolors2				;get 4/16
+		and		mask4,newcolors
+		and		mask4,newcolors2
+		done
+loop5:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#2,newcolors				;get 5/16
+		shrq		#4,origcolors
+		and		mask4,newcolors
+		and		mask1,origcolors
+		add		origcolors,newcolors
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#2,newcolors2				;get 5/16
+		shrq		#4,origcolors
+		and		mask4,newcolors2
+		and		mask1,origcolors
+		add		origcolors,newcolors2
+		done
+loop6:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#2,newcolors				;get 6/16
+		shrq		#3,origcolors
+		and		mask4,newcolors
+		and		mask2,origcolors
+		add		origcolors,newcolors
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#2,newcolors2				;get 6/16
+		shrq		#3,origcolors
+		and		mask4,newcolors2
+		and		mask2,origcolors
+		add		origcolors,newcolors2
+		done
+loop7:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		move		newcolors,temp
+		shrq		#2,newcolors				;get 7/16
+		shrq		#3,origcolors
+		and		mask4,newcolors
+		and		mask2,origcolors
+		shrq		#4,temp
+		add		origcolors,newcolors
+		and		mask1,temp
+		add		temp,newcolors
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		move		newcolors2,temp
+		shrq		#2,newcolors2				;get 7/16
+		shrq		#3,origcolors
+		and		mask4,newcolors2
+		and		mask2,origcolors
+		shrq		#4,temp
+		add		origcolors,newcolors2
+		and		mask1,temp
+		add		temp,newcolors2
+		done
+loop8:
+		shrq		#1,newcolors				;get 8/16
+		shrq		#1,newcolors2				;get 8/16
+		and		mask8,newcolors
+		and		mask8,newcolors2
+		done
+loop9:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#1,newcolors				;get 8/16
+		shrq		#4,origcolors
+		and		mask8,newcolors
+		and		mask1,origcolors
+		add		origcolors,newcolors		;8/16 + 1/16
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#1,newcolors2				;get 8/16
+		shrq		#4,origcolors
+		and		mask8,newcolors2
+		and		mask1,origcolors
+		add		origcolors,newcolors2		;8/16 + 1/16
+		done
+loop10:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#1,newcolors
+		shrq		#3,origcolors
+		and		mask8,newcolors
+		and		mask2,origcolors
+		add		origcolors,newcolors
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#1,newcolors2
+		shrq		#3,origcolors
+		and		mask8,newcolors2
+		and		mask2,origcolors
+		add		origcolors,newcolors2
+		done
+loop11:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		move		newcolors,temp
+		shrq		#2,temp
+		shrq		#4,origcolors
+		and		mask4,temp
+		and		mask1,origcolors
+		add		origcolors,temp
+		sub		temp,newcolors
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		move		newcolors2,temp
+		shrq		#2,temp
+		shrq		#4,origcolors
+		and		mask4,temp
+		and		mask1,origcolors
+		add		origcolors,temp
+		sub		temp,newcolors2
+		done
+loop12:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#2,origcolors				;get 4/16
+		and		mask4,origcolors
+		sub		origcolors,newcolors		;subtract 4/16 from 16/16
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#2,origcolors				;get 4/16
+		and		mask4,origcolors
+		sub		origcolors,newcolors2		;subtract 4/16 from 16/16
+		done
+loop13:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		move		newcolors,temp
+ 		shrq		#3,temp					;get 3/16
+		shrq		#4,origcolors
+		and		mask2,temp
+		and		mask1,origcolors
+		add		origcolors,temp
+		sub		temp,newcolors				;subtract 3/16 from 16/16
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		move		newcolors2,temp
+ 		shrq		#3,temp					;get 3/16
+		shrq		#4,origcolors
+		and		mask2,temp
+		and		mask1,origcolors
+		add		origcolors,temp
+		sub		temp,newcolors2			;subtract 3/16 from 16/16
+		done
+loop14:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#3,origcolors				;get 2/16
+		and		mask2,origcolors
+		sub		origcolors,newcolors		;subtract 2/16 from 16/16
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#3,origcolors				;get 2/16
+		and		mask2,origcolors
+		sub		origcolors,newcolors2		;subtract 2/16 from 16/16
+		done
+loop15:
+	nop	; retail GASM inter-loop pipeline bubble
+		move		newcolors,origcolors
+		shrq		#4,origcolors				;get 1/16
+		and		mask1,origcolors
+		sub		origcolors,newcolors		;subtract 1/16 from 16/16
+
+	nop	; retail GASM inter-pixel pipeline bubble
+
+		move		newcolors2,origcolors
+		shrq		#4,origcolors				;get 1/16
+		and		mask1,origcolors
+		sub		origcolors,newcolors2		;subtract 1/16 from 16/16
+		done
+loop16:
+		done
+
+
+.phrase
+jump_table:
+	dc.w (loop0 & $ffff), (loop0 >> 16)
+	dc.w (loop1 & $ffff), (loop1 >> 16)
+	dc.w (loop2 & $ffff), (loop2 >> 16)
+	dc.w (loop3 & $ffff), (loop3 >> 16)
+	dc.w (loop4 & $ffff), (loop4 >> 16)
+	dc.w (loop5 & $ffff), (loop5 >> 16)
+	dc.w (loop6 & $ffff), (loop6 >> 16)
+	dc.w (loop7 & $ffff), (loop7 >> 16)
+	dc.w (loop8 & $ffff), (loop8 >> 16)
+	dc.w (loop9 & $ffff), (loop9 >> 16)
+	dc.w (loop10 & $ffff), (loop10 >> 16)
+	dc.w (loop11 & $ffff), (loop11 >> 16)
+	dc.w (loop12 & $ffff), (loop12 >> 16)
+	dc.w (loop13 & $ffff), (loop13 >> 16)
+	dc.w (loop14 & $ffff), (loop14 >> 16)
+	dc.w (loop15 & $ffff), (loop15 >> 16)
+	dc.w (loop16 & $ffff), (loop16 >> 16)
+

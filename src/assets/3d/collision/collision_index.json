@@ -1,0 +1,98 @@
+{
+  "CAR1.MDL": {
+    "model": "CAR1.MDL",
+    "polygons": 58,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 133,
+    "original_polygons": 58,
+    "original_nodes": 31,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 31
+  },
+  "CAR2.MDL": {
+    "model": "CAR2.MDL",
+    "polygons": 60,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 143,
+    "original_polygons": 60,
+    "original_nodes": 3,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 3
+  },
+  "CAR3.MDL": {
+    "model": "CAR3.MDL",
+    "polygons": 59,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 138,
+    "original_polygons": 59,
+    "original_nodes": 5,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 5
+  },
+  "CAR4.MDL": {
+    "model": "CAR4.MDL",
+    "polygons": 59,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 138,
+    "original_polygons": 59,
+    "original_nodes": 5,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 5
+  },
+  "CAR5.MDL": {
+    "model": "CAR5.MDL",
+    "polygons": 60,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 143,
+    "original_polygons": 60,
+    "original_nodes": 3,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 3
+  },
+  "CAR6.MDL": {
+    "model": "CAR6.MDL",
+    "polygons": 58,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 133,
+    "original_polygons": 58,
+    "original_nodes": 31,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 31
+  },
+  "CARS/CAR2.MDL": {
+    "model": "CARS/CAR2.MDL",
+    "polygons": 60,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 143,
+    "original_polygons": 60,
+    "original_nodes": 3,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 3
+  },
+  "CARS/CAR3.MDL": {
+    "model": "CARS/CAR3.MDL",
+    "polygons": 59,
+    "changed_or_added_polygon_positions": 0,
+    "existing_edges": 138,
+    "original_polygons": 59,
+    "original_nodes": 5,
+    "added_edges": 0,
+    "cp_delta_bytes": 0,
+    "tree_delta_bytes": 0,
+    "compiled_nodes": 5
+  }
+}

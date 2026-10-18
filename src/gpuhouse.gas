@@ -1,0 +1,555 @@
+;
+; House animation function
+; parameter block layout:
+;	0	texture
+;	4	seed for random number
+;	8	mouse band pointer
+;	12	recording buffer start
+;	16	recording buffer end
+;	20	playback head
+;	24	elapsed time since last movement
+
+
+	include "jaguar.inc"
+	include "blit.inc"
+
+	include "3d.inc"
+	include "68kequ.inc"
+	include	"3dds.inc"
+
+DOPACK EQU 1
+
+	ORG	Overlay
+
+; global register defines
+pic1	REGEQU	R0
+pic2	REGEQU	R1
+pic3	REGEQU	R2
+pic4	REGEQU	R3
+destpic	REGEQU	R4
+line1	REGEQU	R5
+line2	REGEQU	R6
+destline	REGEQU	R7
+count	REGEQU	R8
+mask	REGEQU	R9
+red	REGEQU	R10
+
+constA	REGEQU	R15
+constQ	REGEQU	R16
+constR	REGEQU	R17
+remain	REGEQU	R18
+_lseed	REGEQU	R19
+func	REGEQU	R20
+linsiz	REGEQU	R21
+high	REGEQU	R22
+wide	REGEQU	R23
+aflags	REGEQU	R24
+
+texture	REGEQU	R26
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+parambl	REGEQU	R30
+return	REGEQU	R31
+
+
+MACRO JSR_FUNC
+	move	PC,return
+	jump	(func)
+	addqt	#6,return
+ENDM
+
+	movei	#rand,func
+	movei	#16807,constA
+	movei	#127773,constQ
+	movei	#2836,constR
+
+	movei	#$f000,red
+	movei	#$00ff,mask
+
+	movei	#animateparam,temp
+	load	(temp),parambl
+	or	parambl,parambl
+	load	(parambl),texture
+	addqt	#4,parambl
+	load	(parambl),_lseed
+	movei	#G_REMAIN,remain
+
+.if 1
+;
+; set up the TV texture
+;
+	movei	#screen_addr,temp2
+	load	(temp2),temp2
+	movei	#ATOGGLE,temp
+	xor	temp,temp2
+	and	temp,temp2
+	store	temp2,(texture)
+.endif
+	addqt	#12,texture
+;
+; set up the fireplace texture
+;
+	load	(texture),destline
+	addqt	#8,texture		; skip blitter A1_FLAGS
+	loadw	(texture),wide
+	addqt	#2,texture
+	loadw	(texture),high
+
+	move	wide,linsiz
+	add	linsiz,linsiz		; size of line in bytes
+
+	move	high,count
+	addqt	#1,count
+	mult	wide,count
+
+	move	destline,line1
+	add	linsiz,line1
+	move	line1,line2
+	add	linsiz,line2
+
+	subqt	#2,line1
+	loadw	(line1),pic1
+	addqt	#2,line1
+	loadw	(line1),pic2
+	addqt	#2,line1
+
+.if DOPACK
+	unpack	pic1
+	unpack	pic2
+.else
+	and	mask,pic1
+	and	mask,pic2
+.endif
+	movei	#floop,innerLoop
+	subqt	#1,count
+
+floop:
+	loadw	(line1),pic3
+	addqt	#2,line1
+	loadw	(line2),pic4
+	addqt	#2,line2
+.if DOPACK
+	unpack	pic3
+	unpack	pic4
+.else
+	and	mask,pic3
+	and	mask,pic4
+.endif
+	move	pic1,destpic
+	add	pic2,destpic
+	add	pic3,destpic
+	add	pic4,destpic
+	shrq	#2,destpic
+	move	destpic,temp
+.if DOPACK
+	pack	destpic
+	shlq	#24,temp
+	shrq	#24,temp
+.else
+	or	red,destpic
+.endif
+	cmpq	#15,temp
+	jr	PL,_CDLOCAL_10_155
+	subqt	#6,destpic
+		movei	#$f010,destpic
+_CDLOCAL_10_155:
+	storew	destpic,(destline)
+	addqt	#2,destline
+	move	pic2,pic1
+	move	pic3,pic2
+	subq	#1,count
+	jump	NE,(innerLoop)
+	nop
+
+; Now re-initialize the bottom line
+	movei	#$f080,destpic
+	move	destline,line2
+	add	linsiz,line2
+	move	wide,count
+	movei	#bloop,innerLoop
+	subqt	#1,count
+bloop:
+		JSR_FUNC
+		btst	#2,_lseed
+		movei	#around,temp
+		jump	EQ,(temp)
+		nop
+			JSR_FUNC
+			btst	#2,_lseed
+			movei	#$ffff,destpic
+			jr	EQ,around
+			nop
+				movei	#$f080,destpic
+around:
+	storew	destpic,(destline)
+	addqt	#2,destline
+	storew	destpic,(line2)
+	addqt	#2,line2
+
+	subq	#1,count
+	jump	NE,(innerLoop)
+	nop
+
+; finish up fireplace stuff
+	store	_lseed,(parambl)
+	addqt	#4,parambl
+
+; global register defines
+dronebnd	REGEQU	R0
+qstart		REGEQU	R1
+qend		REGEQU	R2
+qplay		REGEQU	R3
+mbandptr	REGEQU	R4
+curbnd		REGEQU	R5
+
+xhead		REGEQU	R6
+yhead		REGEQU	R7
+zhead		REGEQU	R8
+
+xrite		REGEQU	R9
+yrite		REGEQU	R10
+zrite		REGEQU	R11
+
+xdown		REGEQU	R12
+ydown		REGEQU	R13
+zdown		REGEQU	R14
+
+xposn		REGEQU	R15
+yposn		REGEQU	R16
+zposn		REGEQU	R17
+
+qtime		REGEQU	R18
+
+brloop		REGEQU	R19
+brend		REGEQU	R20
+
+playspeed	REGEQU	R21
+
+	movei	#playspd,playspeed
+	loadw	(playspeed),playspeed
+	movei	#mbands,mbandptr
+;
+; do the mouse's playback
+;
+	load	(parambl),dronebnd
+	addqt	#4,parambl
+	load	(parambl),qstart
+	addqt	#4,parambl
+	load	(parambl),qend
+	addqt	#4,parambl
+	load	(parambl),qplay
+	addqt	#4,parambl
+	load	(parambl),qtime
+	movei	#player,temp2
+	movei	#mloop,brloop
+	load	(temp2),temp2		; get pointer to current player
+	movei	#endmloop,brend
+	movei	#CAR_FRAME,temp
+	add	temp,temp2
+	load	(temp2),temp2		; get elapsed time for current player's frame
+	sub	temp2,qtime		; subtract elapsed time from playback time
+
+	sharq	#1,playspeed		; double playback speed by halving time between frames
+mloop:
+	cmpq	#0,qtime
+	jump	PL,(brend)
+	nop
+	add	playspeed,qtime
+;
+; load up the band and x,y,z positions
+;
+	loadw	(qplay),curbnd
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,curbnd
+	or	temp,curbnd
+	loadw	(qplay),xposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,xposn
+	or	temp,xposn
+	loadw	(qplay),yposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,yposn
+	or	temp,yposn
+	loadw	(qplay),zposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,zposn
+	or	temp,zposn
+
+	movei	#XORIG,temp2
+	add	dronebnd,temp2
+	store	xposn,(temp2)
+	addqt	#4,temp2
+	store	yposn,(temp2)
+	addqt	#4,temp2
+	store	zposn,(temp2)
+	addqt	#4,temp2
+
+;
+; load up the band matrix
+;
+	loadw	(qplay),xrite
+	addqt	#2,qplay
+	loadw	(qplay),xdown
+	addqt	#2,qplay
+	loadw	(qplay),yrite
+	addqt	#2,qplay
+	loadw	(qplay),ydown
+	addqt	#2,qplay
+	loadw	(qplay),zrite
+	addqt	#2,qplay
+	loadw	(qplay),zdown
+	addqt	#4,qplay			; skip 2 bytes of game data, too
+
+; calculate col. 3 as col. 1 X col. 2
+	move	xdown,xposn
+	move	ydown,yposn
+	move	zdown,zposn
+	neg	xposn
+	neg	yposn
+	neg	zposn
+	imultn	yrite,zdown
+	imacn	zrite,yposn
+	resmac	xhead
+	imultn	zrite,xdown
+	imacn	xrite,zposn
+	resmac	yhead
+	imultn	xrite,ydown
+	imacn	yrite,xposn
+	resmac	zhead
+	sharq	#14,xhead
+	sharq	#14,yhead
+	sharq	#14,zhead
+
+; store the matrix
+	movei	#BND_MATRIX,temp2
+	add	dronebnd,temp2
+	load	(temp2),temp2
+	or	temp2,temp2
+
+	storew	xrite,(temp2)
+	addq	#2,temp2
+	storew	xdown,(temp2)
+	addq	#2,temp2
+	storew	xhead,(temp2)
+	addq	#2,temp2
+	storew	yrite,(temp2)
+	addq	#2,temp2
+	storew	ydown,(temp2)
+	addq	#2,temp2
+	storew	yhead,(temp2)
+	addq	#2,temp2
+	storew	zrite,(temp2)
+	addq	#2,temp2
+	storew	zdown,(temp2)
+	addq	#2,temp2
+	storew	zhead,(temp2)
+
+	store	dronebnd,(mbandptr)
+	addqt	#4,mbandptr
+	bclr	#31,curbnd		; clear the "this is a good place" bit
+	store	curbnd,(mbandptr)
+	addqt	#4,mbandptr
+	moveq	#0,temp
+	store	temp,(mbandptr)
+	subqt	#8,mbandptr
+	cmp	qplay,qend
+	jr	NE,_CDLOCAL_10_367
+	nop
+		move	qstart,qplay
+_CDLOCAL_10_367:
+	jump	(brloop)
+	nop
+
+endmloop:
+	store	qtime,(parambl)
+	subqt	#4,parambl
+	store	qplay,(parambl)
+	addqt	#8,parambl
+	addqt	#8,mbandptr
+
+;
+; now the cat's playback
+;
+
+	load	(parambl),dronebnd
+	addqt	#4,parambl
+	load	(parambl),qstart
+	addqt	#4,parambl
+	load	(parambl),qend
+	addqt	#4,parambl
+	load	(parambl),qplay
+	addqt	#4,parambl
+	load	(parambl),qtime
+	movei	#player,temp2
+	movei	#cloop,brloop
+	load	(temp2),temp2		; get pointer to current player
+	movei	#endcloop,brend
+	movei	#CAR_FRAME,temp
+	add	temp,temp2
+	load	(temp2),temp2		; get elapsed time for current player's frame
+	sub	temp2,qtime		; subtract elapsed time from playback time
+
+cloop:
+	cmpq	#0,qtime
+	jump	PL,(brend)
+	nop
+	add	playspeed,qtime
+;
+; load up the band and x,y,z positions
+;
+	loadw	(qplay),curbnd
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,curbnd
+	or	temp,curbnd
+	loadw	(qplay),xposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,xposn
+	or	temp,xposn
+	loadw	(qplay),yposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,yposn
+	or	temp,yposn
+	loadw	(qplay),zposn
+	addqt	#2,qplay
+	loadw	(qplay),temp
+	addqt	#2,qplay
+	shlq	#16,zposn
+	or	temp,zposn
+
+	movei	#XORIG,temp2
+	add	dronebnd,temp2
+	store	xposn,(temp2)
+	addqt	#4,temp2
+	store	yposn,(temp2)
+	addqt	#4,temp2
+	store	zposn,(temp2)
+	addqt	#4,temp2
+
+;
+; load up the band matrix
+;
+	loadw	(qplay),xrite
+	addqt	#2,qplay
+	loadw	(qplay),xdown
+	addqt	#2,qplay
+	loadw	(qplay),yrite
+	addqt	#2,qplay
+	loadw	(qplay),ydown
+	addqt	#2,qplay
+	loadw	(qplay),zrite
+	addqt	#2,qplay
+	loadw	(qplay),zdown
+	addqt	#4,qplay			; skip 2 bytes of game data, too
+
+; calculate col. 3 as col. 1 X col. 2
+	move	xdown,xposn
+	move	ydown,yposn
+	move	zdown,zposn
+	neg	xposn
+	neg	yposn
+	neg	zposn
+	imultn	yrite,zdown
+	imacn	zrite,yposn
+	resmac	xhead
+	imultn	zrite,xdown
+	imacn	xrite,zposn
+	resmac	yhead
+	imultn	xrite,ydown
+	imacn	yrite,xposn
+	resmac	zhead
+	sharq	#14,xhead
+	sharq	#14,yhead
+	sharq	#14,zhead
+
+; store the matrix
+	movei	#BND_MATRIX,temp2
+	add	dronebnd,temp2
+	load	(temp2),temp2
+	or	temp2,temp2
+
+	storew	xrite,(temp2)
+	addq	#2,temp2
+	storew	xdown,(temp2)
+	addq	#2,temp2
+	storew	xhead,(temp2)
+	addq	#2,temp2
+	storew	yrite,(temp2)
+	addq	#2,temp2
+	storew	ydown,(temp2)
+	addq	#2,temp2
+	storew	yhead,(temp2)
+	addq	#2,temp2
+	storew	zrite,(temp2)
+	addq	#2,temp2
+	storew	zdown,(temp2)
+	addq	#2,temp2
+	storew	zhead,(temp2)
+
+	store	dronebnd,(mbandptr)
+	addqt	#4,mbandptr
+	bclr	#31,curbnd		; clear the "this is a good place" bit
+	store	curbnd,(mbandptr)
+	addqt	#4,mbandptr
+	moveq	#0,temp
+	store	temp,(mbandptr)
+	subqt	#8,mbandptr
+	cmp	qplay,qend
+	jr	NE,_CDLOCAL_10_514
+	nop
+		move	qstart,qplay
+_CDLOCAL_10_514:
+	jump	(brloop)
+	nop
+
+endcloop:
+	store	qtime,(parambl)
+	subqt	#4,parambl
+	store	qplay,(parambl)
+	addqt	#8,parambl
+
+; load pre-rendering routines
+	movei	#loadIt,temp2
+	movei	#prprog, temp
+	jump		(temp2)
+	nop
+
+;
+; random number generator
+;
+rand:
+	move	_lseed,temp
+	div	constQ,temp
+	or	temp,temp
+	load	(remain),temp2
+	cmpq	#0,temp2
+	jr	MI,_CDLOCAL_10_542
+	nop
+		add	constQ,temp2
+_CDLOCAL_10_542:
+	mult	constA,temp2
+
+	move	temp,_lseed
+	shrq	#16,temp
+	mult	constR,temp
+	mult	constR,_lseed
+	shlq	#16,temp
+	add	temp,_lseed
+
+	neg	_lseed
+	jump	(return)
+	add	temp2,_lseed

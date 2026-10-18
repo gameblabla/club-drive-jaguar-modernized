@@ -1,0 +1,28 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BEIGE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BEIGE MATTE
+
+newmtl BLACK_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK MATTE
+
+newmtl BRASS_GIFMAP
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BRASS GIFMAP
+
+newmtl FLOORS
+Kd 0.7 0.7 0.7
+# Original 1994 material name: FLOORS
+
+newmtl GRAY_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY MATTE
+
+newmtl LNDRDOOR
+Kd 0.7 0.7 0.7
+# Original 1994 material name: LNDRDOOR
+
+newmtl WHITE_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE PLASTIC

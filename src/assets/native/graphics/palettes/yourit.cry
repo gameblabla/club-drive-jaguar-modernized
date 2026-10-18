@@ -1,0 +1,3 @@
+; Recovered from original retail ROM offset $0E7FA4-$0E8FA4
+o_yourit::
+	.incbin "assets/native/rom/fragments/yourit.bin"

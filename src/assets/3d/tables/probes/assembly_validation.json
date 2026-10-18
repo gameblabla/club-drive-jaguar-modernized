@@ -1,0 +1,30 @@
+{
+  "scope": "Isolated standalone RMAC car MDL only; no game ROM or gameplay validation",
+  "assembler_pass": true,
+  "old_bytes": 2920,
+  "new_bytes": 2988,
+  "size_delta_bytes": 68,
+  "new_point": [
+    0,
+    20,
+    -36
+  ],
+  "new_normal": [
+    0,
+    32767,
+    0
+  ],
+  "new_divider": [
+    94,
+    31
+  ],
+  "added_edges": 4,
+  "triangles_replacing_quad": 4,
+  "cp_delta_bytes": 34,
+  "tree_relocation_bytes": 68,
+  "new_cp2_offset": 710,
+  "retained_post_tree_bytes": 372,
+  "surface_area_error": 0.0,
+  "original_assembled_sha256": "dd69471309c08ef367252c6e0696edd74773729b4af8bba6cd6ce29e455fd525",
+  "edited_assembled_sha256": "969d22047eccca4aca61014747edbda36a495b25f090a6d12b3a177531095575"
+}

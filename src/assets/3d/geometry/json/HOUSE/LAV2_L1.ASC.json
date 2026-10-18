@@ -1,0 +1,253 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "HOUSE/LAV2_L1.ASC",
+  "template_sha256": "e4ad7d540da1d5d79fa264b17d43c7db1d7d6d6e6ee6b6da2cff54cbef97c95e",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 11,
+      "mesh": "bthsnk2",
+      "index": 0,
+      "xyz": [
+        -755.499878,
+        1814.526978,
+        -305.64209
+      ]
+    },
+    {
+      "line": 12,
+      "mesh": "bthsnk2",
+      "index": 1,
+      "xyz": [
+        2683.295898,
+        1814.5271,
+        -305.64209
+      ]
+    },
+    {
+      "line": 13,
+      "mesh": "bthsnk2",
+      "index": 2,
+      "xyz": [
+        -755.499878,
+        1814.526978,
+        -2172.446777
+      ]
+    },
+    {
+      "line": 14,
+      "mesh": "bthsnk2",
+      "index": 3,
+      "xyz": [
+        2683.295898,
+        1814.5271,
+        -2172.446289
+      ]
+    },
+    {
+      "line": 55,
+      "mesh": "lavatory2",
+      "index": 0,
+      "xyz": [
+        -837.542908,
+        3690.416504,
+        1837.106567
+      ]
+    },
+    {
+      "line": 56,
+      "mesh": "lavatory2",
+      "index": 1,
+      "xyz": [
+        0.995183,
+        2238.024902,
+        1837.106567
+      ]
+    },
+    {
+      "line": 57,
+      "mesh": "lavatory2",
+      "index": 2,
+      "xyz": [
+        -837.542908,
+        3690.416504,
+        -2172.446289
+      ]
+    },
+    {
+      "line": 58,
+      "mesh": "lavatory2",
+      "index": 3,
+      "xyz": [
+        0.995183,
+        2238.024902,
+        -2172.446289
+      ]
+    },
+    {
+      "line": 59,
+      "mesh": "lavatory2",
+      "index": 4,
+      "xyz": [
+        -755.5047,
+        872.466431,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 60,
+      "mesh": "lavatory2",
+      "index": 5,
+      "xyz": [
+        -755.5047,
+        872.466431,
+        2812.45459
+      ]
+    },
+    {
+      "line": 66,
+      "mesh": "lavatory2",
+      "index": 6,
+      "xyz": [
+        2683.297363,
+        872.460693,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 67,
+      "mesh": "lavatory2",
+      "index": 7,
+      "xyz": [
+        2683.296875,
+        872.460693,
+        2812.45459
+      ]
+    },
+    {
+      "line": 68,
+      "mesh": "lavatory2",
+      "index": 8,
+      "xyz": [
+        2683.294189,
+        4430.152832,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 69,
+      "mesh": "lavatory2",
+      "index": 9,
+      "xyz": [
+        2683.294189,
+        4430.152832,
+        2812.45459
+      ]
+    },
+    {
+      "line": 70,
+      "mesh": "lavatory2",
+      "index": 10,
+      "xyz": [
+        -755.505798,
+        4430.152832,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 71,
+      "mesh": "lavatory2",
+      "index": 11,
+      "xyz": [
+        -755.505798,
+        4430.152832,
+        2812.45459
+      ]
+    },
+    {
+      "line": 72,
+      "mesh": "lavatory2",
+      "index": 12,
+      "xyz": [
+        -755.504761,
+        2060.312012,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 73,
+      "mesh": "lavatory2",
+      "index": 13,
+      "xyz": [
+        -755.505798,
+        3737.390137,
+        1837.077148
+      ]
+    },
+    {
+      "line": 74,
+      "mesh": "lavatory2",
+      "index": 14,
+      "xyz": [
+        -755.505798,
+        3737.390137,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 75,
+      "mesh": "lavatory2",
+      "index": 15,
+      "xyz": [
+        -755.504761,
+        2060.312012,
+        1837.077148
+      ]
+    },
+    {
+      "line": 76,
+      "mesh": "lavatory2",
+      "index": 16,
+      "xyz": [
+        -890.911011,
+        2060.312012,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 77,
+      "mesh": "lavatory2",
+      "index": 17,
+      "xyz": [
+        -890.911072,
+        3737.390137,
+        1837.077148
+      ]
+    },
+    {
+      "line": 78,
+      "mesh": "lavatory2",
+      "index": 18,
+      "xyz": [
+        -890.911072,
+        3737.390137,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 79,
+      "mesh": "lavatory2",
+      "index": 19,
+      "xyz": [
+        -890.911011,
+        2060.312012,
+        1837.077148
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

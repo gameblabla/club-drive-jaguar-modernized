@@ -1,0 +1,52 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BEIGE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BEIGE MATTE
+
+newmtl BEIGE_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BEIGE PLASTIC
+
+newmtl BLACK_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK MATTE
+
+newmtl BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BROWN MATTE
+
+newmtl CHROME_GIFMAP
+Kd 0.7 0.7 0.7
+# Original 1994 material name: CHROME GIFMAP
+
+newmtl DARK_BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN MATTE
+
+newmtl FLOORS
+Kd 0.7 0.7 0.7
+# Original 1994 material name: FLOORS
+
+newmtl GRAY_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY MATTE
+
+newmtl GRAY_SEMIGLOSS
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY SEMIGLOSS
+
+newmtl WHITE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE MATTE
+
+newmtl WHITE_PLASTIC_2S
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE PLASTIC 2S
+
+newmtl WOOD_DARK_RED
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WOOD - DARK RED
+
+newmtl YLW_CHEESE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: YLW-CHEESE

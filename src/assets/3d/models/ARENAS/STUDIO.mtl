@@ -1,0 +1,84 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BEIGE_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BEIGE PLASTIC
+
+newmtl BLACK_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK MATTE
+
+newmtl BROWN_HILLS
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BROWN HILLS
+
+newmtl BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BROWN MATTE
+
+newmtl DARK_BROWN_1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN 1
+
+newmtl DARK_BROWN_2
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN 2
+
+newmtl DARK_BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN MATTE
+
+newmtl GRAY_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY MATTE
+
+newmtl GRAY_METALIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY METALIC
+
+newmtl GREEN_MATTE1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GREEN MATTE1
+
+newmtl MAROON_PEARL1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: MAROON PEARL1
+
+newmtl MIRROR
+Kd 0.7 0.7 0.7
+# Original 1994 material name: MIRROR
+
+newmtl MONITOR
+Kd 0.7 0.7 0.7
+# Original 1994 material name: MONITOR
+
+newmtl PORTAL0
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTAL0
+
+newmtl PORTAL1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTAL1
+
+newmtl PORTAL2
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTAL2
+
+newmtl PORTAL3
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTAL3
+
+newmtl TOILET
+Kd 0.7 0.7 0.7
+# Original 1994 material name: TOILET
+
+newmtl WHITE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE MATTE
+
+newmtl WHITE_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE PLASTIC
+
+newmtl WINDOW
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WINDOW

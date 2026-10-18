@@ -1,0 +1,660 @@
+{
+ "source": "ARENAS/SIMPRAMP.ASC",
+ "sha256": "6b1613549156f173e07aa62af63be963284f7615119b1de01ee88133612e8a0b",
+ "objects": [
+  {
+   "name": "Object01",
+   "vertices": [
+    [
+     "-3680.709717",
+     "-2712.101807",
+     "289.870178"
+    ],
+    [
+     "2469.949707",
+     "-2712.101807",
+     "1646.633301"
+    ],
+    [
+     "2469.949707",
+     "2712.101807",
+     "1053.049316"
+    ],
+    [
+     "-3680.709717",
+     "2712.101807",
+     "2438.078369"
+    ],
+    [
+     "-3680.709717",
+     "-2712.101807",
+     "0"
+    ],
+    [
+     "2469.949707",
+     "-2712.101807",
+     "0"
+    ],
+    [
+     "2469.949707",
+     "2712.101807",
+     "0"
+    ],
+    [
+     "-3680.709717",
+     "2712.101807",
+     "0"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      5,
+      4,
+      0
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      5,
+      0
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      6,
+      5,
+      1
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      6,
+      1
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      6,
+      2
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      7,
+      2
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      4,
+      7,
+      3
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      0,
+      4,
+      3
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "DARK BROWN MATTE"
+    },
+    {
+     "vertices": [
+      6,
+      7,
+      4
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "WOOD - MED. ASH"
+    },
+    {
+     "vertices": [
+      5,
+      6,
+      4
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "WOOD - MED. ASH"
+    }
+   ],
+   "declared_vertices": 8,
+   "declared_faces": 10
+  },
+  {
+   "name": "Object02",
+   "vertices": [
+    [
+     "-2080.481201",
+     "192.40451",
+     "386.142883"
+    ],
+    [
+     "-1599.469971",
+     "192.40451",
+     "386.142883"
+    ],
+    [
+     "-1599.469971",
+     "833.752869",
+     "386.142883"
+    ],
+    [
+     "-2080.481201",
+     "833.752869",
+     "386.142883"
+    ],
+    [
+     "-2080.481201",
+     "192.40451",
+     "0"
+    ],
+    [
+     "-1599.469971",
+     "192.40451",
+     "0"
+    ],
+    [
+     "-1599.469971",
+     "833.752869",
+     "-0.000019"
+    ],
+    [
+     "-2080.481201",
+     "833.752869",
+     "-0.000019"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      0,
+      4,
+      5
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      0,
+      5,
+      1
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      1,
+      5,
+      6
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      6,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "ORANGE MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      6,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      2,
+      7,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      3,
+      7,
+      4
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      4,
+      0
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    }
+   ],
+   "declared_vertices": 8,
+   "declared_faces": 8
+  },
+  {
+   "name": "Object03",
+   "vertices": [
+    [
+     "-2080.481201",
+     "-1250.629272",
+     "348.983704"
+    ],
+    [
+     "-1599.731201",
+     "-1250.629272",
+     "348.983704"
+    ],
+    [
+     "-1599.731201",
+     "-673.415771",
+     "348.983673"
+    ],
+    [
+     "-2080.481201",
+     "-673.415771",
+     "348.983673"
+    ],
+    [
+     "-2080.481201",
+     "-1250.629272",
+     "0"
+    ],
+    [
+     "-1599.731201",
+     "-1250.629272",
+     "0"
+    ],
+    [
+     "-1599.731201",
+     "-673.415771",
+     "-0.000019"
+    ],
+    [
+     "-2080.481201",
+     "-673.415771",
+     "-0.000019"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      0,
+      4,
+      5
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      0,
+      5,
+      1
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      5,
+      6
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "RED MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      6,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "RED MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      6,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      2,
+      7,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      3,
+      7,
+      4
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "RED MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      4,
+      0
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "RED MATTE"
+    }
+   ],
+   "declared_vertices": 8,
+   "declared_faces": 8
+  },
+  {
+   "name": "Object04",
+   "vertices": [
+    [
+     "3.901015",
+     "-1122.359497",
+     "123.185242"
+    ],
+    [
+     "324.575226",
+     "-1122.359497",
+     "123.185242"
+    ],
+    [
+     "324.575226",
+     "-1100.020313",
+     "123.185242"
+    ],
+    [
+     "3.901015",
+     "-1100.020313",
+     "123.185242"
+    ],
+    [
+     "3.901015",
+     "-1122.359619",
+     "0.000019"
+    ],
+    [
+     "324.575226",
+     "-1122.359619",
+     "0.000019"
+    ],
+    [
+     "324.575226",
+     "865.820313",
+     "-0.000019"
+    ],
+    [
+     "3.901015",
+     "865.820313",
+     "-0.000019"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      0,
+      4,
+      5
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      0,
+      5,
+      1
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      1,
+      5,
+      6
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "RED MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      6,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "RED MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      6,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      2,
+      7,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "MAROON PEARL1"
+    },
+    {
+     "vertices": [
+      3,
+      7,
+      4
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "RED MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      4,
+      0
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "RED MATTE"
+    }
+   ],
+   "declared_vertices": 8,
+   "declared_faces": 8
+  },
+  {
+   "name": "Light01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  }
+ ],
+ "material_names": [
+  "DARK BROWN MATTE",
+  "GREEN MATTE",
+  "MAROON PEARL1",
+  "ORANGE MATTE",
+  "RED MATTE",
+  "WOOD - MED. ASH"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

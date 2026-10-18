@@ -1,0 +1,3171 @@
+;----------------------------------------------------------------------------
+;	precomp.gas
+;	Calculations to go before the computation of points
+;----------------------------------------------------------------------------
+
+; BEGIN jaguar.inc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;       JAGUAR.INC  Hardware Equates for JAGUAR System
+;
+;       COPYRIGHT 1992-1995 Atari Computer Corporation
+;       UNAUTHORIZED REPRODUCTION, ADAPTATION, DISTRIBUTION,
+;       PERFORMANCE OR DISPLAY OF THIS COMPUTER PROGRAM OR
+;       THE ASSOCIATED AUDIOVISUAL WORK IS STRICTLY PROHIBITED.
+;       ALL RIGHTS RESERVED.
+;
+; Revision History:
+; 9/19/94 - Consolidated several files into first master JAGUAR.INC (SDS)
+; 2/16/95 - MF
+; 4/24/95 - Added UART Error Control and Mask definitions (NBK)
+; 5/16/95 - Added Asynchronous Serial/DAC Synonyms (SDS)
+; 8/08/95 - Fixed two Blitter LFU Equates, added ProController equates,
+;           added blitter BLITMASK flag, removed MOD_MASK/DSPINT0,
+;           removed private hardware register definitions.
+; 9/26/20 - Restored MOD_MASK/DSPINT0/GPUINT0 and private hardware register
+;           definitions.
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      GENERIC DEFINES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+DRAM            EQU     $000000 ; First system RAM location
+USERRAM         EQU     $004000 ; Beginning of non-reserved RAM
+ENDRAM          EQU     $200000 ; End of DRAM
+INITSTACK       EQU     ENDRAM-4        ; Good place to initialize stack
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      CPU REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+LEVEL0          EQU     $100            ; 68000 Level 0 Autovector Interrupt
+USER0           EQU     $100            ; Pseudonym for LEVEL0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Masks for INT1 CPU Interrupt Control Register
+
+C_VIDENA        EQU     $0001           ; Enable Video time-base interrupts
+C_GPUENA        EQU     $0002           ; Enable GPU register-write interrupt
+C_OPENA         EQU     $0004           ; Enable OP stop-object interrupt
+C_PITENA        EQU     $0008           ; Enable PIT interrupt
+C_JERENA        EQU     $0010           ; Enable Jerry interrupt
+
+C_VIDCLR        EQU     $0100           ; Clear pending video interrupts
+C_GPUCLR        EQU     $0200           ; Clear pending GPU interrupts
+C_OPCLR         EQU     $0400           ; Clear pending OP interrupts
+C_PITCLR        EQU     $0800           ; Clear pending PIT interrupts
+C_JERCLR        EQU     $1000           ; Clear pending Jerry interrupts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       JAGUAR REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+BASE            EQU     $F00000 ; TOM Internal Register Base
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       TOM REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+HC              EQU     BASE + 4        ; Horizontal Count
+VC              EQU     BASE + 6        ; Vertical Count
+LPH             EQU     BASE + 8        ; Horizontal Lightpen
+LPV             EQU     BASE + $0A      ; Vertical Lightpen
+OB0             EQU     BASE + $10      ; Current Object Phrase
+OB1             EQU     BASE + $12
+OB2             EQU     BASE + $14
+OB3             EQU     BASE + $16
+OLP             EQU     BASE + $20      ; Object List Pointer
+OBF             EQU     BASE + $26      ; Object Processor Flag
+VMODE           EQU     BASE + $28      ; Video Mode
+BORD1           EQU     BASE + $2A      ; Border Color (Red & Green)
+BORD2           EQU     BASE + $2C      ; Border Color (Blue)
+HDB1            EQU     BASE + $38      ; Horizontal Display Begin One
+HDB2            EQU     BASE + $3A      ; Horizontal Display Begin Two
+HDE             EQU     BASE + $3C      ; Horizontal Display End
+VS              EQU     BASE + $44      ; Vertical Sync
+VDB             EQU     BASE + $46      ; Vertical Display Begin
+VDE             EQU     BASE + $48      ; Vertical Display End
+VI              EQU     BASE + $4E      ; Vertical Interrupt
+PIT0            EQU     BASE + $50      ; Programmable Interrupt Timer (Lo)
+PIT1            EQU     BASE + $52      ; Programmable Interrupt Timer (Hi)
+BG              EQU     BASE + $58      ; Background Color
+
+INT1            EQU     BASE + $E0      ; CPU Interrupt Control Register
+INT2            EQU     BASE + $E2      ; CPU Interrupt Resume Register
+
+CLUT            EQU     BASE + $400     ; Color Lookup Table
+
+LBUFA           EQU     BASE + $800     ; Line Buffer A
+LBUFB           EQU     BASE + $1000    ; Line Buffer B
+LBUFC           EQU     BASE + $1800    ; Line Buffer Current
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      OBJECT PROCESSOR EQUATES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+BITOBJ          EQU     0
+SCBITOBJ        EQU     1
+GPUOBJ          EQU     2
+BRANCHOBJ       EQU     3
+STOPOBJ         EQU     4
+
+O_REFLECT       EQU     $00002000       ; OR with top LONG of BITMAP object
+O_RMW           EQU     $00004000
+O_TRANS         EQU     $00008000
+O_RELEASE       EQU     $00010000
+
+O_DEPTH1        EQU     (0<<12) ; DEPTH Field for BITMAP objects
+O_DEPTH2        EQU     (1<<12)
+O_DEPTH4        EQU     (2<<12)
+O_DEPTH8        EQU     (3<<12)
+O_DEPTH16       EQU     (4<<12)
+O_DEPTH32       EQU     (5<<12)
+
+O_NOGAP         EQU     (1<<15) ; Phrase GAP between image phrases
+O_1GAP          EQU     (2<<15)
+O_2GAP          EQU     (3<<15)
+O_3GAP          EQU     (4<<15)
+O_4GAP          EQU     (5<<15)
+O_5GAP          EQU     (6<<15)
+O_6GAP          EQU     (7<<15)
+
+O_BREQ          EQU     (0<<14) ; CC field of BRANCH objects
+O_BRGT          EQU     (1<<14)
+O_BRLT          EQU     (2<<14)
+O_BROP          EQU     (3<<14)
+O_BRHALF        EQU     (4<<14)
+
+O_STOPINTS      EQU     $00000008       ; Enable Interrupts in STOP object
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      VIDEO INITIALIZATION CONSTANTS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+NTSC_WIDTH      EQU     1409            ; Width of screen in pixel clocks
+NTSC_HMID       EQU     823             ; Middle of screen in pixel clocks
+NTSC_HEIGHT     EQU     241             ; Height of screen in scanlines
+NTSC_VMID       EQU     266             ; Middle of screen in halflines
+
+PAL_WIDTH       EQU     1381            ; Same as above for PAL...
+PAL_HMID        EQU     843
+PAL_HEIGHT      EQU     287
+PAL_VMID        EQU     322
+
+;;; The following mask will extract the PAL/NTSC flag bit from the
+;;; CONFIG register. NTSC = Bit Set, PAL = Bit Clear
+
+VIDTYPE         EQU     $10
+
+;;; The following are Video Mode register flags
+
+VIDEN           EQU     $0001           ; Enable video-time base generator
+
+CRY16           EQU     $0000           ; Enable 16-bit CRY mode
+RGB24           EQU     $0002           ; Enable 24-bit RGB mode
+DIRECT16        EQU     $0004           ; Enable 16-bit DIRECT mode
+RGB16           EQU     $0006           ; Enable 16-bit RGB mode
+
+GENLOCK         EQU     $0008           ; Not Supported in Jaguar Console
+INCEN           EQU     $0010           ; Enable encrustation
+BINC            EQU     $0020           ; Select local border color
+CSYNC           EQU     $0040           ; Enable composite sync
+BGEN            EQU     $0080           ; Clear line buffer to BG
+VARMOD          EQU     $0100           ; Enable variable-color resolution mode
+
+PWIDTH1         EQU     $0000           ; Select pixels 1 clock wide
+PWIDTH2         EQU     $0200           ; Select pixels 2 clocks wide
+PWIDTH3         EQU     $0400           ; Select pixels 3 clocks wide
+PWIDTH4         EQU     $0600           ; Select pixels 4 clocks wide
+PWIDTH5         EQU     $0800           ; Select pixels 5 clocks wide
+PWIDTH6         EQU     $0A00           ; Select pixels 6 clocks wide
+PWIDTH7         EQU     $0C00           ; Select pixels 7 clocks wide
+PWIDTH8         EQU     $0E00           ; Select pixels 8 clocks wide
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       GPU REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+G_FLAGS         EQU     BASE + $2100    ; GPU Flags
+G_MTXC          EQU     BASE + $2104    ; GPU Matrix Control
+G_MTXA          EQU     BASE + $2108    ; GPU Matrix Address
+G_END           EQU     BASE + $210C    ; GPU Data Organization
+G_PC            EQU     BASE + $2110    ; GPU Program Counter
+G_CTRL          EQU     BASE + $2114    ; GPU Operation Control/Status
+G_HIDATA        EQU     BASE + $2118    ; GPU Bus Interface high data
+G_REMAIN        EQU     BASE + $211C    ; GPU Division Remainder
+G_DIVCTRL       EQU     BASE + $211C    ; GPU Divider control
+G_RAM           EQU     BASE + $3000    ; GPU Internal RAM
+G_ENDRAM        EQU     G_RAM +(4*1024) ; 4K bytes
+
+;;;
+;;; GPU Flags Register Equates
+;;;
+
+G_CPUENA        EQU     $00000010       ; CPU Interrupt enable bits
+G_DSPENA        EQU     $00000020       ; DSP Interrupt enable bits
+G_PITENA        EQU     $00000040       ; PIT Interrupt enable bits
+G_OPENA         EQU     $00000080       ; Object Processor Interrupt enable bits
+G_BLITENA       EQU     $00000100       ; Blitter Interrupt enable bits
+G_CPUCLR        EQU     $00000200       ; CPU Interrupt clear bits
+G_DSPCLR        EQU     $00000400       ; DSP Interrupt clear bits
+G_PITCLR        EQU     $00000800       ; PIT Interrupt clear bits
+G_OPCLR         EQU     $00001000       ; Object Processor Interrupt clear bits
+G_BLITCLR       EQU     $00002000       ; Blitter Interrupt clear bits
+
+;;;
+;;; GPU Control/Status Register
+;;;
+
+GPUGO           EQU     $00000001       ; Start and Stop the GPU
+GPUINT0         EQU     $00000004       ; generate a GPU type 0 interrupt
+
+G_CPULAT        EQU     $00000040       ; Interrupt Latches
+G_DSPLAT        EQU     $00000080
+G_PITLAT        EQU     $00000100
+G_OPLAT         EQU     $00000200
+G_BLITLAT       EQU     $00000400
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       BLITTER REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+A1_BASE         EQU     BASE + $2200    ; A1 Base Address
+A1_FLAGS        EQU     BASE + $2204    ; A1 Control Flags
+A1_CLIP         EQU     BASE + $2208    ; A1 Clipping Size
+A1_PIXEL        EQU     BASE + $220C    ; A1 Pixel Pointer
+A1_STEP         EQU     BASE + $2210    ; A1 Step (Integer Part)
+A1_FSTEP        EQU     BASE + $2214    ; A1 Step (Fractional Part)
+A1_FPIXEL       EQU     BASE + $2218    ; A1 Pixel Pointer (Fractional)
+A1_INC          EQU     BASE + $221C    ; A1 Increment (Integer Part)
+A1_FINC         EQU     BASE + $2220    ; A1 Increment (Fractional Part)
+A2_BASE         EQU     BASE + $2224    ; A2 Base Address
+A2_FLAGS        EQU     BASE + $2228    ; A2 Control Flags
+A2_MASK         EQU     BASE + $222C    ; A2 Address Mask
+A2_PIXEL        EQU     BASE + $2230    ; A2 PIXEL
+A2_STEP         EQU     BASE + $2234    ; A2 Step (Integer)
+
+B_CMD           EQU     BASE + $2238    ; Command
+B_COUNT         EQU     BASE + $223C    ; Counters
+B_SRCD          EQU     BASE + $2240    ; Source Data
+B_DSTD          EQU     BASE + $2248    ; Destination Data
+B_DSTZ          EQU     BASE + $2250    ; Destination Z
+B_SRCZ1         EQU     BASE + $2258    ; Source Z (Integer)
+B_SRCZ2         EQU     BASE + $2260    ; Source Z (Fractional)
+B_PATD          EQU     BASE + $2268    ; Pattern Data
+B_IINC          EQU     BASE + $2270    ; Intensity Increment
+B_ZINC          EQU     BASE + $2274    ; Z Increment
+B_STOP          EQU     BASE + $2278    ; Collision stop control
+
+B_I3            EQU     BASE + $227C    ; Blitter Intensity 3
+B_I2            EQU     BASE + $2280    ; Blitter Intensity 2
+B_I1            EQU     BASE + $2284    ; Blitter Intensity 1
+B_I0            EQU     BASE + $2288    ; Blitter Intensity 0
+
+B_Z3            EQU     BASE + $228C    ; Blitter Z 3
+B_Z2            EQU     BASE + $2290    ; Blitter Z 2
+B_Z1            EQU     BASE + $2294    ; Blitter Z 1
+B_Z0            EQU     BASE + $2298    ; Blitter Z 0
+
+;;;
+;;; BLITTER Command Register equates
+;;;
+
+SRCEN           EQU     $00000001       ; d00:     source data read (inner loop)
+SRCENZ          EQU     $00000002       ; d01:     source Z read (inner loop)
+SRCENX          EQU     $00000004       ; d02:     source data read (realign)
+DSTEN           EQU     $00000008       ; d03:     dest data read (inner loop)
+DSTENZ          EQU     $00000010       ; d04:     dest Z read (inner loop)
+DSTWRZ          EQU     $00000020       ; d05:     dest Z write (inner loop)
+CLIP_A1         EQU     $00000040       ; d06:     A1 clipping enable
+UPDA1F          EQU     $00000100       ; d08:     A1 update step fraction
+UPDA1           EQU     $00000200       ; d09:     A1 update step
+UPDA2           EQU     $00000400       ; d10:     A2 update step
+DSTA2           EQU     $00000800       ; d11:     reverse usage of A1 and A2
+GOURD           EQU     $00001000       ; d12:     enable Gouraud shading
+ZBUFF           EQU     $00002000       ; d13:     polygon Z data updates
+TOPBEN          EQU     $00004000       ; d14:     intensity carry into byte
+TOPNEN          EQU     $00008000       ; d15:     intensity carry into nibble
+PATDSEL         EQU     $00010000       ; d16:     Select pattern data
+ADDDSEL         EQU     $00020000       ; d17:     diagnostic
+                                        ; d18-d20: Z comparator inhibit
+ZMODELT         EQU     $00040000       ;            source < destination
+ZMODEEQ         EQU     $00080000       ;            source = destination
+ZMODEGT         EQU     $00100000       ;            source > destination
+                                        ; d21-d24: Logic function control
+LFU_NAN         EQU     $00200000       ;            !source & !destination
+LFU_NA          EQU     $00400000       ;            !source &  destination
+LFU_AN          EQU     $00800000       ;             source & !destination
+LFU_A           EQU     $01000000       ;             source &  destination
+
+CMPDST          EQU     $02000000       ; d25:     pixel compare pattern & dest
+BCOMPEN         EQU     $04000000       ; d26:     bit compare write inhibit
+DCOMPEN         EQU     $08000000       ; d27:     data compare write inhibit
+BKGWREN         EQU     $10000000       ; d28:     data write back
+BUSHI           EQU     $20000000       ; d29      blitter priority
+SRCSHADE        EQU     $40000000       ; d30:     shade src data w/IINC value
+
+;;;
+;;; The following are ALL 16 possible logical operations of the LFUs
+;;;
+
+LFU_ZERO        EQU     $00000000       ; All Zeros
+LFU_NSAND       EQU     $00200000       ; NOT Source AND NOT Destination
+LFU_NSAD        EQU     $00400000       ; NOT Source AND Destination
+LFU_NOTS        EQU     $00600000       ; NOT Source
+LFU_SAND        EQU     $00800000       ; Source AND NOT Destination
+LFU_NOTD        EQU     $00A00000       ; NOT Destination
+LFU_SXORD       EQU     $00C00000       ; Source XOR Destination
+LFU_NSORND      EQU     $00E00000       ; NOT Source OR NOT Destination
+LFU_SAD         EQU     $01000000       ; Source AND Destination
+LFU_N_SXORD     EQU     $01200000       ; NOT (Source XOR Destination)
+LFU_D           EQU     $01400000       ; Destination
+LFU_NSORD       EQU     $01600000       ; NOT Source OR Destination
+LFU_S           EQU     $01800000       ; Source
+LFU_SORND       EQU     $01A00000       ; Source OR NOT Destination
+LFU_SORD        EQU     $01C00000       ; Source OR Destination
+LFU_ONE         EQU     $01E00000       ; All Ones
+
+; These are some common combinations with less boolean names
+
+LFU_REPLACE     EQU     $01800000       ; Source REPLACEs destination
+LFU_XOR         EQU     $00C00000       ; Source XOR with destination
+LFU_CLEAR       EQU     $00000000       ; CLEAR destination
+
+;;;
+;;; BLITTER Flags (A1 or A2) register equates
+;;;
+
+; Pitch d00-d01:
+;       distance between pixel phrases
+PITCH1          EQU     $00000000       ; 0 phrase gap
+PITCH2          EQU     $00000001       ; 1 phrase gap
+PITCH4          EQU     $00000002       ; 3 phrase gap
+PITCH3          EQU     $00000003       ; 2 phrase gap
+
+; Pixel d03-d05
+;       bit depth (2^n)
+PIXEL1          EQU     $00000000       ; n = 0
+PIXEL2          EQU     $00000008       ; n = 1
+PIXEL4          EQU     $00000010       ; n = 2
+PIXEL8          EQU     $00000018       ; n = 3
+PIXEL16         EQU     $00000020       ; n = 4
+PIXEL32         EQU     $00000028       ; n = 5
+
+; Z offset d06-d08
+;       offset from phrase of pixel data from its corresponding
+;       Z data phrases
+ZOFFS0          EQU     $00000000       ; offset = 0    UNUSED
+ZOFFS1          EQU     $00000040       ; offset = 1
+ZOFFS2          EQU     $00000080       ; offset = 2
+ZOFFS3          EQU     $000000C0       ; offset = 3
+ZOFFS4          EQU     $00000100       ; offset = 4
+ZOFFS5          EQU     $00000140       ; offset = 5
+ZOFFS6          EQU     $00000180       ; offset = 6
+ZOFFS7          EQU     $000001C0       ; offset = 7    UNUSED
+
+; Width d09-d14
+;       width used for address generation
+;       This is a 6-bit floating point value in pixels
+;       4-bit unsigned exponent
+;       2-bit mantissa with implied 3rd bit of 1
+WID2            EQU     $00000800       ; 1.00 X 2^1  ( 4<<9)
+WID4            EQU     $00001000       ; 1.00 X 2^2  ( 8<<9)
+WID6            EQU     $00001400       ; 1.10 X 2^2  (10<<9)
+WID8            EQU     $00001800       ; 1.00 x 2^3  (12<<9)
+WID10           EQU     $00001A00       ; 1.01 X 2^3  (13<<9)
+WID12           EQU     $00001C00       ; 1.10 X 2^3  (14<<9)
+WID14           EQU     $00001E00       ; 1.11 X 2^3  (15<<9)
+WID16           EQU     $00002000       ; 1.00 X 2^4  (16<<9)
+WID20           EQU     $00002200       ; 1.01 X 2^4  (17<<9)
+WID24           EQU     $00002400       ; 1.10 X 2^4  (18<<9)
+WID28           EQU     $00002600       ; 1.11 X 2^4  (19<<9)
+WID32           EQU     $00002800       ; 1.00 X 2^5  (20<<9)
+WID40           EQU     $00002A00       ; 1.01 X 2^5  (21<<9)
+WID48           EQU     $00002C00       ; 1.10 X 2^5  (22<<9)
+WID56           EQU     $00002E00       ; 1.11 X 2^5  (23<<9)
+WID64           EQU     $00003000       ; 1.00 X 2^6  (24<<9)
+WID80           EQU     $00003200       ; 1.01 X 2^6  (25<<9)
+WID96           EQU     $00003400       ; 1.10 X 2^6  (26<<9)
+WID112          EQU     $00003600       ; 1.11 X 2^6  (27<<9)
+WID128          EQU     $00003800       ; 1.00 X 2^7  (28<<9)
+WID160          EQU     $00003A00       ; 1.01 X 2^7  (29<<9)
+WID192          EQU     $00003C00       ; 1.10 X 2^7  (30<<9)
+WID224          EQU     $00003E00       ; 1.11 X 2^7  (31<<9)
+WID256          EQU     $00004000       ; 1.00 X 2^8  (32<<9)
+WID320          EQU     $00004200       ; 1.01 X 2^8  (33<<9)
+WID384          EQU     $00004400       ; 1.10 X 2^8  (34<<9)
+WID448          EQU     $00004600       ; 1.11 X 2^8  (35<<9)
+WID512          EQU     $00004800       ; 1.00 X 2^9  (36<<9)
+WID640          EQU     $00004A00       ; 1.01 X 2^9  (37<<9)
+WID768          EQU     $00004C00       ; 1.10 X 2^9  (38<<9)
+WID896          EQU     $00004E00       ; 1.11 X 2^9  (39<<9)
+WID1024         EQU     $00005000       ; 1.00 X 2^10 (40<<9)
+WID1280         EQU     $00005200       ; 1.01 X 2^10 (41<<9)
+WID1536         EQU     $00005400       ; 1.10 X 2^10 (42<<9)
+WID1792         EQU     $00005600       ; 1.11 X 2^10 (43<<9)
+WID2048         EQU     $00005800       ; 1.00 X 2^11 (44<<9)
+WID2560         EQU     $00005A00       ; 1.01 X 2^11 (45<<9)
+WID3072         EQU     $00005C00       ; 1.10 X 2^11 (46<<9)
+WID3584         EQU     $00005E00       ; 1.11 X 2^11 (47<<9)
+
+; A2 Mask Enable Bit
+BLITMASK        EQU     $00008000
+
+; X add control d16-d17
+;       controls the update of the X pointer on each pass
+;       round the inner loop
+XADDPHR         EQU     $00000000       ; 00 - add phrase width and truncate
+XADDPIX         EQU     $00010000       ; 01 - add pixel size (add 1)
+XADD0           EQU     $00020000       ; 10 - add zero
+XADDINC         EQU     $00030000       ; 11 - add the increment
+
+; Y add control d18
+;       controls the update of the Y pointer within the inner loop.
+;       it is overridden by the X add control if they are in add increment
+YADD0           EQU     $00000000       ; 00 - add zero
+YADD1           EQU     $00040000       ; 01 - add 1
+
+; X sign d19
+;       add or subtract pixel size if X add control = 01 (XADDPIX)
+XSIGNADD        EQU     $00000000       ; 0 - add pixel size
+XSIGNSUB        EQU     $00080000       ; 1 - subtract pixel size
+
+; Y sign d20
+;       add or subtract pixel size if Y add control = 01 (YADD1)
+YSIGNADD        EQU     $00000000       ; 0 - add 1
+YSIGNSUB        EQU     $00100000       ; 1 - sub 1
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       JERRY REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+JPIT1           EQU     BASE + $10000   ; Timer 1 Pre-Scaler
+JPIT2           EQU     BASE + $10002   ; Timer 1 Divider
+JPIT3           EQU     BASE + $10004   ; Timer 2 Pre-Scaler
+JPIT4           EQU     BASE + $10006   ; Timer 2 Divider
+
+J_INT          EQU     BASE + $10020   ; Jerry Interrupt control (to TOM)
+
+JOYSTICK       EQU     BASE + $14000   ; Joystick register and mute
+JOYBUTS         EQU     BASE + $14002   ; Joystick register
+CONFIG          EQU     BASE + $14002   ; Also has NTSC/PAL
+
+MOD_MASK        EQU     BASE + $1A118   ; Mask for ADDQ(SUBQ)MOD
+
+SCLK            EQU     BASE + $1A150   ; SSI Clock Frequency
+SMODE           EQU     BASE + $1A154   ; SSI Control
+
+L_I2S           EQU     BASE + $1A148   ; I2S Serial Interface
+R_I2S           EQU     BASE + $1A14C   ; I2S Serial Interface
+LTXD            EQU     BASE + $1A148   ; Synonyms
+RTXD            EQU     BASE + $1A14C
+LRXD            EQU     BASE + $1A148   ; Synonyms
+RRXD            EQU     BASE + $1A14C
+
+R_DAC           EQU     BASE + $1A148   ; Swapped on Purpose!
+L_DAC           EQU     BASE + $1A14C
+
+ASICLK          EQU     BASE + $10034   ; Asynchronous Clock Register
+ASICTRL         EQU     BASE + $10032   ; Asynchronous Control Register
+ASISTAT         EQU     BASE + $10032   ; Asynchronous Status Register
+ASIDATA         EQU     BASE + $10030   ; Asynchronous Data Register
+
+;================================================================
+; UART Definitions (new in this file as of 24-Apr-95)
+;================================================================
+
+; UART control register Masks
+; All unused bits in the control register need to be written as zeros !
+; With exception of U_CLRERR these are valid for read in ASISTAT, too
+
+U_MODD          equ     (1<<0)  ; selects odd parity
+U_MPAREN        equ     (1<<1)  ; enable parity
+U_MTXOPOL       equ     (1<<2)  ; transmit output polarity (if set: active low)
+U_MRXIPOL       equ     (1<<3)  ; receive input polarity (if set: invert input)
+U_MTINTEN       equ     (1<<4)  ; enable transmitter interrupts
+U_MRINTEN       equ     (1<<5)  ; enable reciever interrupts
+U_MCLRERR       equ     (1<<6)  ; clear error (only use if U_SERIN is 
+                                ; inactive otherwise the UART locks up.
+                                ; By default input is active low. This
+                                ; depends on U_MRXIPOL) 
+U_MTXBRK        equ     (1<<14) ; transmit break
+
+; UART control register (ONLY) bit numbers
+U_CLRERR        equ     6
+
+; UART control AND status register (SHARED) bit numbers 
+
+U_ODD           equ     0       ; selects odd parity
+U_PAREN         equ     1       ; enable parity
+U_TXOPOL        equ     2       ; transmit output polarity (if set: active low)
+U_RXIPOL        equ     3       ; receive input polarity (if set: invert input)
+U_TINTEN        equ     4       ; enable transmitter interrupts
+U_RINTEN        equ     5       ; enable reciever interrupts
+U_TXBRK         equ     14      ; transmit break
+
+; UART status register (ONLY) bit numbers
+
+U_ERR           equ     15      ; error condition exists
+U_SERIN         equ     13      ; state of UART1 Pin (serial input data)
+U_OE            equ     11      ; overrun error
+U_FE            equ     10      ; frame error
+U_PE            equ     9       ; parity error
+U_TBE           equ     8       ; transitter buffer empty
+U_RBF           equ     7       ; receiver buffer full
+
+;;;
+;;; Jerry Interrupt Control Flags
+;;;
+
+J_EXTENA        EQU     $0001           ; Enable external interrupts
+J_DSPENA        EQU     $0002           ; Enable DSP interrupts
+J_TIM1ENA       EQU     $0004           ; Enable Timer 1 interrupts
+J_TIM2ENA       EQU     $0008           ; Enable Timer 2 interrupts
+J_ASYNENA       EQU     $0010           ; Enable Asyncronous Serial interrupts
+J_SYNENA        EQU     $0020           ; Enable Syncronous Serial interrupts
+
+J_EXTCLR        EQU     $0100           ; Clear pending external interrupts
+J_DSPCLR        EQU     $0200           ; Clear pending DSP interrupts
+J_TIM1CLR       EQU     $0400           ; Clear pending Timer 1 interrupts
+J_TIM2CLR       EQU     $0800           ; Clear pending Timer 2 interrupts
+J_ASYNCLR       EQU     $1000           ; Clear pending Asynch. Serial interrupts
+J_SYNCLR        EQU     $2000           ; Clear pending Synch. Serial interrupts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;     JERRY Joystick Equates
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Bits when LONGword is formatted as below (from JOYTEST\JT_LOOP.S).
+;
+; Format: xxApxxBx RLDU147* xxCxxxox 2580369#
+
+JOY_UP          EQU     20              ;joypad
+JOY_DOWN        EQU     21
+JOY_LEFT        EQU     22
+JOY_RIGHT       EQU     23
+
+FIRE_A          EQU     29              ;fire buttons
+FIRE_B          EQU     25
+FIRE_C          EQU     13
+OPTION          EQU     9
+PAUSE           EQU     28
+
+KEY_STAR        EQU     16              ;keypad
+KEY_7           EQU     17
+KEY_4           EQU     18
+KEY_1           EQU     19
+
+KEY_0           EQU     4
+KEY_8           EQU     5
+KEY_5           EQU     6
+KEY_2           EQU     7
+
+KEY_HASH        EQU     0
+KEY_9           EQU     1
+KEY_6           EQU     2
+KEY_3           EQU     3
+
+SHIFT_L         EQU     18              ; ProController Mappings
+SHIFT_R         EQU     2
+FIRE_Z          EQU     17
+FIRE_Y          EQU     5
+FIRE_X          EQU     1
+
+ANY_JOY         EQU     $00F00000       ; AND joyedge with this...
+                                        ; joypad was pressed if result is not 0
+ANY_FIRE        EQU     $22002000       ; retail Club Drive: FIRE_A/B/C only       ; AND joyedge with this...
+                                        ; A,B C, Option or Pause was pressed
+                                        ; if result is not 0
+ANY_KEY         EQU     $000F00FF       ; AND joyedge with this... 123456789*0#
+                                        ; was pressed if result is not 0
+
+;;;
+;;;     ROM Tables built into Jerry - 128 samples each
+;;;     16 bit samples sign extended to 32
+;;;
+
+ROM_TABLE       EQU     BASE + $1D000   ; Base of tables
+
+ROM_TRI         EQU     BASE + $1D000   ; A triangle wave
+ROM_SINE        EQU     BASE + $1D200   ; Full amplitude SINE
+ROM_AMSINE      EQU     BASE + $1D400   ; Linear (?) ramp SINE
+ROM_12W         EQU     BASE + $1D600   ; SINE(X)+SINE(2*X) : (was ROM_SINE12W)
+ROM_CHIRP16     EQU     BASE + $1D800   ; SHORT SWEEP
+ROM_NTRI        EQU     BASE + $1DA00   ; Triangle w/NOISE
+ROM_DELTA       EQU     BASE + $1DC00   ; Positive spike
+ROM_NOISE       EQU     BASE + $1DE00   ; Guess
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       JERRY Registers (DSP)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+D_FLAGS         EQU     BASE + $1A100   ; DSP Flags
+D_MTXC          EQU     BASE + $1A104   ; DSP Matrix Control
+D_MTXA          EQU     BASE + $1A108   ; DSP Matrix Address
+D_END           EQU     BASE + $1A10C   ; DSP Data Organization
+D_PC            EQU     BASE + $1A110   ; DSP Program Counter
+D_CTRL          EQU     BASE + $1A114   ; DSP Operation Control/Status
+D_MOD          EQU     BASE + $1A118   ; DSP Modulo Instruction Mask
+D_REMAIN        EQU     BASE + $1A11C   ; DSP Division Remainder
+D_DIVCTRL       EQU     BASE + $1A11C   ; DSP Divider control
+D_MACHI        EQU     BASE + $1A120   ; DSP Hi byte of MAC operations
+D_RAM           EQU     BASE + $1B000   ; DSP Internal RAM
+D_ENDRAM        EQU     D_RAM +(8*1024) ; 8K bytes
+
+;;;
+;;; JERRY Flag Register Equates
+;;;
+
+D_CPUENA        EQU     $00000010       ; CPU Interrupt Enable Bit
+D_I2SENA        EQU     $00000020       ; I2S Interrupt Enable Bit
+D_TIM1ENA       EQU     $00000040       ; Timer 1 Interrupt Enable Bit
+D_TIM2ENA       EQU     $00000080       ; Timer 2 Interrupt Enable Bit
+D_EXT0ENA       EQU     $00000100       ; External Interrupt 0 Enable Bit
+D_EXT1ENA       EQU     $00010000       ; External Interrupt 1 Enable Bit
+
+D_CPUCLR        EQU     $00000200       ; CPU Interrupt Clear Bit
+D_I2SCLR        EQU     $00000400       ; I2S Interrupt Clear Bit
+D_TIM1CLR       EQU     $00000800       ; Timer 1 Interrupt Clear Bit
+D_TIM2CLR       EQU     $00001000       ; Timer 2 Interrupt Clear Bit
+D_EXT0CLR       EQU     $00002000       ; External Interrupt 0 Clear Bit
+D_EXT1CLR       EQU     $00020000       ; External Interrupt 1 Clear Bit
+
+;;;
+;;; JERRY Control/Status Register
+;;;
+
+DSPGO           EQU     $00000001       ; Start DSP
+DSPINT0         EQU     $00000004       ; Generate a DSP Interrupt 0
+
+D_CPULAT        EQU     $00000040       ; Interrupt Latches
+D_I2SLAT        EQU     $00000080
+D_TIM1LAT       EQU     $00000100
+D_TIM2LAT       EQU     $00000200
+D_EXT1LAT       EQU     $00000400
+D_EXT2LAT       EQU     $00010000
+
+;;;
+;;; JERRY Modulo Instruction Masks
+;;;
+
+MODMASK2        EQU     $FFFFFFFE       ; 2 byte circular buffer
+MODMASK4        EQU     $FFFFFFFC       ; 4 byte circular buffer
+MODMASK8        EQU     $FFFFFFF8       ; 8 byte circular buffer
+MODMASK16       EQU     $FFFFFFF0       ; 16 byte circular buffer
+MODMASK32       EQU     $FFFFFFE0       ; 32 byte circular buffer
+MODMASK64       EQU     $FFFFFFC0       ; 64 byte circular buffer
+MODMASK128      EQU     $FFFFFF80       ; 128 byte circular buffer
+MODMASK256      EQU     $FFFFFF00       ; 256 byte circular buffer
+MODMASK512      EQU     $FFFFFE00       ; 512 byte circular buffer
+MODMASK1K       EQU     $FFFFFC00       ; 1k circular buffer
+MODMASK2K       EQU     $FFFFF800       ; 2k circular buffer
+MODMASK4K       EQU     $FFFFF000       ; 4k circular buffer
+MODMASK8K       EQU     $FFFFE000       ; 8k circular buffer
+MODMASK16K      EQU     $FFFFC000       ; 16k circular buffer
+MODMASK32K      EQU     $FFFF8000       ; 32k circular buffer
+MODMASK64K      EQU     $FFFF0000       ; 64k circular buffer
+MODMASK128K     EQU     $FFFE0000       ; 128k circular buffer
+MODMASK256K     EQU     $FFFC0000       ; 256k circular buffer
+MODMASK512K     EQU     $FFF80000       ; 512k circular buffer
+MODMASK1M       EQU     $FFF00000       ; 1M circular buffer
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; SHARED Equates for TOM (GPU) and JERRY (DSP)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;
+;;; Control/Status Registers
+;;;
+
+RISCGO          EQU     $00000001       ; Start GPU or DSP
+CPUINT          EQU     $00000002       ; Allow the GPU/DSP to interrupt CPU
+FORCEINT0       EQU     $00000004       ; Cause an INT 0 on GPU or DSP
+SINGLE_STEP     EQU     $00000008       ; Enter SINGLE_STEP mode
+SINGLE_GO       EQU     $00000010       ; Execute one instruction
+
+REGPAGE         EQU     $00004000       ; Register Bank Select
+DMAEN           EQU     $00008000       ; Enable DMA LOAD and STORE
+
+;;;
+;;; Flags Register
+;;;
+
+ZERO_FLAG       EQU     $00000001       ; ALU Zero Flag
+CARRY_FLAG      EQU     $00000002       ; ALU Carry Flag
+NEGA_FLAG       EQU     $00000004       ; ALU Negative Flag
+
+IMASK           EQU     $00000008       ; Interrupt Service Mask
+
+;;;
+;;; Matrix Control Register
+;;;
+
+MATRIX3         EQU     $00000003       ; use for 3x1 Matrix
+MATRIX4         EQU     $00000004       ; etc...
+MATRIX5         EQU     $00000005
+MATRIX6         EQU     $00000006
+MATRIX7         EQU     $00000007
+MATRIX8         EQU     $00000008
+MATRIX9         EQU     $00000009
+MATRIX10        EQU     $0000000A
+MATRIX11        EQU     $0000000B
+MATRIX12        EQU     $0000000C
+MATRIX13        EQU     $0000000D
+MATRIX14        EQU     $0000000E
+MATRIX15        EQU     $0000000F
+
+MATROW          EQU     $00000000       ; Access Matrix by Row
+MATCOL          EQU     $00000010       ; Access Matrix by Column
+
+;;;
+;;; Data Organisation Register
+;;;
+
+BIG_IO          EQU     $00010001       ; Use 32-bit registers as big-endian
+BIG_PIX         EQU     $00020002       ; Pixel organisation is big-endian
+BIG_INST        EQU     $00040004       ; Word program fetches are big-endian
+
+;;;
+;;; Divide Unit Control
+;;;
+
+DIV_OFFSET      EQU     $00000001       ; Divide 16.16 values if set
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Atari claimed the below registers should never be messed with and
+;;; eventually removed them from later copies of jaguar.inc. However, there
+;;; are corner cases in which messing with them is necessary (E.g., fixing up
+;;; MEMCON1 to access the Jaguar CD's memory-mapped registers while booting
+;;; from a Skunkboard, programming custom high-resolution video modes, etc.),
+;;; so I've restored them. In general though, the point stands: Don't use
+;;; these if you don't know what you're doing.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+MEMCON1         EQU     BASE + 0        ; Memory Configuration Register One
+MEMCON2         EQU     BASE + 2        ; Memory Configuration Register Two
+OLPLO           EQU     BASE + $20
+OLPHI           EQU     BASE + $22
+ODP             EQU     BASE + $24      ; Object Data Pointer
+HP              EQU     BASE + $2e      ; Horizontal Period
+HBB             EQU     BASE + $30      ; Horizontal Blanking Begin
+HBE             EQU     BASE + $32      ; Horizontal Blanking End
+HS              EQU     BASE + $34      ; Horizontal Sync
+HVS             EQU     BASE + $36      ; Horizontal Vertical Sync
+VP              EQU     BASE + $3e      ; Vertical Period
+VBB             EQU     BASE + $40      ; Vertical Blanking Begin
+VBE             EQU     BASE + $42      ; Vertical Blanking End
+VEB             EQU     BASE + $4a      ; Vertical EQUalization Begin
+VEE             EQU     BASE + $4c      ; Vertical EQUalization End
+HEQ             EQU     BASE + $54      ; Horizontal EQUalization End
+TEST1           EQU     BASE + $56      ; Undocumented Register - DO NOT USE
+
+;;;;;;;;;
+;; EOF ;;
+;;;;;;;;;
+; END jaguar.inc
+; BEGIN blit.inc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Header File: BLIT.INC
+;              Jaguar Blitter Equates
+;
+; NOTICE: This file has been incorporated into JAGUAR.INC. This file
+;         is for compatibility reasons only.
+;
+	
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; WARNING!!! The following EQU's exist here for compatibility only.
+;;; Do not use them. There are more EQUs with better names in JAGUAR.INC
+;;; These EQUs - Including this whole include file will go away in the next
+;;; release
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+		IF      COMPAT
+
+NOGO            EQU     $00000080       ; d07:     diagnostic
+
+		ENDIF
+; END blit.inc
+
+; BEGIN 3d.inc
+loadIt	EQU	$00f03010
+Overlay	EQU	G_RAM+$38
+
+; END 3d.inc
+; BEGIN 68kequ.inc
+; the definitions given here must agree with the table
+; in gpufix.s!!!
+
+SYMBOL		EQU	$543b0700
+bgpprog       	EQU	SYMBOL+0
+cgpprog       	EQU	SYMBOL+1
+egpprog       	EQU	SYMBOL+2
+rgpprog       	EQU	SYMBOL+3
+sn       	EQU	SYMBOL+4
+sqrtTabM512    	EQU	SYMBOL+5	; sqrtTab - 512
+car_dat       	EQU	SYMBOL+6
+player       	EQU	SYMBOL+7
+screen_addr	EQU	SYMBOL+8
+SKY		EQU	SYMBOL+9
+atanTab		EQU	SYMBOL+10
+itCar		EQU	SYMBOL+11
+twoplayer	EQU	SYMBOL+12
+framecnt	EQU	SYMBOL+13
+gametype	EQU	SYMBOL+14
+dash		EQU	SYMBOL+15
+digitfont	EQU	SYMBOL+16
+cmpssfont	EQU	SYMBOL+17
+mapscale	EQU	SYMBOL+18
+maporig		EQU	SYMBOL+19
+speedfont	EQU	SYMBOL+20
+scoreinc	EQU	SYMBOL+21
+dotloc		EQU	SYMBOL+22
+dotimg		EQU	SYMBOL+23
+tnyfont		EQU	SYMBOL+24
+pbprog		EQU	SYMBOL+25
+showcoord	EQU	SYMBOL+26
+pcprog		EQU	SYMBOL+27
+debugflg	EQU	SYMBOL+28
+prprog		EQU	SYMBOL+29
+animateprg	EQU	SYMBOL+30
+animateparam	EQU	SYMBOL+31
+mbands		EQU	SYMBOL+32
+gameover	EQU	SYMBOL+33
+splitscrn	EQU	SYMBOL+34
+gpu_do		EQU	SYMBOL+35
+TPNTADDR	EQU	SYMBOL+36
+ENDTPNTS	EQU	SYMBOL+37
+SKYHIGH		EQU	SYMBOL+38
+fps		EQU	SYMBOL+39
+playspd		EQU	SYMBOL+40
+; END 68kequ.inc
+
+; global register defines
+; legacy REGEQU innerLoop => R27 ; precomp.gas:13
+; legacy REGEQU temp => R28 ; precomp.gas:14
+; legacy REGEQU temp2 => R29 ; precomp.gas:15
+; legacy REGEQU return => R31 ; precomp.gas:16
+
+; WARNING WARNING WARNING: these get passed to "comp",
+; so if you change them here, change them there too!!!
+; global alternate register usage
+; legacy REGEQU ALTplayer => R27 ; precomp.gas:21
+; legacy REGEQU ALTbndindex => R30 ; precomp.gas:22
+; legacy REGEQU ALTband => R31 ; precomp.gas:23
+
+; r0-r3 are scratch registers for outer loop
+; legacy REGEQU gl_curbnd => R0 ; precomp.gas:26
+; legacy REGEQU gl_bndlist => R1 ; precomp.gas:27
+; legacy REGEQU gl_player => R2 ; precomp.gas:28
+; legacy REGEQU gl_temp => R3 ; precomp.gas:29
+
+
+	ORG	Overlay
+
+; BEGIN 3dds.inc
+;------------------------------------------------------------------
+; 3dds.inc
+;	defines addresses for 3d data structures
+;------------------------------------------------------------------
+
+;PHRASE_ALIGN equ			((@1 + 7) & $fffffff8)
+
+HUD1		equ	$60000		; player 1 heads up display
+HUD2		equ	$61000		; player 2 HUD
+PAUSECRY	equ	$62000		; "paused" bitmap
+
+DS_BASE		equ	$6a200
+
+ASCRN1		equ	$20000		; player 1 screen 1
+BSCRN1		equ	$2ed80		; player 2 screen 1
+ASCRN2		equ	$40000
+BSCRN2		equ	$4ed80		; player 2 screen 2
+ATOGGLE		equ	$60000
+
+MARKADDR	EQU	$1fff00
+LASTTIME	EQU	$1feefc
+TIMEARRAY	EQU	$1ff000
+DEBUG		EQU	$1ffe00
+
+; data sizes for fixed structures (fixed in terms of global 3d coords)
+MAX_VECTORS		equ	200 ; normals + verticie vectors
+MAX_POINTS		equ	810;380 ; vertices
+MAX_SURFS			equ	550;300 ; polygons
+MAX_EDGES			equ	1200;600 ; edges
+MAX_DIVIDERS		equ	550;300 ; dividing planes
+
+; data sizes for mobile (car) structures
+MAX_MVECTORS		equ	100 ; normals + verticie vectors
+MAX_COLORS		equ	200  ; the only kind of colors computed ; 90
+MAX_MPOINTS		equ	200 ; vertices
+MAX_MSURFS		equ	90  ; trigons
+MAX_MEDGES		equ	300 ; edges
+MAX_MDIVIDERS		equ	100 ; dividing vectors
+
+; player car driving data structures
+; BEGIN car.inc
+;------------------------------------------------------------------
+; car.inc
+;	defines structures for car
+;	all addresses are relative
+;------------------------------------------------------------------
+
+CAR_POSN		equ	0										; x, y, z longwords of position
+CAR_MATRIX	equ	12										; 3x3 matrix of words
+CAR_VELOCITY	equ	(( CAR_MATRIX + 18			+ 3) & $fffffffc)	; vx, vy, vz longwords
+CAR_OMEGA		equ	CAR_VELOCITY + 12				; wx, wy, wz longwords - rotational velocity
+CAR_SPIN		equ	CAR_OMEGA + 12					; total absolute value of CAR_OMEGA since last time all wheels in contact
+CAR_FORCE		equ	CAR_SPIN + 4					; 
+CAR_TORQUE	equ	CAR_FORCE + 12					; CAR_TORQUE must immediately follow CAR_FORCE
+CAR_POSNS		equ	CAR_TORQUE + 12				; x, y, z words of the 20 control points on the car
+	CAR_NUM_PNTS	equ	38						; number of control points on a car
+CAR_SHOCKS	equ	(( CAR_POSNS + (CAR_NUM_PNTS*6)+ 3) & $fffffffc)	; position of suspension extention for use in shock dampening
+CAR_OSHOCKS	equ	CAR_SHOCKS + 16						; position of suspension extention for use in shock dampening
+CAR_TIRE_SPD	equ	CAR_OSHOCKS + 16						; last known speed of wheel
+CAR_SLIDE		equ	CAR_TIRE_SPD + 16				; some quantity of skid
+CAR_SURFDATA	equ	CAR_SLIDE + 16					; floor properties for various wheels
+CAR_CTRL		equ	CAR_SURFDATA + 16				; joystick bits
+CAR_TURN		equ	CAR_CTRL + 4					; amount to rotate front tire
+CAR_GAS		equ	CAR_TURN + 2					; amount of thrust
+CAR_GEAR		equ	CAR_TURN + 4					; state of car's transmission
+CAR_SKD_VCE	equ	CAR_GEAR + 4					; voice number of the car's skid sound
+
+CAR_HEAD		equ	CAR_SKD_VCE + 4					; angle of car heading (beta)
+CAR_ANGLE		equ	CAR_HEAD + 4					; other angles (alpha, gamma)
+MAP_POS			equ	CAR_ANGLE + 4					; position of car on map
+
+CAR_MODEL		equ	MAP_POS + 4					; pointer to car 3d model
+FLOOR_MODEL		equ	CAR_MODEL+4					; pointer to band the car is in
+NEW_FLOOR		equ	FLOOR_MODEL+4					; pointer to the band the car is going to be in
+; the next 4 things must go together
+CUR_PORTAL		equ	NEW_FLOOR+4					; current portal by which to teleport
+CUR_SOUND		equ	CUR_PORTAL + 4					; sound to make when crashing
+SND_VOL			equ	CUR_SOUND+4					;	volume for sound
+SND_POS			equ	SND_VOL+4					;	position for sound ($7fff = left, 0 = right)
+
+GAME_DATA		equ	SND_POS + 4					; data for game play (16 bits)
+QTIME			equ	GAME_DATA + 2					; timer for playback/record
+CAR_TOTFRAME		equ	QTIME + 2					; time stamp at beginning of ani cycle (value of intCount)
+CAR_FRAME		equ	CAR_TOTFRAME + 4				; time for this frame
+CAR_TIMER		equ	CAR_FRAME + 4					; value to display in "time" field of dashboard
+WAIT_TIME		equ	CAR_TIMER + 4					; time to wait for some event
+SCORE			equ	WAIT_TIME + 4					; timer ticks or spot total
+PRV_SCORE		equ	SCORE + 4					; td.s assumes SCORE, PRV_SCORE, and SCOREPIX
+SCOREPIX		equ	PRV_SCORE + 4					;   all come together
+TIMERPIX		equ	SCOREPIX+4
+
+QSTART			equ	TIMERPIX+4					; start of playback queue
+QEND			equ	QSTART+4
+QHEAD			equ	QEND+4						; pointer within playback queue
+QTAIL			equ	QHEAD+4						; pointer within playback queue
+QPLAY			equ	QTAIL+4						; position of playback head
+QREC			equ	QPLAY+4						; position of record head
+
+NEW_CAMERA		equ	QREC+4						; band the camera is going to be in next frame
+CAMERA_MODEL		equ	NEW_CAMERA+4					; band the camera is currently in
+CAMERA_POSN		equ	CAMERA_MODEL+4					; X,Y,Z (32 bits) for camera position
+CAMERA_MATRIX		equ	CAMERA_POSN+12					; viewing matrix for camera
+CAMERA_FLAG		equ	CAMERA_MATRIX+18				; what kind of camera to use
+CAMERA_TURN		equ	CAMERA_FLAG+2					; angle to turn camera in X-Z plane
+
+CAMLIST_BEG		equ	CAMERA_TURN+4					; start of camera list
+CAMLIST_END		equ	CAMLIST_BEG+4					; end of camera list
+CAMLIST_POS		equ	CAMLIST_END+4					; current position in camera list
+
+PORTAL_ROT		equ	CAMLIST_POS+4					; rotation imposed by portal
+AUTO_REW		equ	PORTAL_ROT+4					; automatic rewind is in effect
+CAR_DOWN		equ	AUTO_REW + 4
+CAR_QUEUE		equ	CAR_DOWN + 4					;player input queue
+
+; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CAR_DS_SIZE	equ	CAR_QUEUE + (32*4) + 4						; it takes this many bytes
+CAR_RADIUS	equ	$4000									; all points of the car are closer to the car center than this
+
+QENTRYSIZ		equ	30		; 12 bytes for matrix, 4 for band, 12 for position, 2 for game data
+QNUMENTRY		equ	1000		; number of entries in playback queue
+QUANTUM			equ	30		; number of 300ths per recorder entry
+
+; END car.inc
+	PLAYER1				equ	DS_BASE
+	PLAYER2				equ	PLAYER1 + CAR_DS_SIZE
+
+GEO_DS_BASE		equ		(( PLAYER2 + CAR_DS_SIZE					+ 3) & $fffffffc) ;LONG ALIGN
+
+; what the variables mean:
+; GEO_BND_PTR points to the current band
+; BANDS is the list of bands we should do calculations on, which is
+; the union of the camera's band list and the floor's; normally the
+; camera and floor are in the same band. We also stuff any extra bands
+; (e.g. the cars) into this list
+; The list is null terminated, and can have at most 100 entries
+
+GEO_BND_PTR		equ	GEO_DS_BASE
+CURBND			equ	GEO_BND_PTR+4			; for ren and 3dend: points to band we're currently looking at
+BANDS			equ	CURBND+4			; in comp: list of bands (see above)
+DISPBANDS		equ	BANDS+404			; band to be displayed, and Z value for it
+								; (sorted by Z)
+; addresses of computed data structs
+	SEMAPHORE			equ	DISPBANDS+800
+	SIDES				equ	SEMAPHORE+16			; sides of viewing area
+	DRAWRECT			equ	SIDES+8				; blitter rectangle to draw in
+	XCENTER				equ	DRAWRECT+4			; (X,Y) of center of screen
+	YCENTER				equ	XCENTER+4
+	ASPECTR				equ	YCENTER+4			; aspect ratio of viewing area
+	LOOPCNT				equ	ASPECTR+4			; loop counter for GPU loops
+	PWRBALLX			equ	LOOPCNT+4			; transformed (screen) X coordinate for power ball
+	PWRBALLY			equ	PWRBALLX+4			; screen Y coord for power ball
+	PWRBALLZ			equ	PWRBALLY+4
+	PWRBALLR			equ	PWRBALLZ+4			; radius for power ball
+	tEND				equ	PWRBALLR+4
+	GP_STACK			equ	((tEND+7) & $fffffff8)		; phrase align
+
+	QUEUES				equ	GP_STACK+8192			; queues for playback/record
+	GEO_END				equ	QUEUES+64000
+
+;------------------------------------------------------------------
+; addresses of structures in GPU RAM
+
+POLYGON					equ	BASE + $3f20	; room for 12 points
+CORNERS					equ	BASE + $3fe0	; x,y for the four corners - TLBR
+
+;------------------------------------------------------------------
+; edge bit numbers
+
+TOP_EDGE		equ	0
+LEFT_EDGE		equ	1
+BOTTOM_EDGE	equ	2
+RIGHT_EDGE	equ	3
+
+; BEGIN bndhead.inc
+;
+; data structure for per-band data
+
+; Constants that are always present
+
+BND_FLAGS	EQU	0		; flags for the band
+					;	bit 0: band cannot be collided with
+					;	bit 1: draw a cloudy sky with this band
+					;	bit 2: band is a bonus world (don't count time, don't draw map)
+
+					;	bit 13: (set in code): 0 if band has been visited by "comp"
+					;			       1 if band is in comp list but not yet computed
+					;	bit 14: (set in code): band has been clipped from view
+
+NUM_PNTS	EQU	BND_FLAGS+4	; number of points in the band
+NUM_VECTORS	EQU	NUM_PNTS+2	; number of vectors -- NOTE: this must immediately follow NUM_PNTS
+
+NUM_DIVIDERS	EQU	NUM_VECTORS+2	; number of dividers
+NUM_EDGES	EQU	NUM_DIVIDERS+2	; number of edges
+
+NUM_CPS		EQU	NUM_EDGES+2	; number of CPs
+NUM_COLORS	EQU	NUM_CPS+2	; number of entries in color table (normally 0)
+
+;; Make sure the stuff below is long aligned
+FILLER		EQU	NUM_COLORS+0	; make it NUM_COLORS+2 if stuff is inserted above
+
+XORIG		EQU	FILLER+2	; X origin in global coordinates
+YORIG		EQU	XORIG+4
+ZORIG		EQU	YORIG+4
+RADIUS		EQU	ZORIG+4		; square of the band's radius
+
+PROP_LIST	EQU	RADIUS+4	; pointer to special surface properties
+
+; static band data
+
+DIVIDER_LIST	EQU	PROP_LIST+4
+EDGE_LIST	EQU	DIVIDER_LIST+4
+PNT_LIST	EQU	EDGE_LIST+4
+SURF_LIST	EQU	PNT_LIST+4
+SURFS_END	EQU	SURF_LIST+4
+TREE		EQU	SURFS_END+4
+TEXTURES	EQU	TREE+4
+COLOR_LIST	EQU	TEXTURES+4	; colors for dynamic coloring (if applicable)
+CAMERA		EQU	COLOR_LIST+4	; pointer to camera list (if applicable)
+
+; pointers to allocated global memory
+
+ROTPNT_LIST	EQU	CAMERA+4	; pointer to rotated points
+tVECTORS	EQU	ROTPNT_LIST+4
+tCOLORS		EQU	tVECTORS+4
+tEDGES		EQU	tCOLORS+4
+tDIVIDERS	EQU	tEDGES+4
+tCLOSE_LIST	EQU	tDIVIDERS+4
+tPNTS		EQU	tCLOSE_LIST+4
+tPOLYS		EQU	tPNTS+4
+
+; statistics about this band
+BND_MATRIX	EQU	tPOLYS+4		; pointer to matrix for rotating band
+tNUM_EXTRAS	EQU	BND_MATRIX+4		; extra points added when rendering
+tINITED		EQU	tNUM_EXTRAS+4		; flag: set to 1 if the bnd is initialized, 0 if not, 2 if memory allocated but not inited
+USE_COUNT	EQU	tINITED+2		; number of times band is used (if 0, allocated memory may be freed)
+
+; finally: the list of bands which must be drawn when a
+; car is in this band. This list will usually be non-empty,
+; since the band itself should be drawn!
+; the list is 0 terminated
+
+BND_LIST	EQU	USE_COUNT+2
+
+
+
+;
+; Flags used in polygon structures
+; the first 12 bits of the "numsides" word for each polygon are flags, used as follows:
+; 	(the "fXXX" macros are masks for or'ing; the "bXXX" macros are the corresponding bits
+;	for btst)
+
+fGLASS		EQU	$8000			; flag for transparent polygon
+bGLASS		EQU	15
+
+fTEXTURE	EQU	$4000			; flag for texture mapped polygon (?)
+bTEXTURE	EQU	14
+
+fFLASH		EQU	$2000			; flag for flashing objects (in general, this
+bFLASH		EQU	13			; means the object's color must be computed)
+
+fSPSURF		EQU	$1000			; flag for special surfaces
+bSPSURF		EQU	12
+
+mSPSURF		EQU	$0f00			; up to 16 special surfaces per model
+
+fNOCOLLIDE	EQU	$0080			; object can't be collided with
+bNOCOLLIDE	EQU	7
+
+fNODRAW		EQU	$0040			; don't draw object
+bNODRAW		EQU	6
+
+;
+; offsets for polygon special surface structure
+; crash.gas assumes that this is 32 bytes long
+;
+PORTAL_BND	EQU	0			; band associated with a portal, or 0 if not a portal
+PORTAL_X	EQU	PORTAL_BND+4
+PORTAL_Y	EQU	PORTAL_X+4
+PORTAL_Z	EQU	PORTAL_Y+4
+SP_SOUND	EQU	PORTAL_Z+4
+SURF_PROP	EQU	SP_SOUND+4
+POWER_UP	EQU	SURF_PROP+4
+PROTATE		EQU	POWER_UP+4		; sine and cosine of rotation angle for portal
+
+;
+; world startup structure
+;
+STARTP1		EQU	0			; player 1 starting band, x, y, z (4*4 bytes)
+STARTH1		EQU	16			; player 1 starting angle (2 bytes)
+STARTP2		EQU	18			; player 2 starting band, x, y, z (4*4 bytes)
+STARTH2		EQU	34			; player 2 starting angle (2 bytes)
+MSCALE		EQU	36			; map scale (y then x: 2*2 bytes)
+MCENTER		EQU	40			; map center (y then x: 2*2 bytes)
+STARTANIM	EQU	44			; pointer to animation function info, or 0
+STARTDOTS	EQU	48			; 64 (band, x, y, z) quadruples for powerball locations
+; END bndhead.inc
+
+; END 3dds.inc
+; BEGIN time.gas
+;
+; definition for timing macros:
+;
+; StartTimer addr:	starts a timer running
+;	uses: temp, temp2
+;
+; SaveTimer addr:	saves the timer value into a specific memory location
+;	uses: temp, temp2
+;
+; RestoreTimer addr:	restarts a timer previously saved by SaveTimer
+;	uses:	temp, temp2
+
+.if 0
+
+MACRO	StartTimer
+	moveq	#1,r28
+	movei	#PIT0,r29
+	neg	r28
+	store	r28,(r29)
+ENDM
+
+MACRO	SaveTimer
+	movei	#PIT0,r29
+	load	(r29),r28
+	movei	#\1+TIMEARRAY,r29
+	rorq	#16,r28
+	neg	r28
+	store	r28,(r29)
+ENDM
+
+MACRO	RestoreTimer
+	movei	#\1,r29
+	load	(r29),r28
+	movei	#PIT0,r29
+	neg	r28
+	rorq	#16,r28
+	store	r28,(r29)
+ENDM
+
+MACRO	Mark
+	movei	#MARKADDR,r29
+	moveq	#\1,r28
+	store	r28,(r29)
+ENDM
+
+.else
+
+MACRO	StartTimer
+	nop
+ENDM
+
+MACRO	SaveTimer
+	nop
+ENDM
+
+MACRO	RestoreTimer
+	nop
+ENDM
+
+MACRO	Mark
+	nop
+ENDM
+
+.endif
+
+; END time.gas
+
+	MACRO cutItOut
+		moveq	#\1, r29
+		movei	#(SEMAPHORE+8), r27
+		movei	#thatsAllFolks, r28
+		jump		(r28)
+		store	r29, (r27)
+	ENDM
+
+; code start ----------------------------------------------------------------
+;
+; first, check to see if calculations are necessary
+;
+	movei	#gpu_do,r28
+	loadw	(r28),r28		; see what we're supposed to do
+	moveq	#$9,r29		; see if we should do rendering (bit 0) or collision detection (bit 3)
+	and	r29,r28
+	movei	#thatsAllFolks,r29	; if neither, abort now
+	cmpq	#0,r28
+	jump	EQ,(r29)
+	nop
+
+	StartTimer	$08		; precomp+comp
+
+
+	movei	#player,r2
+	load	(r2),r2
+	nop
+	moveta	r2,r27
+
+;
+; we should mark our own car as non-collidable, and the other car as collidable, for
+; the (eventual) collision detection functions in 3dend
+;
+.if 0
+	movei	#gametype,r28
+	loadw	(r28),r28
+	movei	#nocollides,r29
+	cmpq	#0,r28				; tag game is gametype 0
+	jump	EQ,(r29)
+	nop
+.endif
+		movei	#(PLAYER1^PLAYER2),r29
+		xor	r2,r29		; get pointer to other player
+		movei	#CAR_MODEL,r28
+		add	r28,r29
+		load	(r29),r29
+		or	r29,r29
+		load	(r29),r28		; get other player's car flags
+		bclr	#0,r28			; clear the "no collide" flag
+		store	r28,(r29)
+		movei	#CAR_MODEL,r29
+		add	r2,r29
+		load	(r29),r29
+		or	r29,r29
+		load	(r29),r28		; get our car flags
+		bset	#0,r28			; set the "no collide" flag
+		store	r28,(r29)
+nocollides:
+; BEGIN camera.gas
+;
+; camera.gas: set up camera position
+;
+; camera modes (as stored in "camflag"):
+; 0 = inside the car
+; 1 = chase camera
+; 2 = fixed camera
+; 3 = swooping from 1 to 2
+; 4 = camera on a stick (beside car)
+; 5 = camera on a stick (behind car)
+; 6 = dropped camera
+;
+; legacy REGEQU camera => R0 ; camera.gas:13
+; legacy REGEQU savemat => R1 ; camera.gas:14
+; legacy REGEQU camflag => R2 ; camera.gas:15
+; legacy REGEQU thePlayer => R3 ; camera.gas:16
+; legacy REGEQU nextbr => R4 ; camera.gas:17
+; legacy REGEQU tx => R5 ; camera.gas:18
+; legacy REGEQU ty => R6 ; camera.gas:19
+; legacy REGEQU tz => R7 ; camera.gas:20
+; legacy REGEQU mag => R8 ; camera.gas:21
+; legacy REGEQU normrout => R9 ; camera.gas:22
+
+; legacy REGEQU xrite => r10 ; camera.gas:24
+; legacy REGEQU yrite => r11 ; camera.gas:25
+; legacy REGEQU zrite => r12 ; camera.gas:26
+; legacy REGEQU xdown => r13 ; camera.gas:27
+; legacy REGEQU ydown => r14 ; camera.gas:28
+; legacy REGEQU zdown => r15 ; camera.gas:29
+;
+; WARNING WARNING WARNING: dual use reggies
+;
+; legacy REGEQU qstart => r10 ; camera.gas:33
+; legacy REGEQU qend => r11 ; camera.gas:34
+; legacy REGEQU qhead => r12 ; camera.gas:35
+; legacy REGEQU qtail => r13 ; camera.gas:36
+; legacy REGEQU qplay => r14 ; camera.gas:37
+; legacy REGEQU qtemp => r15 ; camera.gas:38
+
+; END WARNING
+
+; legacy REGEQU xhead => r16 ; camera.gas:42
+; legacy REGEQU yhead => r17 ; camera.gas:43
+; legacy REGEQU zhead => r18 ; camera.gas:44
+; legacy REGEQU xposn => r19 ; camera.gas:45
+; legacy REGEQU yposn => r20 ; camera.gas:46
+; legacy REGEQU zposn => r21 ; camera.gas:47
+
+; legacy REGEQU floorbnd => R22 ; camera.gas:49
+
+; legacy REGEQU camx => R23 ; camera.gas:51
+; legacy REGEQU camy => R24 ; camera.gas:52
+; legacy REGEQU camz => R25 ; camera.gas:53
+
+; legacy REGEQU camerabnd => R26 ; camera.gas:55
+
+; R27-R31 reserved
+; legacy REGEQU temp3 => r27 ; camera.gas:58
+
+; ALTERNATE REGISTERS USED
+;tx		REGEQU	R5	; temporary x,y,z for calculations
+;ty		REGEQU	R6
+;tz		REGEQU	R7
+
+MACRO	JSR_NORM
+	move	PC,r31
+	jump	(r9)
+	addqt	#6,r31
+ENDM
+
+	movei	#G_DIVCTRL,r29		; use 16.16 division
+	moveq	#1,r28
+	store	r28,(r29)
+
+	movei	#nrmlize,r9
+	movei	#player,r3
+	load	(r3),r3
+
+	movei	#FLOOR_MODEL,r29
+	add	r3,r29
+	load	(r29),r22
+
+	movei	#CAMERA_MODEL,r0
+	add	r3,r0
+	movei	#CAMERA_FLAG,r2
+	add	r3,r2
+	loadw	(r2),r2
+	movei	#saveit,r1
+
+	bclr	#7,r2			; clear the "always draw last" flag
+
+	move	r3,r29
+	load	(r29),r5
+	addqt	#4,r29
+	load	(r29),r6
+	addqt	#4,r29
+	load	(r29),r7
+	addqt	#4,r29
+
+	move	r22,r26
+
+	cmpq	#0,r2
+	movei	#fixedpos,r4
+	jump	NE,(r4)
+	nop
+;
+; standard "inside the car" camera view
+;
+	move	r5,r19
+	move	r6,r20
+	move	r7,r21
+	loadw	(r29),r10
+	addqt	#2,r29
+	loadw	(r29),r11
+	addqt	#2,r29
+	loadw	(r29),r12
+	addqt	#2,r29
+	loadw	(r29),r13
+	addqt	#2,r29
+	loadw	(r29),r14
+	addqt	#2,r29
+	loadw	(r29),r15
+	addqt	#2,r29
+	loadw	(r29),r16
+	addqt	#2,r29
+	loadw	(r29),r17
+	addqt	#2,r29
+	loadw	(r29),r18
+;
+; subtract some of the "down" vector
+;
+	move	r13,r28
+	move	r14,r29
+	shlq	#16,r28
+	shlq	#16,r29
+	sharq	#14,r28
+	sharq	#14,r29
+	sub	r28,r19
+	move	r15,r28
+	sub	r29,r20
+	shlq	#16,r28
+	sharq	#14,r28
+	jump	(r1)
+	sub	r28,r21
+
+fixedpos:
+	cmpq	#1,r2	
+	movei	#backpos,r4
+	jump	EQ,(r4)
+	nop
+	cmpq	#4,r2
+	movei	#stickpos,r4
+	jump	PL,(r4)
+	nop
+;
+; fixed camera position
+; 
+; special case: if camflag is 3, we're switching from a chase
+; camera view to a fixed view, and so we should do a "swoop"
+; to get to the position
+;
+; to actually find the camera coordinates: there are 2 cases
+; (1) the CAMERA field in the band header is 0; then the
+;     camera is located at the origin of the band
+; (2) the CAMERA field in the band header is non-zero; then
+;     this points at a list of camera positions. This list
+;     consists of (for each possible position):
+;	(1) A plane equation (4 longs: Ax+By+Cz+D=0)
+;	    if the evaluated equation at the car's position
+;	    is >= 0, we use this camera. In particular, if
+;	    A = B = C = D = 0, we will always use this camera
+;	    note that the car's (x,y,z) are converted to 0.16
+;	    numbers by right shifting by 16, so D should actually
+;	    be /16
+;	(2) camera band
+;	(3) X,Y,Z of camera (3 longs)
+;
+		movei	#CAMERA,r29
+		add	r22,r29
+		load	(r29),r29
+		movei	#default,r4
+		cmpq	#0,r29
+		jump	EQ,(r4)
+		nop
+		movei	#camloop,r4
+		move	r5,r23
+		move	r6,r24
+		move	r7,r25
+		sharq	#16,r23
+		sharq	#16,r24
+		sharq	#16,r25
+camloop:
+		load	(r29),r19
+		addqt	#4,r29
+		load	(r29),r20
+		addqt	#4,r29
+		load	(r29),r21
+		addqt	#4,r29
+		load	(r29),r28
+		addqt	#4,r29
+		load	(r29),r26
+		addqt	#4,r29
+		imultn	r19,r23
+		imacn	r20,r24
+		imacn	r21,r25
+		resmac	r19
+		add	r28,r19
+		cmpq	#0,r19
+		jr	PL,loadit
+		nop
+		jump	(r4)
+		addqt	#12, r29
+default:
+		move	r22,r26
+		moveq	#XORIG,r29
+		add	r22,r29
+loadit:
+		load	(r29),r19
+		addqt	#4,r29
+		load	(r29),r20
+		addqt	#4,r29
+		load	(r29),r21
+gotposn:
+		movei	#docalcs,r4
+		cmpq	#3,r2		; if it's 2, don't do a swoop
+		jump	NE,(r4)
+		nop
+
+; here we're still in the "swoop" for the camera
+		move	r19,r23
+		move	r20,r24
+		move	r21,r25
+		movei	#CAMERA_POSN,r29
+		add	r3,r29
+		load	(r29),r19
+		addqt	#4,r29
+		load	(r29),r20
+		addqt	#4,r29
+		load	(r29),r21
+		; move the camera from the old position towards the new position
+		; xposn has the current camera position, camx the new position
+		sub	r19,r23
+		sub	r20,r24
+		sub	r21,r25
+		
+		sharq	#2,r23			; find the "velocity" vector for the camera
+		sharq	#2,r24
+		sharq	#2,r25
+
+		move	r23,r28		; check its magnitude; if small enough, we're done the swoop
+		move	r24,r29
+		abs	r28
+		abs	r29
+		add	r29,r28
+		move	r25,r29
+		abs	r29
+		add	r29,r28
+		shrq	#2,r28
+		cmpq	#15,r28
+		jr	PL,_CDLOCAL_10_266			; still pretty big: keep going
+		nop
+			movei	#CAMERA_FLAG,r29
+			moveq	#2,r2
+			add	r3,r29
+			jump	(r4)
+			store	r2,(r29)
+_CDLOCAL_10_266:
+
+		add	r23,r19
+		add	r24,r20
+		add	r25,r21
+
+		jump	(r4)	; go do the camera calculations
+		nop
+;
+; we get here for camera values 4,5,6
+;
+stickpos:
+	cmpq	#6,r2		; dropped camera?
+	movei	#specialpos,r28
+	jump	EQ,(r28)		; no == must be dropped camera
+	nop
+;
+; "camera on a stick" view; there are two of these; 4 = beside the car,
+; 5 = behind the car
+;
+	move	r5,r19
+	move	r6,r20
+	move	r7,r21
+	loadw	(r29),r10
+	addqt	#2,r29
+	loadw	(r29),r11
+	addqt	#2,r29
+	loadw	(r29),r12
+	addqt	#2,r29
+	loadw	(r29),r13
+	addqt	#2,r29
+	loadw	(r29),r14
+	addqt	#2,r29
+	loadw	(r29),r15
+	addqt	#2,r29
+	loadw	(r29),r16
+	addqt	#2,r29
+	loadw	(r29),r17
+	addqt	#2,r29
+	loadw	(r29),r18
+
+;
+; subtract some of the "head" vector (so we end up behind the car)
+;
+	move	r16,r28
+	move	r17,r29
+	move	r18,r27
+
+	shlq	#16,r28
+	shlq	#16,r29
+	shlq	#16,r27
+
+	cmpq	#4,r2
+	jr	NE,behindcar
+	nop
+		neg	r28		; go in front of the car instead of behind
+		neg	r29
+		neg	r27
+behindcar:
+	sharq	#10,r28
+	sharq	#10,r29
+	sharq	#10,r27
+
+	sub	r28,r19
+	sub	r29,r20
+	sub	r27,r21
+	sharq	#1,r28
+	sharq	#1,r29
+	sharq	#1,r27
+	sub	r28,r19
+	sub	r29,r20
+	sub	r27,r21
+;
+; then move up a bit
+;
+	movei	#$28000,r28
+	sub	r28,r20
+
+; now go do the calculations to point the camera at the car
+	movei	#docalcs,r28
+	jump	(r28)
+	nop
+
+specialpos:
+
+	move	r0,r29
+	load	(r29),r26
+	addqt	#4,r29
+	load	(r29),r19
+	addqt	#4,r29
+	load	(r29),r20
+	addqt	#4,r29
+	load	(r29),r21
+	movei	#docalcs,r29
+	jump	(r29)
+	nop
+
+backpos:
+
+;
+; "chase" camera position: we find this by looking
+; back about 1/3 second in the playback buffer;
+; if that position is "far enough" away, start moving
+; the camera towards it by averaging the current
+; camera position and that camera position
+; if the camera is "too close", move it slightly away from
+; the car
+	move	r0,r29
+	load	(r29),r26
+	addqt	#4,r29
+	load	(r29),r19
+	addqt	#4,r29
+	load	(r29),r20
+	addqt	#4,r29
+	load	(r29),r21
+
+	movei	#QSTART,r29
+	add	r3,r29
+
+	load	(r29),r10
+	addqt	#4,r29
+	load	(r29),r11
+	addqt	#4,r29
+	load	(r29),r12
+	addqt	#4,r29
+	load	(r29),r13
+	addqt	#4,r29
+	load	(r29),r14
+; the "120" is for 120/300'th of a second
+	movei	#(120*QENTRYSIZ)/QUANTUM,r15
+	sub	r15,r14
+	cmp	r10,r14
+	jr	PL,_CDLOCAL_10_402
+	nop
+		sub	r10,r14
+		add	r11,r14
+_CDLOCAL_10_402:
+; possible cases:
+; CASE I: qtail <= qhead: then qplay is valid if qtail <= qplay < qhead
+; CASE 2: qhead < qtail: then qplay is valid if !(qhead <= qplay < qtail)
+;			 	i.e. if qplay < qhead || qplay >= qtail
+; if qplay is not valid, don't change the camera band or position
+;
+	moveta	r5,r5		; save these variables so they can be restored at "tooclose"
+	moveta	r6,r6
+	moveta	r7,r7
+
+	movei	#restoret,r4
+	cmp	r13,r12
+	movei	#case2,r28
+	jump	MI,(r28)
+	nop
+		cmp	r13,r14
+		jr	PL,_CDLOCAL_25_423
+		nop
+			jump	(r4)		; go to restoret
+			nop
+_CDLOCAL_25_423:
+		cmp	r12,r14
+		jr	MI,_CDLOCAL_30_429
+		nop
+			jump	(r4)		; go to restoret
+			nop
+_CDLOCAL_30_429:
+		movei	#validqplay,r28
+		jump	(r28)
+		nop
+case2:
+		cmp	r14,r12
+		jr	PL,validqplay
+		nop
+		cmp	r13,r14
+		jr	PL,validqplay
+		nop
+			jump	(r4)		; go to restoret
+			nop
+validqplay:
+	movei	#tooclose,r4
+	loadw	(r14),r22		; possible new camera band
+	addqt	#2,r14
+	loadw	(r14),r28
+	addqt	#2,r14
+	shlq	#16,r22
+	or	r28,r22
+
+	loadw	(r14),r23	; load up the possible new position: note that it's not long aligned!
+	addqt	#2,r14
+	loadw	(r14),r28
+	addqt	#2,r14
+	shlq	#16,r23
+	or	r28,r23
+	loadw	(r14),r24
+	addqt	#2,r14
+	loadw	(r14),r28
+	addqt	#2,r14
+	shlq	#16,r24
+	or	r28,r24
+	loadw	(r14),r25
+	addqt	#2,r14
+	loadw	(r14),r28
+	shlq	#16,r25
+	or	r28,r25
+
+	movei	#$1c000,r28	; make the camera a little bit higher
+	sub	r28,r24
+	move	r0,r29	; load the old position
+
+	addqt	#4,r29	; skip camera band
+	load	(r29),r19
+	addqt	#4,r29
+	load	(r29),r20
+	addqt	#4,r29
+	load	(r29),r21
+
+	; move the camera from the old position towards the new position
+	; xposn has the current camera position, camx the new position
+	sub	r19,r23
+	sub	r20,r24
+	sub	r21,r25
+		
+	sharq	#2,r23
+	sharq	#2,r24
+	sharq	#2,r25
+
+	add	r19,r23
+	add	r20,r24
+	add	r21,r25
+
+	sub	r23,r5			; check distance from car to new point
+	sub	r24,r6			; "tx" is now a vector pointing from the camera to the car
+	sub	r25,r7
+	sharq	#12,r5
+	sharq	#12,r6
+	sharq	#12,r7
+	imultn	r5,r5
+	imacn	r6,r6
+	imacn	r7,r7
+	resmac	r15
+	movei	#$c000,r28
+	cmp	r28,r15
+	jump	MI,(r4)		; go to tooclose
+	nop
+		move	r23,r19
+		move	r24,r20
+		move	r25,r21
+		movei	#restoret,r29
+		cmpq	#0,r22	; if the new camera band is going to be 0, don't use it
+		jump	EQ,(r29)
+		nop
+		move	r22,r26
+		jump	(r29)
+		nop
+tooclose:
+.if 1
+;
+; if the camera is too close to the car, push it away
+; a little bit
+;
+	movefa	r5,r5
+	movefa	r6,r6
+	movefa	r7,r7
+	sub	r19,r5
+	sub	r20,r6
+	sub	r21,r7
+	sharq	#12,r5
+	sharq	#12,r6
+	sharq	#12,r7
+	imultn	r5,r5
+	imacn	r6,r6
+	imacn	r7,r7
+	resmac	r15
+
+	movei	#$8000,r28
+	cmp	r28,r15
+	movei	#restoret,r4
+	jump	PL,(r4)
+	nop
+		JSR_NORM		; normalize the vector pointing away from the car
+		shlq	#2,r5
+		shlq	#2,r6
+		shlq	#2,r7
+		sub	r5,r19	; push the camera away
+		sub	r6,r20
+		sub	r7,r21
+.endif
+
+restoret:
+
+	movefa	r5,r5
+	movefa	r6,r6
+	movefa	r7,r7
+
+;
+; tx,ty,tz were loaded up with the car's position earlier;
+; use them to find a vector pointing from the camera to
+; the car
+;
+docalcs:
+;
+; the "head" vector points at the car
+;
+	sub	r19,r5
+	sub	r20,r6
+	sub	r21,r7
+	JSR_NORM
+	move	r5,r16
+	move	r6,r17
+	move	r7,r18
+;
+; now find a "down" vector for the matrix
+; this should have a positive y component,
+; and be orthogonal to the "head" vector
+; (-yx, x^2+z^2, -yz) works well for this,
+; if x and z are not both zero; otherwise
+; punt with (1,0,0)
+
+	imultn	r16,r16
+	imacn	r18,r18
+	resmac	r28
+	cmpq	#0,r28
+	jr	NE,notzero
+	nop
+		moveq	#0,r5			; cross product computation below assumes tx = xdown, ty = ydown, etc.
+		bset	#14,r5
+		move	r5,r13
+		moveq	#0,r6
+		move	r6,r14
+		movei	#donedown,r29
+		moveq	#0,r7
+		jump	(r29)
+		move	r7,r15
+notzero:
+	move	r28,r6
+	imult	r17,r5
+	imult	r17,r7
+	neg	r5
+	neg	r7
+	JSR_NORM
+	move	r5,r13
+	move	r6,r14
+	move	r7,r15
+
+donedown:
+; finally, calculate the "rite" vector as the cross product head X down
+; a copy of "down" is still in tx,ty,tz
+	neg	r5
+	neg	r6
+	neg	r7
+
+	imultn	r17,r15
+	imacn	r18,r6
+	resmac	r10
+	sharq	#14,r10
+
+	imultn	r18,r13
+	imacn	r16,r7
+	resmac	r11
+	sharq	#14,r11
+
+	imultn	r16,r14
+	imacn	r17,r5
+	resmac	r12
+	sharq	#14,r12
+
+	neg	r10		; oops: we did the cross product in the wrong order
+	neg	r11
+	neg	r12
+
+	jump	(r1)
+	nop
+;
+; Subroutine: normalize the vector in (tx,ty,tz)
+; assumes that we're given something that's already signed
+; Does this by first finding an approximation to the magnitude
+; This approximation (from Graphics Gems) is
+;  mag ~= abs(max) + abs(med)/4 + abs(min)/4
+; where max,med,min are the sorted x,y,z components of the vector
+; Registers destroyed: temp,temp2,temp3,tx,ty,tz,mag
+;
+nrmlize:
+	move	r5,r28
+	move	r6,r29
+	move	r7,r8
+
+	abs	r28
+	abs	r29
+	abs	r8
+
+	move	r28,r27
+	or	r29,r27
+	or	r8,r27
+	normi	r27,r27
+	addqt	#10,r27
+	sha	r27,r28
+	sha	r27,r29
+	sha	r27,r8
+	sha	r27,r5
+	sha	r27,r6
+	sha	r27,r7
+
+	cmp	r28,r8
+	jr	PL,_CDLOCAL_10_672
+	nop
+		move	r8,r27
+		move	r28,r8
+		move	r27,r28
+_CDLOCAL_10_672:
+	cmp	r29,r8
+	jr	PL,_CDLOCAL_15_679
+	nop
+		move	r8,r27
+		move	r29,r8
+		move	r27,r29
+_CDLOCAL_15_679:
+	sharq	#2,r28		; divide by 4
+	sharq	#2,r29
+	add	r28,r8
+	add	r29,r8	; mag should now be relatively close to the magnitude
+	
+; save the signs of tx,ty,tz in "temp3"
+; bit 0 is tx, bit 1 is ty, bit 2 is tz
+	move	r5,r27
+	move	r6,r29
+	move	r7,r28
+	shrq	#31,r27
+	shrq	#31,r29
+	shrq	#31,r28
+	shlq	#1,r29
+	shlq	#2,r28
+	or	r29,r27
+	or	r28,r27
+
+	abs	r5
+	div	r8,r5
+	abs	r6
+	div	r8,r6
+	sharq	#2,r5		; convert back to 0.14
+	abs	r7
+	sharq	#2,r6
+	div	r8,r7
+	sharq	#2,r7
+;
+; now normalize again using the trick described in ortho.gas:
+; (1+x)^2 ~= 1+2x for small x, where "x" is the amount over 1
+;
+	imultn	r5,r5
+	imacn	r6,r6
+	imacn	r7,r7
+	resmac	r8
+	moveq	#1,r28		; make "temp" = 1 (in 28.4 bits)
+	shlq	#28,r28
+	sub	r28,r8	; find (mag-1)
+	sharq	#1,r8		; divide by 2
+	add	r28,r8	; add 1 again
+	div	r8,r28	; find inverse of magnitude
+	shrq	#2,r28
+	mult	r28,r5
+	mult	r28,r6
+	mult	r28,r7
+	shrq	#14,r5
+	shrq	#14,r6
+	shrq	#14,r7
+; now restore the signs of tx,ty,and tz from temp3
+	btst	#0,r27
+	jr	EQ, _CDLOCAL_30_733
+	nop
+		neg	r5
+_CDLOCAL_30_733:
+	btst	#1,r27
+	jr	EQ,_CDLOCAL_31_738
+	nop
+		neg	r6
+_CDLOCAL_31_738:
+	btst	#2,r27
+	jump	EQ,(r31)
+	nop
+	jump	(r31)
+	neg	r7
+
+saveit:
+	bclr	#31,r26	; flag for "good position"; we can ignore this
+	subqt	#4,r0		; move to NEW_CAMERA
+	store	r26,(r0)
+	addqt	#8,r0		; skip CAMERA_MODEL
+	store	r19,(r0)
+	addqt	#4,r0
+	store	r20,(r0)
+	addqt	#4,r0
+	store	r21,(r0)
+	addqt	#4,r0
+
+	storew	r10,(r0)
+	addqt	#2,r0
+	storew	r11,(r0)
+	addqt	#2,r0
+	storew	r12,(r0)
+	addqt	#2,r0
+	storew	r13,(r0)
+	addqt	#2,r0
+	storew	r14,(r0)
+	addqt	#2,r0
+	storew	r15,(r0)
+	addqt	#2,r0
+	storew	r16,(r0)
+	addqt	#2,r0
+	storew	r17,(r0)
+	addqt	#2,r0
+	storew	r18,(r0)
+
+droppedpos:
+
+	movei	#G_DIVCTRL,r29
+	moveq	#0,r28
+	store	r28,(r29)
+
+; GASM REGUNDEF camera ; camera.gas:782
+; GASM REGUNDEF camflag ; camera.gas:783
+; GASM REGUNDEF savemat ; camera.gas:784
+; GASM REGUNDEF thePlayer ; camera.gas:785
+; GASM REGUNDEF nextbr ; camera.gas:786
+; GASM REGUNDEF tx ; camera.gas:787
+; GASM REGUNDEF ty ; camera.gas:788
+; GASM REGUNDEF tz ; camera.gas:789
+; GASM REGUNDEF mag ; camera.gas:790
+; GASM REGUNDEF normrout ; camera.gas:791
+
+; GASM REGUNDEF xhead ; camera.gas:793
+; GASM REGUNDEF yhead ; camera.gas:794
+; GASM REGUNDEF zhead ; camera.gas:795
+; GASM REGUNDEF xrite ; camera.gas:796
+; GASM REGUNDEF yrite ; camera.gas:797
+; GASM REGUNDEF zrite ; camera.gas:798
+; GASM REGUNDEF xdown ; camera.gas:799
+; GASM REGUNDEF ydown ; camera.gas:800
+; GASM REGUNDEF zdown ; camera.gas:801
+
+; GASM REGUNDEF temp3 ; camera.gas:803
+; GASM REGUNDEF camx ; camera.gas:804
+; GASM REGUNDEF camy ; camera.gas:805
+; GASM REGUNDEF camz ; camera.gas:806
+; GASM REGUNDEF qstart ; camera.gas:807
+; GASM REGUNDEF qend ; camera.gas:808
+; GASM REGUNDEF qhead ; camera.gas:809
+; GASM REGUNDEF qtail ; camera.gas:810
+; GASM REGUNDEF qplay ; camera.gas:811
+; GASM REGUNDEF qtemp ; camera.gas:812
+
+; GASM REGUNDEF camerabnd ; camera.gas:814
+; END camera.gas
+; BEGIN sky2.gas
+;
+; sky drawing module
+;
+; this module expects a sky which is 640*100, with:
+;   top line is all blue (matches the color in sky1.gas)
+;   a "complete" view of the sky is 384 pixels
+;   the remaining 256 pixels are a repeat of the first 384
+;
+; The screen is
+; 320 pixels wide, which represents a field of view of approximately
+; 60 degrees, or 2048/6 BRADS.
+; So, there are 320/(2048/6) = 1920/2048 = 15/16 pixels per BRAD in the destination.
+;
+; The sky bitmap is 90 degrees + 60 degrees = 150 degrees, or 2560/3 BRADS. (should be 360+60 = 420 degrees)
+; This is stored in 768 pixels; so there are
+;  768/(2560/3) = 0.9 pixels per BRAD in the source
+
+; that means there are (9/10)/(15/16) = 0.96 source pixels per destination pixel
+
+.if 0
+
+SRC_SCALE	EQU	$6000		; pixels per BRAD in source	(15 bit fixed point)
+SD_SCALE	EQU	$6666		; source pixels per dest. pixel
+SCRN_X		EQU	$7FFF		; (320 * SD_SCALE) >> 8	-- remember to renormalize after multiplying
+SCRN_Y1		EQU	$2599		; (94 * SD_SCALE) >> 8	-- remember to renormalize after multiplying
+SCRN_Y2		EQU	$4fff		; (200 * SD_SCALE) >> 8
+SCRN_NORM	EQU	8			; see above
+HORIZ_ADJUST	EQU	639		; we want (HORIZ_ADJUST-512)*SRC_SCALE to be about 100
+SRC_SIZE	EQU	$0063027F	; 640x100 (sky source picture size)
+SRC_FLAGS	EQU	PITCH1|PIXEL16|WID640|XADDINC
+
+.else
+
+SRC_SCALE	EQU	$7332		; pixels per BRAD in source	(15 bit fixed point)
+SD_SCALE	EQU	$7ae0		; source pixels per dest. pixel
+SCRN_X		EQU	$4ccc		; (320 * SD_SCALE) >> 9	-- remember to renormalize after multiplying
+SCRN_Y1		EQU	$168f		; (94 * SD_SCALE) >> 9	-- remember to renormalize after multiplying
+SCRN_Y2		EQU	$2fff		; (200 * SD_SCALE) >> 9
+SCRN_NORM	EQU	9			; see above
+HORIZ_ADJUST	EQU	623		; we want (HORIZ_ADJUST-512)*SRC_SCALE to be about 100
+SRC_SIZE	EQU	$00780300	; 768x120 (sky source picture size)
+SRC_FLAGS	EQU	PITCH1|PIXEL16|WID768|XADDINC
+
+.endif
+
+;
+; ANGLES: in order to view the proper part of the sky, we have to reconstruct the yaw, pitch, and roll
+; angles from the transformation matrix. The information is calculated as follows:
+;    angle in the (x,z) plane (i.e. which direction, relative to the ground, we're looking in):
+;        atan2(zhead,xhead) = arctan(zhead/xhead)
+;    tilt angle (up into the sky):
+;        arccos(yhead)
+;    twist angle (how you're turned sideways)
+;        arccos(yrite)
+
+; elided repeat include /mnt/data/club_case_work/club-drive-source/src/compat_include/jaguar.inc
+; elided repeat include /mnt/data/club_case_work/club-drive-source/src/compat_include/blit.inc
+; elided repeat include /mnt/data/club_case_work/club-drive-source/src/3dds.inc
+; elided repeat include /mnt/data/club_case_work/club-drive-source/src/68kequ.inc
+
+; identical repeated EQU elided: sky2.gas:61 LFU_REPLACE	EQU	(LFU_AN|LFU_A)
+
+; legacy REGEQU thePlayer => r0 ; sky2.gas:63
+; legacy REGEQU geoband => r1 ; sky2.gas:64
+; legacy REGEQU matptr => r2 ; sky2.gas:65
+; legacy REGEQU xtemp => r5 ; sky2.gas:66
+; legacy REGEQU ytemp => r6 ; sky2.gas:67
+; legacy REGEQU pic_x => r7 ; sky2.gas:68
+; legacy REGEQU pic_y => r8 ; sky2.gas:69
+; legacy REGEQU xinc => r9 ; sky2.gas:70
+; legacy REGEQU yinc => r10 ; sky2.gas:71
+; legacy REGEQU atantemp => r11 ; sky2.gas:72
+; legacy REGEQU tempptr => r12 ; sky2.gas:73
+; legacy REGEQU mid => r13 ; sky2.gas:74
+; legacy REGEQU basemat => r14 ; sky2.gas:75
+; legacy REGEQU storeptr => r15 ; sky2.gas:76
+
+; legacy REGEQU pi2 => r24 ; sky2.gas:78
+; legacy REGEQU sintbl => r25 ; sky2.gas:79
+
+; R27-R31 reserved
+
+	MACRO JSR_ARCTAN
+		movei	#atan,r11
+		move	PC,r31
+		jump	(r11)
+		addqt	#6,r31
+	ENDM
+
+	MACRO JSR_ARCCOS
+		movei	#acos,r11
+		move	PC,r31
+		jump	(r11)
+		addqt	#6,r31
+	ENDM
+
+	MACRO JSR_ARCSIN
+		movei	#asin,r11
+		move	PC,r31
+		jump	(r11)
+		addqt	#6,r31
+	ENDM
+;
+
+	movefa	r27,r0
+
+	movei	#G_DIVCTRL,r29	; set up 16.16 division
+	moveq	#1,r28
+	store	r28,(r29)
+
+
+	moveq	#4,r24
+	movei	#sn,r25
+	shlq	#7,r24
+;
+; get the car's direction heading
+; (used in other places) and alpha, beta angles
+; (used for the modem)
+;
+; direction heading is atan2(xhead,zhead)
+; alpha is arcsin(-yhead)
+; gamma is atan2(yrite,ydown)
+;
+; get direction heading
+;
+	moveq	#CAR_MATRIX,r2
+	add	r0,r2
+	move	r2,r14
+	addqt	#12,r2
+	loadw	(r2),r28			; xhead
+	addqt	#4,r2
+	loadw	(r2),r29			; zhead
+	shlq	#16,r28
+	sharq	#16,r28
+	shlq	#16,r29
+	sharq	#16,r29
+
+	JSR_ARCTAN
+	movei	#CAR_HEAD,r15
+	add	r0,r15
+	store	r28,(r15)
+	addqt	#4,r15
+
+	move	r14,r2
+	addqt	#14,r2			; yhead
+	loadw	(r2),r28
+	shlq	#16,r28
+	sharq	#16,r28
+	neg	r28
+	JSR_ARCSIN
+	storew	r28,(r15)
+	addqt	#2,r15
+;
+; finally, get gamma
+;
+	move	r14,r2
+	addqt	#2,r2
+	loadw	(r2),r28			; yrite
+	addqt	#6,r2
+	loadw	(r2),r29			; ydown
+	shlq	#16,r28
+	sharq	#16,r28
+	shlq	#16,r29
+	sharq	#16,r29
+	JSR_ARCTAN
+	storew	r28,(r15)
+
+;
+; see if we should draw the sky at all, by checking this player's model flags
+;
+	movei	#FLOOR_MODEL,r28
+	add	r0,r28
+	load	(r28),r28		; get current band
+	moveq	#BND_FLAGS,r29
+	add	r28,r29
+	load	(r29),r29		; get band flags
+	movei	#goaround,r28
+	btst	#1,r29		; should we draw sky with this band?
+	jump	EQ,(r28)
+	nop
+
+;
+; get the camera's direction heading
+; The matrix is stored as:
+;	xrite	yrite	zrite
+;	xdown	ydown	zdown
+;	xhead	yhead	zhead
+
+	movei	#(CAMERA_MATRIX+12),r2
+	add	r0,r2
+
+	loadw	(r2),r28			; xhead
+	addqt	#4,r2
+	loadw	(r2),r29			; zhead
+	subqt	#2,r2			; point at yhead
+	shlq	#16,r28
+	sharq	#16,r28
+	shlq	#16,r29
+	sharq	#16,r29
+
+;
+; find the (x,z) angle
+;
+	JSR_ARCTAN		; make "temp" the angle (0 to 2047)
+
+	move	r28,r7
+
+; scale the angles appropriately
+	bclr	#9,r7				; source bitmap angles should be between 0 and 511 (only)
+	bclr	#10,r7
+
+	movei	#171,r28
+	add	r28,r7				; make pic_x the center of the 60 degree (171*2 BRADs) field of vision
+
+;
+; pic_y is based on the angle with the y axis, the cosine of which is "yhead"
+;
+	loadw	(r2),r28		; get yhead	(matptr was left pointing at it above)
+	subqt	#14,r2		; point back at the beginning of the matrix
+
+	shlq	#16,r28
+	sharq	#16,r28
+
+	JSR_ARCCOS
+				; now we have an angle from 0-1024, with 0 being "pointed down", 512 "pointed ahead"
+	move	r29,r8
+	neg	r8
+;
+; adjust the horizon
+;
+.if 0
+	movei	#HORIZ_ADJUST,r29	; 
+	add	r29,r8		; when pointing straight ahead (angle 512) we look at the bottom of the picture
+.else
+	movei	#SKYHIGH,r29
+	load	(r29),r29
+	add	r29,r8
+.endif
+	movei	#SRC_SCALE,r29
+	imult	r29,r7
+	shlq	#1,r7
+
+	imult	r29,r8
+	shlq	#1,r8
+
+; finally, calculate the "twist": the cosine of the twist relative to the y axis is yrite
+; in order to get the sine, we need to know whether we're "right side up" or "up side down";
+; ydown tells us this
+
+
+	addqt	#2,r2	; move from beginning of matrix to yrite
+	loadw	(r2),r10	; yrite
+	addqt	#6,r2	; move to ydown
+	loadw	(r2),r9
+	shlq	#16,r9
+	sharq	#16,r9
+	shlq	#16,r10
+	sharq	#16,r10
+
+	move	r10,r28	; save the cosine
+
+	JSR_ARCCOS
+	move	r29,r28
+
+;JSR_SIN		; to get the sine that goes with the cosine
+	movei	#sine,r29
+	move	PC,r31
+	jump	(r29)
+	addqt	#6,r31
+
+	btst	#31,r9	; should sine be negative?
+	jr	EQ,plussin
+	nop
+		neg	r29
+
+plussin:
+	move	r29,r9
+
+; yinc already has the cosine...
+
+;
+; yinc should be sin(angle); xinc should be cos(angle)
+
+; (pic_x,pic_y) gives the center of the field of view; turn this into the upper left corner
+; by multiplying by appropriate amounts
+;	x' = x * xinc - y * yinc
+;	y' = y * xinc + x * yinc
+
+	movei	#SCRN_X,r5		; this is preshifted by 9 to fit in 0.15
+	movei	#splitscrn,r28
+	loadw	(r28),r28
+	movei	#-SCRN_Y1,r6
+	cmpq	#0,r28
+	jr	NE,_CDLOCAL_22_296
+	nop
+		movei	#-SCRN_Y2,r6
+_CDLOCAL_22_296:
+	imultn	r9,r5
+	imacn	r10,r6
+	resmac	r28
+	sharq	#(14-SCRN_NORM),r28			; 14 because xinc is /4 and SCRN_NORM because SCRN_X is normalized by it
+	sub	r28,r7
+	neg	r6
+	imultn	r10,r5
+	imacn	r9,r6
+	resmac	r28
+	sharq	#(14-SCRN_NORM),r28
+	sub	r28,r8
+
+; make sure blitter is free
+	movei	#B_CMD,r29
+_CDLOCAL_9_311:
+	load	(r29),r28
+	btst	#0,r28
+	jr	EQ,_CDLOCAL_9_311
+	nop
+
+; set up the blitter
+; window A1 is the source (the picture)
+; window A2 is the destination (the screen)
+
+	movei	#SKY,r28
+	movei	#A1_BASE,r29
+	store	r28,(r29)
+
+	addqt	#4,r29		; move to A1_FLAGS
+	movei	#SRC_FLAGS,r28
+	store	r28,(r29)
+
+	addqt	#4,r29		; move to A1_CLIP
+	movei	#SRC_SIZE,r28			
+	store	r28,(r29)
+
+	move	r8,r28
+	shrq	#16,r28
+	shlq	#16,r28
+	move	r7,r29
+	shrq	#16,r29
+	or	r29,r28
+	movei	#A1_PIXEL,r29
+	store	r28,(r29)
+
+	move	r8,r28
+	shlq	#16,r28
+	move	r7,r29
+	shlq	#16,r29
+	shrq	#16,r29
+	or	r29,r28
+	movei	#A1_FPIXEL,r29
+	store	r28,(r29)
+
+
+; SCALE by appropriate amount to match source and destination pixels
+; ASSUMPTIONS: 0 < SD_SCALE <= 1
+; xinc and yinc are predivided by 4
+	movei	#SD_SCALE,r28
+
+	imult	r28,r9
+	imult	r28,r10
+	sharq	#13,r9		; sharq #15 for SD_SCALE, then shl #2 because xinc and yinc are 14 bits
+	sharq	#13,r10
+
+; set up the X and Y increments in the blitter
+
+	move	r10,r28
+	shrq	#16,r28
+	shlq	#16,r28
+	move	r9,r29
+	shrq	#16,r29
+	or	r29,r28
+	movei	#A1_INC,r29
+	store	r28,(r29)
+
+	move	r10,r28
+	shlq	#16,r28
+	move	r9,r29
+	shlq	#16,r29
+	shrq	#16,r29
+	or	r29,r28
+	movei	#A1_FINC,r29
+	store	r28,(r29)
+
+; X and Y step are calculated as follows:
+; (1) xstep = -320*xinc-yinc
+; (2) ystep = -320*yinc+xinc
+
+	move	r9,r5
+	move	r10,r6
+
+	sharq	#2,r5
+	sharq	#2,r6
+	movei	#320,r29
+	imult	r29,r5
+	imult	r29,r6
+	neg	r5
+	neg	r6
+	shlq	#2,r5
+	shlq	#2,r6
+	sub	r10,r5
+	add	r9,r6
+
+	move	r6,r28
+	move	r5,r29
+	shrq	#16,r28
+	shlq	#16,r28
+	shrq	#16,r29
+	or	r29,r28
+
+	movei	#A1_STEP,r29
+	store	r28,(r29)
+
+	move	r6,r28
+	move	r5,r29
+	shlq	#16,r28
+	shlq	#16,r29
+	shrq	#16,r29
+	or	r29,r28
+
+	movei	#A1_FSTEP,r29
+	store	r28,(r29)
+
+
+;
+; set up stuff for the screen
+;
+	movei	#A2_BASE,r29
+	movei	#PITCH1|PIXEL16|WID320|XADDPIX,r28
+	addqt	#4,r29			; move to A2_FLAGS
+	store	r28,(r29)
+	moveq	#0,r28
+	movei	#A2_PIXEL,r29
+	store	r28,(r29)
+	movei	#$0001FEC0,r28			; +1y, -320x
+	movei	#A2_STEP,r29
+	store	r28,(r29)
+	movei	#screen_addr,r28
+	load	(r28),r28
+	movei	#A2_BASE,r29
+	store	r28,(r29)
+
+	movei	#DRAWRECT,r28
+	load	(r28),r28		; get screen size
+	movei	#B_COUNT,r29
+	store	r28,(r29)
+;
+; start the blitter
+;
+	movei	#B_CMD,r29
+	movei	#CLIP_A1|SRCEN|UPDA1F|UPDA1|UPDA2|DSTA2|LFU_REPLACE,r28
+	store	r28,(r29)
+
+	movei	#goaround,r28
+	jump	(r28)
+	nop
+
+;
+; atan(y,x): find arc tangent of (y/x)
+; y is passed in temp	(14 bit value)
+; x is passed in temp2	(14 bit value)
+; returns a value from 0 to 2048, in temp
+; destroys: temp, temp2, xtemp, ytemp, atantemp,mid, tempptr, innerLoop
+;
+
+; legacy REGEQU hi => r5 ; sky2.gas:464
+; legacy REGEQU lo => r6 ; sky2.gas:465
+; legacy REGEQU quadrant => r11 ; sky2.gas:466
+
+atan:
+	movei	#512,r5
+
+	move	r29,r11
+	shrq	#31,r11		; quadrant is 0 if x is >= 0, 1 if x < 0
+	btst	#31,r28
+	jr	EQ,plusy
+	moveq	#3,r6
+		xor	r6,r11	; if z < 0, flip the bits
+plusy:
+	abs	r28
+	abs	r29
+	btst	#0,r11
+	jr	EQ,noflip
+	nop
+		move	r28,r6		; for quadrants 1 and 3, exchange x and y
+		move	r29,r28
+		move	r6,r29
+noflip:
+	mult	r5,r11		; now quadrant is the starting angle for the quadrant
+	moveq	#0,r6
+
+	cmpq	#0,r29
+	jr	NE,atandefined
+	nop
+		move	r5,r28		; hi still has 512 in it
+		jump	(r31)
+		add	r11,r28
+atandefined:
+
+	cmpq	#0,r28
+	jr	NE,atanplus
+	nop
+		jump	(r31)
+		add	r11,r28
+atanplus:
+	div	r29,r28		; temp now contains y/x
+
+; now look up y/x in the tangent table
+
+
+	movei	#atanTab,r12
+	movei	#atanloop,r27
+	moveq	#0,r13
+
+atanloop:
+	cmp	r5,r6			; if ((lo-hi >= 0) then return
+	jr	MI,moreatan
+	nop
+		move	r13,r28
+		subqt	#1,r28
+		jump	(r31)
+		add	r11,r28
+moreatan:
+	move	r6,r13
+	add	r5,r13
+	sharq	#1,r13	; mid = [(hi+lo)/2]
+	move	r13,r29
+	shlq	#2,r29
+	add	r12,r29
+	load	(r29),r29
+	cmp	r29,r28	; if (y/x) == table[mid]
+	jr	NE,noteq
+	nop
+		move	r13,r28
+		jump	(r31)	; return temp + quadrant
+		add	r11,r28
+noteq:
+	jr	MI,less		; else if (y/x) > table[mid]
+	nop
+		move	r13,r6
+		jump	(r27)
+		addqt	#1,r6	;	lo = mid+1
+less:
+	move	r13,r5
+	jump	(r27)
+	subqt	#1,r5		; else hi = mid-1
+
+;
+; arcsin(temp): returns the angle foo (-512 to 512) for which sin(foo) = temp
+;
+asin:
+	move	r28,r11
+	abs	r28
+
+	movei	#512,r5
+	moveq	#0,r6
+
+	cmpq	#0,r28
+	jump	EQ,(r31)		; sin(0) = 0
+	nop
+; look up temp in the sine table
+	movei	#moreasin,r12
+	movei	#asinloop,r27
+	moveq	#0,r13
+
+asinloop:
+	move	r5,r13			; if (hi-lo <= 1)
+	sub	r6,r13
+	cmpq	#2,r13
+	jump	PL,(r12)
+	nop
+		move	r6,r12
+		move	r5,r29
+		shlq	#1,r12
+		shlq	#1,r29
+		add	r25,r12
+		loadw	(r12),r12
+		add	r25,r29
+		load	(r29),r29
+		sub	r28,r12
+		sub	r28,r29
+		abs	r12
+		abs	r29
+		move	r6,r13		; assume return value is "lo"
+		cmp	r12,r29	; if (hi value is closer to temp than lo value)
+		jr	MI,asinlo
+		nop
+			move	r5,r13
+	asinlo:
+		btst	#31,r11
+		jr	EQ,asin0
+		move	r13,r28		; set temp to return value
+			neg	r28		; sin(-x) = -sin(x)
+	asin0:
+		jump	(r31)
+		nop
+moreasin:
+	move	r6,r13
+	add	r5,r13
+	sharq	#1,r13		; mid = [(hi+lo)/2]
+	move	r13,r29
+	shlq	#1,r29	; table has words
+	add	r25,r29
+	loadw	(r29),r29
+	cmp	r29,r28	; if (y/x) == table[mid]
+	jr	NE,sanoteq
+	nop
+		btst	#31,r11
+		jr	EQ,asin1
+		move	r13,r28
+			neg	r28
+	asin1:
+		jump	(r31)
+		nop
+sanoteq:
+	jr	MI,saless		; else if (y/x) > table[mid]
+	nop
+		move	r13,r6
+		jump	(r27)
+		addqt	#1,r6	;	lo = mid+1
+saless:
+	move	r13,r5
+	jump	(r27)
+	subqt	#1,r5		; else hi = mid-1
+
+
+;
+; arccos(temp): returns the angle foo (0 to 1024) for which cos(foo) = temp
+; value is returned in temp2
+; destroys: temp, temp2, xtemp, ytemp, atantemp,mid, tempptr, innerLoop
+;
+acos:
+	move	r28,r11
+	abs	r28
+
+	movei	#512,r5
+	moveq	#0,r6
+
+	cmpq	#0,r28
+	jr	NE,acosnz
+	nop
+		jump	(r31)
+		move	r5,r29
+acosnz:
+
+; look up temp in the sine table
+	movei	#moreacos,r12
+	movei	#acosloop,r27
+	moveq	#0,r13
+
+acosloop:
+	move	r5,r13			; if (hi-lo <= 1)
+	sub	r6,r13
+	cmpq	#2,r13
+	jump	PL,(r12)
+	nop
+		move	r6,r12
+		move	r5,r29
+		shlq	#1,r12
+		shlq	#1,r29
+		add	r25,r12
+		loadw	(r12),r12
+		add	r25,r29
+		load	(r29),r29
+		sub	r28,r12
+		sub	r28,r29
+		abs	r12
+		abs	r29
+		move	r6,r13		; assume return value is "lo"
+		cmp	r12,r29	; if (hi value is closer to temp than lo value)
+		jr	MI,acoslo
+		nop
+			move	r5,r13
+	acoslo:
+		moveq	#1,r29
+		btst	#31,r11
+		jr	NE,acos0
+		shlq	#9,r29		; set temp2 to 512
+			jump	(r31)
+			sub	r13,r29	; set temp2 to 512 - mid
+	acos0:
+		jump	(r31)
+		add	r13,r29
+moreacos:
+	move	r6,r13
+	add	r5,r13
+	sharq	#1,r13		; mid = [(hi+lo)/2]
+	move	r13,r29
+	shlq	#1,r29	; table has words
+	add	r25,r29
+	loadw	(r29),r29
+	cmp	r29,r28	; if (y/x) == table[mid]
+	jr	NE,anoteq
+	nop
+		moveq	#1,r29
+		btst	#31,r11
+		jr	NE,acos1
+		shlq	#9,r29		; set temp2 to 512
+			jump	(r31)
+			sub	r13,r29	; set temp2 to 512 - mid
+	acos1:
+		jump	(r31)
+		add	r13,r29	
+anoteq:
+	jr	MI,aless		; else if (y/x) > table[mid]
+	nop
+		move	r13,r6
+		jump	(r27)
+		addqt	#1,r6	;	lo = mid+1
+aless:
+	move	r13,r5
+	jump	(r27)
+	subqt	#1,r5		; else hi = mid-1
+
+
+;
+;	SUBROUTINE AREA
+;
+; sin, cos
+; -----------------------------------------------------------------------
+;	sine & cosine   16-bit table lookup Cosine
+;
+;	GIVEN:
+;		temp = Angle (Binary Radians (1 BRAD = PI/1024))
+;		pi2 = PI/2 ($200 in Brads)
+;		sintbl = Ptr to Sine Table
+;
+;	RETURNS:
+;		TEMP = Cos(Angle)*$4000
+;
+;	REGISTER USAGE:
+;		temp, temp2, return
+;
+;
+cosine:
+	add	r24,r28	; Cos(a) = Sin(a + pi/2)
+sine:
+	move		r28, r29	; keep quadrant data in temp
+	shlq		#23, r29	; strip quadrant data
+	btst		#9, r28
+	jr		EQ, _CDLOCAL_10_744
+	shrq		#22, r29	; word address
+		shlq	#1, r24 ; this is free
+		neg	r29
+		add	r24, r29
+		shrq	#1, r24 ; this is free
+_CDLOCAL_10_744:
+	add		r25, r29
+	btst		#10, r28
+	loadw	(r29), r29
+	jump		EQ, (r31)
+	nop
+	jump		(r31)
+	neg		r29
+
+;
+;
+goaround:
+
+;
+; all done, clean up
+;
+	movei	#G_DIVCTRL,r29	; restore 32 bit division
+	moveq	#0,r28
+	store	r28,(r29)
+
+
+; GASM REGUNDEF thePlayer ; sky2.gas:766
+; GASM REGUNDEF xhead ; sky2.gas:767
+; GASM REGUNDEF yhead ; sky2.gas:768
+; GASM REGUNDEF zhead ; sky2.gas:769
+; GASM REGUNDEF xtemp ; sky2.gas:770
+; GASM REGUNDEF ytemp ; sky2.gas:771
+; GASM REGUNDEF pic_x ; sky2.gas:772
+; GASM REGUNDEF pic_y ; sky2.gas:773
+; GASM REGUNDEF xinc ; sky2.gas:774
+; GASM REGUNDEF yinc ; sky2.gas:775
+; GASM REGUNDEF atantemp ; sky2.gas:776
+
+; END sky2.gas
+; BEGIN rotdot.gas
+;
+; powerball point transformation code
+;
+
+; BEGIN rot.inc
+;- Rotation register defines ----------------------------------------------
+
+; rotation matrix
+; legacy REGEQU m0 => R0 ; rot.inc:4
+; legacy REGEQU m1 => R1 ; rot.inc:5
+; legacy REGEQU m2 => R2 ; rot.inc:6
+; legacy REGEQU m3 => R3 ; rot.inc:7
+; legacy REGEQU m4 => R4 ; rot.inc:8
+; legacy REGEQU m5 => R5 ; rot.inc:9
+; legacy REGEQU m6 => R6 ; rot.inc:10
+; legacy REGEQU m7 => R7 ; rot.inc:11
+; legacy REGEQU m8 => R8 ; rot.inc:12
+
+; legacy REGEQU xo => R9 ; rot.inc:14
+; legacy REGEQU yo => R10 ; rot.inc:15
+; legacy REGEQU zo => R11 ; rot.inc:16
+
+; computed data
+; legacy REGEQU resultX => R12 ; rot.inc:19
+; legacy REGEQU resultY => R13 ; rot.inc:20
+; legacy REGEQU resultZ => R14 ; rot.inc:21
+
+; pointers
+; legacy REGEQU source => R15 ; rot.inc:24
+; legacy REGEQU dest => R16 ; rot.inc:25
+; legacy REGEQU dest2 => R17 ; rot.inc:26
+; legacy REGEQU dest3 => R18 ; rot.inc:27
+; legacy REGEQU numPnts => R19 ; rot.inc:28
+
+; legacy REGEQU x => R20 ; rot.inc:30
+; legacy REGEQU y => R21 ; rot.inc:31
+; legacy REGEQU z => R22 ; rot.inc:32
+
+; legacy REGEQU xaz => R20 ; rot.inc:34
+; legacy REGEQU yaz => R21 ; rot.inc:35
+; legacy REGEQU ze => R22 ; rot.inc:36
+
+; legacy REGEQU rightSd => R23 ; rot.inc:38
+; legacy REGEQU bottomSd => R24 ; rot.inc:39
+
+; legacy REGEQU dataHi => R25 ; rot.inc:41
+; legacy REGEQU sectors => R26 ; rot.inc:42
+
+;innerLoop	REGEQU	R27
+
+;---------------------------------------------------------------------------
+
+; END rot.inc
+
+	movei	#dotloc,r29
+	load	(r29),r28
+	addqt	#4,r29
+	cmpq	#0,r28
+	movei	#noballs,r29
+	jump	EQ,(r29)
+	nop
+
+	movefa	r27,r15
+	movei	#CAMERA_POSN,r28
+	add	r28,r15
+	load		(r15), r9
+	addq	#4, r15
+	load		(r15), r10
+	addq	#4, r15
+	load		(r15), r11
+	addq	#4, r15
+
+	loadw	(r15), r0
+	addqt	#2, r15
+	loadw	(r15), r1
+	addqt	#2, r15
+	loadw	(r15), r2
+	addqt	#2, r15
+	loadw	(r15), r3
+	addqt	#2, r15
+	loadw	(r15), r4
+	addqt	#2, r15
+	loadw	(r15), r5
+	addqt	#2, r15
+	loadw	(r15), r6
+	addqt	#2, r15
+	loadw	(r15), r7
+	addqt	#2, r15
+	loadw	(r15), r8
+
+	movei	#dotloc,r15
+	addqt	#4,r15
+	load	(r15),r20
+	addqt	#4,r15
+	load	(r15),r21
+	addqt	#4,r15
+	load	(r15),r22
+	sub	r9,r20
+	sub	r10,r21
+	sub	r11,r22
+
+	movei	#PWRBALLX,r16
+
+	; make 16 bits
+	move		r20, r28
+	abs		r28
+	move		r21, r29
+	abs		r29
+	or		r29, r28
+	move		r22, r29
+	abs		r29
+	or		r29, r28
+	normi	r28, r29
+	addqt	#9, r29
+	sha		r29, r20
+	sha		r29, r21
+	sha		r29, r22
+	neg		r29
+	addqt	#12, r29
+
+	; do multiply
+	imultn	r3, r20	;
+	imacn	r4, r21	;
+	imacn	r5, r22	;
+	resmac	r13	;
+	sha		r29, r13	; back to 17.15
+
+	imultn	r0, r20	;
+	imacn	r1, r21	;
+	imacn	r2, r22	;
+	resmac	r12	;
+	sha		r29, r12	; back to 17.15
+
+	imultn	r6, r20	;
+	imacn	r7, r21	;
+	imacn	r8, r22	;
+	resmac	r14	;
+	sha		r29, r14	; back to 17.15
+
+; do perspective calculations
+; legacy REGEQU Dm => r0 ; rotdot.gas:93
+; legacy REGEQU De => r1 ; rotdot.gas:94
+; legacy REGEQU ze => r2 ; rotdot.gas:95
+; legacy REGEQU D => r3 ; rotdot.gas:96
+; legacy REGEQU xe => r4 ; rotdot.gas:97
+; legacy REGEQU ye => r5 ; rotdot.gas:98
+; legacy REGEQU tempz => r6 ; rotdot.gas:99
+
+	movei	#277, r0
+	normi	r0,r1
+	subqt	#8,r1
+	sh	r1,r0
+	neg	r1
+	subqt	#16,r1
+
+	movei	#XCENTER,r28
+	load	(r28),r20
+	addqt	#4,r28
+	load	(r28),r21
+
+	btst	#31,r14
+	movei	#storeit,r29
+	jump	NE,(r29)
+	normi	r14,r2
+
+	move	r14,r6
+
+	addqt	#6,r2
+	sh	r2,r6
+	move	r0,r3
+	div	r6,r3
+
+	add	r1,r2
+	move	r12,r28
+	move	r13,r29
+	abs	r28
+	abs	r29
+	normi	r28,r4
+	normi	r29,r5
+	addqt	#9,r4
+	addqt	#9,r5
+	sha	r4,r12
+	sha	r5,r13
+	neg	r4
+	neg	r5
+	add	r2,r4
+	add	r2,r5
+
+	imult	r3,r12
+	imult	r3,r13
+	sha	r4,r12
+	sha	r5,r13
+	add	r20,r12
+	add	r21,r13
+storeit:
+	movei	#PWRBALLX,r16
+	store	r12,(r16)
+	addqt	#4,r16
+	store	r13,(r16)
+	addqt	#4,r16
+	store	r14,(r16)
+	addqt	#4,r16
+	subqt	#12,r2
+	sha	r2,r3
+	store	r3,(r16)
+
+noballs:
+; BEGIN rotc.inc
+;-------------------------------------------------------------------
+; cleanup section
+; GASM REGUNDEF m0 ; rotc.inc:3
+; GASM REGUNDEF m1 ; rotc.inc:4
+; GASM REGUNDEF m2 ; rotc.inc:5
+; GASM REGUNDEF m3 ; rotc.inc:6
+; GASM REGUNDEF m4 ; rotc.inc:7
+; GASM REGUNDEF m5 ; rotc.inc:8
+; GASM REGUNDEF m6 ; rotc.inc:9
+; GASM REGUNDEF m7 ; rotc.inc:10
+; GASM REGUNDEF m8 ; rotc.inc:11
+; GASM REGUNDEF xo ; rotc.inc:12
+; GASM REGUNDEF yo ; rotc.inc:13
+; GASM REGUNDEF zo ; rotc.inc:14
+; GASM REGUNDEF resultX ; rotc.inc:15
+; GASM REGUNDEF resultY ; rotc.inc:16
+; GASM REGUNDEF resultZ ; rotc.inc:17
+; GASM REGUNDEF source ; rotc.inc:18
+; GASM REGUNDEF dest ; rotc.inc:19
+; GASM REGUNDEF dest2 ; rotc.inc:20
+; GASM REGUNDEF dest3 ; rotc.inc:21
+; GASM REGUNDEF numPnts ; rotc.inc:22
+; GASM REGUNDEF x ; rotc.inc:23
+; GASM REGUNDEF y ; rotc.inc:24
+; GASM REGUNDEF z ; rotc.inc:25
+; GASM REGUNDEF xaz ; rotc.inc:26
+; GASM REGUNDEF yaz ; rotc.inc:27
+; GASM REGUNDEF ze ; rotc.inc:28
+; GASM REGUNDEF rightSd ; rotc.inc:29
+; GASM REGUNDEF bottomSd ; rotc.inc:30
+; GASM REGUNDEF dataHi ; rotc.inc:31
+; GASM REGUNDEF sectors ; rotc.inc:32
+;-------------------------------------------------------------------
+
+; END rotc.inc
+
+; GASM REGUNDEF Dm ; rotdot.gas:162
+; GASM REGUNDEF De ; rotdot.gas:163
+; GASM REGUNDEF ze ; rotdot.gas:164
+; GASM REGUNDEF D ; rotdot.gas:165
+; GASM REGUNDEF xe ; rotdot.gas:166
+; GASM REGUNDEF ye ; rotdot.gas:167
+
+; END rotdot.gas
+
+; jump to the next part of the renderer (the computations)
+		movei	#cgpprog,r28
+		movei	#loadIt, r29
+		jump		(r29)
+		nop
+
+; set sem -------------------------------------------------------------------
+;		; set the semaphore
+;		moveq	#1, temp
+;		movei	#SEMAPHORE, temp2
+;		store	temp, (temp2)
+
+; halt the GPU --------------------------------------------------------------
+thatsAllFolks:
+; stolen code
+		movei	#G_CTRL, r29
+		load		(r29), r28
+		bclr #0, r28
+		bset #1, r28
+		store	r28, (r29)
+
+_CDLOCAL_10_119:	jr	_CDLOCAL_10_119
+		nop
+
+;-------------------------------------------------------------------
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop

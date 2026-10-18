@@ -1,0 +1,811 @@
+DEBUGTREE	EQU	0
+;
+; mark points of interest in the BSP tree
+; the parameters are:
+;
+; px,py,pz:	X,Y,Z for the point to be marked
+; radius:	radius of object associated with point
+;		(actually, the radius squared)
+; flag:		0 = mark unconditionally
+;		1 = mark only if behind an object in the
+;		    subtree
+; geoband:	band containing the BSP tree
+; tree:		subtree to mark
+;
+; global variables:
+; stack:	stack pointer
+; dividers:	pointer to world dividers
+; points:	pointer to world points
+; vectors:	pointer to world vectors
+; tdividers:	pointer to transformed dividers
+; lists:	pointer to list of lists; there are
+; maxlist:	last list currently in use
+; mtreefunc:	address of marktree function
+; treelist:	pointer to world list
+;
+px	REGEQU	r0
+py	REGEQU	r1
+pz	REGEQU	r2
+radius	REGEQU	r3
+geoband REGEQU	r4
+flag	REGEQU	r5
+tree	REGEQU	r6
+dividers REGEQU	r7
+points	REGEQU	r8
+vectors	REGEQU	r9
+tdividers REGEQU r10
+tempx	REGEQU	r11
+tempy	REGEQU	r12
+tempz	REGEQU	r13
+
+fronttree REGEQU r14		; WARNING: re-used
+backtree REGEQU r15
+
+bitcount REGEQU	r14
+pntsigns REGEQU	r15
+
+eyesigns REGEQU	r16
+
+nx	REGEQU	r17
+ny	REGEQU	r18
+nz	REGEQU	r19
+
+breakout REGEQU	r20		; WARNING: re-used
+numsides REGEQU	r21
+
+liststart REGEQU r20
+
+treelist REGEQU	r22
+mtreefunc REGEQU r23
+divnum	REGEQU	r24
+nodetype REGEQU r25
+
+tpoints	REGEQU	r26		; NOT USED for now...
+stack	REGEQU	r30
+
+; registers r27-r31 reserved, except for r30
+
+; ALTERNATE REGISTERS
+ox	REGEQU	r0			; original values of (px,py,pz)
+oy	REGEQU	r1
+oz	REGEQU	r2
+surflist	REGEQU	r3		; SURF_LIST of the .bnd
+lists	REGEQU	r4
+maxlist	REGEQU	r5
+treeptr REGEQU	r6
+theMark	REGEQU	r7			; what we're marking the node with (typically car band)
+dist	REGEQU	r8			; distance from object to camera
+camx	REGEQU	r9			; camera X, Y, Z
+camy	REGEQU	r10
+camz	REGEQU	r11
+cambnd	REGEQU	r12			; the camera band
+
+MACRO	JSR_MARK
+	movei	#doMark,temp2
+	move	PC,return
+	jump	(temp2)
+	addqt	#6,return
+ENDM
+
+;
+; setup for everything
+;
+	movei	#DISPBANDS,temp
+	moveta	temp,lists
+	moveq	#0,temp
+	moveta	temp,maxlist
+	movei	#player,temp2
+	load	(temp2),temp2
+	movei	#CAMERA_MODEL,temp
+	add	temp,temp2
+	load	(temp2),flag
+	addqt	#4,temp2
+	load	(temp2),nx
+	addqt	#4,temp2
+	load	(temp2),ny
+	addqt	#4,temp2
+	load	(temp2),nz
+	moveta	flag,cambnd
+	moveta	nx,camx
+	moveta	ny,camy
+	moveta	nz,camz
+;
+; mark our own car
+; if bit 7 of CAMERA_FLAG is set, the car should
+; always be drawn last in the band
+;
+	movefa	ALTplayer,temp2
+	movei	#CAR_MODEL,temp
+	add	temp2,temp
+	load	(temp),flag			; get car model into flag
+	movei	#CAMERA_FLAG,temp
+	add	temp2,temp
+	loadw	(temp),temp			; get camera_flag into temp
+	movei	#FLOOR_MODEL,geoband
+	add	temp2,geoband
+	movei	#CAR_RADIUS,radius
+	load	(geoband),geoband
+	btst	#7,temp				; draw this last?
+	jr	EQ,notlast
+	nop
+		moveq	#0,radius
+		or	geoband,geoband		; wait for load to complete
+		movefa	camx,px			; if so, draw a point at the camera location
+		movefa	camy,py
+		movefa	camz,pz
+		movefa	cambnd,geoband		; use the camera's band, so car always shows
+		jr	drawus
+		nop
+notlast:
+	movei	#XORIG,temp2
+	add	flag,temp2
+	load	(temp2),px
+	addqt	#4,temp2
+	load	(temp2),py
+	addqt	#4,temp2
+	load	(temp2),pz
+drawus:
+	JSR_MARK
+
+;
+; mark the other player's car
+;
+
+	movefa	ALTplayer,temp2
+	movei	#(PLAYER1^PLAYER2),temp
+	xor	temp,temp2
+	movei	#FLOOR_MODEL,geoband
+	movei	#CAR_MODEL,temp
+	add	temp2,geoband
+	add	temp2,temp
+
+	load	(temp),flag
+	movei	#XORIG,temp2
+	add	flag,temp2
+	load	(temp2),px
+	addqt	#4,temp2
+	load	(temp2),py
+	addqt	#4,temp2
+	load	(temp2),pz
+	movei	#CAR_RADIUS,radius
+	load	(geoband),geoband
+	JSR_MARK
+;
+; mark the power ball
+;
+	movei	#dotloc,temp2
+	move	temp2,flag
+	bset	#31,flag			; mark as a "dot"
+	load	(temp2),geoband
+	addqt	#4,temp2
+	load	(temp2),px
+	addqt	#4,temp2
+	load	(temp2),py
+	addqt	#4,temp2
+	load	(temp2),pz
+	movei	#$00002000,radius
+	JSR_MARK
+;
+; mark any other bands
+;
+	movei	#mbands,temp2
+	load	(temp2),flag
+	addqt	#4,temp2
+	load	(temp2),geoband
+	movei	#endmbands,temp
+	movei	#RADIUS,radius
+	cmpq	#0,flag
+		movei	#XORIG,temp2
+	jump	EQ,(temp)			; goes to endmbands
+	add	flag,radius
+		load	(radius),radius
+		add	flag,temp2
+		load	(temp2),px
+		addqt	#4,temp2
+		load	(temp2),py
+		addqt	#4,temp2
+		load	(temp2),pz
+		JSR_MARK
+
+.if 1
+	movei	#mbands,temp2
+	addqt	#8,temp2			;use addqt instead of mbands+8 because mbands is munged by gpufix
+	load	(temp2),flag
+	addqt	#4,temp2
+	load	(temp2),geoband
+	movei	#RADIUS,radius
+	cmpq	#0,flag
+		movei	#XORIG,temp2
+	jr	EQ,endmbands
+	add	flag,radius
+		load	(radius),radius
+		add	flag,temp2
+		load	(temp2),px
+		addqt	#4,temp2
+		load	(temp2),py
+		addqt	#4,temp2
+		load	(temp2),pz
+		JSR_MARK
+.endif
+
+endmbands:
+
+	movei	#mtree_around,temp2	
+	jump	(temp2)
+	nop
+
+;
+; ENTRY POINT for main code:
+; passed px,py,pz,radius, flag, and a band
+; loads up global variables based on the band,etc.
+;
+doMark:
+	cmpq	#0,geoband	; band doesn't exist?
+	jump	EQ,(return)
+	sharq	#2,radius	; divide radius by 4 (since computations are (/2), squared)
+
+; check to make sure the band is (1) initialized, and (2) not clipped
+	movei	#tINITED,temp2
+	add	geoband,temp2
+	loadw	(temp2),temp
+	nop
+	btst	#0,temp
+	jump	EQ,(return)	; band not initialized
+	nop
+	load	(geoband),temp
+	nop
+	btst	#14,temp
+	jump	NE,(return)	; band clipped
+	nop
+; finally, make sure the band is visible to the current player
+	movefa	ALTplayer,temp
+	movei	#CAMERA_MODEL,temp2
+	add	temp,temp2
+	load	(temp2),temp2
+	movei	#BND_LIST,temp
+	add	temp,temp2
+bndlp:
+	load	(temp2),temp
+	addqt	#4,temp2
+	cmp	temp,geoband
+	jr	EQ,bndlpend
+	nop
+	cmpq	#0,temp
+	jr	NE,bndlp
+	nop
+	jump	(return)
+	nop
+bndlpend:
+
+; save away the thing we're going to mark with
+	moveta	flag,theMark
+; find the distance from the camera to the point
+	movefa	camx,nx
+	movefa	camy,ny
+	movefa	camz,nz
+	sub	px,nx
+	sub	py,ny
+	sub	pz,nz
+	sharq	#14,nx			; really should be "16", but it's a good bet that any object we can see is relatively
+	sharq	#14,ny			; close to us, and I want to keep precision without the hassle of normi
+	sharq	#14,nz
+	imultn	nx,nx
+	imacn	ny,ny
+	imacn	nz,nz
+	resmac	temp
+	or	temp,temp
+	moveta	temp,dist
+
+; OK, load up the band global variables
+	movei	#tDIVIDERS,temp2
+	add	geoband,temp2
+	load	(temp2),tdividers
+	movei	#DIVIDER_LIST,temp2
+	add	geoband,temp2
+	load	(temp2),dividers
+	moveq	#NUM_PNTS,temp2
+	add	geoband,temp2
+	loadw	(temp2),temp
+	movei	#ROTPNT_LIST,temp2
+	add	geoband,temp2
+	load	(temp2),points
+	movei	#TREE,temp2
+	add	geoband,temp2
+	load	(temp2),treelist
+	move	points,vectors
+	moveq	#6,temp2
+	mult	temp2,temp		; "temp" still has NUM_PNTS
+	add	temp,vectors
+	movei	#XORIG,temp2
+	add	geoband,temp2
+	load	(temp2),tempx
+	addqt	#4,temp2
+	load	(temp2),tempy
+	addqt	#4,temp2
+	load	(temp2),tempz
+
+; save (px,py,pz) for future reference
+	moveta	px,ox
+	moveta	py,oy
+	moveta	pz,oz
+; adjust (px,py,pz) by band origin
+	sub	tempx,px
+	sub	tempy,py
+	sub	tempz,pz
+	movei	#SURF_LIST,temp2
+	add	geoband,temp2
+	load	(temp2),temp2
+	moveq	#0,flag
+	movei	#marktree,mtreefunc
+	moveta	temp2,surflist
+	movei	#GP_STACK,stack
+	moveq	#0,tree
+
+;
+; SUBROUTINE marktree
+; in C, this would look something like: (WARNING: this comment is out of date: the code no longer looks
+; much like the C, which was broken)
+;
+;int
+;marktree(long px, long py, long pz, long radius, TREE *tree, int flag)
+;{
+;	if (tree->type == INTERIOR_NODE) {
+;		divnum = tree->divider;
+;		distance = dotproduct(divider[divnum],VECTOR(px,py,pz));
+;		if (distance < 0) {
+;			backside = tree->front;
+;			frontside = tree->back;
+;		} else {
+;			backside = tree->back;
+;			frontside = tree->front;
+;		}
+;		if (abs(distance*distance) > radius) {
+;			return marktree(px,py,pz,radius,frontside,flag);
+;		} else {
+;			if (marktree(px,py,pz,backside,1))
+;				return 1;
+;			return marktree(px,py,pz,radius,frontside,flag);
+;		}
+;	} else {
+;	}
+;}
+
+marktree:
+	add	treelist,tree
+	load	(tree),nodetype
+	addqt	#4,tree
+	load	(tree),backtree			; now "backtree" is in low word, "fronttree" in high word
+	subqt	#4,tree
+	move	nodetype,divnum
+	shlq	#16,divnum
+	shrq	#16,nodetype
+	shrq	#16,divnum
+	movei	#leafnode,temp2
+	cmpq	#0,nodetype
+	jump	NE,(temp2)
+	nop
+;
+; interior node
+;
+
+		move	backtree,fronttree
+		shlq	#16,backtree
+		shrq	#16,fronttree
+		shrq	#16,backtree
+.if DEBUGTREE
+movei	#$1ff400,temp2
+movei	#$11111111,temp
+store	temp,(temp2)
+addqt	#4,temp2
+store	divnum,(temp2)
+addqt	#4,temp2
+store	fronttree,(temp2)
+addqt	#4,temp2
+store	backtree,(temp2)
+.endif
+		btst	#15,divnum		; special case: divider of -1 means always draw in back-front order
+		jr	EQ,_CDLOCAL_20_411
+		nop
+			movei	#splitdiv,temp2
+			jump	(temp2)
+			nop
+_CDLOCAL_20_411:
+		move	tdividers,temp2
+		add	divnum,temp2
+		loadb	(temp2),eyesigns	; get sign of divider as seen from eye
+		shlq	#2,divnum		; 4 bytes/divider
+		add	dividers,divnum
+		loadw	(divnum),temp		; get the point index
+		addqt	#2,divnum
+		loadw	(divnum),temp2		; get the normal index
+		moveq	#6,tempx
+		mult	tempx,temp
+		mult	tempx,temp2
+		add	points,temp
+		add	vectors,temp2
+		loadw	(temp),tempx		; load the point
+		addqt	#2,temp
+		loadw	(temp),tempy
+		addqt	#2,temp
+		loadw	(temp),tempz
+		shlq	#16,tempx		; sign extend point
+		shlq	#16,tempy
+		shlq	#16,tempz
+		sharq	#4,tempx		; convert to 20.12
+		sharq	#4,tempy
+		sharq	#4,tempz
+		sub	px,tempx		; find vector from plane to test point
+		sub	py,tempy
+		sub	pz,tempz
+		loadw	(temp2),nx		; get normal vector
+		addqt	#2,temp2
+		loadw	(temp2),ny
+		addqt	#2,temp2
+		loadw	(temp2),nz
+		nop
+.if DEBUGTREE
+movei	#$1ff410,temp2
+movei	#$22222222,temp
+store	temp,(temp2)
+addqt	#4,temp2
+store	tempx,(temp2)
+addqt	#4,temp2
+store	tempy,(temp2)
+addqt	#4,temp2
+store	tempz,(temp2)
+addqt	#4,temp2
+store	nx,(temp2)
+addqt	#4,temp2
+store	ny,(temp2)
+addqt	#4,temp2
+store	nz,(temp2)
+addqt	#4,temp2
+movei	#$22222222,temp
+store	temp,(temp2)
+.endif
+		move	tempx,temp		; prepare for dot product
+		move	tempy,temp2
+		abs	temp
+		abs	temp2
+		or	temp2,temp
+		move	tempz,temp2
+		abs	temp2
+		or	temp2,temp
+		normi	temp,temp
+		addqt	#9,temp
+		sha	temp,tempx
+		sha	temp,tempy
+		sha	temp,tempz
+		imultn	nx,tempx		; find distance from point to plane
+		imacn	ny,tempy
+		imacn	nz,tempz
+		resmac	tempz
+		neg	temp			; un-normalize
+		addqt	#15,temp		; normal is 0.15
+		sha	temp,tempz
+		nop
+
+		move	tempz,tempx
+		shrq	#31,tempz
+.if DEBUGTREE
+movei	#$1ff440,temp2
+movei	#$33333333,temp
+store	temp,(temp2)
+addqt	#4,temp2
+store	radius,(temp2)
+addqt	#4,temp2
+store	tempx,(temp2)
+addqt	#4,temp2
+store	tempz,(temp2)
+addqt	#4,temp2
+store	eyesigns,(temp2)
+addqt	#4,temp2
+movei	#$33333333,temp
+store	temp,(temp2)
+.endif
+		sharq	#13,tempx			; convert to integer, and divide by 2 for good measure
+		movei	#farfromdiv,temp2
+		imult	tempx,tempx			; square (since radius is squared and divided by 4)
+		cmp	radius,tempx
+		jump	PL,(temp2)
+		nop
+			move	eyesigns,temp		; if the eye and the car are on the same side of the divider,
+			xor	tempz,temp		; don't do anything special
+			jump	EQ,(temp2)
+			nop
+ondivider:
+			btst	#0,eyesigns		; how does the eye see this divider?
+			jr	NE,splitdiv
+			nop
+				move	fronttree,temp
+				move	backtree,fronttree
+				move	temp,backtree
+splitdiv:
+			store	return,(stack)
+			addqt	#4,stack
+			store	fronttree,(stack)
+			addqt	#4,stack
+			store	flag,(stack)
+			addqt	#4,stack
+
+			moveq	#1,flag
+			move	backtree,tree
+			move	PC,return
+			jump	(mtreefunc)
+			addqt	#6,return
+
+			; come back here after the subroutine call
+			subqt	#4,stack
+			load	(stack),flag
+			subqt	#4,stack
+			load	(stack),fronttree
+			subqt	#4,stack
+			load	(stack),return
+
+			cmpq	#0,temp		; if marktree returned 1, we can abort now
+			jump	NE,(return)
+			nop
+			jr	tailrecurse
+			move	fronttree,tree
+
+farfromdiv:
+		btst	#0,tempz
+		move	fronttree,tree
+		jr	NE,tailrecurse
+		nop
+			move	backtree,tree
+tailrecurse:
+		jump	(mtreefunc)
+		nop
+
+leafnode:
+	moveta	tree,treeptr			; save "tree" (which points to the tree entry)
+;
+; try to figure out whether to draw the point before or after this CP...
+; we do this by comparing the current player's view of the CP with the point's view;
+; if every side the point can see is also seen by the player, then we draw the point
+; after the CP, otherwise we draw it before the CP
+;
+	movei	#mdivloop,innerLoop
+	movefa	surflist,tree
+	movei	#mdivend,breakout
+	add	backtree,tree			; now "tree" points at the CP we're interested in
+	moveq	#0,bitcount
+	moveq	#0,eyesigns
+	moveq	#0,pntsigns
+
+mdivloop:
+	loadw	(tree),numsides			; get number of sides of current polygon
+	addqt	#2,tree
+	shlq	#28,numsides				; strip off flags
+	shrq	#27,numsides				; and multiply by 2 (2 bytes per polygon side)
+;	cmpq	#0,numsides
+	jump	EQ,(breakout)
+	nop
+		loadw	(tree),divnum
+		addqt	#4,tree			; 2 bytes for divider, 2 for color
+		add	numsides,tree
+		move	divnum,temp
+		add	tdividers,temp
+		loadb	(temp),temp2			; get the divider's sign from the eye's point of view
+
+		shlq	#2,divnum			; multiply divider number by sizeof(divider)
+		moveq	#1,temp
+		and	temp,temp2
+		sha	bitcount,temp2
+		or	temp2,eyesigns
+
+	; find the divider's sign from the point's point of view
+		add	dividers,divnum
+
+		loadw	(divnum),temp		; get point index
+		addqt	#2,divnum
+		loadw	(divnum),divnum		; get normal vector index
+		moveq	#6,temp2		; sizeof(point)
+		mult	temp2,temp
+		mult	temp2,divnum
+		add	points,temp
+		add	vectors,divnum
+
+		loadw	(temp),tempx		; load up normal point
+		addqt	#2,temp
+		loadw	(temp),tempy
+		addqt	#2,temp
+		loadw	(temp),tempz
+		shlq	#16,tempx			; sign extend
+		shlq	#16,tempy
+		shlq	#16,tempz
+		sharq	#4,tempx		; normalize to 20.12
+		sharq	#4,tempy
+		sharq	#4,tempz
+		sub	px,tempx			; and translate
+		sub	py,tempy
+		sub	pz,tempz
+
+		loadw	(divnum),nx		; load up normal vector
+		addqt	#2,divnum
+		loadw	(divnum),ny
+		addqt	#2,divnum
+		loadw	(divnum),nz
+
+		move	tempx,temp
+		abs	temp
+		move	tempy,temp2
+		abs	temp2
+		or	temp2,temp
+		move	tempz,temp2
+		abs	temp2
+		or	temp2,temp
+		normi	temp,temp
+		addqt	#9,temp
+		sha	temp,tempx
+		sha	temp,tempy
+		sha	temp,tempz
+
+		imultn	tempx,nx
+		imacn	tempy,ny
+		imacn	tempz,nz
+		resmac	temp2
+		shrq	#31,temp2		; move out the sign
+		sha	bitcount,temp2		; move it into position
+		or	temp2,pntsigns		; record it
+
+		jump	(innerLoop)		; continue
+		subqt	#1,bitcount
+
+mdivend:
+
+; maybe mark the node with the appropriate info
+; if the point is to be drawn before the CP, always mark it
+; and return 1
+; otherwise, mark it (and return 1) only if "flags" is 0
+; if it is not marked, return 0
+;
+	movefa	treeptr,tree		; "tree" points at the first word (the "draw behind" list)
+
+	cmp	pntsigns,eyesigns	; eyesigns == pntsigns, or (pntsigns AND eyesigns) != 0, draw in front
+	jr	EQ,drawinfront
+	move	pntsigns,temp
+	and	eyesigns,temp
+;	cmpq	#0,temp
+	jr	EQ,drawbehind
+	nop
+drawinfront:
+		addqt	#2,tree		; move to the "in front" node
+		cmpq	#0,flag
+		jump	NE,(return)
+		moveq	#0,temp
+drawbehind:
+	cmpq	#0,flag			; if "flag" is 1, we're more cautious about what is "behind"
+	jr	EQ,_CDLOCAL_10_684
+	moveq	#0,temp			; in particular, if all faces of the object are facing away, it won't
+		cmpq	#0,eyesigns	; obscure the car
+		jump	EQ,(return)
+		nop
+_CDLOCAL_10_684:
+	loadw	(tree),temp		; get a "list pointer" for this list
+	movei	#oldlist,temp2
+	bclr	#0,temp			; clear the "leaf node" flag
+	cmpq	#0,temp			; is there no list yet?
+	jump	NE,(temp2)
+	nop
+		movefa	maxlist,temp	; get a new list index
+		movei	#64,temp2	; 8 entries, 8 bytes each
+		add	temp2,temp
+		moveta	temp,maxlist
+		bset	#0,temp		; mark as a leaf node
+		storew	temp,(tree)
+		movefa	lists,temp2
+		bclr	#0,temp
+		add	temp2,temp
+		moveq	#0,temp2
+		store	temp2,(temp)	; mark the list as empty
+		addqt	#4,temp
+		store	temp2,(temp)	
+		jr	listsetup
+		subqt	#4,temp
+oldlist:
+	movefa	lists,temp2
+	add	temp2,temp
+listsetup:
+;
+; insert the new mark into the list
+;
+	movefa	dist,nz
+	movefa	theMark,nx
+	move	temp,liststart
+;
+; first, find the end of the list
+;
+listlp1:
+	load	(temp),tempx
+	addqt	#4,temp
+	load	(temp),tempz
+	addqt	#4,temp
+	cmpq	#0,tempx
+	jr	NE,listlp1
+	nop
+
+; mark the new end of the list
+	store	tempx,(temp)
+	subqt	#8,temp
+
+; now step back through the list,
+; copying as we go, until we find a Z
+; value that's bigger than "nz", or
+; until we reach the start of the list
+; "temp" points to the destination,
+; "temp2" to the source
+;
+	move	temp,temp2
+	subqt	#8,temp2
+	movei	#listlp2,innerLoop
+
+listlp2:
+	load	(temp2),tempx
+	addqt	#4,temp2
+	load	(temp2),tempz
+	subqt	#12,temp2
+	cmp	temp,liststart
+	jr	EQ,storeit
+	nop
+	cmp	tempz,nz
+	jr	MI,storeit
+	nop
+	store	tempx,(temp)
+	addqt	#4,temp
+	store	tempz,(temp)
+	subqt	#12,temp
+	jump	(innerLoop)
+	nop
+storeit:
+	store	nx,(temp)
+	addqt	#4,temp
+	store	nz,(temp)
+;
+; return "1"
+;
+	jump	(return)
+	moveq	#1,temp
+
+;
+; main code comes here
+;
+mtree_around:
+
+
+REGUNDEF	px
+REGUNDEF	py
+REGUNDEF	pz
+REGUNDEF	radius
+REGUNDEF	geoband
+REGUNDEF	flag
+REGUNDEF	tree
+REGUNDEF	dividers
+REGUNDEF	points
+REGUNDEF	vectors
+REGUNDEF	tdividers
+REGUNDEF	tempx
+REGUNDEF	tempy
+REGUNDEF	tempz
+REGUNDEF	fronttree
+REGUNDEF	backtree
+REGUNDEF	bitcount
+REGUNDEF	eyesigns
+REGUNDEF	nx
+REGUNDEF	ny
+REGUNDEF	nz
+REGUNDEF	treelist
+REGUNDEF	mtreefunc
+REGUNDEF	divnum
+REGUNDEF	nodetype
+REGUNDEF	stack
+REGUNDEF	ox
+REGUNDEF	oy
+REGUNDEF	oz
+REGUNDEF	surflist
+REGUNDEF	lists
+REGUNDEF	maxlist	
+REGUNDEF	treeptr
+REGUNDEF	theMark
+REGUNDEF	tpoints

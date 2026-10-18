@@ -1,0 +1,128 @@
+;----------------------------------------------------------------------------
+;	precomp.gas
+;	Calculations to go before the computation of points
+;----------------------------------------------------------------------------
+
+	include "jaguar.inc"
+	include "blit.inc"
+
+	include "3d.inc"
+	include "68kequ.inc"
+
+; global register defines
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+return	REGEQU	R31
+
+; WARNING WARNING WARNING: these get passed to "comp",
+; so if you change them here, change them there too!!!
+; global alternate register usage
+ALTplayer	REGEQU	R27
+ALTbndindex	REGEQU	R30
+ALTband		REGEQU	R31
+
+; r0-r3 are scratch registers for outer loop
+gl_curbnd	REGEQU	R0
+gl_bndlist	REGEQU	R1
+gl_player	REGEQU	R2
+gl_temp		REGEQU	R3
+
+
+	ORG	Overlay
+
+	include "3dds.inc"
+	include	"time.gas"
+
+	MACRO cutItOut
+		moveq	#@1, temp2
+		movei	#(SEMAPHORE+8), innerLoop
+		movei	#thatsAllFolks, temp
+		jump		(temp)
+		store	temp2, (innerLoop)
+	ENDM
+
+; code start ----------------------------------------------------------------
+;
+; first, check to see if calculations are necessary
+;
+	movei	#gpu_do,temp
+	loadw	(temp),temp		; see what we're supposed to do
+	moveq	#$9,temp2		; see if we should do rendering (bit 0) or collision detection (bit 3)
+	and	temp2,temp
+	movei	#thatsAllFolks,temp2	; if neither, abort now
+	cmpq	#0,temp
+	jump	EQ,(temp2)
+	nop
+
+	StartTimer	$08		; precomp+comp
+
+
+	movei	#player,gl_player
+	load	(gl_player),gl_player
+	nop
+	moveta	gl_player,ALTplayer
+
+;
+; we should mark our own car as non-collidable, and the other car as collidable, for
+; the (eventual) collision detection functions in 3dend
+;
+.if 0
+	movei	#gametype,temp
+	loadw	(temp),temp
+	movei	#nocollides,temp2
+	cmpq	#0,temp				; tag game is gametype 0
+	jump	EQ,(temp2)
+	nop
+.endif
+		movei	#(PLAYER1^PLAYER2),temp2
+		xor	gl_player,temp2		; get pointer to other player
+		movei	#CAR_MODEL,temp
+		add	temp,temp2
+		load	(temp2),temp2
+		or	temp2,temp2
+		load	(temp2),temp		; get other player's car flags
+		bclr	#0,temp			; clear the "no collide" flag
+		store	temp,(temp2)
+		movei	#CAR_MODEL,temp2
+		add	gl_player,temp2
+		load	(temp2),temp2
+		or	temp2,temp2
+		load	(temp2),temp		; get our car flags
+		bset	#0,temp			; set the "no collide" flag
+		store	temp,(temp2)
+nocollides:
+	include	"camera.gas"
+	include	"sky2.gas"
+	include	"rotdot.gas"
+
+; jump to the next part of the renderer (the computations)
+		movei	#cgpprog,temp
+		movei	#loadIt, temp2
+		jump		(temp2)
+		nop
+
+; set sem -------------------------------------------------------------------
+;		; set the semaphore
+;		moveq	#1, temp
+;		movei	#SEMAPHORE, temp2
+;		store	temp, (temp2)
+
+; halt the GPU --------------------------------------------------------------
+thatsAllFolks:
+; stolen code
+		movei	#G_CTRL, temp2
+		load		(temp2), temp
+		bclr #0, temp
+		bset #1, temp
+		store	temp, (temp2)
+
+_CDLOCAL_10_119:	jr	_CDLOCAL_10_119
+		nop
+
+;-------------------------------------------------------------------
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop

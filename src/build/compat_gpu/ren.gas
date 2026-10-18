@@ -1,0 +1,4041 @@
+;----------------------------------------------------------------------------
+;	ren.gas
+;
+;----------------------------------------------------------------------------
+
+GPU_DOES_BLIT	EQU	1
+
+;	DATA_FORMAT		MOTOROLA
+
+; BEGIN jaguar.inc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;       JAGUAR.INC  Hardware Equates for JAGUAR System
+;
+;       COPYRIGHT 1992-1995 Atari Computer Corporation
+;       UNAUTHORIZED REPRODUCTION, ADAPTATION, DISTRIBUTION,
+;       PERFORMANCE OR DISPLAY OF THIS COMPUTER PROGRAM OR
+;       THE ASSOCIATED AUDIOVISUAL WORK IS STRICTLY PROHIBITED.
+;       ALL RIGHTS RESERVED.
+;
+; Revision History:
+; 9/19/94 - Consolidated several files into first master JAGUAR.INC (SDS)
+; 2/16/95 - MF
+; 4/24/95 - Added UART Error Control and Mask definitions (NBK)
+; 5/16/95 - Added Asynchronous Serial/DAC Synonyms (SDS)
+; 8/08/95 - Fixed two Blitter LFU Equates, added ProController equates,
+;           added blitter BLITMASK flag, removed MOD_MASK/DSPINT0,
+;           removed private hardware register definitions.
+; 9/26/20 - Restored MOD_MASK/DSPINT0/GPUINT0 and private hardware register
+;           definitions.
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      GENERIC DEFINES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+DRAM            EQU     $000000 ; First system RAM location
+USERRAM         EQU     $004000 ; Beginning of non-reserved RAM
+ENDRAM          EQU     $200000 ; End of DRAM
+INITSTACK       EQU     ENDRAM-4        ; Good place to initialize stack
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      CPU REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+LEVEL0          EQU     $100            ; 68000 Level 0 Autovector Interrupt
+USER0           EQU     $100            ; Pseudonym for LEVEL0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Masks for INT1 CPU Interrupt Control Register
+
+C_VIDENA        EQU     $0001           ; Enable Video time-base interrupts
+C_GPUENA        EQU     $0002           ; Enable GPU register-write interrupt
+C_OPENA         EQU     $0004           ; Enable OP stop-object interrupt
+C_PITENA        EQU     $0008           ; Enable PIT interrupt
+C_JERENA        EQU     $0010           ; Enable Jerry interrupt
+
+C_VIDCLR        EQU     $0100           ; Clear pending video interrupts
+C_GPUCLR        EQU     $0200           ; Clear pending GPU interrupts
+C_OPCLR         EQU     $0400           ; Clear pending OP interrupts
+C_PITCLR        EQU     $0800           ; Clear pending PIT interrupts
+C_JERCLR        EQU     $1000           ; Clear pending Jerry interrupts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       JAGUAR REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+BASE            EQU     $F00000 ; TOM Internal Register Base
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       TOM REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+HC              EQU     BASE + 4        ; Horizontal Count
+VC              EQU     BASE + 6        ; Vertical Count
+LPH             EQU     BASE + 8        ; Horizontal Lightpen
+LPV             EQU     BASE + $0A      ; Vertical Lightpen
+OB0             EQU     BASE + $10      ; Current Object Phrase
+OB1             EQU     BASE + $12
+OB2             EQU     BASE + $14
+OB3             EQU     BASE + $16
+OLP             EQU     BASE + $20      ; Object List Pointer
+OBF             EQU     BASE + $26      ; Object Processor Flag
+VMODE           EQU     BASE + $28      ; Video Mode
+BORD1           EQU     BASE + $2A      ; Border Color (Red & Green)
+BORD2           EQU     BASE + $2C      ; Border Color (Blue)
+HDB1            EQU     BASE + $38      ; Horizontal Display Begin One
+HDB2            EQU     BASE + $3A      ; Horizontal Display Begin Two
+HDE             EQU     BASE + $3C      ; Horizontal Display End
+VS              EQU     BASE + $44      ; Vertical Sync
+VDB             EQU     BASE + $46      ; Vertical Display Begin
+VDE             EQU     BASE + $48      ; Vertical Display End
+VI              EQU     BASE + $4E      ; Vertical Interrupt
+PIT0            EQU     BASE + $50      ; Programmable Interrupt Timer (Lo)
+PIT1            EQU     BASE + $52      ; Programmable Interrupt Timer (Hi)
+BG              EQU     BASE + $58      ; Background Color
+
+INT1            EQU     BASE + $E0      ; CPU Interrupt Control Register
+INT2            EQU     BASE + $E2      ; CPU Interrupt Resume Register
+
+CLUT            EQU     BASE + $400     ; Color Lookup Table
+
+LBUFA           EQU     BASE + $800     ; Line Buffer A
+LBUFB           EQU     BASE + $1000    ; Line Buffer B
+LBUFC           EQU     BASE + $1800    ; Line Buffer Current
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      OBJECT PROCESSOR EQUATES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+BITOBJ          EQU     0
+SCBITOBJ        EQU     1
+GPUOBJ          EQU     2
+BRANCHOBJ       EQU     3
+STOPOBJ         EQU     4
+
+O_REFLECT       EQU     $00002000       ; OR with top LONG of BITMAP object
+O_RMW           EQU     $00004000
+O_TRANS         EQU     $00008000
+O_RELEASE       EQU     $00010000
+
+O_DEPTH1        EQU     (0<<12) ; DEPTH Field for BITMAP objects
+O_DEPTH2        EQU     (1<<12)
+O_DEPTH4        EQU     (2<<12)
+O_DEPTH8        EQU     (3<<12)
+O_DEPTH16       EQU     (4<<12)
+O_DEPTH32       EQU     (5<<12)
+
+O_NOGAP         EQU     (1<<15) ; Phrase GAP between image phrases
+O_1GAP          EQU     (2<<15)
+O_2GAP          EQU     (3<<15)
+O_3GAP          EQU     (4<<15)
+O_4GAP          EQU     (5<<15)
+O_5GAP          EQU     (6<<15)
+O_6GAP          EQU     (7<<15)
+
+O_BREQ          EQU     (0<<14) ; CC field of BRANCH objects
+O_BRGT          EQU     (1<<14)
+O_BRLT          EQU     (2<<14)
+O_BROP          EQU     (3<<14)
+O_BRHALF        EQU     (4<<14)
+
+O_STOPINTS      EQU     $00000008       ; Enable Interrupts in STOP object
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;      VIDEO INITIALIZATION CONSTANTS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+NTSC_WIDTH      EQU     1409            ; Width of screen in pixel clocks
+NTSC_HMID       EQU     823             ; Middle of screen in pixel clocks
+NTSC_HEIGHT     EQU     241             ; Height of screen in scanlines
+NTSC_VMID       EQU     266             ; Middle of screen in halflines
+
+PAL_WIDTH       EQU     1381            ; Same as above for PAL...
+PAL_HMID        EQU     843
+PAL_HEIGHT      EQU     287
+PAL_VMID        EQU     322
+
+;;; The following mask will extract the PAL/NTSC flag bit from the
+;;; CONFIG register. NTSC = Bit Set, PAL = Bit Clear
+
+VIDTYPE         EQU     $10
+
+;;; The following are Video Mode register flags
+
+VIDEN           EQU     $0001           ; Enable video-time base generator
+
+CRY16           EQU     $0000           ; Enable 16-bit CRY mode
+RGB24           EQU     $0002           ; Enable 24-bit RGB mode
+DIRECT16        EQU     $0004           ; Enable 16-bit DIRECT mode
+RGB16           EQU     $0006           ; Enable 16-bit RGB mode
+
+GENLOCK         EQU     $0008           ; Not Supported in Jaguar Console
+INCEN           EQU     $0010           ; Enable encrustation
+BINC            EQU     $0020           ; Select local border color
+CSYNC           EQU     $0040           ; Enable composite sync
+BGEN            EQU     $0080           ; Clear line buffer to BG
+VARMOD          EQU     $0100           ; Enable variable-color resolution mode
+
+PWIDTH1         EQU     $0000           ; Select pixels 1 clock wide
+PWIDTH2         EQU     $0200           ; Select pixels 2 clocks wide
+PWIDTH3         EQU     $0400           ; Select pixels 3 clocks wide
+PWIDTH4         EQU     $0600           ; Select pixels 4 clocks wide
+PWIDTH5         EQU     $0800           ; Select pixels 5 clocks wide
+PWIDTH6         EQU     $0A00           ; Select pixels 6 clocks wide
+PWIDTH7         EQU     $0C00           ; Select pixels 7 clocks wide
+PWIDTH8         EQU     $0E00           ; Select pixels 8 clocks wide
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       GPU REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+G_FLAGS         EQU     BASE + $2100    ; GPU Flags
+G_MTXC          EQU     BASE + $2104    ; GPU Matrix Control
+G_MTXA          EQU     BASE + $2108    ; GPU Matrix Address
+G_END           EQU     BASE + $210C    ; GPU Data Organization
+G_PC            EQU     BASE + $2110    ; GPU Program Counter
+G_CTRL          EQU     BASE + $2114    ; GPU Operation Control/Status
+G_HIDATA        EQU     BASE + $2118    ; GPU Bus Interface high data
+G_REMAIN        EQU     BASE + $211C    ; GPU Division Remainder
+G_DIVCTRL       EQU     BASE + $211C    ; GPU Divider control
+G_RAM           EQU     BASE + $3000    ; GPU Internal RAM
+G_ENDRAM        EQU     G_RAM +(4*1024) ; 4K bytes
+
+;;;
+;;; GPU Flags Register Equates
+;;;
+
+G_CPUENA        EQU     $00000010       ; CPU Interrupt enable bits
+G_DSPENA        EQU     $00000020       ; DSP Interrupt enable bits
+G_PITENA        EQU     $00000040       ; PIT Interrupt enable bits
+G_OPENA         EQU     $00000080       ; Object Processor Interrupt enable bits
+G_BLITENA       EQU     $00000100       ; Blitter Interrupt enable bits
+G_CPUCLR        EQU     $00000200       ; CPU Interrupt clear bits
+G_DSPCLR        EQU     $00000400       ; DSP Interrupt clear bits
+G_PITCLR        EQU     $00000800       ; PIT Interrupt clear bits
+G_OPCLR         EQU     $00001000       ; Object Processor Interrupt clear bits
+G_BLITCLR       EQU     $00002000       ; Blitter Interrupt clear bits
+
+;;;
+;;; GPU Control/Status Register
+;;;
+
+GPUGO           EQU     $00000001       ; Start and Stop the GPU
+GPUINT0         EQU     $00000004       ; generate a GPU type 0 interrupt
+
+G_CPULAT        EQU     $00000040       ; Interrupt Latches
+G_DSPLAT        EQU     $00000080
+G_PITLAT        EQU     $00000100
+G_OPLAT         EQU     $00000200
+G_BLITLAT       EQU     $00000400
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       BLITTER REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+A1_BASE         EQU     BASE + $2200    ; A1 Base Address
+A1_FLAGS        EQU     BASE + $2204    ; A1 Control Flags
+A1_CLIP         EQU     BASE + $2208    ; A1 Clipping Size
+A1_PIXEL        EQU     BASE + $220C    ; A1 Pixel Pointer
+A1_STEP         EQU     BASE + $2210    ; A1 Step (Integer Part)
+A1_FSTEP        EQU     BASE + $2214    ; A1 Step (Fractional Part)
+A1_FPIXEL       EQU     BASE + $2218    ; A1 Pixel Pointer (Fractional)
+A1_INC          EQU     BASE + $221C    ; A1 Increment (Integer Part)
+A1_FINC         EQU     BASE + $2220    ; A1 Increment (Fractional Part)
+A2_BASE         EQU     BASE + $2224    ; A2 Base Address
+A2_FLAGS        EQU     BASE + $2228    ; A2 Control Flags
+A2_MASK         EQU     BASE + $222C    ; A2 Address Mask
+A2_PIXEL        EQU     BASE + $2230    ; A2 PIXEL
+A2_STEP         EQU     BASE + $2234    ; A2 Step (Integer)
+
+B_CMD           EQU     BASE + $2238    ; Command
+B_COUNT         EQU     BASE + $223C    ; Counters
+B_SRCD          EQU     BASE + $2240    ; Source Data
+B_DSTD          EQU     BASE + $2248    ; Destination Data
+B_DSTZ          EQU     BASE + $2250    ; Destination Z
+B_SRCZ1         EQU     BASE + $2258    ; Source Z (Integer)
+B_SRCZ2         EQU     BASE + $2260    ; Source Z (Fractional)
+B_PATD          EQU     BASE + $2268    ; Pattern Data
+B_IINC          EQU     BASE + $2270    ; Intensity Increment
+B_ZINC          EQU     BASE + $2274    ; Z Increment
+B_STOP          EQU     BASE + $2278    ; Collision stop control
+
+B_I3            EQU     BASE + $227C    ; Blitter Intensity 3
+B_I2            EQU     BASE + $2280    ; Blitter Intensity 2
+B_I1            EQU     BASE + $2284    ; Blitter Intensity 1
+B_I0            EQU     BASE + $2288    ; Blitter Intensity 0
+
+B_Z3            EQU     BASE + $228C    ; Blitter Z 3
+B_Z2            EQU     BASE + $2290    ; Blitter Z 2
+B_Z1            EQU     BASE + $2294    ; Blitter Z 1
+B_Z0            EQU     BASE + $2298    ; Blitter Z 0
+
+;;;
+;;; BLITTER Command Register equates
+;;;
+
+SRCEN           EQU     $00000001       ; d00:     source data read (inner loop)
+SRCENZ          EQU     $00000002       ; d01:     source Z read (inner loop)
+SRCENX          EQU     $00000004       ; d02:     source data read (realign)
+DSTEN           EQU     $00000008       ; d03:     dest data read (inner loop)
+DSTENZ          EQU     $00000010       ; d04:     dest Z read (inner loop)
+DSTWRZ          EQU     $00000020       ; d05:     dest Z write (inner loop)
+CLIP_A1         EQU     $00000040       ; d06:     A1 clipping enable
+UPDA1F          EQU     $00000100       ; d08:     A1 update step fraction
+UPDA1           EQU     $00000200       ; d09:     A1 update step
+UPDA2           EQU     $00000400       ; d10:     A2 update step
+DSTA2           EQU     $00000800       ; d11:     reverse usage of A1 and A2
+GOURD           EQU     $00001000       ; d12:     enable Gouraud shading
+ZBUFF           EQU     $00002000       ; d13:     polygon Z data updates
+TOPBEN          EQU     $00004000       ; d14:     intensity carry into byte
+TOPNEN          EQU     $00008000       ; d15:     intensity carry into nibble
+PATDSEL         EQU     $00010000       ; d16:     Select pattern data
+ADDDSEL         EQU     $00020000       ; d17:     diagnostic
+                                        ; d18-d20: Z comparator inhibit
+ZMODELT         EQU     $00040000       ;            source < destination
+ZMODEEQ         EQU     $00080000       ;            source = destination
+ZMODEGT         EQU     $00100000       ;            source > destination
+                                        ; d21-d24: Logic function control
+LFU_NAN         EQU     $00200000       ;            !source & !destination
+LFU_NA          EQU     $00400000       ;            !source &  destination
+LFU_AN          EQU     $00800000       ;             source & !destination
+LFU_A           EQU     $01000000       ;             source &  destination
+
+CMPDST          EQU     $02000000       ; d25:     pixel compare pattern & dest
+BCOMPEN         EQU     $04000000       ; d26:     bit compare write inhibit
+DCOMPEN         EQU     $08000000       ; d27:     data compare write inhibit
+BKGWREN         EQU     $10000000       ; d28:     data write back
+BUSHI           EQU     $20000000       ; d29      blitter priority
+SRCSHADE        EQU     $40000000       ; d30:     shade src data w/IINC value
+
+;;;
+;;; The following are ALL 16 possible logical operations of the LFUs
+;;;
+
+LFU_ZERO        EQU     $00000000       ; All Zeros
+LFU_NSAND       EQU     $00200000       ; NOT Source AND NOT Destination
+LFU_NSAD        EQU     $00400000       ; NOT Source AND Destination
+LFU_NOTS        EQU     $00600000       ; NOT Source
+LFU_SAND        EQU     $00800000       ; Source AND NOT Destination
+LFU_NOTD        EQU     $00A00000       ; NOT Destination
+LFU_SXORD       EQU     $00C00000       ; Source XOR Destination
+LFU_NSORND      EQU     $00E00000       ; NOT Source OR NOT Destination
+LFU_SAD         EQU     $01000000       ; Source AND Destination
+LFU_N_SXORD     EQU     $01200000       ; NOT (Source XOR Destination)
+LFU_D           EQU     $01400000       ; Destination
+LFU_NSORD       EQU     $01600000       ; NOT Source OR Destination
+LFU_S           EQU     $01800000       ; Source
+LFU_SORND       EQU     $01A00000       ; Source OR NOT Destination
+LFU_SORD        EQU     $01C00000       ; Source OR Destination
+LFU_ONE         EQU     $01E00000       ; All Ones
+
+; These are some common combinations with less boolean names
+
+LFU_REPLACE     EQU     $01800000       ; Source REPLACEs destination
+LFU_XOR         EQU     $00C00000       ; Source XOR with destination
+LFU_CLEAR       EQU     $00000000       ; CLEAR destination
+
+;;;
+;;; BLITTER Flags (A1 or A2) register equates
+;;;
+
+; Pitch d00-d01:
+;       distance between pixel phrases
+PITCH1          EQU     $00000000       ; 0 phrase gap
+PITCH2          EQU     $00000001       ; 1 phrase gap
+PITCH4          EQU     $00000002       ; 3 phrase gap
+PITCH3          EQU     $00000003       ; 2 phrase gap
+
+; Pixel d03-d05
+;       bit depth (2^n)
+PIXEL1          EQU     $00000000       ; n = 0
+PIXEL2          EQU     $00000008       ; n = 1
+PIXEL4          EQU     $00000010       ; n = 2
+PIXEL8          EQU     $00000018       ; n = 3
+PIXEL16         EQU     $00000020       ; n = 4
+PIXEL32         EQU     $00000028       ; n = 5
+
+; Z offset d06-d08
+;       offset from phrase of pixel data from its corresponding
+;       Z data phrases
+ZOFFS0          EQU     $00000000       ; offset = 0    UNUSED
+ZOFFS1          EQU     $00000040       ; offset = 1
+ZOFFS2          EQU     $00000080       ; offset = 2
+ZOFFS3          EQU     $000000C0       ; offset = 3
+ZOFFS4          EQU     $00000100       ; offset = 4
+ZOFFS5          EQU     $00000140       ; offset = 5
+ZOFFS6          EQU     $00000180       ; offset = 6
+ZOFFS7          EQU     $000001C0       ; offset = 7    UNUSED
+
+; Width d09-d14
+;       width used for address generation
+;       This is a 6-bit floating point value in pixels
+;       4-bit unsigned exponent
+;       2-bit mantissa with implied 3rd bit of 1
+WID2            EQU     $00000800       ; 1.00 X 2^1  ( 4<<9)
+WID4            EQU     $00001000       ; 1.00 X 2^2  ( 8<<9)
+WID6            EQU     $00001400       ; 1.10 X 2^2  (10<<9)
+WID8            EQU     $00001800       ; 1.00 x 2^3  (12<<9)
+WID10           EQU     $00001A00       ; 1.01 X 2^3  (13<<9)
+WID12           EQU     $00001C00       ; 1.10 X 2^3  (14<<9)
+WID14           EQU     $00001E00       ; 1.11 X 2^3  (15<<9)
+WID16           EQU     $00002000       ; 1.00 X 2^4  (16<<9)
+WID20           EQU     $00002200       ; 1.01 X 2^4  (17<<9)
+WID24           EQU     $00002400       ; 1.10 X 2^4  (18<<9)
+WID28           EQU     $00002600       ; 1.11 X 2^4  (19<<9)
+WID32           EQU     $00002800       ; 1.00 X 2^5  (20<<9)
+WID40           EQU     $00002A00       ; 1.01 X 2^5  (21<<9)
+WID48           EQU     $00002C00       ; 1.10 X 2^5  (22<<9)
+WID56           EQU     $00002E00       ; 1.11 X 2^5  (23<<9)
+WID64           EQU     $00003000       ; 1.00 X 2^6  (24<<9)
+WID80           EQU     $00003200       ; 1.01 X 2^6  (25<<9)
+WID96           EQU     $00003400       ; 1.10 X 2^6  (26<<9)
+WID112          EQU     $00003600       ; 1.11 X 2^6  (27<<9)
+WID128          EQU     $00003800       ; 1.00 X 2^7  (28<<9)
+WID160          EQU     $00003A00       ; 1.01 X 2^7  (29<<9)
+WID192          EQU     $00003C00       ; 1.10 X 2^7  (30<<9)
+WID224          EQU     $00003E00       ; 1.11 X 2^7  (31<<9)
+WID256          EQU     $00004000       ; 1.00 X 2^8  (32<<9)
+WID320          EQU     $00004200       ; 1.01 X 2^8  (33<<9)
+WID384          EQU     $00004400       ; 1.10 X 2^8  (34<<9)
+WID448          EQU     $00004600       ; 1.11 X 2^8  (35<<9)
+WID512          EQU     $00004800       ; 1.00 X 2^9  (36<<9)
+WID640          EQU     $00004A00       ; 1.01 X 2^9  (37<<9)
+WID768          EQU     $00004C00       ; 1.10 X 2^9  (38<<9)
+WID896          EQU     $00004E00       ; 1.11 X 2^9  (39<<9)
+WID1024         EQU     $00005000       ; 1.00 X 2^10 (40<<9)
+WID1280         EQU     $00005200       ; 1.01 X 2^10 (41<<9)
+WID1536         EQU     $00005400       ; 1.10 X 2^10 (42<<9)
+WID1792         EQU     $00005600       ; 1.11 X 2^10 (43<<9)
+WID2048         EQU     $00005800       ; 1.00 X 2^11 (44<<9)
+WID2560         EQU     $00005A00       ; 1.01 X 2^11 (45<<9)
+WID3072         EQU     $00005C00       ; 1.10 X 2^11 (46<<9)
+WID3584         EQU     $00005E00       ; 1.11 X 2^11 (47<<9)
+
+; A2 Mask Enable Bit
+BLITMASK        EQU     $00008000
+
+; X add control d16-d17
+;       controls the update of the X pointer on each pass
+;       round the inner loop
+XADDPHR         EQU     $00000000       ; 00 - add phrase width and truncate
+XADDPIX         EQU     $00010000       ; 01 - add pixel size (add 1)
+XADD0           EQU     $00020000       ; 10 - add zero
+XADDINC         EQU     $00030000       ; 11 - add the increment
+
+; Y add control d18
+;       controls the update of the Y pointer within the inner loop.
+;       it is overridden by the X add control if they are in add increment
+YADD0           EQU     $00000000       ; 00 - add zero
+YADD1           EQU     $00040000       ; 01 - add 1
+
+; X sign d19
+;       add or subtract pixel size if X add control = 01 (XADDPIX)
+XSIGNADD        EQU     $00000000       ; 0 - add pixel size
+XSIGNSUB        EQU     $00080000       ; 1 - subtract pixel size
+
+; Y sign d20
+;       add or subtract pixel size if Y add control = 01 (YADD1)
+YSIGNADD        EQU     $00000000       ; 0 - add 1
+YSIGNSUB        EQU     $00100000       ; 1 - sub 1
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       JERRY REGISTERS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+JPIT1           EQU     BASE + $10000   ; Timer 1 Pre-Scaler
+JPIT2           EQU     BASE + $10002   ; Timer 1 Divider
+JPIT3           EQU     BASE + $10004   ; Timer 2 Pre-Scaler
+JPIT4           EQU     BASE + $10006   ; Timer 2 Divider
+
+J_INT          EQU     BASE + $10020   ; Jerry Interrupt control (to TOM)
+
+JOYSTICK       EQU     BASE + $14000   ; Joystick register and mute
+JOYBUTS         EQU     BASE + $14002   ; Joystick register
+CONFIG          EQU     BASE + $14002   ; Also has NTSC/PAL
+
+MOD_MASK        EQU     BASE + $1A118   ; Mask for ADDQ(SUBQ)MOD
+
+SCLK            EQU     BASE + $1A150   ; SSI Clock Frequency
+SMODE           EQU     BASE + $1A154   ; SSI Control
+
+L_I2S           EQU     BASE + $1A148   ; I2S Serial Interface
+R_I2S           EQU     BASE + $1A14C   ; I2S Serial Interface
+LTXD            EQU     BASE + $1A148   ; Synonyms
+RTXD            EQU     BASE + $1A14C
+LRXD            EQU     BASE + $1A148   ; Synonyms
+RRXD            EQU     BASE + $1A14C
+
+R_DAC           EQU     BASE + $1A148   ; Swapped on Purpose!
+L_DAC           EQU     BASE + $1A14C
+
+ASICLK          EQU     BASE + $10034   ; Asynchronous Clock Register
+ASICTRL         EQU     BASE + $10032   ; Asynchronous Control Register
+ASISTAT         EQU     BASE + $10032   ; Asynchronous Status Register
+ASIDATA         EQU     BASE + $10030   ; Asynchronous Data Register
+
+;================================================================
+; UART Definitions (new in this file as of 24-Apr-95)
+;================================================================
+
+; UART control register Masks
+; All unused bits in the control register need to be written as zeros !
+; With exception of U_CLRERR these are valid for read in ASISTAT, too
+
+U_MODD          equ     (1<<0)  ; selects odd parity
+U_MPAREN        equ     (1<<1)  ; enable parity
+U_MTXOPOL       equ     (1<<2)  ; transmit output polarity (if set: active low)
+U_MRXIPOL       equ     (1<<3)  ; receive input polarity (if set: invert input)
+U_MTINTEN       equ     (1<<4)  ; enable transmitter interrupts
+U_MRINTEN       equ     (1<<5)  ; enable reciever interrupts
+U_MCLRERR       equ     (1<<6)  ; clear error (only use if U_SERIN is 
+                                ; inactive otherwise the UART locks up.
+                                ; By default input is active low. This
+                                ; depends on U_MRXIPOL) 
+U_MTXBRK        equ     (1<<14) ; transmit break
+
+; UART control register (ONLY) bit numbers
+U_CLRERR        equ     6
+
+; UART control AND status register (SHARED) bit numbers 
+
+U_ODD           equ     0       ; selects odd parity
+U_PAREN         equ     1       ; enable parity
+U_TXOPOL        equ     2       ; transmit output polarity (if set: active low)
+U_RXIPOL        equ     3       ; receive input polarity (if set: invert input)
+U_TINTEN        equ     4       ; enable transmitter interrupts
+U_RINTEN        equ     5       ; enable reciever interrupts
+U_TXBRK         equ     14      ; transmit break
+
+; UART status register (ONLY) bit numbers
+
+U_ERR           equ     15      ; error condition exists
+U_SERIN         equ     13      ; state of UART1 Pin (serial input data)
+U_OE            equ     11      ; overrun error
+U_FE            equ     10      ; frame error
+U_PE            equ     9       ; parity error
+U_TBE           equ     8       ; transitter buffer empty
+U_RBF           equ     7       ; receiver buffer full
+
+;;;
+;;; Jerry Interrupt Control Flags
+;;;
+
+J_EXTENA        EQU     $0001           ; Enable external interrupts
+J_DSPENA        EQU     $0002           ; Enable DSP interrupts
+J_TIM1ENA       EQU     $0004           ; Enable Timer 1 interrupts
+J_TIM2ENA       EQU     $0008           ; Enable Timer 2 interrupts
+J_ASYNENA       EQU     $0010           ; Enable Asyncronous Serial interrupts
+J_SYNENA        EQU     $0020           ; Enable Syncronous Serial interrupts
+
+J_EXTCLR        EQU     $0100           ; Clear pending external interrupts
+J_DSPCLR        EQU     $0200           ; Clear pending DSP interrupts
+J_TIM1CLR       EQU     $0400           ; Clear pending Timer 1 interrupts
+J_TIM2CLR       EQU     $0800           ; Clear pending Timer 2 interrupts
+J_ASYNCLR       EQU     $1000           ; Clear pending Asynch. Serial interrupts
+J_SYNCLR        EQU     $2000           ; Clear pending Synch. Serial interrupts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;     JERRY Joystick Equates
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Bits when LONGword is formatted as below (from JOYTEST\JT_LOOP.S).
+;
+; Format: xxApxxBx RLDU147* xxCxxxox 2580369#
+
+JOY_UP          EQU     20              ;joypad
+JOY_DOWN        EQU     21
+JOY_LEFT        EQU     22
+JOY_RIGHT       EQU     23
+
+FIRE_A          EQU     29              ;fire buttons
+FIRE_B          EQU     25
+FIRE_C          EQU     13
+OPTION          EQU     9
+PAUSE           EQU     28
+
+KEY_STAR        EQU     16              ;keypad
+KEY_7           EQU     17
+KEY_4           EQU     18
+KEY_1           EQU     19
+
+KEY_0           EQU     4
+KEY_8           EQU     5
+KEY_5           EQU     6
+KEY_2           EQU     7
+
+KEY_HASH        EQU     0
+KEY_9           EQU     1
+KEY_6           EQU     2
+KEY_3           EQU     3
+
+SHIFT_L         EQU     18              ; ProController Mappings
+SHIFT_R         EQU     2
+FIRE_Z          EQU     17
+FIRE_Y          EQU     5
+FIRE_X          EQU     1
+
+ANY_JOY         EQU     $00F00000       ; AND joyedge with this...
+                                        ; joypad was pressed if result is not 0
+ANY_FIRE        EQU     $22002000       ; retail Club Drive: FIRE_A/B/C only       ; AND joyedge with this...
+                                        ; A,B C, Option or Pause was pressed
+                                        ; if result is not 0
+ANY_KEY         EQU     $000F00FF       ; AND joyedge with this... 123456789*0#
+                                        ; was pressed if result is not 0
+
+;;;
+;;;     ROM Tables built into Jerry - 128 samples each
+;;;     16 bit samples sign extended to 32
+;;;
+
+ROM_TABLE       EQU     BASE + $1D000   ; Base of tables
+
+ROM_TRI         EQU     BASE + $1D000   ; A triangle wave
+ROM_SINE        EQU     BASE + $1D200   ; Full amplitude SINE
+ROM_AMSINE      EQU     BASE + $1D400   ; Linear (?) ramp SINE
+ROM_12W         EQU     BASE + $1D600   ; SINE(X)+SINE(2*X) : (was ROM_SINE12W)
+ROM_CHIRP16     EQU     BASE + $1D800   ; SHORT SWEEP
+ROM_NTRI        EQU     BASE + $1DA00   ; Triangle w/NOISE
+ROM_DELTA       EQU     BASE + $1DC00   ; Positive spike
+ROM_NOISE       EQU     BASE + $1DE00   ; Guess
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       JERRY Registers (DSP)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+D_FLAGS         EQU     BASE + $1A100   ; DSP Flags
+D_MTXC          EQU     BASE + $1A104   ; DSP Matrix Control
+D_MTXA          EQU     BASE + $1A108   ; DSP Matrix Address
+D_END           EQU     BASE + $1A10C   ; DSP Data Organization
+D_PC            EQU     BASE + $1A110   ; DSP Program Counter
+D_CTRL          EQU     BASE + $1A114   ; DSP Operation Control/Status
+D_MOD          EQU     BASE + $1A118   ; DSP Modulo Instruction Mask
+D_REMAIN        EQU     BASE + $1A11C   ; DSP Division Remainder
+D_DIVCTRL       EQU     BASE + $1A11C   ; DSP Divider control
+D_MACHI        EQU     BASE + $1A120   ; DSP Hi byte of MAC operations
+D_RAM           EQU     BASE + $1B000   ; DSP Internal RAM
+D_ENDRAM        EQU     D_RAM +(8*1024) ; 8K bytes
+
+;;;
+;;; JERRY Flag Register Equates
+;;;
+
+D_CPUENA        EQU     $00000010       ; CPU Interrupt Enable Bit
+D_I2SENA        EQU     $00000020       ; I2S Interrupt Enable Bit
+D_TIM1ENA       EQU     $00000040       ; Timer 1 Interrupt Enable Bit
+D_TIM2ENA       EQU     $00000080       ; Timer 2 Interrupt Enable Bit
+D_EXT0ENA       EQU     $00000100       ; External Interrupt 0 Enable Bit
+D_EXT1ENA       EQU     $00010000       ; External Interrupt 1 Enable Bit
+
+D_CPUCLR        EQU     $00000200       ; CPU Interrupt Clear Bit
+D_I2SCLR        EQU     $00000400       ; I2S Interrupt Clear Bit
+D_TIM1CLR       EQU     $00000800       ; Timer 1 Interrupt Clear Bit
+D_TIM2CLR       EQU     $00001000       ; Timer 2 Interrupt Clear Bit
+D_EXT0CLR       EQU     $00002000       ; External Interrupt 0 Clear Bit
+D_EXT1CLR       EQU     $00020000       ; External Interrupt 1 Clear Bit
+
+;;;
+;;; JERRY Control/Status Register
+;;;
+
+DSPGO           EQU     $00000001       ; Start DSP
+DSPINT0         EQU     $00000004       ; Generate a DSP Interrupt 0
+
+D_CPULAT        EQU     $00000040       ; Interrupt Latches
+D_I2SLAT        EQU     $00000080
+D_TIM1LAT       EQU     $00000100
+D_TIM2LAT       EQU     $00000200
+D_EXT1LAT       EQU     $00000400
+D_EXT2LAT       EQU     $00010000
+
+;;;
+;;; JERRY Modulo Instruction Masks
+;;;
+
+MODMASK2        EQU     $FFFFFFFE       ; 2 byte circular buffer
+MODMASK4        EQU     $FFFFFFFC       ; 4 byte circular buffer
+MODMASK8        EQU     $FFFFFFF8       ; 8 byte circular buffer
+MODMASK16       EQU     $FFFFFFF0       ; 16 byte circular buffer
+MODMASK32       EQU     $FFFFFFE0       ; 32 byte circular buffer
+MODMASK64       EQU     $FFFFFFC0       ; 64 byte circular buffer
+MODMASK128      EQU     $FFFFFF80       ; 128 byte circular buffer
+MODMASK256      EQU     $FFFFFF00       ; 256 byte circular buffer
+MODMASK512      EQU     $FFFFFE00       ; 512 byte circular buffer
+MODMASK1K       EQU     $FFFFFC00       ; 1k circular buffer
+MODMASK2K       EQU     $FFFFF800       ; 2k circular buffer
+MODMASK4K       EQU     $FFFFF000       ; 4k circular buffer
+MODMASK8K       EQU     $FFFFE000       ; 8k circular buffer
+MODMASK16K      EQU     $FFFFC000       ; 16k circular buffer
+MODMASK32K      EQU     $FFFF8000       ; 32k circular buffer
+MODMASK64K      EQU     $FFFF0000       ; 64k circular buffer
+MODMASK128K     EQU     $FFFE0000       ; 128k circular buffer
+MODMASK256K     EQU     $FFFC0000       ; 256k circular buffer
+MODMASK512K     EQU     $FFF80000       ; 512k circular buffer
+MODMASK1M       EQU     $FFF00000       ; 1M circular buffer
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; SHARED Equates for TOM (GPU) and JERRY (DSP)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;
+;;; Control/Status Registers
+;;;
+
+RISCGO          EQU     $00000001       ; Start GPU or DSP
+CPUINT          EQU     $00000002       ; Allow the GPU/DSP to interrupt CPU
+FORCEINT0       EQU     $00000004       ; Cause an INT 0 on GPU or DSP
+SINGLE_STEP     EQU     $00000008       ; Enter SINGLE_STEP mode
+SINGLE_GO       EQU     $00000010       ; Execute one instruction
+
+REGPAGE         EQU     $00004000       ; Register Bank Select
+DMAEN           EQU     $00008000       ; Enable DMA LOAD and STORE
+
+;;;
+;;; Flags Register
+;;;
+
+ZERO_FLAG       EQU     $00000001       ; ALU Zero Flag
+CARRY_FLAG      EQU     $00000002       ; ALU Carry Flag
+NEGA_FLAG       EQU     $00000004       ; ALU Negative Flag
+
+IMASK           EQU     $00000008       ; Interrupt Service Mask
+
+;;;
+;;; Matrix Control Register
+;;;
+
+MATRIX3         EQU     $00000003       ; use for 3x1 Matrix
+MATRIX4         EQU     $00000004       ; etc...
+MATRIX5         EQU     $00000005
+MATRIX6         EQU     $00000006
+MATRIX7         EQU     $00000007
+MATRIX8         EQU     $00000008
+MATRIX9         EQU     $00000009
+MATRIX10        EQU     $0000000A
+MATRIX11        EQU     $0000000B
+MATRIX12        EQU     $0000000C
+MATRIX13        EQU     $0000000D
+MATRIX14        EQU     $0000000E
+MATRIX15        EQU     $0000000F
+
+MATROW          EQU     $00000000       ; Access Matrix by Row
+MATCOL          EQU     $00000010       ; Access Matrix by Column
+
+;;;
+;;; Data Organisation Register
+;;;
+
+BIG_IO          EQU     $00010001       ; Use 32-bit registers as big-endian
+BIG_PIX         EQU     $00020002       ; Pixel organisation is big-endian
+BIG_INST        EQU     $00040004       ; Word program fetches are big-endian
+
+;;;
+;;; Divide Unit Control
+;;;
+
+DIV_OFFSET      EQU     $00000001       ; Divide 16.16 values if set
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Atari claimed the below registers should never be messed with and
+;;; eventually removed them from later copies of jaguar.inc. However, there
+;;; are corner cases in which messing with them is necessary (E.g., fixing up
+;;; MEMCON1 to access the Jaguar CD's memory-mapped registers while booting
+;;; from a Skunkboard, programming custom high-resolution video modes, etc.),
+;;; so I've restored them. In general though, the point stands: Don't use
+;;; these if you don't know what you're doing.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+MEMCON1         EQU     BASE + 0        ; Memory Configuration Register One
+MEMCON2         EQU     BASE + 2        ; Memory Configuration Register Two
+OLPLO           EQU     BASE + $20
+OLPHI           EQU     BASE + $22
+ODP             EQU     BASE + $24      ; Object Data Pointer
+HP              EQU     BASE + $2e      ; Horizontal Period
+HBB             EQU     BASE + $30      ; Horizontal Blanking Begin
+HBE             EQU     BASE + $32      ; Horizontal Blanking End
+HS              EQU     BASE + $34      ; Horizontal Sync
+HVS             EQU     BASE + $36      ; Horizontal Vertical Sync
+VP              EQU     BASE + $3e      ; Vertical Period
+VBB             EQU     BASE + $40      ; Vertical Blanking Begin
+VBE             EQU     BASE + $42      ; Vertical Blanking End
+VEB             EQU     BASE + $4a      ; Vertical EQUalization Begin
+VEE             EQU     BASE + $4c      ; Vertical EQUalization End
+HEQ             EQU     BASE + $54      ; Horizontal EQUalization End
+TEST1           EQU     BASE + $56      ; Undocumented Register - DO NOT USE
+
+;;;;;;;;;
+;; EOF ;;
+;;;;;;;;;
+; END jaguar.inc
+; BEGIN blit.inc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Header File: BLIT.INC
+;              Jaguar Blitter Equates
+;
+; NOTICE: This file has been incorporated into JAGUAR.INC. This file
+;         is for compatibility reasons only.
+;
+	
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; WARNING!!! The following EQU's exist here for compatibility only.
+;;; Do not use them. There are more EQUs with better names in JAGUAR.INC
+;;; These EQUs - Including this whole include file will go away in the next
+;;; release
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+		IF      COMPAT
+
+NOGO            EQU     $00000080       ; d07:     diagnostic
+
+		ENDIF
+; END blit.inc
+; BEGIN joypad.inc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Header File: JOYPAD.INC
+;              Jaguar Joypad Equates
+;
+; NOTICE: This file has been incorporated into JAGUAR.INC. This file
+;         is for compatibility reasons only. You should be using
+;	   JAGUAR.INC instead.
+        
+
+; END joypad.inc
+
+; BEGIN 3d.inc
+loadIt	EQU	$00f03010
+Overlay	EQU	G_RAM+$38
+
+; END 3d.inc
+; BEGIN 68kequ.inc
+; the definitions given here must agree with the table
+; in gpufix.s!!!
+
+SYMBOL		EQU	$543b0700
+bgpprog       	EQU	SYMBOL+0
+cgpprog       	EQU	SYMBOL+1
+egpprog       	EQU	SYMBOL+2
+rgpprog       	EQU	SYMBOL+3
+sn       	EQU	SYMBOL+4
+sqrtTabM512    	EQU	SYMBOL+5	; sqrtTab - 512
+car_dat       	EQU	SYMBOL+6
+player       	EQU	SYMBOL+7
+screen_addr	EQU	SYMBOL+8
+SKY		EQU	SYMBOL+9
+atanTab		EQU	SYMBOL+10
+itCar		EQU	SYMBOL+11
+twoplayer	EQU	SYMBOL+12
+framecnt	EQU	SYMBOL+13
+gametype	EQU	SYMBOL+14
+dash		EQU	SYMBOL+15
+digitfont	EQU	SYMBOL+16
+cmpssfont	EQU	SYMBOL+17
+mapscale	EQU	SYMBOL+18
+maporig		EQU	SYMBOL+19
+speedfont	EQU	SYMBOL+20
+scoreinc	EQU	SYMBOL+21
+dotloc		EQU	SYMBOL+22
+dotimg		EQU	SYMBOL+23
+tnyfont		EQU	SYMBOL+24
+pbprog		EQU	SYMBOL+25
+showcoord	EQU	SYMBOL+26
+pcprog		EQU	SYMBOL+27
+debugflg	EQU	SYMBOL+28
+prprog		EQU	SYMBOL+29
+animateprg	EQU	SYMBOL+30
+animateparam	EQU	SYMBOL+31
+mbands		EQU	SYMBOL+32
+gameover	EQU	SYMBOL+33
+splitscrn	EQU	SYMBOL+34
+gpu_do		EQU	SYMBOL+35
+TPNTADDR	EQU	SYMBOL+36
+ENDTPNTS	EQU	SYMBOL+37
+SKYHIGH		EQU	SYMBOL+38
+fps		EQU	SYMBOL+39
+playspd		EQU	SYMBOL+40
+; END 68kequ.inc
+
+; global register defines
+; legacy REGEQU innerLoop => R27 ; ren.gas:18
+; legacy REGEQU temp => R28 ; ren.gas:19
+; legacy REGEQU temp2 => R29 ; ren.gas:20
+; legacy REGEQU return => R31 ; ren.gas:21
+
+
+	ORG	Overlay
+
+; BEGIN 3dds.inc
+;------------------------------------------------------------------
+; 3dds.inc
+;	defines addresses for 3d data structures
+;------------------------------------------------------------------
+
+;PHRASE_ALIGN equ			((@1 + 7) & $fffffff8)
+
+HUD1		equ	$60000		; player 1 heads up display
+HUD2		equ	$61000		; player 2 HUD
+PAUSECRY	equ	$62000		; "paused" bitmap
+
+DS_BASE		equ	$6a200
+
+ASCRN1		equ	$20000		; player 1 screen 1
+BSCRN1		equ	$2ed80		; player 2 screen 1
+ASCRN2		equ	$40000
+BSCRN2		equ	$4ed80		; player 2 screen 2
+ATOGGLE		equ	$60000
+
+MARKADDR	EQU	$1fff00
+LASTTIME	EQU	$1feefc
+TIMEARRAY	EQU	$1ff000
+DEBUG		EQU	$1ffe00
+
+; data sizes for fixed structures (fixed in terms of global 3d coords)
+MAX_VECTORS		equ	200 ; normals + verticie vectors
+MAX_POINTS		equ	810;380 ; vertices
+MAX_SURFS			equ	550;300 ; polygons
+MAX_EDGES			equ	1200;600 ; edges
+MAX_DIVIDERS		equ	550;300 ; dividing planes
+
+; data sizes for mobile (car) structures
+MAX_MVECTORS		equ	100 ; normals + verticie vectors
+MAX_COLORS		equ	200  ; the only kind of colors computed ; 90
+MAX_MPOINTS		equ	200 ; vertices
+MAX_MSURFS		equ	90  ; trigons
+MAX_MEDGES		equ	300 ; edges
+MAX_MDIVIDERS		equ	100 ; dividing vectors
+
+; player car driving data structures
+; BEGIN car.inc
+;------------------------------------------------------------------
+; car.inc
+;	defines structures for car
+;	all addresses are relative
+;------------------------------------------------------------------
+
+CAR_POSN		equ	0										; x, y, z longwords of position
+CAR_MATRIX	equ	12										; 3x3 matrix of words
+CAR_VELOCITY	equ	(( CAR_MATRIX + 18			+ 3) & $fffffffc)	; vx, vy, vz longwords
+CAR_OMEGA		equ	CAR_VELOCITY + 12				; wx, wy, wz longwords - rotational velocity
+CAR_SPIN		equ	CAR_OMEGA + 12					; total absolute value of CAR_OMEGA since last time all wheels in contact
+CAR_FORCE		equ	CAR_SPIN + 4					; 
+CAR_TORQUE	equ	CAR_FORCE + 12					; CAR_TORQUE must immediately follow CAR_FORCE
+CAR_POSNS		equ	CAR_TORQUE + 12				; x, y, z words of the 20 control points on the car
+	CAR_NUM_PNTS	equ	38						; number of control points on a car
+CAR_SHOCKS	equ	(( CAR_POSNS + (CAR_NUM_PNTS*6)+ 3) & $fffffffc)	; position of suspension extention for use in shock dampening
+CAR_OSHOCKS	equ	CAR_SHOCKS + 16						; position of suspension extention for use in shock dampening
+CAR_TIRE_SPD	equ	CAR_OSHOCKS + 16						; last known speed of wheel
+CAR_SLIDE		equ	CAR_TIRE_SPD + 16				; some quantity of skid
+CAR_SURFDATA	equ	CAR_SLIDE + 16					; floor properties for various wheels
+CAR_CTRL		equ	CAR_SURFDATA + 16				; joystick bits
+CAR_TURN		equ	CAR_CTRL + 4					; amount to rotate front tire
+CAR_GAS		equ	CAR_TURN + 2					; amount of thrust
+CAR_GEAR		equ	CAR_TURN + 4					; state of car's transmission
+CAR_SKD_VCE	equ	CAR_GEAR + 4					; voice number of the car's skid sound
+
+CAR_HEAD		equ	CAR_SKD_VCE + 4					; angle of car heading (beta)
+CAR_ANGLE		equ	CAR_HEAD + 4					; other angles (alpha, gamma)
+MAP_POS			equ	CAR_ANGLE + 4					; position of car on map
+
+CAR_MODEL		equ	MAP_POS + 4					; pointer to car 3d model
+FLOOR_MODEL		equ	CAR_MODEL+4					; pointer to band the car is in
+NEW_FLOOR		equ	FLOOR_MODEL+4					; pointer to the band the car is going to be in
+; the next 4 things must go together
+CUR_PORTAL		equ	NEW_FLOOR+4					; current portal by which to teleport
+CUR_SOUND		equ	CUR_PORTAL + 4					; sound to make when crashing
+SND_VOL			equ	CUR_SOUND+4					;	volume for sound
+SND_POS			equ	SND_VOL+4					;	position for sound ($7fff = left, 0 = right)
+
+GAME_DATA		equ	SND_POS + 4					; data for game play (16 bits)
+QTIME			equ	GAME_DATA + 2					; timer for playback/record
+CAR_TOTFRAME		equ	QTIME + 2					; time stamp at beginning of ani cycle (value of intCount)
+CAR_FRAME		equ	CAR_TOTFRAME + 4				; time for this frame
+CAR_TIMER		equ	CAR_FRAME + 4					; value to display in "time" field of dashboard
+WAIT_TIME		equ	CAR_TIMER + 4					; time to wait for some event
+SCORE			equ	WAIT_TIME + 4					; timer ticks or spot total
+PRV_SCORE		equ	SCORE + 4					; td.s assumes SCORE, PRV_SCORE, and SCOREPIX
+SCOREPIX		equ	PRV_SCORE + 4					;   all come together
+TIMERPIX		equ	SCOREPIX+4
+
+QSTART			equ	TIMERPIX+4					; start of playback queue
+QEND			equ	QSTART+4
+QHEAD			equ	QEND+4						; pointer within playback queue
+QTAIL			equ	QHEAD+4						; pointer within playback queue
+QPLAY			equ	QTAIL+4						; position of playback head
+QREC			equ	QPLAY+4						; position of record head
+
+NEW_CAMERA		equ	QREC+4						; band the camera is going to be in next frame
+CAMERA_MODEL		equ	NEW_CAMERA+4					; band the camera is currently in
+CAMERA_POSN		equ	CAMERA_MODEL+4					; X,Y,Z (32 bits) for camera position
+CAMERA_MATRIX		equ	CAMERA_POSN+12					; viewing matrix for camera
+CAMERA_FLAG		equ	CAMERA_MATRIX+18				; what kind of camera to use
+CAMERA_TURN		equ	CAMERA_FLAG+2					; angle to turn camera in X-Z plane
+
+CAMLIST_BEG		equ	CAMERA_TURN+4					; start of camera list
+CAMLIST_END		equ	CAMLIST_BEG+4					; end of camera list
+CAMLIST_POS		equ	CAMLIST_END+4					; current position in camera list
+
+PORTAL_ROT		equ	CAMLIST_POS+4					; rotation imposed by portal
+AUTO_REW		equ	PORTAL_ROT+4					; automatic rewind is in effect
+CAR_DOWN		equ	AUTO_REW + 4
+CAR_QUEUE		equ	CAR_DOWN + 4					;player input queue
+
+; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CAR_DS_SIZE	equ	CAR_QUEUE + (32*4) + 4						; it takes this many bytes
+CAR_RADIUS	equ	$4000									; all points of the car are closer to the car center than this
+
+QENTRYSIZ		equ	30		; 12 bytes for matrix, 4 for band, 12 for position, 2 for game data
+QNUMENTRY		equ	1000		; number of entries in playback queue
+QUANTUM			equ	30		; number of 300ths per recorder entry
+
+; END car.inc
+	PLAYER1				equ	DS_BASE
+	PLAYER2				equ	PLAYER1 + CAR_DS_SIZE
+
+GEO_DS_BASE		equ		(( PLAYER2 + CAR_DS_SIZE					+ 3) & $fffffffc) ;LONG ALIGN
+
+; what the variables mean:
+; GEO_BND_PTR points to the current band
+; BANDS is the list of bands we should do calculations on, which is
+; the union of the camera's band list and the floor's; normally the
+; camera and floor are in the same band. We also stuff any extra bands
+; (e.g. the cars) into this list
+; The list is null terminated, and can have at most 100 entries
+
+GEO_BND_PTR		equ	GEO_DS_BASE
+CURBND			equ	GEO_BND_PTR+4			; for ren and 3dend: points to band we're currently looking at
+BANDS			equ	CURBND+4			; in comp: list of bands (see above)
+DISPBANDS		equ	BANDS+404			; band to be displayed, and Z value for it
+								; (sorted by Z)
+; addresses of computed data structs
+	SEMAPHORE			equ	DISPBANDS+800
+	SIDES				equ	SEMAPHORE+16			; sides of viewing area
+	DRAWRECT			equ	SIDES+8				; blitter rectangle to draw in
+	XCENTER				equ	DRAWRECT+4			; (X,Y) of center of screen
+	YCENTER				equ	XCENTER+4
+	ASPECTR				equ	YCENTER+4			; aspect ratio of viewing area
+	LOOPCNT				equ	ASPECTR+4			; loop counter for GPU loops
+	PWRBALLX			equ	LOOPCNT+4			; transformed (screen) X coordinate for power ball
+	PWRBALLY			equ	PWRBALLX+4			; screen Y coord for power ball
+	PWRBALLZ			equ	PWRBALLY+4
+	PWRBALLR			equ	PWRBALLZ+4			; radius for power ball
+	tEND				equ	PWRBALLR+4
+	GP_STACK			equ	((tEND+7) & $fffffff8)		; phrase align
+
+	QUEUES				equ	GP_STACK+8192			; queues for playback/record
+	GEO_END				equ	QUEUES+64000
+
+;------------------------------------------------------------------
+; addresses of structures in GPU RAM
+
+POLYGON					equ	BASE + $3f20	; room for 12 points
+CORNERS					equ	BASE + $3fe0	; x,y for the four corners - TLBR
+
+;------------------------------------------------------------------
+; edge bit numbers
+
+TOP_EDGE		equ	0
+LEFT_EDGE		equ	1
+BOTTOM_EDGE	equ	2
+RIGHT_EDGE	equ	3
+
+; BEGIN bndhead.inc
+;
+; data structure for per-band data
+
+; Constants that are always present
+
+BND_FLAGS	EQU	0		; flags for the band
+					;	bit 0: band cannot be collided with
+					;	bit 1: draw a cloudy sky with this band
+					;	bit 2: band is a bonus world (don't count time, don't draw map)
+
+					;	bit 13: (set in code): 0 if band has been visited by "comp"
+					;			       1 if band is in comp list but not yet computed
+					;	bit 14: (set in code): band has been clipped from view
+
+NUM_PNTS	EQU	BND_FLAGS+4	; number of points in the band
+NUM_VECTORS	EQU	NUM_PNTS+2	; number of vectors -- NOTE: this must immediately follow NUM_PNTS
+
+NUM_DIVIDERS	EQU	NUM_VECTORS+2	; number of dividers
+NUM_EDGES	EQU	NUM_DIVIDERS+2	; number of edges
+
+NUM_CPS		EQU	NUM_EDGES+2	; number of CPs
+NUM_COLORS	EQU	NUM_CPS+2	; number of entries in color table (normally 0)
+
+;; Make sure the stuff below is long aligned
+FILLER		EQU	NUM_COLORS+0	; make it NUM_COLORS+2 if stuff is inserted above
+
+XORIG		EQU	FILLER+2	; X origin in global coordinates
+YORIG		EQU	XORIG+4
+ZORIG		EQU	YORIG+4
+RADIUS		EQU	ZORIG+4		; square of the band's radius
+
+PROP_LIST	EQU	RADIUS+4	; pointer to special surface properties
+
+; static band data
+
+DIVIDER_LIST	EQU	PROP_LIST+4
+EDGE_LIST	EQU	DIVIDER_LIST+4
+PNT_LIST	EQU	EDGE_LIST+4
+SURF_LIST	EQU	PNT_LIST+4
+SURFS_END	EQU	SURF_LIST+4
+TREE		EQU	SURFS_END+4
+TEXTURES	EQU	TREE+4
+COLOR_LIST	EQU	TEXTURES+4	; colors for dynamic coloring (if applicable)
+CAMERA		EQU	COLOR_LIST+4	; pointer to camera list (if applicable)
+
+; pointers to allocated global memory
+
+ROTPNT_LIST	EQU	CAMERA+4	; pointer to rotated points
+tVECTORS	EQU	ROTPNT_LIST+4
+tCOLORS		EQU	tVECTORS+4
+tEDGES		EQU	tCOLORS+4
+tDIVIDERS	EQU	tEDGES+4
+tCLOSE_LIST	EQU	tDIVIDERS+4
+tPNTS		EQU	tCLOSE_LIST+4
+tPOLYS		EQU	tPNTS+4
+
+; statistics about this band
+BND_MATRIX	EQU	tPOLYS+4		; pointer to matrix for rotating band
+tNUM_EXTRAS	EQU	BND_MATRIX+4		; extra points added when rendering
+tINITED		EQU	tNUM_EXTRAS+4		; flag: set to 1 if the bnd is initialized, 0 if not, 2 if memory allocated but not inited
+USE_COUNT	EQU	tINITED+2		; number of times band is used (if 0, allocated memory may be freed)
+
+; finally: the list of bands which must be drawn when a
+; car is in this band. This list will usually be non-empty,
+; since the band itself should be drawn!
+; the list is 0 terminated
+
+BND_LIST	EQU	USE_COUNT+2
+
+
+
+;
+; Flags used in polygon structures
+; the first 12 bits of the "numsides" word for each polygon are flags, used as follows:
+; 	(the "fXXX" macros are masks for or'ing; the "bXXX" macros are the corresponding bits
+;	for btst)
+
+fGLASS		EQU	$8000			; flag for transparent polygon
+bGLASS		EQU	15
+
+fTEXTURE	EQU	$4000			; flag for texture mapped polygon (?)
+bTEXTURE	EQU	14
+
+fFLASH		EQU	$2000			; flag for flashing objects (in general, this
+bFLASH		EQU	13			; means the object's color must be computed)
+
+fSPSURF		EQU	$1000			; flag for special surfaces
+bSPSURF		EQU	12
+
+mSPSURF		EQU	$0f00			; up to 16 special surfaces per model
+
+fNOCOLLIDE	EQU	$0080			; object can't be collided with
+bNOCOLLIDE	EQU	7
+
+fNODRAW		EQU	$0040			; don't draw object
+bNODRAW		EQU	6
+
+;
+; offsets for polygon special surface structure
+; crash.gas assumes that this is 32 bytes long
+;
+PORTAL_BND	EQU	0			; band associated with a portal, or 0 if not a portal
+PORTAL_X	EQU	PORTAL_BND+4
+PORTAL_Y	EQU	PORTAL_X+4
+PORTAL_Z	EQU	PORTAL_Y+4
+SP_SOUND	EQU	PORTAL_Z+4
+SURF_PROP	EQU	SP_SOUND+4
+POWER_UP	EQU	SURF_PROP+4
+PROTATE		EQU	POWER_UP+4		; sine and cosine of rotation angle for portal
+
+;
+; world startup structure
+;
+STARTP1		EQU	0			; player 1 starting band, x, y, z (4*4 bytes)
+STARTH1		EQU	16			; player 1 starting angle (2 bytes)
+STARTP2		EQU	18			; player 2 starting band, x, y, z (4*4 bytes)
+STARTH2		EQU	34			; player 2 starting angle (2 bytes)
+MSCALE		EQU	36			; map scale (y then x: 2*2 bytes)
+MCENTER		EQU	40			; map center (y then x: 2*2 bytes)
+STARTANIM	EQU	44			; pointer to animation function info, or 0
+STARTDOTS	EQU	48			; 64 (band, x, y, z) quadruples for powerball locations
+; END bndhead.inc
+
+; END 3dds.inc
+
+	MACRO nopCity
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+	ENDM
+	MACRO cutItOut
+		moveq	#\1, r29
+		movei	#(SEMAPHORE+8), r27
+		movei	#thatsAllFolks, r28
+		jump		(r28)
+		store	r29, (r27)
+	ENDM
+
+; BEGIN time.gas
+;
+; definition for timing macros:
+;
+; StartTimer addr:	starts a timer running
+;	uses: temp, temp2
+;
+; SaveTimer addr:	saves the timer value into a specific memory location
+;	uses: temp, temp2
+;
+; RestoreTimer addr:	restarts a timer previously saved by SaveTimer
+;	uses:	temp, temp2
+
+.if 0
+
+MACRO	StartTimer
+	moveq	#1,r28
+	movei	#PIT0,r29
+	neg	r28
+	store	r28,(r29)
+ENDM
+
+MACRO	SaveTimer
+	movei	#PIT0,r29
+	load	(r29),r28
+	movei	#\1+TIMEARRAY,r29
+	rorq	#16,r28
+	neg	r28
+	store	r28,(r29)
+ENDM
+
+MACRO	RestoreTimer
+	movei	#\1,r29
+	load	(r29),r28
+	movei	#PIT0,r29
+	neg	r28
+	rorq	#16,r28
+	store	r28,(r29)
+ENDM
+
+MACRO	Mark
+	movei	#MARKADDR,r29
+	moveq	#\1,r28
+	store	r28,(r29)
+ENDM
+
+.else
+
+MACRO	StartTimer
+	nop
+ENDM
+
+MACRO	SaveTimer
+	nop
+ENDM
+
+MACRO	RestoreTimer
+	nop
+ENDM
+
+MACRO	Mark
+	nop
+ENDM
+
+.endif
+
+; END time.gas
+
+; r0-r2 are scratch registers for outer loop
+; legacy REGEQU gl_curbnd => R0 ; ren.gas:51
+; legacy REGEQU gl_bndlist => R1 ; ren.gas:52
+; legacy REGEQU gl_player => R2 ; ren.gas:53
+
+; code start ----------------------------------------------------------------
+
+; DEBUG - test alignment of a label for texture map stuf
+	.globl		doTrap
+	.globl		odoTrap
+	.globl		odoTexTrap
+
+	movei	#doTrap, r28
+	moveq	#3, r29
+	and		r29, r28
+	jr		EQ, _CDLOCAL_4_67
+	nop
+		cutItOut	$12
+_CDLOCAL_4_67:
+; ------------------------------------------------------
+	;some temporary poly strucked stuffing
+;	movei	#$f03e0c, temp
+;	moveq	#1, temp2
+;;	bset		#16, temp2
+;	store	temp2, (temp) ;1
+;	addqt	#16, temp
+;	move		temp2, innerLoop
+;	add		innerLoop, temp2
+;	store	temp2, (temp) ;2
+;	addqt	#16, temp
+;	add		innerLoop, temp2
+;	store	temp2, (temp) ;3
+;	addqt	#16, temp
+;	add		innerLoop, temp2
+;	store	temp2, (temp) ;4
+;	nop
+
+	StartTimer	$14
+
+; start the band counter at the beginning of the current model's list
+
+	movei	#player,r2
+	load	(r2),r2
+	movei	#CAMERA_MODEL,r28
+	add	r2,r28
+	load	(r28),r28			; get the world the player is in
+	movei	#BND_LIST,r1
+	add	r28,r1
+	movei	#CURBND,r29
+	store	r1,(r29)
+
+renloop:
+;
+; get the next band element
+;
+	movei	#CURBND,r29
+	load	(r29),r1
+	movei	#GEO_BND_PTR,r28
+	load	(r1),r0
+	addqt	#4,r1
+	movei	#renloopend,r31
+	store	r1,(r29)		; save the list pointer
+	cmpq	#0,r0			; is the current band 0
+	jump	EQ, (r31)
+	nop
+
+	store	r0, (r28)		; store the current .bnd pointer
+
+; BEGIN tree.gas
+; traverse the polygon ordering tree
+
+; BEGIN tree.inc
+; structures for sort trees
+
+;; Say it in english doc! -----------------------------------------------
+;// node types
+;
+;// THE node - all nodes in a sort tree are tNodes
+;struct tNode {
+;	short int nDivs;	// number of dividers
+;	short int nNodes;	// number of nodes (max of 16)
+;	int dList[nDivs];
+;	int nList[nNodes];	// high order bit tells node type (0-CP, 1-tNode)
+;	nyble oList[2^nDivs][nNodes];
+;	}
+;
+;; ----------------------------------------------------------------------
+
+;struct tNode {
+	tnNDs	equ	0
+	tnNNs	equ	1
+;	int dList[nDs];
+		tnDList		equ	2
+		tnDLSz		equ	2
+;	int nList[nDs];
+		tnNLSz		equ	2
+
+;	nyble oList[2^tnNDs][tnNNs]
+
+MACRO	RTS_TREE
+		subqt	#8, R10
+		loadp	(R10), R28
+		movei	#G_HIDATA, R29 ;dataHi
+		jump		(R28)
+		subqt	#8, R10
+ENDM
+
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+; END tree.inc
+
+; Registers ------------------------------------------------------------
+; legacy REGEQU cpTree => R0 ; tree.gas:6
+; legacy REGEQU cpBack => R1 ; tree.gas:7
+; legacy REGEQU cpFront => R2 ; tree.gas:8
+; legacy REGEQU nodetype => R3 ; tree.gas:9
+; legacy REGEQU dividers => R4 ; tree.gas:10
+; legacy REGEQU cpNode => R5 ; tree.gas:11
+;braround	REGEQU	R6
+; legacy REGEQU divnum => R7 ; tree.gas:13
+; legacy REGEQU drawtreeadr => R8 ; tree.gas:14
+; legacy REGEQU dataHi => R9 ; tree.gas:15
+; legacy REGEQU stack => R10 ; tree.gas:16
+; legacy REGEQU braround => R11 ; tree.gas:17
+; legacy REGEQU geoband => R12 ; tree.gas:18
+; ----------------------------------------------------------------------
+; stack stuf
+;	upward growing tree - stack pointer must be preserved in called routines
+
+; pass address of routine to jump to in temp2 - pass arg in temp
+MACRO	JSR_TREE
+		store	r5, (r9)
+		storep	r2, (r10)
+		addqt	#8, r10
+		store	r0, (r9)
+		move		PC, r31
+		addqt	#10, r31			; adjust return address to end of JSR_TREE macro
+		storep	r31, (r10)
+		jump		(r29)
+		addqt	#8, r10
+			; we're now on the other side
+		load		(r29), r0
+		move	r29,r9
+		loadp	(r10), r2
+			or	r2, r2	;make dataHi valid
+		load		(r9), r5
+ENDM
+
+; elided repeat include /mnt/data/club_case_work/club-drive-source/src/tree.inc
+
+;MACRO	RTS_TREE
+;		subqt	#8, stack
+;		loadp	(stack), temp
+;		movei	#G_HIDATA, temp2
+;		jump		(temp)
+;		subqt	#8, stack
+;ENDM
+		
+; ----------------------------------------------------------------------
+
+		movei	#GP_STACK, r10		; initialize stack pointer
+		movei	#G_HIDATA,r9
+
+		movei	#skip_sub,r28			; skip around our subroutine
+		jump	(r28)
+		nop
+
+draw_model:
+		movei	#GEO_BND_PTR,r12
+		load	(r12),r12
+		movei	#TREE, r0			; holds the root node
+
+		cmpq	#0,r12			; is it a null pointer?
+		jr	EQ,ret1				; yes -- skip it
+		nop					; (really we should do a cutItOut)
+		load	(r12),r28			; get band flags
+		add	r12,r0
+		btst	#14,r28			; check for clipped band
+		jr	EQ,ok1
+		nop
+ret1:
+			RTS_TREE
+ok1:
+		load	(r0), r0		; get the tree's address
+		movei	#tINITED,r28
+		add	r12,r28
+		loadw	(r28),r28			; make sure this band is initialized
+		btst	#0,r28
+		jr	NE,ok2
+		nop
+			RTS_TREE			; band not initialized: don't draw it
+ok2:
+		moveq	#0,r28
+		movei	#drawCP,r29
+		JSR_TREE
+
+		movei	#GEO_BND_PTR,r12
+		load	(r12),r12
+.if 1
+		movei	#tDIVIDERS,r4
+		add	r12,r4
+		load	(r4),r4
+.endif
+		moveq	#0,r28				; start with root node (always 0)
+;; fall through
+
+;
+; to draw a tree:
+; if the back subtree is non-empty, draw it
+; if the front subtree is non-empty, draw it
+; we're passed the tree node in cpNode
+
+drawTree:
+		move	PC,r8
+		btst	#15,r28				; check for 16 bit negative number
+		jr	EQ,treeOK
+		move	r28,r5				; our parameter
+			RTS_TREE
+treeOK:
+		add	r0,r5				; cpNode is always an offset from the tree base
+.if 0
+;		movei	#GEO_BND_PTR,geoband
+;		load	(geoband),geoband
+		movei	#tDIVIDERS,r4
+		add	r12, r4
+		load	(r4), r4
+.endif
+		loadw	(r5),r3			; get node type
+		addqt	#2,r5
+		loadw	(r5),r7
+		movei	#drawit,r28
+		cmpq	#0,r3			; if this is a leaf node
+		jump	NE,(r28)			; go draw the corresponding polygon
+		addqt	#2,r5
+			loadw	(r5),r2
+			addqt	#2,r5
+			loadw	(r5),r1
+
+			btst	#15,r7		; special flag: divider -1 means always draw back, then front
+			move	r4,r29
+			jr	NE,normal_tree
+			add	r7,r29
+
+			loadb	(r29),r28			; get sign of dividers
+			or	r28,r28			; test sign bit
+			jr	NE,normal_tree			; this polygon is facing us, do normal stuff
+			move	r1,r28			; always executed, but that's OK
+
+	; reverse tree: we must reverse the meanings of front and back
+				move	r2,r1
+				move	r28,r2
+		normal_tree:
+			move	r8,r29
+			move	r1,r28
+			move	r29,r5		; will be pushed on stack
+			JSR_TREE			; draw the back subtree
+			move	r5,r29		; cpback has drawtreeadr
+			jump	(r29)			; draw the front subtree
+			move	r2,r28
+
+; leaf nodes come here, to draw their CP and perhaps associated data
+
+	drawit:
+		bclr	#0,r3
+		movei	#docp,r11
+		cmpq	#0,r3			; is this a "plain" node?
+		jump	EQ,(r11)			; if so, don't need XDRAW
+		subqt	#4,r5			; point to the node type again, for xdraw
+			movei	#xdraw,r29
+			moveq	#0,r28			; we're drawing the back
+			JSR_TREE			; go do xdraw
+	docp:
+		addqt	#4,r5
+		load	(r5),r28			; get offset of this CP (parameter for drawCP)
+		movei	#drawCP,r29
+		JSR_TREE				; actually draw the CP
+
+
+		subqt	#2,r5			; post-CP flags are in the second word
+		loadw	(r5),r3		; check node flags for more stuff to draw
+
+		movei	#GEO_BND_PTR,r12		; geoband may have been trashed by drawCP
+		load	(r12),r12
+		movei	#tDIVIDERS,r4
+		add	r12, r4
+		load	(r4), r4
+
+		bclr	#0,r3
+		movei	#doneit,r11
+		cmpq	#0,r3
+		jump	EQ,(r11)
+		nop
+			movei	#xdraw,r29
+			moveq	#1,r28			; we're drawing the front
+			JSR_TREE
+	doneit:
+		RTS_TREE
+
+;
+; subroutine: draw extra stuff (like the other car, or power pills)
+; parameters: nodetype has a list index; cpNode points to
+; where this came from (it should be zeroed to indicate the node has been
+; drawn)
+
+xdraw:
+
+	moveq	#1,r28
+	storew	r28,(r5)				; mark node as drawn
+	movei	#DISPBANDS,r5
+	add	r3,r5				; point to the list of things to draw
+
+xdrawlp:
+	load	(r5),r3			; get the node marker
+	addqt	#8,r5				; skip marker and Z value
+	cmpq	#0,r3				; end of list?
+	jr	NE,keepgoing
+	nop
+		RTS_TREE				;	yes -- return
+keepgoing:
+		move	r12,r2		; cpFront is saved on the stack, so this is how we can save geoband
+		movei	#GEO_BND_PTR,r29
+		store	r3,(r29)	; save the car model as the new rendering model
+
+		move	r3,r28		; parameter for draw_model
+		movei	#draw_model,r29
+		btst	#31,r3
+		jr	EQ,notadot
+		bclr	#31,r28
+			movei	#draw_dot,r29
+notadot:
+		JSR_TREE			; draw the car or dot (as appropriate)
+
+		move	r2,r12
+		movei	#GEO_BND_PTR,r29
+		store	r12,(r29)
+		movei	#tDIVIDERS,r4
+		add	r12,r4
+		load	(r4),r4
+		movei	#xdrawlp,r28
+		jump	(r28)
+		nop
+
+;
+; the main code comes here
+;
+
+skip_sub:
+	movei	#draw_model,r29
+	JSR_TREE
+	nop
+; Register cleanup -----------------------------------------------------
+; GASM REGUNDEF cpTree ; tree.gas:245
+; GASM REGUNDEF cpBack ; tree.gas:246
+; GASM REGUNDEF cpFront ; tree.gas:247
+; GASM REGUNDEF nodetype ; tree.gas:248
+; GASM REGUNDEF cpNode ; tree.gas:249
+; GASM REGUNDEF dividers ; tree.gas:250
+; GASM REGUNDEF divMap ; tree.gas:251
+; GASM REGUNDEF dataHi ; tree.gas:252
+; GASM REGUNDEF divnum ; tree.gas:253
+; GASM REGUNDEF geoband ; tree.gas:254
+; ----------------------------------------------------------------------
+
+; END tree.gas
+
+	movei	#renloop, r28			; go back and compute the next band
+	jump	(r28)
+	nop
+
+renloopend:
+
+	SaveTimer	$14
+
+	; load driving routines
+	; (or playback routines, as appropriate)
+	movei	#gpu_do,r28
+	loadw	(r28),r28
+	movei	#thatsAllFolks,r29
+	btst	#3,r28			; do collision detection, etc?
+	jump	EQ,(r29)		; no == go stop the GPU
+	nop
+
+	movei	#egpprog, r28		; default is "3dend" function
+	movei	#loadIt, r29
+	jump		(r29)
+	nop
+
+; set sem -------------------------------------------------------------------
+;		; set the semaphore
+;		moveq	#1, temp
+;		movei	#SEMAPHORE, temp2
+;		store	temp, (temp2)
+
+; halt the GPU --------------------------------------------------------------
+thatsAllFolks:
+; stolen code
+		movei	#G_CTRL, r29
+		load		(r29), r28
+		bclr #0, r28
+		bset #1, r28
+		store	r28, (r29)
+
+allGone2:	jr	allGone2
+		nop
+
+;-------------------------------------------------------------------
+; BEGIN surf.gas
+;----------------------------------------------------------------------------
+;	surf.gas
+;		Feeds blitter with shaded lines for a gon.
+;	Limitations (so far): phrase mode only, flatgons only
+;
+;
+;----------------------------------------------------------------------------
+
+NEVER	EQU	0
+
+; identical repeated EQU elided: surf.gas:11 LFU_REPLACE	EQU	(LFU_AN|LFU_A)
+
+TOP_O_WINDOW	EQU		$8	; a very small 17.15 number - no on-screen point that we care about will be less than this
+
+; wait for blitter completion (mostly stolen code)
+; must have address in command. Trashes temp, temp2
+MACRO waitForBlitter
+	blitwaitmacro:
+		load		(R11), r28
+		btst		#0, r28
+		jr		EQ, blitwaitmacro
+;		moveq	#0, temp2
+
+;		load		(temp2), temp
+;		add		temp, temp
+	ENDM
+
+; scan polygons -------------------------------------------------------------
+; legacy REGEQU theEdge => R0 ; surf.gas:29
+; legacy REGEQU points => R30 ; surf.gas:30
+; legacy REGEQU tEdges => R31 ; surf.gas:31
+; legacy REGEQU a => R3 ; surf.gas:32
+; legacy REGEQU b => R4 ; surf.gas:33
+; legacy REGEQU xs => R5 ; surf.gas:34
+; legacy REGEQU ys => R6 ; surf.gas:35
+; legacy REGEQU aFirst => R7 ; surf.gas:36
+; legacy REGEQU numSides => R8 ; surf.gas:37
+; legacy REGEQU dataHi => R9 ; surf.gas:38
+; legacy REGEQU stack => R10 ; surf.gas:39
+; legacy REGEQU polyPtr => R11 ; surf.gas:40
+; legacy REGEQU noWayA => R12 ; surf.gas:41
+; legacy REGEQU clr => R13 ; surf.gas:42
+; legacy REGEQU colors => R14 ; surf.gas:43
+; legacy REGEQU bPrev => R15 ; surf.gas:44
+; legacy REGEQU slp => R16 ; surf.gas:45
+; legacy REGEQU dontDoItMan => R17 ; surf.gas:46
+; legacy REGEQU polygon => R18 ; surf.gas:47
+; legacy REGEQU hiPoint => R19 ; surf.gas:48
+; legacy REGEQU hiY => R20 ; surf.gas:49
+; legacy REGEQU hiIndex => R21 ; surf.gas:50
+; legacy REGEQU noCorner => R22 ; surf.gas:51
+; legacy REGEQU secIn => R23 ; surf.gas:52
+; legacy REGEQU secOut => R24 ; surf.gas:53
+; legacy REGEQU corners => R25 ; surf.gas:54
+; legacy REGEQU dividers => R26 ; surf.gas:55
+; global reg dudes 27-29
+; legacy REGEQU polyflags => R1 ; surf.gas:57
+; legacy REGEQU edgeCrosses => R2 ; surf.gas:58
+
+; elided repeat include /mnt/data/club_case_work/club-drive-source/src/tree.inc
+
+.align 4	; to align doTrap
+
+; code start -----------------------------------------------------------
+drawCP:
+; On ENTRY: "temp" has our parameter in it
+
+.if 0
+		movei	#GEO_BND_PTR,r29
+		load	(r29),r29
+		nop
+.else
+		move	r12,r29
+.endif
+		movei	#SURF_LIST, r11
+		add	r29,r11
+		load		(r11), r11
+		add		r28, r11		; add CP offset (our parameter)
+
+rlPolyLp:	; partial register reload entry point for polyLp
+		movei	#PATDSEL|DSTA2|UPDA2,r31	; doIt (used tEdges as temp)
+		moveta	r31, r5
+
+;		movei	#G_HIDATA,dataHi		; not necessary, done for us in tree.gas
+
+		movei	#tEDGES,r31
+		move	r31,r26
+		addqt	#(tDIVIDERS-tEDGES),r26
+		move	r31,r30
+		addqt	#(tPNTS-tEDGES),r30
+		add	r29, r26
+		move	r31,r14
+		subqt	#(tEDGES-tCOLORS),r14
+		load	(r26), r26
+		add	r29, r30
+		load	(r30), r30
+		subqt	#20, r30	; back up to sector record
+		add	r29, r31
+		load	(r31), r31
+
+		; for computed colors
+		add	r29, r14
+		load	(r14), r14
+
+polyLp:	; read points, slps, colors
+		loadw	(r11), r8
+		addqt	#2, r11	; point to divider record
+		move	r8,r1
+
+;		cmpq		#1, numSides
+;		movei	#shadeTop, temp
+;		jump		EQ, (temp)
+;		btst		#15, numSides			; flag for line structure
+;		movei	#lineTop, temp
+;		jump		NE, (temp)
+
+		shlq	#28,r8	; strip off flags
+		shrq	#28,r8	; 
+
+;		or		numSides, numSides	; zero for end of CP
+		movei	#cpDone, r28
+		jump		EQ, (r28)
+		nop
+		; check for no normal or 2 sided poly
+;flatPoly:	;===========================================================================
+		loadw	(r11), r28					; get normal
+		addqt	#2, r11	; point to edge[0] record
+		movei	#nextEdge, r17
+		add		r26, r28
+		btst	#7,r1					; is this a "never drawn" poly?
+		jr	NE,backremove					; if so, always backface remove it
+		loadb	(r28), r28
+		btst		#0, r28
+		jr		NE, yesItIsGood
+		nop
+backremove:
+  			; this poly has turned its back on us
+			shlq		#1, r8	; len in words
+
+			movei	#polyLp, r28
+;			subq		#1, numPolys
+			addqt	#2, r11	; jump past color
+			jump		(r28)
+			add		r8, r11
+
+;			movei	#donePoly, temp
+;			jump		(temp)
+;			moveq	#1, numPolys	; this will finish us
+yesItIsGood:
+		movei	#(POLYGON+8), r18 ; point to slope
+		movei	#enterTrav, r12
+		movei	#CORNERS, r25 ; address of corner list
+		movei	#doneCorn, r22
+		movei	#traverse, r27
+
+		moveq	#0, r2
+		loadw	(r11), r0					; get first edge
+		moveq	#0, r20	; init hiY to 1024 in 16.16 (part 1 of 2)
+findFirst:
+		addqt	#2, r11	; point to edge[1] record
+		move		r0, r29						; make edge address
+		bclr		#15, r0
+		shlq		#4, r0
+		add		r31, r0
+
+		shrq		#15, r29	; if reverse bit set
+		loadp	(r0), r7 					; get first a, b
+		shlq		#4, r29	; if reverse bit set
+
+		or		r7, r7
+		jr		NE, gotFirst ;(dontDoItMan)
+		load		(r9), r28
+
+		subq		#1, r8
+		loadw	(r11), r0					; get first a, b (or color)
+		jr		NE, findFirst ;(innerLoop)
+		or		r28, r2
+
+		; there aren't any edges!! ------------ Is it full screen or offscreen?
+		cmpq		#15, r2
+		movei	#polyLp, r17
+		jump		NE, (r17)	;NE
+		addqt	#2, r11	; point to next gon record
+
+		; possible full screen polygon
+		movei	#fullScr, r28
+		jump		(r28)
+
+gotFirst:
+		move		r11, r2	; store for tex.gas retraverse
+		bset		#26, r20	; init hiY to 1024 in 16.16 (part 2 of 2)
+		addqt	#12, r0
+		ror		r29, r7		; swap a and b
+
+		; get the rest of the edge
+		load		(r0), r16
+
+		move		r7, r4							; separate a, b
+		; compute addresses (don't allways need both, but it interleaves so well...)
+		shlq		#16, r4
+		shrq		#16, r7
+		shrq		#11, r4 ; now shifted left 5
+		shlq		#5, r7
+		add		r30, r4
+		add		r30, r7
+; compute normal here
+;	add	slp, temp
+		jump		(r12)
+		addqt	#12, r4	; advance to xs,ys record - collect 200 dollars
+;	nop
+traverse:	;---------------------------------------------------------------------------
+		move		r0, r29
+		bclr		#15, r0
+		shlq		#4, r0
+;		mult		edgeSize, theEdge
+		add		r31, r0
+		shrq		#15, r29	; if reverse bit set
+		loadp	(r0), r3
+		shlq		#4, r29	; if reverse bit set
+		addqt	#12, r0
+		ror		r29, r3		; swap a and b
+		;nbkwrds:
+		or		r3, r3			; test if on screen edge
+		jump		EQ, (r17)
+		; seperate
+		move		r3, r4
+
+		; get the rest of the edge
+		load		(r0), r16
+
+		; compute addresses (don't allways need both, but it interleaves so well...)
+		shrq		#16, r3
+		shlq		#16, r4
+		shlq		#5, r3
+		shrq		#11, r4 ; now shifted left 5
+		add		r30, r3
+		add		r30, r4
+
+		cmp		r15, r3		; is this a new point?
+		addqt	#12, r4	; advance to xs,ys record - collect 200 dollars
+		jump		EQ, (r12)
+		moveq	#0, r5 ; (not really xs!!!)
+			; check for corners
+			load		(r3), r23
+			addqt	#12, r3	; advance to xs,ys record - collect 200 dollars
+			move		r24, r28
+			and		r23, r28	; check for edge differences
+			moveq	#31, r29	; mask for wrap
+			jump		NE, (r22)
+			normi	r23, r23
+				normi	r24, r24
+				shlq		#3, r23
+				shlq		#3, r24
+				and		r29, r23		; wrap to 32 bits
+				; test for new corner being hiPoint
+				and		r29, r24		; test for zero (edge 3 - right side) - wrap to 32 bits
+				move		r23, r28
+				jr		EQ, NewHi
+				move		r18, r29
+					shrq		#2, r28
+					or		r24, r28
+					shrq		#1, r28
+					cmpq		#$e, r28
+					jr		NE, NoTopCorn
+					addqt	#16, r29 ; back up to y
+						NewHi:
+						subqt	#4, r29 ; move up to y
+						moveq	#TOP_O_WINDOW, r20
+						move		r29, r21
+	
+				NoTopCorn:
+
+				moveq	#31, r29	; mask for wrap of corner list
+
+
+				addCorner:
+					or		r25, r24	; add base address
+					store	r5, (r18)		; slp=0
+					subqt	#8, r18		; back up to x
+					load		(r24), r28	; get x
+					addqt	#4, r24
+					store	r28, (r18)	; xs
+					load		(r24), r28
+					addqt	#4, r24
+					addqt	#4, r18
+					and		r29, r24		; wrap to 32 bytes
+					store	r28, (r18)	; ys
+					cmp		r24, r23
+					jr		NE, addCorner
+					addqt	#20, r18		; advance to n+1 slope
+			doneCorn:
+			; add the real point
+			loadp	(r3), r6		; read point
+			store	r5, (r18) ; sloope
+			subqt	#4, r18 ; back up to y
+			; check for hi y
+			cmp		r6, r20
+			jr		MI, tooLow
+			store	r6, (r18) ; y
+;				move		a, hiPoint
+				move		r6, r20
+				move		r18, r21
+;				bset		#31, hiIndex
+			tooLow:
+			load		(r9), r5
+			subqt	#4, r18 ; back up to x
+			store	r5, (r18) ; x
+			addqt	#24, r18 ; advance to n+1 slope
+
+enterTrav:
+		loadp	(r4), r6		; read point
+		subqt	#12, r4	; back up to sector record
+;		load		(b), secOut	; cant do it here!!!!
+		store	r16, (r18) ; sloope
+		subqt	#4, r18 ; back up to y
+		; check for hi y
+		cmp		r6, r20
+		jr		MI, tooLow2
+		store	r6, (r18) ; y
+			move		r4, r19
+			move		r6, r20
+			move		r18, r21
+		tooLow2:
+		load		(r9), r5
+		load		(r4), r24
+		subqt	#4, r18 ; back up to x
+		store	r5, (r18) ; x
+		addqt	#24, r18 ; advance to n+1 slope
+
+nextEdge:
+		loadw	(r11), r0
+		subq		#1, r8
+		move		r4, r15		; store old b
+		jump		NE, (r27)
+		addqt	#2, r11	; point to next edge record
+;--- optional install aFirst
+	; check for NULL aFirst
+	or		r7, r7
+	movei	#didIt, r28
+	jump		EQ, (r28)
+	; check for different aFirst
+	cmp		r7, r4
+;	addqt	#12, aFirst	; advance to xs,ys record - collect 200 dollars
+	movei	#doneCornL, r22
+	jump		EQ, (r28) ;didIt
+	moveq	#0, r5 ; (not really xs!!!)
+		; check for corners
+		load		(r7), r23
+		addqt	#12, r7	; advance to xs,ys record - collect 200 dollars
+		move		r24, r28
+		and		r23, r28	; check for edge differences
+		moveq	#31, r29	; mask for wrap of corner list
+		jump		NE, (r22)
+		normi	r23, r23
+			normi	r24, r24
+			shlq		#3, r23
+			shlq		#3, r24
+			and		r29, r23		; wrap to 32 bits
+			; test for new corner being hiPoint
+			and		r29, r24		; test for zero (edge 3 - right side) - wrap to 32 bits
+			move		r23, r28
+			jr		EQ, lNewHi
+			move		r18, r29
+				shrq		#2, r28
+				or		r24, r28
+				shrq		#1, r28
+				cmpq		#$e, r28
+				jr		NE, lNoTopCorn
+				addqt	#16, r29 ; move up to next
+					lNewHi:
+					subqt	#4, r29 ; back up to y
+					moveq	#TOP_O_WINDOW, r20
+					move		r29, r21
+
+			lNoTopCorn:
+
+			moveq	#31, r29	; mask for wrap of corner list
+			addCornerL:
+				or		r25, r24	; add base address
+				store	r5, (r18)		; slp=0
+				subqt	#8, r18		; back up to x
+				load		(r24), r28	; get x
+				addqt	#4, r24
+				store	r28, (r18)	; xs
+				load		(r24), r28
+				addqt	#4, r24
+				addqt	#4, r18
+				and		r29, r24		; wrap to 32 bits
+				store	r28, (r18)	; ys
+				cmp		r24, r23
+				jr		NE, addCornerL
+				addqt	#20, r18		; advance to n+1 slope
+		doneCornL:
+		loadp	(r7), r6		; read point
+		store	r5, (r18) ; sloope
+		subqt	#4, r18 ; back up to y
+		; check for hi y
+		cmp		r6, r20
+		jr		MI, tooLow3
+		store	r6, (r18) ; y
+			move		r3, r19
+			move		r6, r20
+			move		r18, r21
+;			bset		#31, hiIndex
+		tooLow3:
+		load		(r9), r5
+		subqt	#4, r18 ; back up to x
+		store	r5, (r18) ; x
+		addqt	#24, r18 ; advance to n+1 slope
+didIt:
+	nop
+		; check for texture mapped poly
+		btst		#bTEXTURE, r1			; flag for texture mapping structure
+		movei	#texTop, r28
+		jump		NE, (r28)
+;-------------------------------------------------------------------------------------
+; we now have the polygon struct filled
+		; get clr
+; legacy REGEQU theColor => r0 ; surf.gas:419
+
+		; check for color type
+		btst	#bFLASH,r1	; NULL for fixed object
+		jr		EQ, _CDLOCAL_10_429
+		nop
+			shlq		#1, r0	; word address
+			add		r14, r0
+			; load color
+			loadw	(r0), r0
+			nop
+_CDLOCAL_10_429:
+		; replicate color to long word
+		move		r0, r13
+		shlq		#16, r0
+		or		r0, r13
+	; get hiSectors
+	; switch hiSectors|type
+;--
+; legacy REGEQU rPtr => r12 ; surf.gas:438
+; legacy REGEQU overPtr => r7 ; surf.gas:439
+; legacy REGEQU iters => r8 ; surf.gas:440
+; legacy REGEQU lPtr => r21 ; surf.gas:441
+; legacy REGEQU lSlp => r16 ; surf.gas:442
+; legacy REGEQU startLine => r20 ; surf.gas:443
+; legacy REGEQU dontLeft => r15 ; surf.gas:444
+; legacy REGEQU polyStart => r3 ; surf.gas:445
+; legacy REGEQU numLines => r4 ; surf.gas:446
+; legacy REGEQU lX => r5 ; surf.gas:447
+;ys		REGEQU	ys
+; legacy REGEQU rX => r22 ; surf.gas:449
+; legacy REGEQU rSlp => r23 ; surf.gas:450
+; legacy REGEQU lCount => r24 ; surf.gas:451
+; legacy REGEQU rCount => r25 ; surf.gas:452
+
+;	REGEQU	
+
+	; set jump addrs
+;	movei	#donePoly, overPtr
+	movei	#polyLp, r7
+	movei	#nextPoint, r27
+fetchTrap:
+	; set line - just use hiY
+	; set lPtr, rPtr
+	subqt	#4, r21	; back up to beginning
+	move		r21, r12
+	; set lCount, rCount, numLines, iters
+	moveq	#0, r24
+	moveq	#0, r25
+	moveq	#0, r4
+;doThePoly:
+	; set polygon, polyStart
+	movei	#(POLYGON+8), r3	; point at first slope
+	move		r18, r8
+	sub		r3, r8
+	subqt	#20, r18			; point at last ys in GRAM polygon
+	addqt	#16, r8
+.if 0
+										movei	#$1700c, r28
+										store	r8, (r28)
+										addqt	#16, r28
+										store	r21, (r28)
+										nop
+.endif
+	; set jump addrs
+;	movei	#donePoly, overPtr
+;	movei	#nextPoint, innerLoop
+	movei	#rightOK, r17
+	movei	#chkRight, r15
+nextPoint:
+	sub		r4, r24
+	jump		NE, (r15)
+	nop
+		; check for completion
+		subq		#16, r8	; size of point data in GRAM polygon
+		jump		EQ, (r7)
+		nop
+		; left
+		load		(r21), r5
+		addqt	#4, r21
+		load		(r21), r6
+		; inc lPtr
+		cmp		r21, r18	; polygon is set to address of final ys
+		addqt	#20, r21		; advance to n+1 slope
+		jr		NE, noWrap
+		nop
+			move	r3, r21
+		noWrap:
+		load		(r21), r16
+		subqt	#4, r21
+		; calc starting x		mult lSlp, (1 - y Frac)
+		move		r6, r24	; use lCount as a temp for (1 - y frac)
+		move		r16, r28	; normalize lSlp into temp(mantissa) and temp2(exponent)
+		abs		r28
+		neg		r24
+		normi	r28, r29
+		shrq		#1, r24
+		addqt	#9, r29
+		bclr		#15, r24
+		move		r16, r28
+		sha		r29, r28
+		neg		r29
+		imult	r28, r24	; multiply the mantissas
+		addqt	#15, r29	; add the exponents
+		sha		r29, r24	; convert float back to int
+		add		r24, r5
+		; calc lCount
+		load		(r21), r24	; the y of Christmas yet-to-be
+
+		subqt	#4, r21		; to xs
+		shrq		#16, r6
+		shrq		#16, r24
+		sub		r6, r24
+chkRight:
+	sub		r4, r25
+	jump		NE, (r17)
+	nop
+		; check for completion
+		subq		#16, r8	; size of point data in GRAM polygon
+		jump		EQ, (r7)
+		nop
+		; right =
+		load		(r12), r22
+		addqt	#4, r12
+		load		(r12), r6
+		addqt	#4, r12
+		load		(r12), r23
+		; dec rPtr
+		cmp		r12, r3	; polygon set to address of first ys
+		subqt	#20, r12			; back to n-1 ys
+		jr		NE, noWrap2
+		move		r6, r25	; use rCount as a temp
+			move	r18, r12
+			;addqt	#4, rPtr
+		noWrap2:
+		; calc starting x
+		move		r23, r28
+		abs		r28
+		neg		r25
+		normi	r28, r29
+		shrq		#1, r25
+		addqt	#9, r29
+		bclr		#15, r25
+		move		r23, r28
+		sha		r29, r28
+		neg		r29
+		imult	r28, r25
+		addqt	#15, r29
+		sha		r29, r25
+		add		r25, r22
+		; calc rCount
+		load		(r12), r25	; the y of Christmas yet-to-be
+		subqt	#4, r12		; back to the start
+		shrq		#16, r6
+		shrq		#16, r25
+		sub		r6, r25
+rightOK:
+		; check lCount, rCount (old cutItOut 1 and 2)
+		btst		#15, r25
+		movei	#polyLp, r28
+		jump		NE, (r28)
+		btst		#15, r24
+		jump		NE, (r28)
+		; watch the next instruction
+
+	cmp		r24, r25
+	jr		CS, floor
+	move		r25, r4
+		move		r24, r4
+floor: ; aka got the lowest value
+	or		r4, r4 ; if anything to do..
+	jump		EQ, (r27)
+	nop
+									btst		#31, r5
+									;jr		EQ, weCheckedIte
+									jump		NE, (r27)
+									;nop
+									;	cutItOut 14
+									;weCheckedIte:
+									btst		#31, r22
+									jump		NE, (r27)
+									;jr		EQ, weCheckedItf
+									nop
+									;	cutItOut 15
+									;weCheckedItf:
+									;	movei	#230, temp
+									;cmp		temp, numLines
+									;jr		MI, weCheckedIt6
+									;nop
+									;	;movei	#$17008, temp
+									;	;store	lCount, (temp)
+									;	;addqt	#4, temp
+									;	;nopCity
+									;	;store	rCount, (temp)
+									;	;nop ;City
+									;	cutItOut 7
+									;weCheckedIt6:
+; do trap	
+doTrap:		
+; things to be set for a trapazoid
+;	line left right iLeft iChange numLines
+;	dLeft dRight dILeft dIChange
+
+		; set alternate bank	: Why? - because someday, I want to write the blitter loop as an interrupt routine and have the rest of the renderrrer code use register bank 1. The bank switch would be for free.(sortof)
+		movei	#G_FLAGS, r28
+		load		(r28), r29
+		bset		#14, r29	; REG_PAGE
+		store	r29, (r28)
+		nop
+		nop
+
+;- Inner loop register defines ----------------------------------------------
+
+; blitter data
+; legacy REGEQU count => R0 ; surf.gas:633
+; legacy REGEQU intInc => R1 ; surf.gas:634
+; legacy REGEQU start => R2 ; surf.gas:635
+; legacy REGEQU strtIf => R3 ; surf.gas:636
+; legacy REGEQU strtI => R4 ; surf.gas:637
+; legacy REGEQU doIt => R5 ; surf.gas:638
+; blitter addresses (for the previous 6 registers respectivly)
+; legacy REGEQU aCount => R6 ; surf.gas:640
+; legacy REGEQU aIntInc => R7 ; surf.gas:641
+; legacy REGEQU aStart => R8 ; surf.gas:642
+; legacy REGEQU aStrtIf => R9 ; surf.gas:643
+; legacy REGEQU aStrtI => R10 ; surf.gas:644
+; legacy REGEQU command => R11 ; surf.gas:645
+
+; totals
+; legacy REGEQU left => R12 ; surf.gas:648
+; legacy REGEQU right => R13 ; surf.gas:649
+; legacy REGEQU iLeft => R14 ; surf.gas:650
+; legacy REGEQU iChange => R15 ; surf.gas:651
+; increments
+; legacy REGEQU dLeft => R16 ; surf.gas:653
+; legacy REGEQU dRight => R17 ; surf.gas:654
+; legacy REGEQU dILeft => R18 ; surf.gas:655
+; legacy REGEQU dIChange => R19 ; surf.gas:656
+
+; legacy REGEQU line => R20 ; surf.gas:658
+; legacy REGEQU trapLines => R21 ; surf.gas:659
+; legacy REGEQU aLine => R22 ; surf.gas:660
+
+; legacy REGEQU lowMask => R23 ; surf.gas:662
+; legacy REGEQU lpStart => R24 ; surf.gas:663
+; legacy REGEQU incMask => R25 ; surf.gas:664
+;r		REGEQU	R26
+;r		REGEQU	R27
+;temp		REGEQU	R28
+;temp2	REGEQU	R29
+;polyflags	REGEQU	R30
+
+;----------------------------------------------------------------------------
+; blitter has been setup by 68K (A1BASE, A1FLAGS, A1CLIP)
+; preset some addresses
+		movei	#B_COUNT,	r6
+
+		movei	#A2_PIXEL,r8
+		movei	#B_PATD,	r10
+		movei	#B_CMD,	r11
+; and some constants
+
+.if 0	; ZBUFFERING
+		movei	#B_Z3,	aStrtZ
+		movei	#DSTEN|DSTENZ|DSTWRZ|ZMODEGT|ZMODEEQ|PATDSEL|DSTA2, r5
+.else
+		movei	#B_IINC,	r7
+		movei	#B_SRCD,	r9
+;		movei	#PATDSEL|DSTA2,doIt
+.endif
+		movei	#$10000,		r22
+		movei	#$ffff,		r23
+		movei	#$ffffff,		r25
+
+;----------------------------------------------------------------------------
+		; give color to blitter
+		waitForBlitter
+		movefa	r1,r29
+		movefa	r13, r28
+		btst	#15,r29			; transparent polygon??
+		jr	EQ,solidfill
+		nop
+;***WARNING:
+;after we've reloaded doIt, the rest of the CP will come out glass!
+			move	r9, r10
+			movei	#DSTEN|ADDDSEL|DSTA2, r5
+solidfill:
+		store	r28,	(r10)
+		addqt	#4, r10
+		store	r28,	(r10)
+		subqt	#4, r10
+
+.if 0 ; ZBUFFERING
+		; set up Z values
+		movefa	largeZ,StrtZ
+		store	StrtZ,(aStrtZ)
+		addqt	#4,aStrtZ
+		store	StrtZ,(aStrtZ)
+		addqt	#4,aStrtZ
+		store	StrtZ,(aStrtZ)
+		addqt	#4,aStrtZ
+		store	StrtZ,(aStrtZ)
+		subqt	#12,aStrtZ
+.endif
+
+; preset initial values
+;	line, trapLines, left, right, iLeft, iChange
+;	dLeft, dRight, dILeft, dIChange
+
+		movefa	r20, r20
+;		add		lowMask, line
+		shrq		#16, r20	; strip x portion clean
+		shlq		#16, r20
+;		and		lowMask, startLine
+
+		movefa	r5, r12
+		movefa	r22, r13
+		movefa	r4, r21
+
+		movefa	r16, r16
+		movefa	r23, r17
+
+;trap:	;It's a trap!!! Run for it!!!
+;														btst		#31, left
+;														jr		EQ, weCheckedIt2
+;														nop
+;															cutItOut 3
+;														weCheckedIt2:
+;
+;														;cmp		left, right
+;														;jr		PL, weCheckedIt3
+;														;nop
+;														;	cutItOut 4
+;														;weCheckedIt3:
+;														btst		#15, trapLines
+;														jr		EQ, weCheckedIt4
+;														nop
+;															cutItOut 5
+;														weCheckedIt4:
+;														movei	#230, temp
+;														cmp		temp, trapLines
+;														jr		MI, weCheckedIt5
+;														nop
+;															cutItOut 6
+;														weCheckedIt5:
+		or		r21, r21	; make shoor trapLines != 0
+		movei	#endTrap, r28
+		jump		EQ, (r28)
+		nop
+
+;	setBorder $a00000
+
+;- the inner loop -----------------------------------------------------------
+
+		movei	#doLine, r24
+
+doLine:
+; pack blitter	data registers (optimized version)
+		move		r13, r28
+		move		r12, r2
+		shrq		#16, r2
+		shrq		#16, r28
+		move		r2, r0
+		sub		r28, r0
+
+		jr	PL, skpTheLn			; check for zero or negative line len
+		neg	r0
+
+		or		r20, r2
+		bset		#16, r0		; give it some thickness
+
+; wait for blitter completion (mostly stolen code)
+waitLp:
+		load		(r11), r28
+		btst		#0, r28
+		jr		EQ, waitLp
+		nop
+
+; feed the blitter
+		store	r0,	(r6)
+		store	r2,	(r8)
+		store	r5,	(r11)	; it's away
+skpTheLn:
+		; next line
+		add		r16,	r12		
+		add		r17,	r13	
+
+		subq		#1, r21
+		jump		NE, (r24) ;doLine
+		add		r22, r20
+;----------------------------------------------------------------------------
+
+endTrap:
+		; so we can start where we left off
+		moveta	r20, r20
+		moveta	r12, r5
+		moveta	r13, r22
+
+		nop
+;----------------------------------------------------------------------------
+		; set primary bank
+		movei	#G_FLAGS, r28
+		load		(r28), r29
+		bclr		#14, r29	; REG_PAGE
+		store	r29, (r28)
+		nop
+		jump		(r27)
+		nop
+
+;donePoly:
+;		movei	#polyLp, temp
+;		jump		(temp)
+;		nop
+cpDone:
+		RTS_TREE
+
+
+;check for full screen poly subroutine --------------------------------------
+fullScr:
+		; robust check for on screenness
+; BEGIN full.gas
+; full.gas - full screen robust check
+; theEdge contains the color
+; edgeCrosses - contains ptr to next poly
+; legacy REGEQU topCross => r20 ; full.gas:4
+; legacy REGEQU topCross1 => r16 ; full.gas:5
+; legacy REGEQU edgeList => r13 ; full.gas:6
+; legacy REGEQU yaza => r3 ; full.gas:7
+; legacy REGEQU yazb => r4 ; full.gas:8
+; legacy REGEQU xa => r5 ; full.gas:9
+; legacy REGEQU ya => r6 ; full.gas:10
+; legacy REGEQU za => r18 ; full.gas:11
+; legacy REGEQU xb => r19 ; full.gas:12
+; legacy REGEQU yb => r21 ; full.gas:13
+; legacy REGEQU zb => r23 ; full.gas:14
+; legacy REGEQU x1 => r24 ; full.gas:15
+; legacy REGEQU z1 => r1 ; full.gas:16
+
+		;change to 16.16 div
+		movei	#G_DIVCTRL, r28
+		moveq	#1, r29
+		store	r29, (r28)
+
+		; load edge list address
+		movei	#GEO_BND_PTR,r29
+		load		(r29),r29
+		movei	#EDGE_LIST, r13
+		add		r29,r13
+		load		(r13), r13
+
+		subqt	#12, r30	; align with start of record
+
+	; find top crossing edges (two!)
+		subqt	#2, r11	; back up to color
+		moveq	#0, r16	; pointer to first top crossing edge
+		move		PC, r27
+findTops:
+		subqt	#2, r11	; point to a previous edge record
+		loadw	(r11), r20					; get first edge
+		bclr		#15, r20
+		shlq		#4, r20
+		add		r31, r20
+
+		load		(r20), r28 					; get first a, b
+
+		btst		#TOP_EDGE, r28
+		jr		EQ, findTops
+		sub		r31, r20					; back to edge num
+
+	; do top edge crosses
+;clipLp:
+		shrq		#2, r20	; smaller structure size
+		add		r13, r20
+		load		(r20), r4
+		move		r4, r3
+		shrq		#16, r3
+		shlq		#16, r4
+		shlq		#5, r3		; make into point address - size to phrase
+		shrq		#11, r4
+		add		r30, r3
+		add		r30, r4
+
+		; get the rest of point a while we're here(in this page) - xa, ya, xaz, yaz
+		loadp	(r3), r5		; get x-y
+		addqt	#8, r3		; move to z record
+		cmp	r5, r28	;--- sync for hidata
+		load		(r9), r6
+		load		(r3), r18
+		addqt	#8, r3
+		load		(r3), r3
+		; now switch to point b page
+		loadp	(r4), r19		; get x-y
+		addqt	#8, r4		; move to z record
+		cmp r19, r28	;--- sync for hidata
+		load		(r9), r21
+		load		(r4), r23
+		addqt	#8, r4
+		load		(r4), r4
+
+		; cut this one? top ------------------------------
+			; compute the t
+			add	r3, r6
+			add	r4, r21
+			sub	r6, r21
+			abs	r6
+			abs	r21
+			shlq	#1, r21
+			div	r21, r6
+
+			; insert result
+		; compute new point coords
+			; reuse some newly worthless registers
+; legacy REGEQU edx => r3 ; full.gas:92
+; legacy REGEQU edz => r4 ; full.gas:93
+			; normalize dx, dz
+			sub		r5, r19
+			sub		r18, r23
+			move		r19, r28
+			abs		r28
+			move		r23, r29
+			abs		r29
+			normi	r28, r3
+			normi	r29, r4
+			addqt	#9, r3
+			addqt	#9, r4
+			sha		r3, r19
+			sha		r4, r23
+			neg		r3
+			neg		r4
+			addqt	#15, r3
+			addqt	#15, r4
+
+			; compute new x,z
+			imult	r6, r19
+			imult	r6, r23
+			sha		r3, r19
+			sha		r4, r23
+			add		r19, r5
+			add		r23, r18
+
+		or		r16, r16
+		jr		NE, gotATop
+		move		r20, r16	; got one
+			move		r5, r24
+			jump		(r27) ;findTops
+			move		r18, r1
+		gotATop:
+		addqt	#12, r30	; put it back
+	; zero intersect
+		; test for yz plane cross
+		move	r5, r28
+		xor	r24, r28
+		jump	PL, (r17)
+		move	r2, r11	; put it back
+		; do intersect
+		sub	r24, r5
+		abs	r24
+		abs	r5
+		shlq	#1, r5
+		div	r5, r24
+	; compute z
+		; normalize dx, dz
+		sub		r1, r18
+		move		r18, r28
+		abs		r28
+		normi	r28, r4
+		addqt	#9, r4
+		sha		r4, r18
+		neg		r4
+		addqt	#15, r4
+
+		; compute new z (in z1)
+		imult	r24, r18
+
+		sha		r4, r18
+		add		r18, r1
+
+	jump		MI, (r17)
+	; next instruct in surf does no damage
+
+; cleanup -----------------------------------------------
+; GASM REGUNDEF topCross ; full.gas:161
+; GASM REGUNDEF topCross1 ; full.gas:162
+; GASM REGUNDEF edgeList ; full.gas:163
+; GASM REGUNDEF yaza ; full.gas:164
+; GASM REGUNDEF yazb ; full.gas:165
+; GASM REGUNDEF xa ; full.gas:166
+; GASM REGUNDEF ya ; full.gas:167
+; GASM REGUNDEF za ; full.gas:168
+; GASM REGUNDEF xb ; full.gas:169
+; GASM REGUNDEF yb ; full.gas:170
+; GASM REGUNDEF zb ; full.gas:171
+; GASM REGUNDEF x1 ; full.gas:172
+; GASM REGUNDEF z1 ; full.gas:173
+; GASM REGUNDEF edx ; full.gas:174
+; GASM REGUNDEF edz ; full.gas:175
+; END full.gas
+		; draw the full screen
+; legacy REGEQU theColor => r0 ; surf.gas:841
+.if 0
+		; check for color type
+		btst	#bFLASH,r1
+		jr		EQ, _CDLOCAL_10_851
+		nop
+			; load color
+			shlq		#1, r0	; word address
+			add	r14, r0
+			loadw	(r0), r0
+			nop
+		_CDLOCAL_10_851:
+.endif
+		; replicate color to long word
+		move		r0, r13
+		shlq		#16, r0
+		or		r0, r13
+
+; GASM REGUNDEF theColor ; surf.gas:859
+; legacy REGEQU anAddr => r0 ; surf.gas:860
+
+		movei	#B_CMD, r29
+
+		waitLpf:					; wait for blitter
+			load		(r29), r28
+			btst		#0, r28
+			jr		EQ, waitLpf
+			move		r29, r0
+		addqt	#30, r0
+		addqt	#((B_PATD-B_CMD)-30), r0
+		store	r13,	(r0)
+		addqt	#4, r0
+		store	r13,	(r0)
+
+		; feed the blitter
+.if 0
+		movei	#$b80140, r28
+.else
+		movei	#DRAWRECT,r28
+		load	(r28),r28			; get screen size
+.endif
+		addqt	#(B_COUNT-B_CMD), r29
+		store	r28,	(r29)
+		subqt	#(B_COUNT-A2_PIXEL), r29
+		moveq	#0, r28
+		store	r28,	(r29)
+		addqt	#(A2_STEP-A2_PIXEL), r29
+		movei	#$1fec0, r28
+		store	r28,	(r29)
+
+		movefa	r5, r28 ; doIt
+;	movei	#PATDSEL|DSTA2, temp
+		addqt	#(B_CMD-A2_STEP), r29
+		jump		(r17)
+		store	r28,	(r29)	; it's away
+
+;		waitLpg:					; wait for blitter
+;			load		(temp2), temp
+;			btst		#0, temp
+;			jr		EQ, waitLpg
+;			nop
+;		jump		(dontDoItMan)
+;	nop
+; GASM REGUNDEF anAddr ; surf.gas:904
+;----------------------------------------------------------------------------
+; BEGIN tex.gas
+; texture map module - tex.gas
+cornert	equ	$1ffd00
+CORNER_BIT	equ	4
+;- Texture map inner loop register defines ----------------------------------
+	; data for blitter registers
+; legacy REGEQU a1pix => R0 ; tex.gas:6
+; legacy REGEQU a1pixf => R1 ; tex.gas:7
+; legacy REGEQU a2pix => R2 ; tex.gas:8
+; legacy REGEQU count => R3 ; tex.gas:9
+; legacy REGEQU doit => R4 ; tex.gas:10
+
+; legacy REGEQU a1step => R5 ; tex.gas:12
+; legacy REGEQU a1stepf => R6 ; tex.gas:13
+
+	; blitter addresses
+; legacy REGEQU aa1pix => R7 ; tex.gas:16
+; legacy REGEQU aa1pixf => R8 ; tex.gas:17
+; legacy REGEQU aa2pix => R9 ; tex.gas:18
+; legacy REGEQU acount => R10 ; tex.gas:19
+; legacy REGEQU command => R11 ; tex.gas:20
+
+	; totals
+; legacy REGEQU ltX => R12 ; tex.gas:23
+; legacy REGEQU ltY => R13 ; tex.gas:24
+; legacy REGEQU rtX => R14 ; tex.gas:25
+; legacy REGEQU rtY => R15 ; tex.gas:26
+; legacy REGEQU leftX => R16 ; tex.gas:27
+; legacy REGEQU rightX => R17 ; tex.gas:28
+
+	; increments
+; legacy REGEQU iltX => R18 ; tex.gas:31
+; legacy REGEQU iltY => R19 ; tex.gas:32
+; legacy REGEQU irtX => R20 ; tex.gas:33
+; legacy REGEQU irtY => R21 ; tex.gas:34
+; legacy REGEQU ileftX => R22 ; tex.gas:35
+; legacy REGEQU irightX => R23 ; tex.gas:36
+
+; legacy REGEQU texLines => R24 ; tex.gas:38
+
+; legacy REGEQU itemp => R25 ; tex.gas:40
+; legacy REGEQU itemp2 => R26 ; tex.gas:41
+; legacy REGEQU itemp3 => R27 ; tex.gas:42
+
+	; interrupt routine uses r28-r31
+	; interrupt vars
+; legacy REGEQU rtiAddr => R28 ; tex.gas:46
+; legacy REGEQU aFlags => R29 ; tex.gas:47
+; legacy REGEQU flags => R30 ; tex.gas:48
+; legacy REGEQU istack => R31 ; tex.gas:49
+
+	; primary register set
+; legacy REGEQU diffs => r0 ; tex.gas:52
+
+; legacy REGEQU ultx => r30 ; tex.gas:54
+; legacy REGEQU ulty => r31 ; tex.gas:55
+; legacy REGEQU urtx => r9 ; tex.gas:56
+; legacy REGEQU urty => r10 ; tex.gas:57
+; legacy REGEQU sltx => r11 ; tex.gas:58
+; legacy REGEQU slty => r13 ; tex.gas:59
+; legacy REGEQU srtx => r14 ; tex.gas:60
+; legacy REGEQU srty => r19 ; tex.gas:61
+; legacy REGEQU lltx => r20 ; tex.gas:62
+; legacy REGEQU llty => r26 ; tex.gas:63
+; legacy REGEQU lrtx => r1 ; tex.gas:64
+; legacy REGEQU lrty => r2 ; tex.gas:65
+
+; ----------------------------------------------------------------
+texTop:
+	; theEdge has the polygon "color" (actually texture map index)
+	movei	#GEO_BND_PTR,r29
+	load	(r29),r29
+	movei	#TEXTURES,r28
+	add	r28,r29
+	load	(r29),r13
+	add	r0,r13
+
+	; store some registers whilst doing the texture
+	movei	#(CORNERS-8), r28	; store in the last light source space
+	store	r10, (r28)
+	addqt	#4, r28
+	store	r11, (r28)
+	subqt	#8, r28
+	store	r18, (r28)
+	; retraverse edges for map-side info
+	move		r11, r8
+	sub		r2, r8
+	move		r2, r11
+	shrq		#1, r8
+	subqt	#2, r11
+	loadw	(r11), r0					; get first edge
+	addqt	#2, r11
+	; reset numSides
+;cutItOut $14
+;	move		polyflags, numSides
+;	shlq		#28, numSides	; strip flags
+	movei	#(POLYGON+12), r18
+;	shrq		#28, numSides
+	moveq	#5, r6		; starting side#
+	sub		r8, r6
+	move		r6, r2	; keep for aFirst side#
+
+	movei	#renextEdge, r17
+	movei	#reenterTrav, r12
+	movei	#redoneCorn, r22
+	movei	#retraverse, r27
+
+	bset		#31, r15	; it is our first time!
+	;--------------------------------------------------------------
+;	movei	#$17028, temp
+;	store	numSides, (temp)
+;	nop
+retraverse:	;-------------------------------------------------------------------------
+		move		r0, r29
+		bclr		#15, r0
+		shlq		#4, r0	; x16 (sizeof tEDGE)
+		add		r31, r0
+		shrq		#15, r29	; if reverse bit set
+;	move	theEdge, clr
+		loadp	(r0), r3
+		shlq		#4, r29		; if reverse bit set
+		addqt	#8, r0	; to t values
+		ror		r29, r3		; swap a and b
+		or		r3, r3			; test if on screen edge
+		jump		EQ, (r17)
+		; seperate
+		move		r3, r4
+
+		; get the rest of the edge
+		load		(r0), r16	; ta, tb
+;	move	slp, hiPoint
+
+		; compute addresses (don't allways need both, but it interleaves so well...)
+		shrq		#16, r3
+		shlq		#16, r4
+		shlq		#5, r3
+		shrq		#11, r4 ; now shifted left 5
+		add		r30, r3
+		add		r30, r4
+
+		btst		#31, r15	; is it our first time?
+		jr		EQ, _CDLOCAL_23_145
+		cmp		r15, r3		; is this a new point?
+			move		r16, r19
+			jump		(r12)
+			move		r3, r7
+		_CDLOCAL_23_145:
+
+		jump		EQ, (r12)
+doA:		moveq	#0, r5 ; (not really xs!!!)
+			; check for corners
+			load		(r3), r23
+			move		r24, r28
+			and		r23, r28	; check for edge differences
+			moveq	#3, r29		; mask for wrap
+			jump		NE, (r22)
+			normi	r23, r23
+				normi	r24, r24
+				and		r29, r23		; wrap to 32 bits
+				and		r29, r24		; test for zero (edge 3 - right side) - wrap to 32 bits
+
+				readdCorner:
+					bset		#CORNER_BIT, r24		; mark as screen corner
+					store	r24, (r18)	; store source coord marker :$100|secOut
+					addqt	#1, r24
+					and		r29, r24		; wrap corners
+					cmp		r24, r23
+					jr		NE, readdCorner
+					addqt	#16, r18		; advance to next tEdgenum
+			redoneCorn:
+			; add the real point
+			move		r16, r5
+			shrq		#16, r5
+			shlq		#16, r5
+			or		r6, r5		; edge#
+			store	r5, (r18)	; t-edge#
+	;store a t value for corner approx
+	btst		#0,r6
+	movei	#cornert,r28
+	jr		EQ,_CDLOCAL_10_181
+	cmpq		#3,r6
+		addqt	#4,r28
+	_CDLOCAL_10_181:
+	jr		MI,_CDLOCAL_11_185
+			addqt	#16, r18	; advance to n+1 slope
+		neg	r5
+	_CDLOCAL_11_185:
+	store	r5,(r28)
+
+		; check for no more sides
+		or		r8, r8
+		movei	#reDone,r28
+		jump		EQ, (r28)
+
+reenterTrav:
+		load		(r4), r24
+
+		shlq		#16, r16		; ta
+		or		r6, r16		; edge#
+	cmpq	#0,r24
+		store	r16, (r18) ; tEdgenum
+	jr	EQ,_CDLOCAL_12_215
+		addqt	#16, r18	; advance to next edge
+	;store a t value for corner approx
+	btst		#0,r6
+	movei	#cornert,r28
+	jr		EQ,_CDLOCAL_10_208
+	nop
+		addqt	#4,r28
+	_CDLOCAL_10_208:
+	cmpq		#3,r6
+	jr		MI,_CDLOCAL_11_213
+	nop
+		neg	r16
+	_CDLOCAL_11_213:
+	store	r16,(r28)
+_CDLOCAL_12_215:
+
+renextEdge:
+		loadw	(r11), r0
+		addqt	#1, r6		; side#
+		subq		#1, r8
+		move		r4, r15		; store old b
+		jump		NE, (r27)
+		addqt	#2, r11	; point to next edge record
+
+	; optional install aFirst
+	movei	#doA, r27
+	cmp		r15, r7		; is this a new point?
+reDone:
+	move		r2, r6	; back to first side#
+;	moveq	#1, ys			; back to first
+	move		r19, r16
+	jump		NE, (r27)
+	move		r7, r3
+
+.if 0
+;------------------------------------------------------------------------------
+;DEBUG
+	movei	#(SEMAPHORE+12), r28
+	load		(r28), r28
+	or		r28, r28
+	jr		NE, lookAt
+	nop
+cutItOut $13
+lookAt:
+;DEBUG
+.endif
+		movei	#(CORNERS-12), r28
+		load		(r28), r18
+	; set up divide for texture inner loop
+	movei	#G_DIVCTRL, r28
+	moveq	#0, r29
+	store	r29, (r28)
+
+; wait for the blitter to become free
+	movei	#B_CMD,r29
+_CDLOCAL_23_256:
+		load		(r29), r28
+		btst		#0, r28
+		jr		EQ, _CDLOCAL_23_256
+		nop
+.if 0
+	; load some blitter regs for texture
+	movei	#screen_addr,r28
+	load		(r28),r28
+	movei	#A2_BASE,r29
+	store	r28,(r29)
+	addqt	#4,r29		; move to A2_FLAGS
+.else
+;	movei	#A2_FLAGS,temp2
+	subqt	#(B_CMD-A2_FLAGS),r29
+.endif
+	movei	#PITCH1|PIXEL16|WID320|XADDPIX,r28
+	store	r28,(r29)
+
+	load	(r13),r28		; get texture base address
+	movei	#A1_BASE,r29
+	store	r28,(r29)
+	addqt	#4,r13			; advance to texture flags
+.if 0
+	movei	#PITCH1|PIXEL16|WID128|XADDINC,r28
+.else
+	load	(r13),r28
+.endif
+	addqt	#4,r29		; move to A1_FLAGS
+	store	r28,(r29)
+	addqt	#4,r13
+	load	(r13),r13		; get texture size
+	movei	#TXTSIZE,r29
+	store	r13,(r29)		; save texture size
+
+nospec:
+	; load address registers
+	; insert jump instruct sequence into flat fetchTrap:
+	movei	#doTrap, r28
+	movei	#odoTexTrap, r29
+	load		(r29), r0
+	addqt	#4, r29
+	store	r0, (r28)
+	addqt	#4, r28
+	load		(r29), r0
+	store	r0, (r28)
+
+	; set up initial map-space coords
+	moveta	r20, r2
+		; new point - left
+		addqt	#8, r21		; to t-edge#
+		moveq	#31, r29
+		load		(r21), r28
+		subqt	#8, r21		; to xs
+		and		r28, r29	; edge#
+		shrq		#15, r28		; t value
+		subqt	#1, r28		; make zero one (messy)
+.if 0
+		movei	#128, r20		; get map dimensions
+		movei	#105, r26
+.else
+		movei	#TXTSIZE,r20
+		load	(r20), r20		; get map dimensions
+		move	r20,r26
+		shlq	#16,r26
+		shrq	#16,r20
+		shrq	#16,r26
+.endif
+		btst		#CORNER_BIT, r29		; look for corner flag
+;		movei	#findUV, ?
+;		jump		NE, (?)
+	;for corner coord approx
+	jr	EQ,	_CDLOCAL_20_339
+	nop
+		movei	#cornert,r28
+		load		(r28),r29
+		addqt	#4,r28
+		load		(r28),r28
+		shrq		#15,r29
+		shrq		#15,r28
+;		mult		temp,llty
+		jr		_CDLOCAL_42_345
+		mult		r29,r20
+	_CDLOCAL_20_339:
+		cmpq		#1, r29
+		jr		NE, _CDLOCAL_4_348
+		cmpq		#2, r29
+			; side 1
+			moveq	#0, r20
+			_CDLOCAL_42_345:
+			jr		_CDLOCAL_10_366
+			mult		r28, r26
+		_CDLOCAL_4_348:
+		jr		NE, _CDLOCAL_5_355
+		cmpq		#3, r29
+			; side 2
+			mult		r28, r20
+			jr		_CDLOCAL_10_366
+			shlq		#16, r26
+		_CDLOCAL_5_355:
+		jr		NE, _CDLOCAL_6_362
+		neg		r28
+			; side 3
+			mult		r28, r26
+			jr		_CDLOCAL_10_366
+			shlq		#16, r20
+		_CDLOCAL_6_362:
+			; side 4
+			moveq	#0, r26
+			mult		r28, r20
+		_CDLOCAL_10_366:
+;	moveq	#0, lltx
+;	moveq	#0, llty
+	move		r20, r1	; start from the same point
+	move		r26, r2
+	; set overPtr to texOver for cleanup
+	movei	#texOver, r7
+	movei	#doTexTrap, r27	; gives this module a shot at zero line traps
+	; jump to fetchTrap
+	movei	#fetchTrap, r28
+	moveq	#0, r0
+	jump		(r28)
+	nop
+
+texOver:	; replace instructs at doTrap
+	movei	#doTrap, r28
+	movei	#odoTrap, r29
+	load		(r29), r0
+	addqt	#4, r29
+	store	r0, (r28)
+	addqt	#4, r28
+	load		(r29), r0
+	store	r0, (r28)
+
+	; set up the blitter for the renderer
+.if 0
+	movei	#screen_addr,r28
+	load		(r28),r28
+	movei	#A1_BASE,r29
+	store	r28,(r29)
+	addqt	#4,r29	; move to A1_FLAGS
+.else
+	movei	#A2_FLAGS,r29
+.endif
+	movei	#PITCH1|PIXEL16|WID320|XADDPHR,r28
+	store	r28,(r29)
+
+	; replace some wiped out registers
+	movei	#(CORNERS-8), r28	; stored in the last light source space
+	load		(r28), r10
+	addqt	#4, r28
+	load		(r28), r11
+
+	movei	#G_HIDATA,r9
+	movei	#GEO_BND_PTR,r29
+	movei	#rlPolyLp, r28	; go back to flat world
+	jump		(r28)
+	load		(r29),r29
+
+; copys of code to stick in at doTrap ----------------------------
+.align 4
+odoTrap:		; original code
+		movei	#G_FLAGS, r28
+		load		(r28), r29
+odoTexTrap:
+		movei	#doTexTrap, r28
+		jump		(r28)
+
+		nop		; just to keep the ASSembler quiet
+; ----------------------------------------------------------------
+doTexTrap:
+	btst		#1, r0
+	movei	#_CDLOCAL_11_526, r28
+	jump		NE, (r28)
+	nop
+		; lower points => upper points
+		move		r20, r30
+		move		r26, r31
+		; new point - left
+		addqt	#12, r21		; to t-edge#
+		moveq	#31, r29
+		load		(r21), r28
+		subqt	#12, r21		; to xs
+		and		r28, r29	; edge#
+		shrq		#15, r28		; t value
+		subqt	#1, r28		; make zero one (messy)
+.if 0
+		movei	#128, r11		; get map dimensions
+		movei	#105, r13
+.else
+		movei	#TXTSIZE,r11
+		load	(r11),r11
+		move	r11,r13
+		shrq	#16,r11
+		shlq	#16,r13
+		shrq	#16,r13
+.endif
+		btst		#CORNER_BIT, r29		; look for corner flag
+	;for corner coord approx
+	jr	EQ,	_CDLOCAL_20_466
+	nop
+		movei	#cornert,r28
+		load		(r28),r29
+		addqt	#4,r28
+		load		(r28),r28
+		shrq		#15,r29
+		shrq		#15,r28
+;		mult		temp,slty
+		jr		_CDLOCAL_42_472
+		mult		r29,r11
+	_CDLOCAL_20_466:
+		cmpq		#1, r29
+		jr		NE, _CDLOCAL_4_475
+		cmpq		#2, r29
+			; side 1
+			moveq	#0, r11
+			_CDLOCAL_42_472:
+			jr		_CDLOCAL_10_493
+			mult		r28, r13
+		_CDLOCAL_4_475:
+		jr		NE, _CDLOCAL_5_482
+		cmpq		#3, r29
+			; side 2
+			mult		r28, r11
+			jr		_CDLOCAL_10_493
+			shlq		#16, r13
+		_CDLOCAL_5_482:
+		jr		NE, _CDLOCAL_6_489
+		neg		r28
+			; side 3
+			mult		r28, r13
+			jr		_CDLOCAL_10_493
+			shlq		#16, r11
+		_CDLOCAL_6_489:
+			; side 4
+			moveq	#0, r13
+			mult		r28, r11
+		_CDLOCAL_10_493:
+
+;		shlq		#16, sltx
+;		shlq		#16, slty
+		move		r11, r20
+		move		r13, r26
+		sub		r30, r11
+		sub		r31, r13
+		; compute slope
+		move		r11, r28
+		abs		r11
+		div		r24, r11
+		move		r13, r29
+		abs		r13
+		div		r24, r13
+		; replace signs
+		btst		#31, r28
+		jr		EQ, _CDLOCAL_8_513
+		nop
+			neg	r11
+		_CDLOCAL_8_513:
+		btst		#31, r29
+		jr		EQ, _CDLOCAL_9_518
+		nop
+			neg	r13
+		_CDLOCAL_9_518:
+.if 0
+		movei	#$17008, r28
+		store	r20, (r28)
+		addqt	#4, r28
+		store	r26, (r28)
+		nop
+.endif
+	_CDLOCAL_11_526:
+	; right side map coords
+	btst		#0, r0
+	movei	#_CDLOCAL_111_624, r28
+	jump		NE, (r28)
+	nop
+		; lower points => upper points
+		move		r1, r9
+		move		r2, r10
+		; new point - right
+		addqt	#12, r12		; to t-edge#
+		moveq	#31, r29
+		load		(r12), r28
+		subqt	#12, r12		; to xs
+		and		r28, r29	; edge#
+		shrq		#15, r28		; t value
+		subqt	#1, r28
+.if 0
+		movei	#128, r14		; get map dimensions
+		movei	#105, r19
+.else
+		movei	#TXTSIZE,r14
+		load	(r14),r14
+		move	r14,r19
+		shrq	#16,r14
+		shlq	#16,r19
+		shrq	#16,r19
+.endif
+		btst		#CORNER_BIT, r29		; look for corner flag
+	;for corner coord approx
+	jr	EQ,	_CDLOCAL_120_567
+	nop
+		movei	#cornert,r28
+		load		(r28),r29
+		addqt	#4,r28
+		load		(r28),r28
+		shrq		#15,r29
+		shrq		#15,r28
+;		mult		temp,srty
+		jr		_CDLOCAL_142_573
+		mult		r29,r14
+	_CDLOCAL_120_567:
+		cmpq		#1, r29
+		jr		NE, _CDLOCAL_104_576
+		cmpq		#2, r29
+			; side 1
+			moveq	#0, r14
+			_CDLOCAL_142_573:
+			jr		_CDLOCAL_110_594
+			mult		r28, r19
+		_CDLOCAL_104_576:
+		jr		NE, _CDLOCAL_105_583
+		cmpq		#3, r29
+			; side 2
+			mult		r28, r14
+			jr		_CDLOCAL_110_594
+			shlq		#16, r19
+		_CDLOCAL_105_583:
+		jr		NE, _CDLOCAL_106_590
+		neg		r28
+			; side 3
+			mult		r28, r19
+			jr		_CDLOCAL_110_594
+			shlq		#16, r14
+		_CDLOCAL_106_590:
+			; side 4
+			moveq	#0, r19
+			mult		r28, r14
+		_CDLOCAL_110_594:
+
+		move		r14, r1
+		move		r19, r2
+		sub		r9, r14
+		sub		r10, r19
+		; compute slope
+		move		r14, r28
+		abs		r14
+		div		r25, r14
+		move		r19, r29
+		abs		r19
+		div		r25, r19
+		; replace signs
+		btst		#31, r28
+		jr		EQ, _CDLOCAL_108_612
+		nop
+			neg	r14
+		_CDLOCAL_108_612:
+		btst		#31, r29
+		jr		EQ, _CDLOCAL_109_617
+		nop
+			neg	r19
+		_CDLOCAL_109_617:
+;	movei	#$17000, temp
+;	store	lrtx, (temp)
+;	addqt	#4, temp
+;	store	lrty, (temp)
+;	nop
+
+	_CDLOCAL_111_624:
+
+	; temporary reverse feed
+	btst		#1, r0
+	jr		NE, _CDLOCAL_33_637
+	moveta	r4,		r24
+		; gon data - left
+		moveta	r30,		r12
+		moveta	r31,		r13
+		moveta	r5,			r16
+		moveta	r11,		r18	; increments
+		moveta	r13, 		r19
+		moveta	r16,		r22
+	_CDLOCAL_33_637:
+	btst		#0, r0
+	jr		NE, _CDLOCAL_44_648
+	nop
+		; gon data - right
+		moveta	r9,		r14
+		moveta	r10,		r15
+		moveta	r22,			r17
+		moveta	r14,		r20	; increments
+		moveta	r19, 		r21
+		moveta	r23,		r23
+	_CDLOCAL_44_648:
+
+	; find diffs
+	moveta	r0, r28
+	moveq	#0, r0
+	cmp		r24, r4
+	addc		r0, r0
+	cmp		r25, r4
+	addc		r0, r0
+
+	or		r4, r4 ; if anything to do..
+	movei	#nextPoint, r28
+	jump		EQ, (r28)
+	nop
+
+		; set alternate bank	: Why? - because someday, I want to write the blitter loop as an interrupt routine and have the rest of the renderrrer c
+		movei	#G_FLAGS, r28
+		load		(r28), r29
+		bset		#14, r29	; REG_PAGE
+		store	r29, (r28)
+		nop
+		nop
+
+; assume earlier setup by 68K of A2BASE, A2FLAGS
+; set up blitter registers
+	movei	#B_CMD,	r11
+_CDLOCAL_22_674:		; wait for blitter
+		load		(r11), r25
+		btst		#0, r25
+		jr		EQ, _CDLOCAL_22_674
+		nop
+; set up registers
+	movei	#A1_PIXEL, r7
+	movei	#A1_FPIXEL, r8
+	movei	#A2_PIXEL, r9
+	movei	#B_COUNT, r10
+;	movei	#B_CMD, command
+	movei	#SRCEN|DSTA2|LFU_A|LFU_AN, r4
+;	movei	#$390000,		leftX
+;	movei	#$9b0000,		rightX
+;	movei	#$200000,		a2pix
+;	movefa	startLine,	a2pix
+;	movei	#$ffffe000, 	ileftX
+;	movei	#$00003000, 	irightX
+;	movei	#52,			texLines
+;	movefa	diffs, temp
+
+;	btst		#1, temp
+;	jr		NE, 33$
+;	movefa	numLines,		texLines
+;		; gon data - left
+;		movefa	ultx,		ltX
+;		movefa	ulty,		ltY
+;		movefa	lX,			leftX
+;		movefa	sltx,		iltX	; increments
+;		movefa	slty, 		iltY
+;		movefa	lSlp,		ileftX
+;	33$:
+;	btst		#0, temp
+;	jr		NE, 44$
+;	nop
+;		; gon data - right
+;		;movei	#$30000,		rtX
+;		;movei	#$300000,		rtY
+;		movefa	urtx,		rtX
+;		movefa	urty,		rtY
+;		movefa	rX,			rightX
+;		movefa	srtx,		irtX	; increments
+;		;movei	#$ceed,		irtX	; increments
+;		movefa	srty, 		irtY
+;		movefa	rSlp,		irightX
+;	44$:
+
+	movei	#texEnt, r27	; jump in
+	jump		(r27)
+	nop
+
+texInt:
+;	movei	#B_CMD,	command
+_CDLOCAL_52_727:
+		load		(r11), r27
+		btst		#0, r27
+		jr		EQ, _CDLOCAL_52_727
+		nop
+					;waitForBlitter
+
+.if 0
+	movei	#$17010, r27
+	store	r5, (r27)
+	addqt	#4, r27
+	store	r6, (r27)
+.endif
+	; feed the blitter ------------------------------------------------
+	store	r5, (r25)
+	store	r6, (r26)
+	store	r0, (r7)
+	store	r1, (r8)
+	store	r2, (r9)
+	store	r3, (r10)
+	store	r4, (r11)
+;	load		(aFlags), flags
+
+skpTexLine:
+	; add the increments
+	add		r18, r12
+	add		r20, r14
+	add		r22, r16
+	add		r23, r17
+
+	; add more increments
+	add		r19, r13
+	add		r21, r15
+
+	; are we done?
+	subq		#1, r24
+	; trapeziod end?
+					movei	#tdone, r25
+					jump		EQ, (r25)
+;					nop
+texEnt:
+	; set start dest pixel - inc line
+	shrq		#16, r2	;clear old x
+	addqt	#1, r2		;next line
+	shlq		#16, r2	;y back
+	; compute the count
+	move		r16, r3
+	move		r17, r25
+	shrq		#16, r25
+	shrq		#16, r3
+	or		r3, r2	;insert new x
+	sub		r25, r3
+	movei	#skpTexLine, r25
+	jump		PL, (r25)
+	neg		r3
+
+	; compute x step
+	move		r14, r28
+	sub		r12, r28
+;		movei	#$17000, itemp3
+;		store	itemp, (itemp3)
+;		addqt	#4, itemp3
+;		store	count, (itemp3)
+	move		r28, r25
+	abs		r25
+	div		r3, r25
+;		addqt	#4, itemp3
+;		store	itemp, (itemp3)
+
+	; rearrange ltX,ltY into a1pix,a1pixf
+	move		r13, r27
+	move		r12, r26
+	shlq		#16, r26	;x
+	shrq		#16, r27	;y
+	shrq		#16, r26	;x
+	shlq		#16, r27	;y
+
+	move		r13, r1
+	move		r12, r0
+	shrq		#16, r0
+	shlq		#16, r1
+	or		r26, r1
+	; finish rearrange
+	or		r27, r0
+
+	; compute y step
+	move		r15, r27
+	sub		r13, r27
+	move		r27, r26
+	abs		r26
+	div		r3, r26
+
+	; replace xinc (itemp) sign
+	btst		#31, r28
+	jr		EQ, _CDLOCAL_40_825
+	; finish count
+	bset		#16, r3	; set y to 1 line
+		neg	r25
+_CDLOCAL_40_825:
+	; setup for interrupt return
+	bclr		#3, r30
+;	load		(istack), rtiAddr
+	bset		#13, r30
+	addq		#2, r28
+	addq		#4, r31
+
+	; replace yinc (itemp2) sign
+	btst		#31, r27
+	jr		EQ, _CDLOCAL_30_838
+	nop
+		neg	r26
+_CDLOCAL_30_838:
+	; rearrange step
+	move		r25, r5
+	move		r26, r6
+	shrq		#16, r5
+	shlq		#16, r6
+	shlq		#16, r25
+	shrq		#16, r26
+	shrq		#16, r25
+	shlq		#16, r26
+	or		r25, r6
+	or		r26, r5
+
+	; setup regs
+	movei	#texInt, r27	; for loop
+
+	; complete all address registers for blit pump
+	move		r7, r26
+	move		r7, r25
+	addqt	#16, r25
+	addqt	#20, r26
+
+;					subq		#1, texLines
+					jump		(r27)
+					nop
+;	; exit interrupt
+;	jump		(rtiAddr)
+;	store	flags, (aFlags)
+;
+;~75 cycles
+tdone:
+	shlq		#16, r2	;y back
+;cutItOut $14
+_CDLOCAL_22_871:
+		load		(r11), r25
+		btst		#0, r25
+		jr		EQ, _CDLOCAL_22_871
+		nop
+
+		; set primary bank
+		movei	#G_FLAGS, r25
+		load		(r25), r26
+		bclr		#14, r26	; REG_PAGE
+		store	r26, (r25)
+		nop
+;can't do in primary bank - command is secondary def
+;	movei	#B_CMD,	command
+;	waitForBlitter
+;	nop
+;----------------------------------------------------------------------------
+; GASM REGUNDEF a1pix ; tex.gas:889
+; GASM REGUNDEF a1pixf ; tex.gas:890
+; GASM REGUNDEF a2pix ; tex.gas:891
+; GASM REGUNDEF count ; tex.gas:892
+; GASM REGUNDEF doit ; tex.gas:893
+; GASM REGUNDEF a1step ; tex.gas:894
+; GASM REGUNDEF a1stepf ; tex.gas:895
+; GASM REGUNDEF aa1pix ; tex.gas:896
+; GASM REGUNDEF aa1pixf ; tex.gas:897
+; GASM REGUNDEF aa2pix ; tex.gas:898
+; GASM REGUNDEF acount ; tex.gas:899
+; GASM REGUNDEF command ; tex.gas:900
+; GASM REGUNDEF ltX ; tex.gas:901
+; GASM REGUNDEF ltY ; tex.gas:902
+; GASM REGUNDEF rtX ; tex.gas:903
+; GASM REGUNDEF rtY ; tex.gas:904
+; GASM REGUNDEF leftX ; tex.gas:905
+; GASM REGUNDEF rightX ; tex.gas:906
+; GASM REGUNDEF iltX ; tex.gas:907
+; GASM REGUNDEF iltY ; tex.gas:908
+; GASM REGUNDEF irtX ; tex.gas:909
+; GASM REGUNDEF irtY ; tex.gas:910
+; GASM REGUNDEF ileftX ; tex.gas:911
+; GASM REGUNDEF irightX ; tex.gas:912
+; GASM REGUNDEF texLines ; tex.gas:913
+; GASM REGUNDEF itemp ; tex.gas:914
+; GASM REGUNDEF itemp2 ; tex.gas:915
+; GASM REGUNDEF itemp3 ; tex.gas:916
+; GASM REGUNDEF rtiAddr ; tex.gas:917
+; GASM REGUNDEF aFlags ; tex.gas:918
+; GASM REGUNDEF flags ; tex.gas:919
+; GASM REGUNDEF istack ; tex.gas:920
+;----------------------------------------------------------------------------
+;	; set up the blitter for the renderer
+;	movei	#PITCH1|PIXEL16|WID320|XADDPHR,temp
+;	movei	#A1_FLAGS,temp2
+;	store	temp,(temp2)
+;	movei	#screen_addr,temp
+;	load		(temp),temp
+;	movei	#A1_BASE,temp2
+;	store	temp,(temp2)
+
+;		addqt	#2, polyPtr
+;		movei	#polyLp, temp
+;		jump		(temp)
+;	jump	(innerLoop)
+		movei	#nextPoint, r28
+		jump		(r28)
+		nop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+; junk
+;--- optional install aFirst
+	; check for NULL aFirst
+;	or		aFirst, aFirst
+;	movei	#redidIt, temp
+;	jump		EQ, (temp)
+;	; check for different aFirst
+;	cmp		aFirst, b
+;	movei	#redoneCornL, noCorner
+;	jump		EQ, (temp) ;didIt
+;	moveq	#0, xs ; (not really xs!!!)
+;		; check for corners
+;		load		(aFirst), secIn
+;		move		secOut, temp
+;		and		secIn, temp	; check for edge differences
+;		moveq	#3, temp2	; mask for wrap of corner list
+;		jump		NE, (noCorner)
+;		normi	secIn, secIn
+;			normi	secOut, secOut
+;			and		temp2, secIn		; wrap to 32 bits
+;			and		temp2, secOut		; test for zero (edge 3 - right side) - wrap to 32 bits
+;			move		secIn, temp
+;			readdCornerL:
+;				store	temp, (polygon)	; ys
+;				cmp		secOut, secIn
+;				jr		NE, readdCornerL
+;				addqt	#16, polygon		; advance to n+1 slope
+;		redoneCornL:
+;		store	xs, (polygon) ; x
+;		addqt	#16, polygon ; advance to n+1 slope
+
+	.align 4
+TXTSIZE:	dc.l	0
+;cornert:	dc.l 0,0
+; END tex.gas
+; END surf.gas
+; BEGIN drawdot.gas
+;
+; draw a "power ball" dot on the screen
+;
+; elided repeat include /mnt/data/club_case_work/club-drive-source/src/tree.inc
+
+; legacy REGEQU destx => R0 ; drawdot.gas:6
+; legacy REGEQU desty => R1 ; drawdot.gas:7
+; legacy REGEQU count => R2 ; drawdot.gas:8
+; legacy REGEQU radius => R3 ; drawdot.gas:9
+; legacy REGEQU abort => R4 ; drawdot.gas:10
+; legacy REGEQU sourcex => R5 ; drawdot.gas:11
+; legacy REGEQU sourcey => R6 ; drawdot.gas:12
+; legacy REGEQU finalx => R7 ; drawdot.gas:13
+; legacy REGEQU finaly => R8 ; drawdot.gas:14
+; legacy REGEQU dataHi => R9 ; drawdot.gas:15
+; legacy REGEQU stack => R10 ; drawdot.gas:16
+; legacy REGEQU maxx => R11 ; drawdot.gas:17
+; legacy REGEQU maxy => R12 ; drawdot.gas:18
+; legacy REGEQU xcount => R13 ; drawdot.gas:19
+; legacy REGEQU ycount => R14 ; drawdot.gas:20
+; legacy REGEQU inc => R15 ; drawdot.gas:21
+; legacy REGEQU finc => R16 ; drawdot.gas:22
+; legacy REGEQU step => R17 ; drawdot.gas:23
+; legacy REGEQU fstep => R18 ; drawdot.gas:24
+; legacy REGEQU spixel => R19 ; drawdot.gas:25
+; legacy REGEQU sfpixel => R20 ; drawdot.gas:26
+; legacy REGEQU i => R21 ; drawdot.gas:27
+; legacy REGEQU ie => R22 ; drawdot.gas:28
+; legacy REGEQU adivctrl => R23 ; drawdot.gas:29
+; legacy REGEQU bcmd => R24 ; drawdot.gas:30
+; legacy REGEQU scrnaddr => R25 ; drawdot.gas:31
+; legacy REGEQU a1_base => R26 ; drawdot.gas:32
+
+draw_dot:
+; set up the right kind of division
+	movei	#G_DIVCTRL,r23
+	moveq	#1,r28
+	store	r28,(r23)
+
+	movei	#B_CMD,r24
+	movei	#A1_BASE,r26
+
+	movei	#ret_dot,r4
+	movei	#PWRBALLX,r29
+	load	(r29),r0
+	addqt	#4,r29
+	load	(r29),r1
+	addqt	#4,r29
+	load	(r29),r28
+	addqt	#4,r29
+	cmpq	#1,r28			; if Z < 1, don't draw it
+	jump	MI,(r4)
+	nop
+
+		load	(r29),r3
+		movei	#96,r28
+		mult	r28,r3
+		move	r0,r7
+		move	r1,r8
+		sub	r3,r0
+		sub	r3,r1
+		add	r3,r7
+		add	r3,r8
+		move	r7,r29
+		sub	r0,r29
+		jump	MI,(r4)
+		nop
+		move	r28,r15		; "temp" still has 96 in it
+		shlq	#16,r15			; make into a 16.16 number
+		div	r29,r15		; figure out increment, as a 16.16 number
+		movei	#DRAWRECT,r29
+		load	(r29),r11
+.if 0
+		movei	#$8000,r28
+.else
+		moveq	#0,r28
+		bset	#15,r28
+.endif
+		add	r28,r0
+		add	r28,r1
+		add	r28,r7
+		add	r28,r8
+		move	r11,r12
+		shlq	#16,r11
+		shrq	#16,r12
+		shlq	#16,r12
+
+		cmpq	#0,r0
+		jr	PL,plusx
+		moveq	#0,r5
+			move	r0,r5
+			moveq	#0,r0
+			neg	r5
+plusx:
+		cmpq	#0,r1
+		jr	PL,plusy
+		moveq	#0,r6
+			move	r1,r6
+			moveq	#0,r1
+			neg	r6
+plusy:
+		cmp	r11,r7
+		jr	MI,okx
+		nop
+			move	r11,r7
+
+okx:		cmp	r12,r8
+		jr	MI,oky
+		nop
+			move	r12,r8
+oky:
+		move	r7,r13
+		move	r8,r14
+		sub	r0,r13
+		jump	MI,(r4)
+		nop
+		sub	r1,r14
+		jump	MI,(r4)
+		nop
+		shrq	#16,r14
+		jump	EQ,(r4)
+		nop
+		shrq	#16,r13
+		jump	EQ,(r4)
+		nop
+		shlq	#16,r14
+; figure out step value here, based on xcount
+; while we're at it, scale sourcex and sourcey
+		move	r13,r17
+		move	r15,r21
+		normi	r15,r22
+		addqt	#9,r22
+		sha	r22,r21
+		mult	r21,r17
+		shrq	#16,r5
+		shrq	#16,r6
+		mult	r21,r5
+		mult	r21,r6
+		neg	r22
+		sha	r22,r17
+		sha	r22,r5
+		sha	r22,r6
+		or	r14,r13
+		neg	r17
+; for now, "step" has the X step, and "inc" the Y step
+; break inc up into fractional and integer parts
+		move	r15,r16
+		shrq	#16,r15
+		shlq	#16,r16
+		shrq	#16,r16
+; break "step" up into fractional and integer parts
+		move	r17,r18
+		shrq	#16,r17
+		shlq	#16,r18
+		shrq	#16,r18
+; now merge the Y step in with "step"
+		move	r15,r28
+		move	r16,r29
+		shlq	#16,r28
+		shlq	#16,r29
+		or	r28,r17
+		or	r29,r18
+; figure out starting pixel values, based on sourceX and sourceY
+		move	r5,r20
+		move	r5,r19
+		shlq	#16,r20
+		shrq	#16,r19
+		shrq	#16,r20
+		move	r6,r29
+		shrq	#16,r6
+		shlq	#16,r29
+		shlq	#16,r6
+		or	r29,r20
+		or	r6,r19
+
+; wait for the blitter to become free
+_CDLOCAL_10_176:
+		load	(r24),r28
+		btst	#0,r28
+		jr	EQ,_CDLOCAL_10_176
+		nop
+; set up blitter windows
+; source is the current power ball image
+		movei	#dotimg,r28
+		load	(r28),r28
+		move	r26,r29
+		store	r28,(r29)
+		addqt	#4,r29		; move to A1_FLAGS
+		movei	#PITCH1|PIXEL16|WID96|XADDINC,r28
+		store	r28,(r29)
+		addqt	#8,r29		; move to A1_PIXEL
+		store	r19,(r29)
+		addqt	#4,r29		; move to A1_STEP
+		store	r17,(r29)
+		addqt	#4,r29		; move to A1_FSTEP
+		store	r18,(r29)
+		addqt	#4,r29		; move to A1_FPIXEL
+		store	r20,(r29)
+		addqt	#4,r29		; move to A1_INC
+		store	r15,(r29)
+		addqt	#4,r29		; move to A1_FINC
+		store	r16,(r29)
+		movei	#B_COUNT,r29
+		store	r13,(r29)
+
+; destination is the current screen
+		movei	#A2_PIXEL,r29
+		shrq	#16,r1
+		shrq	#16,r0
+		shlq	#16,r1
+		or	r1,r0
+		store	r0,(r29)
+		movei	#screen_addr,r28
+		load	(r28),r25
+		movei	#A2_BASE,r29
+		store	r25,(r29)
+		movei	#PITCH1|PIXEL16|WID320|XADDPIX,r28
+		addqt	#4,r29		; move to A2_FLAGS
+		store	r28,(r29)
+		movei	#A2_STEP,r29
+		move	r13,r28
+		neg	r28
+		shlq	#16,r28
+		shrq	#16,r28
+		bset	#16,r28		; set Y step to 1
+		store	r28,(r29)
+		moveq	#0,r28
+;;		movei	#$AA1CAA1C,temp		; background color
+		movei	#B_PATD,r29
+		store	r28,(r29)
+		addqt	#4,r29
+		store	r28,(r29)
+
+		movei	#SRCEN|UPDA1F|UPDA1|UPDA2|DSTA2|DCOMPEN|LFU_AN|LFU_A,r28
+
+		store	r28,(r24)
+		nop
+; wait for blitter to finish
+_CDLOCAL_20_238:
+		load	(r24),r28
+		btst	#0,r28
+		jr	EQ,_CDLOCAL_20_238
+		nop
+;
+; restore register windows
+;
+
+	move	r26,r29
+	store	r25,(r29)
+	movei	#PITCH1|PIXEL16|WID320|XADDPHR,r28
+	addqt	#4,r29			; move to A1_FLAGS
+	store	r28,(r29)
+
+ret_dot:
+	moveq	#0,r28
+	store	r28,(r23)
+	RTS_TREE
+
+; GASM REGUNDEF x ; drawdot.gas:259
+; GASM REGUNDEF y ; drawdot.gas:260
+; GASM REGUNDEF count ; drawdot.gas:261
+; GASM REGUNDEF radius ; drawdot.gas:262
+; GASM REGUNDEF dataHi ; drawdot.gas:263
+; GASM REGUNDEF stack ; drawdot.gas:264
+; GASM REGUNDEF abort ; drawdot.gas:265
+; GASM REGUNDEF sourcex ; drawdot.gas:266
+; GASM REGUNDEF sourcey ; drawdot.gas:267
+; GASM REGUNDEF finalx ; drawdot.gas:268
+; GASM REGUNDEF finaly ; drawdot.gas:269
+; GASM REGUNDEF maxx ; drawdot.gas:270
+; GASM REGUNDEF maxy ; drawdot.gas:271
+; GASM REGUNDEF xcount ; drawdot.gas:272
+; GASM REGUNDEF ycount ; drawdot.gas:273
+; GASM REGUNDEF inc ; drawdot.gas:274
+; GASM REGUNDEF finc ; drawdot.gas:275
+; GASM REGUNDEF step ; drawdot.gas:276
+; GASM REGUNDEF fstep ; drawdot.gas:277
+; GASM REGUNDEF spixel ; drawdot.gas:278
+; GASM REGUNDEF sfpixel ; drawdot.gas:279
+; GASM REGUNDEF i ; drawdot.gas:280
+; GASM REGUNDEF ie ; drawdot.gas:281
+; END drawdot.gas
+;	include "subs.gas"
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop

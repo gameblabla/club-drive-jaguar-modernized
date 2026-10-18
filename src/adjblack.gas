@@ -1,0 +1,44 @@
+;this changes pixels that are color $0000 to color $0001
+;so the pixels won't be transparent
+
+	include "eq.s"
+
+doneadr	REGEQU	r0
+temp		REGEQU	r1
+num1		REGEQU	r2
+pixeladr	REGEQU	r3
+end_adr	REGEQU	r4
+
+	ORG	ADJBLACK_PRG
+
+		movei	#ADJBLACK_DONE,doneadr		;address in GPU ram
+		moveq	#0,temp					;0 = not done
+		store	temp,(doneadr)				;initialize done flag
+
+		movei	#ADJBLACK_START,temp		;address in GPU ram
+		load		(temp),pixeladr			;get address for start of data
+		addq		#4,temp
+		load		(temp),end_adr				;get address for end of data
+		moveq	#1,num1					;put the number 1 in a register
+loop:
+		loadw	(pixeladr),temp			;get a 16 bit pixel
+		cmpq		#0,temp					;see if color is 0
+		jr		NE,nextpix				;if it is not 0, leave it alone
+		nop
+		storew	num1,(pixeladr)			;if pixel is 0, change it to 1 so it won't be transparent
+nextpix:
+		addq		#2,pixeladr				;go to next pixel
+		cmp		pixeladr,end_adr			;compare current address to end address	
+		jr		NE,loop					;continue if not at the end of the data
+		nop
+		store	num1,(doneadr)				;1 = program finished
+
+;stop the GPU
+		movei	#$00000008,R30
+		movei	#G_CTRL,R31
+		store	R30,(R31)
+
+		nop
+		nop
+		nop
+		nop

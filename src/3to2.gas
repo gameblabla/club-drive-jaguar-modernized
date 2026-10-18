@@ -1,0 +1,266 @@
+; 3to2.gas - performs perspective calculation
+
+x		REGEQU	R0
+y		REGEQU	R1
+z		REGEQU	R2
+xe		REGEQU	R3
+ye		REGEQU	R4
+ze		REGEQU	R5
+Dm		REGEQU	R6
+De		REGEQU	R7
+D		REGEQU	R8
+xCenter	REGEQU	R9
+yCenter	REGEQU	R10
+
+
+pnt		REGEQU	R11
+dataHi	REGEQU	R12
+numPnts	REGEQU	R13
+skipIt	REGEQU	R14
+aspect	REGEQU	R15
+sectors	REGEQU	R16
+
+numExtras REGEQU	R17
+
+high		REGEQU	R18
+wide		REGEQU	R19
+fixH		REGEQU	R20
+fixW		REGEQU	R21
+backIn	REGEQU	R22
+
+;innerLoop	REGEQU	R27
+
+		nop
+		nop
+	movei	#around, skipIt
+
+	movefa	ALTband,temp2
+	movei	#tPNTS, pnt
+	add	temp2,pnt
+	load	(pnt),pnt
+	movei	#G_HIDATA, dataHi
+
+	movei	#XCENTER,yCenter
+	load	(yCenter),xCenter
+	addqt	#4,yCenter
+	load	(yCenter),yCenter
+
+	movei	#277, Dm		; distance from camera to screen - defines FOV
+	normi	Dm, De
+	subqt	#8, De		; normalize to 32-bit
+	sh		De, Dm
+	neg		De
+	subqt	#16, De	; result in 16.16 format
+;	movei	#$ab800000, Dm					; should come from window
+;	moveq	#6, De ; 7
+
+.if DOASPECT
+	movei	#ASPECTR,aspect
+	load	(aspect),aspect
+.else
+	movei	#$7fff, aspect	;782a 78ea
+.endif
+
+	movei	#NUM_PNTS, temp
+	add		temp2,temp
+	loadw	(temp), numPnts
+
+	movei	#tNUM_EXTRAS, temp
+	add		temp2,temp
+	loadw	(temp), numExtras
+	sub		numPnts, numExtras
+
+	move		xCenter, wide
+	subqt	#1, wide
+	move		yCenter, high
+	subqt	#1, high
+	movei	#bound1, fixW
+	movei	#bound2, fixH
+	movei	#thereOKwithMe, backIn
+
+	loadp	(pnt), x
+	movei	#perLoop, innerLoop
+perLoop:
+	; get data
+	addqt	#8, pnt
+		cmp	x,x
+	load		(dataHi), y
+	loadp	(pnt), sectors
+	or		sectors, sectors	; check validity
+	load		(dataHi), z
+	; do it
+	jump		NE, (skipIt) ; don't do behinds
+	addqt		#16, pnt
+		normi	z, ze		;
+		addq		#6, ze	; normalize to 17-bit
+		sh		ze, z	;
+		move		Dm ,D
+		div		z, D
+
+		add		De, ze
+		move		x, temp
+		move		y, temp2
+		abs		temp
+		abs		temp2
+		normi	temp, xe
+		normi	temp2, ye
+		addq		#9, xe
+		addq		#9, ye
+		sha		xe, x
+		sha		ye, y
+.if DOASPECT
+.if DOSCALE
+		imult	aspect,x
+		sharq	#15,x
+.endif
+		imult	aspect, y
+		sharq	#15, y
+.endif
+		neg		xe
+		neg		ye
+		add		ze, xe
+		add		ze, ye
+
+		imult	D, x
+		imult	D, y
+		sha		xe, x
+		sha		ye, y
+		add		xCenter, x
+		add		yCenter, y
+		store	x, (dataHi)
+		storep	y, (pnt)
+;				btst		#LEFT_EDGE, sectors
+;				jr		EQ, around
+;				nop
+;					cutItOut $1f
+around:
+	subq		#1, numPnts
+;	subq		#1, numExtras
+	addqt	#8, pnt
+	jump		NE, (innerLoop) ; perLoop
+	loadp	(pnt), x
+;		cutItOut 9
+; now do the extras -------------------------------------------------------------
+	or		numExtras, numExtras	; are there any to do?
+	movei	#dnPersp, temp
+	jump		EQ, (temp)
+	cmp x,x	; wait for the load to complete
+
+	movei	#ePerLoop, innerLoop
+ePerLoop:
+	; get data
+	addqt	#8, pnt
+		cmp	x,x
+	load		(dataHi), y
+	load		(pnt), z
+	; do it
+	addqt		#16, pnt
+
+	normi	z, ze		;
+	addq		#6, ze	; normalize to 17-bit
+	sh		ze, z	;
+	move		Dm ,D
+	div		z, D
+
+	add		De, ze
+	move		x, temp
+	move		y, temp2
+	abs		temp
+	abs		temp2
+	normi	temp, xe
+	normi	temp2, ye
+	addq		#9, xe
+	addq		#9, ye
+	sha		xe, x
+	sha		ye, y
+.if DOASPECT
+	imult	aspect, y
+	sharq	#15, y
+.endif
+	neg		xe
+	neg		ye
+	add		ze, xe
+	add		ze, ye
+
+	imult	D, x
+	imult	D, y
+	sha		xe, x
+	sha		ye, y
+	; test edges
+	move		x, temp
+	move		y, temp2
+	abs		temp
+	abs		temp2
+	cmp		wide, temp
+	jump		PL, (fixW)
+	cmp		high, temp2
+	jump		PL, (fixH)
+
+thereOKwithMe:
+	add		xCenter, x
+	add		yCenter, y
+	store	x, (dataHi)
+	storep	y, (pnt)
+
+	subq		#1, numExtras
+	addqt	#8, pnt
+	jump		NE, (innerLoop) ; ePerLoop
+	loadp	(pnt), x
+
+; all done ------------------------------------------------------------------
+	movei	#dnPersp, temp
+	jump		(temp)
+	cmp x,x	; wait for the load to complete
+
+	; fix off screen "bad" coords
+bound1:	; bound x coord
+	btst		#31, x	; is it negative?
+	move		xCenter, x
+	jump		EQ, (backIn)
+	subqt	#31, x	; roll it back to onscreen
+		neg	x	; sign fix
+		jump	(backIn)
+		nop
+		
+bound2:	; bound y coord
+	btst		#31, y	; is it negative?
+	move		yCenter, y
+	jr		EQ, _CDLOCAL_10_230
+	subqt	#31, y	; roll it back to onscreen
+		neg	y	; sign fix
+_CDLOCAL_10_230:
+	jump		(backIn)
+	add		xCenter, x
+dnPersp:	; exit the module
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop
+
+; cleanup
+REGUNDEF	x
+REGUNDEF	y
+REGUNDEF	z
+REGUNDEF	xe
+REGUNDEF	ye
+REGUNDEF	ze
+REGUNDEF	Dm
+REGUNDEF	De
+REGUNDEF	D
+REGUNDEF	xCenter
+REGUNDEF	yCenter
+REGUNDEF	pnt
+REGUNDEF	dataHi
+REGUNDEF	numPnts
+REGUNDEF	skipIt
+REGUNDEF	aspect
+REGUNDEF	sectors
+;
+;
+;
+;
+;
+;
+;

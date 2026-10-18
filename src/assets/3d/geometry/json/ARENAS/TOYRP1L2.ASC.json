@@ -1,0 +1,283 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "ARENAS/TOYRP1L2.ASC",
+  "template_sha256": "04586e7e856c15abba4dc08d16d8d18169c9321c3ef40cdd37c1dfc843cda2ab",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 5,
+      "mesh": "Object01",
+      "index": 0,
+      "xyz": [
+        456.257568,
+        -2562.863525,
+        4415.229004
+      ]
+    },
+    {
+      "line": 6,
+      "mesh": "Object01",
+      "index": 1,
+      "xyz": [
+        4959.141113,
+        -2562.863525,
+        4415.229004
+      ]
+    },
+    {
+      "line": 7,
+      "mesh": "Object01",
+      "index": 2,
+      "xyz": [
+        4959.141113,
+        2604.388916,
+        4415.227051
+      ]
+    },
+    {
+      "line": 8,
+      "mesh": "Object01",
+      "index": 3,
+      "xyz": [
+        456.257568,
+        2604.388916,
+        4415.227051
+      ]
+    },
+    {
+      "line": 9,
+      "mesh": "Object01",
+      "index": 4,
+      "xyz": [
+        456.257568,
+        -2562.865723,
+        173.187973
+      ]
+    },
+    {
+      "line": 10,
+      "mesh": "Object01",
+      "index": 5,
+      "xyz": [
+        4959.141113,
+        -2562.865723,
+        173.187973
+      ]
+    },
+    {
+      "line": 11,
+      "mesh": "Object01",
+      "index": 6,
+      "xyz": [
+        4959.141113,
+        2604.37915,
+        173.18605
+      ]
+    },
+    {
+      "line": 12,
+      "mesh": "Object01",
+      "index": 7,
+      "xyz": [
+        456.257568,
+        2604.37915,
+        173.18605
+      ]
+    },
+    {
+      "line": 13,
+      "mesh": "Object01",
+      "index": 8,
+      "xyz": [
+        456.257568,
+        -2562.865234,
+        611.238281
+      ]
+    },
+    {
+      "line": 14,
+      "mesh": "Object01",
+      "index": 9,
+      "xyz": [
+        456.257568,
+        -1495.238037,
+        173.187393
+      ]
+    },
+    {
+      "line": 15,
+      "mesh": "Object01",
+      "index": 10,
+      "xyz": [
+        456.257568,
+        -1490.295532,
+        611.237671
+      ]
+    },
+    {
+      "line": 16,
+      "mesh": "Object01",
+      "index": 11,
+      "xyz": [
+        464.084473,
+        825.161621,
+        883.593689
+      ]
+    },
+    {
+      "line": 17,
+      "mesh": "Object01",
+      "index": 12,
+      "xyz": [
+        1791.716675,
+        825.161621,
+        883.593689
+      ]
+    },
+    {
+      "line": 18,
+      "mesh": "Object01",
+      "index": 13,
+      "xyz": [
+        464.084473,
+        825.16156,
+        173.27507
+      ]
+    },
+    {
+      "line": 19,
+      "mesh": "Object01",
+      "index": 14,
+      "xyz": [
+        1791.716675,
+        825.16156,
+        173.27507
+      ]
+    },
+    {
+      "line": 20,
+      "mesh": "Object01",
+      "index": 15,
+      "xyz": [
+        2824.175293,
+        -2562.863037,
+        746.462158
+      ]
+    },
+    {
+      "line": 21,
+      "mesh": "Object01",
+      "index": 16,
+      "xyz": [
+        2824.175293,
+        -116.721542,
+        746.461548
+      ]
+    },
+    {
+      "line": 22,
+      "mesh": "Object01",
+      "index": 17,
+      "xyz": [
+        2824.175293,
+        -2562.864746,
+        173.248764
+      ]
+    },
+    {
+      "line": 23,
+      "mesh": "Object01",
+      "index": 18,
+      "xyz": [
+        2824.175293,
+        -116.721802,
+        173.248062
+      ]
+    },
+    {
+      "line": 24,
+      "mesh": "Object01",
+      "index": 19,
+      "xyz": [
+        1829.561523,
+        -1743.581299,
+        1745.392944
+      ]
+    },
+    {
+      "line": 25,
+      "mesh": "Object01",
+      "index": 20,
+      "xyz": [
+        2045.116089,
+        -1743.581299,
+        1745.392944
+      ]
+    },
+    {
+      "line": 26,
+      "mesh": "Object01",
+      "index": 21,
+      "xyz": [
+        1243.143555,
+        -93.807999,
+        1745.392822
+      ]
+    },
+    {
+      "line": 27,
+      "mesh": "Object01",
+      "index": 22,
+      "xyz": [
+        1829.561523,
+        -1743.582764,
+        173.275787
+      ]
+    },
+    {
+      "line": 28,
+      "mesh": "Object01",
+      "index": 23,
+      "xyz": [
+        2045.116089,
+        -1743.582764,
+        173.275787
+      ]
+    },
+    {
+      "line": 29,
+      "mesh": "Object01",
+      "index": 24,
+      "xyz": [
+        1243.143555,
+        -93.808228,
+        173.27565
+      ]
+    },
+    {
+      "line": 30,
+      "mesh": "Object01",
+      "index": 25,
+      "xyz": [
+        2824.161133,
+        -366.543304,
+        515.0047
+      ]
+    },
+    {
+      "line": 31,
+      "mesh": "Object01",
+      "index": 26,
+      "xyz": [
+        2045.131226,
+        -366.543182,
+        515.0047
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

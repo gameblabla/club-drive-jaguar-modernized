@@ -1,0 +1,17 @@
+{
+  "scope": "RMAC-assembled standalone native model, not linked ROM",
+  "rmac_success": true,
+  "old_model_bytes": 2920,
+  "new_model_bytes": 2928,
+  "size_delta": 8,
+  "tree_binary_offset": 2524,
+  "unaltered_tail_bytes": 372,
+  "rebased_header_word_offsets": [
+    4,
+    96
+  ],
+  "old_binary_sha256": "dd69471309c08ef367252c6e0696edd74773729b4af8bba6cd6ce29e455fd525",
+  "new_binary_sha256": "e7ef7a5f716794b8693473b8bc6dfc98228140e9f4d8197f8f90ba6c25d50532",
+  "negative_empty_link": "0xffff",
+  "conclusion": "Rebased assembly has exactly the requested 8-byte tree growth; packed polygon/color payload unchanged"
+}

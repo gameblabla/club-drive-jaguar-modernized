@@ -1,0 +1,288 @@
+;----------------------------------------------------------------------------
+;	3dend.gas
+;
+;----------------------------------------------------------------------------
+
+	include "jaguar.inc"
+	include "blit.inc"
+
+	include "68kequ.inc"
+	include "3d.inc"
+
+; global register defines
+returnR	REGEQU	r0
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+return	REGEQU	R31
+
+; global alternate register usage
+ALTbndflags	REGEQU	R26		; flags for current band
+ALTbndlist	REGEQU	R27		; points to current band for collision check
+ALTplayer	REGEQU  R30
+ALTband		REGEQU	R31
+
+ONE_FRAME	EQU	10
+INTERPOLATE	EQU	0
+
+	ORG	Overlay
+	; can use up to 3fac (described in 3dds.inc)
+
+	include "3dds.inc"
+
+	include	"time.gas"
+
+	MACRO nopCity
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+	ENDM
+	MACRO cutItOut
+		moveq	#@1, temp2
+		movei	#(SEMAPHORE+8), innerLoop
+		movei	#thatsAllFolks, temp
+		jump		(temp)
+		store	temp2, (innerLoop)
+	ENDM
+	MACRO JSR_ROTY	; rotate the matrix in r10-r18 about the y-axis by r4
+		half		REGEQU	r7
+		sin		REGEQU	r22
+		cos		REGEQU	r23
+		pi2		REGEQU	r24
+		sintbl	REGEQU	r25
+		cosRout	REGEQU	r26
+		sinRout	REGEQU	r1
+
+		; push some registers
+		moveta	returnR, r20
+		moveta	half, r21
+		moveta	sin, r22
+		moveta	cos, r23
+		moveta	pi2, r24
+		moveta	sintbl, r25
+		moveta	cosRout, r26
+		moveta	sinRout, r27
+
+		moveq	#1,half
+		movei	#sine,sinRout
+		shlq		#13,half		; Half of One ($2000)
+		movei	#cosine,cosRout
+		moveq	#4,pi2
+		movei	#sn,sintbl
+		shlq		#7,pi2			; RPI2 = Pi/2 ($40 in Brads)
+.if INTERPOLATE
+		shlq	#16,pi2
+.endif
+		movei	#doYaw,temp
+		move		PC,returnR
+		jump		(temp)
+		addq		#6,returnR	; Determine Return Address
+	nop
+	nop
+		; pop some registers
+		movefa	r20, returnR
+		movefa	r21, half
+		movefa	r22, sin
+		movefa	r23, cos
+		movefa	r24, pi2
+		movefa	r25, sintbl
+		movefa	r26, cosRout
+		movefa	r27, sinRout
+
+		REGUNDEF	half
+		REGUNDEF	sin
+		REGUNDEF	cos
+		REGUNDEF	pi2
+		REGUNDEF	sintbl
+		REGUNDEF	cosRout
+		REGUNDEF	sinRout
+	ENDM
+; code start ----------------------------------------------------------------
+
+; r0-r3 are scratch registers for outer loop
+gl_curbnd		REGEQU	R0
+gl_bndlist	REGEQU	R1
+gl_player		REGEQU	R2
+
+	StartTimer	$18
+;
+; do everything N/10 times, where N is the number of 300ths of a second elapsed since last time
+;
+	movei	#player,gl_player
+	load	(gl_player),gl_player
+.if TAGGAME
+	movei	#WAIT_TIME,temp
+	add	gl_player,temp
+	load	(temp),temp
+	movei	#eAllDone,temp2
+	cmpq	#0,temp
+	jump	NE,(temp2)
+	nop
+.endif
+;**	movei	#CAR_FRAME,temp
+;**	add	gl_player,temp
+	moveta	gl_player,ALTplayer
+;**	load	(temp),temp
+;**
+;**	subq	#ONE_FRAME,temp
+;**
+;**; clamp between 10 (30 fps) and 60 (5 fps)
+;**	movei	#60,temp2
+;**	cmp	temp2,temp
+;**	jr	MI,shortenough
+;**	nop
+;**		move	temp2,temp
+;**shortenough:
+;**
+;**	movei	#LOOPCNT,temp2
+;**	store	temp,(temp2)		; save elapsed frames
+
+frameloop:
+	;pull CAR_TURN and CAR_GAS from CAR_QUEUE input queue until empty
+	theQueue	REGEQU	r0
+
+	movei	#eAllDone,innerLoop
+	movei	#CAR_QUEUE,theQueue
+	movefa	ALTplayer, gl_player
+	add		gl_player,theQueue
+	loadw	(theQueue),temp	;tail
+	addqt	#2,theQueue
+	loadw	(theQueue),temp2	;head
+	cmp		temp,temp2		;if not empty
+	move		theQueue,temp		;compute datum address in temp
+	jump		EQ, (innerLoop)
+	addqt	#2,temp			;move to start of data elements
+		add		temp2,temp	;addr of head
+		addqt	#4,temp2		;advance head
+		load		(temp),temp	;get datum
+		bclr		#5,temp2		;wrap
+		storew	temp2,(theQueue)	;store new head
+		movei	#CAR_TURN,temp2
+		add		gl_player,temp2
+		store	temp,(temp2)	;put datum in current CAR_TURN,CAR_GAS
+;**	3$:
+	REGUNDEF	theQueue
+
+	include	"carrot.gas"
+
+	movefa	ALTplayer, gl_player
+
+	; zero force vector
+	movei	#CAR_FORCE, temp2
+	add	gl_player, temp2
+	moveq	#0, temp
+	store	temp, (temp2)
+	addqt	#4, temp2
+	store	temp, (temp2)
+	addqt	#4, temp2
+	store	temp, (temp2)
+	; zero torque
+	addqt	#4,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+
+	; zero shocks
+	movei	#CAR_SHOCKS,temp2
+	add	gl_player, temp2
+;	moveq	#0,temp
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+
+	; initialize car surface properties
+	movei	#CAR_SURFDATA,temp2
+	add	gl_player,temp2
+	movei	#$00540b16,temp	;default slipperyness
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+.if 0
+; start the band counter at the beginning of the current player's list
+; the player's current world model ends with a list of models to draw
+	movei	#FLOOR_MODEL,temp
+	add	gl_player,temp
+	load	(temp),temp		; get the model the player is driving in
+	movei	#BND_LIST,gl_bndlist
+	add	temp,gl_bndlist		; get band list offset
+.else
+	movei	#BANDS,gl_bndlist
+.endif
+	moveta	gl_bndlist,ALTbndlist
+
+drvloop:
+;
+; get the next band element
+;
+	movefa	ALTbndlist,gl_bndlist
+	nop
+	load	(gl_bndlist),gl_curbnd
+	addqt	#4,gl_bndlist
+	moveta	gl_bndlist,ALTbndlist
+	moveta	gl_curbnd,ALTband
+	cmpq	#0,gl_curbnd			; is the current band 0
+	movei	#drvloopend,temp2
+	jump	EQ, (temp2)
+	nop
+
+	include "close.gas"
+
+	movei	#drvloop,temp
+	jump	(temp)
+	nop
+
+drvloopend:
+
+	include "drive.gas"
+	include "turt.gas"
+
+;
+; end of the frame loop
+;
+;**	movei	#LOOPCNT,temp2
+;**	load	(temp2),temp
+;**	nop
+;**	subq	#ONE_FRAME,temp
+;**	store	temp,(temp2)
+;**
+;**	cmpq	#0,temp
+	movei	#frameloop,temp2
+	jump		(temp2) ;PL
+	nop
+
+eAllDone:
+	SaveTimer	$18
+
+	StartTimer	$00			; to measure time spent in 68K land
+
+thatsAllFolks:	; for cutItOut
+; stolen code
+		movei	#G_CTRL, temp2
+		load		(temp2), temp
+		bclr #0, temp		; stop the GPU
+;		bset		3, temp
+		bset #1, temp		; start the cpu
+		store	temp, (temp2)
+
+allGone:	jr	allGone
+		nop
+
+;----------------------------------------------------------------------------
+	include "subsend.gas"

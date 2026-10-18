@@ -1,0 +1,64 @@
+{
+  "active_band": "0x08355C",
+  "active_player": "0x06A200",
+  "bios_mode": "real",
+  "collision_polygon": "0x082946",
+  "committed_force_torque_sequences": 382,
+  "committed_responses": [
+    {
+      "field": 1065,
+      "force": [
+        0,
+        -30815,
+        0
+      ],
+      "torque": [
+        40022,
+        0,
+        127980
+      ]
+    },
+    {
+      "field": 1067,
+      "force": [
+        0,
+        -5598,
+        0
+      ],
+      "torque": [
+        -16862,
+        0,
+        -11256
+      ]
+    }
+  ],
+  "divider": 18,
+  "edgehit_by_field": {
+    "1065": 6,
+    "1067": 5,
+    "1069": 6,
+    "1071": 3
+  },
+  "edgehit_entries": 20,
+  "events": 784,
+  "field_count": 1800,
+  "limitations": [
+    "Observational emulator evidence, not physical Jaguar hardware",
+    "The final CP word is a native color/material identifier, not proven friction coefficient",
+    "No edited collision model linked into the runtime ROM",
+    "Instruction hits are not unique physical collision events"
+  ],
+  "native_color_word": "0x9341",
+  "nonzero_committed_sequences": 2,
+  "polygon_edges": 4,
+  "rom_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "screenshots_byte_identical": true,
+  "trace_sha256": "ec52c008666633bb471ecfd3f7813388f1f22dccc7892eeaa8d7385ffbc73760",
+  "unmatched_store_sequences": 0,
+  "unmodified_emulator_frame_sha256": {
+    "1200": "2b21bf5edc7a30a56ca88c2f72eab6ff3ab946e933f3f1683a584f4a00a5bca1",
+    "1800": "b56878f54e90795e4abd0fc76036e6f8ddbc95b85036117130790a94619df15a",
+    "600": "ac27a0ad483a9b9de53b32af07c7768e77b01791389d5aac0690a97c81828050"
+  },
+  "gpu_trace_gpu_counts_unchanged": true
+}

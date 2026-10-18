@@ -1,0 +1,164 @@
+	.include "rot.inc"
+
+bnorot	REGEQU	rightSd
+bdorot	REGEQU	bottomSd
+
+MACRO	JSR_DOBND
+	move	PC,return
+	jump	(bdorot)
+	addqt	#6,return
+ENDM
+
+MACRO RTS_DOBND
+	jump	(return)
+	nop
+ENDM
+
+;
+; rotate all mobile bands' data points and vectors
+; so that we can do collision detection properly
+;
+	movei	#norotting,bnorot
+	movei	#dorot,bdorot
+.if 0
+	movei	#player,temp2
+	load	(temp2),dest
+	movei	#PLAYER1,temp
+	cmp	temp2,dest
+	movei	#norotting,temp
+	jump	NE,(temp)
+	nop
+.endif
+
+	movei	#PLAYER1+CAR_MODEL,dest
+	load	(dest),dest
+	JSR_DOBND
+
+	movei	#PLAYER2+CAR_MODEL,dest
+	load	(dest),dest
+	JSR_DOBND
+
+	movei	#mbands,dest
+	load	(dest),dest
+	cmpq	#0,dest
+	jump	EQ,(bnorot)
+	nop
+	JSR_DOBND
+
+.if 1
+	movei	#mbands,dest
+	addqt	#8,dest				; mbands is a magic symbol
+	or	dest,dest
+	load	(dest),dest
+	cmpq	#0,dest
+	jump	EQ,(bnorot)
+	nop
+	JSR_DOBND
+.endif
+
+	jump	(bnorot)
+	nop
+
+;
+; enter with "dest" == band to rotate
+;
+
+dorot:
+	movei	#(BND_MATRIX), source
+	add	dest, source
+	load	(source),source
+	nop
+	or	source,source
+
+	loadw	(source), m0
+	addqt	#2, source
+	loadw	(source), m1
+	addqt	#2, source
+	loadw	(source), m2
+	addqt	#2, source
+	loadw	(source), m3
+	addqt	#2, source
+	loadw	(source), m4
+	addqt	#2, source
+	loadw	(source), m5
+	addqt	#2, source
+	loadw	(source), m6
+	addqt	#2, source
+	loadw	(source), m7
+	addqt	#2, source
+	loadw	(source), m8
+
+
+; we have to replace the car points with transformed versions of these
+
+	moveq	#NUM_PNTS, temp
+	add	dest,temp
+	loadw	(temp),numPnts
+	addqt	#2,temp
+	loadw	(temp),temp2
+	add	temp2,numPnts		; numPnts is actually the number of points + number of vectors
+
+	movei	#PNT_LIST,temp
+	add	dest,temp		; now "temp" points to the pointer to the car's points
+	load	(temp),source		; now "source" points to the car points
+
+	movei	#ROTPNT_LIST,temp
+	add	dest,temp
+	load	(temp),dest2		; now dest2 points at the rotated point list
+	nop
+
+	move	dest2, dest
+	move	dest2, dest3
+
+	subqt	#6, dest
+	subqt	#4, dest2
+	subqt	#2, dest3
+
+	movei	#_CDLOCAL_20_118, innerLoop
+	loadw	(source),x
+_CDLOCAL_20_118:
+	; get data
+	addqt	#6, dest
+	addqt	#2, source
+	addqt	#6, dest2
+	loadw	(source), y
+	addqt	#2, source
+	addqt	#6, dest3
+	loadw	(source), z
+
+; do multiply, by the transpose (i.e. inverse) of the matrix
+	imultn	m0, x	;
+	imacn	m3, y	;
+	imacn	m6, z	;
+	resmac	resultX	;
+	addqt	#2, source
+	sharq	#14, resultX
+	storew	resultX, (dest)
+
+	imultn	m1, x	;
+	imacn	m4, y	;
+	imacn	m7, z	;
+	resmac	resultY	;
+	sharq	#14, resultY
+
+	imultn	m2, x	;
+	imacn	m5, y	;
+	imacn	m8, z	;
+	resmac	resultZ	;
+	storew	resultY, (dest2)
+	sharq	#14, resultZ
+
+
+	subq		#1, numPnts
+	storew	resultZ, (dest3)
+	jump		NE, (innerLoop)
+	loadw	(source), x
+
+	or	x,x			; make sure the last load is done
+
+	RTS_DOBND
+
+norotting:
+
+	.include "rotc.inc"
+

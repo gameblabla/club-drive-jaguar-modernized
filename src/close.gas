@@ -1,0 +1,276 @@
+;----------------------------------------------------------------------------
+;	close.gas
+;		Second level collision check.  Test distance to polygon center of
+;	all polygons that are close in closeList and pass sucessful candidates
+;	to full collision routines.
+;													TP
+;----------------------------------------------------------------------------
+
+polys		REGEQU	R0	; poly list pointer
+tPolys		REGEQU	R1	; the poly center list
+
+xc			REGEQU	R2	; the car coord in 16 bit format
+yc			REGEQU	R3	;
+zc			REGEQU	R4
+
+xp			REGEQU	R5	; the poly center coord
+yp			REGEQU	R6
+zp			REGEQU	R7
+closeList		REGEQU	R8
+numSides		REGEQU	R9
+polyRad		REGEQU	R10
+carRad		REGEQU	R11	; distance at which divider is marked for car contact (car radius)
+bColided	REGEQU	R12	; address for branch to "colided"
+outerLoop	REGEQU	R13
+surfsend	REGEQU	R14
+radius		REGEQU	R15
+dist		REGEQU	R16
+
+ee		REGEQU	R17	; exponent for (xc,yc,zc)
+
+polyflags	REGEQU	R18	; polygon flags
+
+ox			REGEQU	R24	; the car coord in 24.12 format
+oy			REGEQU	R25	; passed in to "crash" and preserved there
+oz			REGEQU	R26
+
+; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+DEBUGGING	EQU	0
+; tabulate init
+
+	movei	#doneclose,outerLoop 
+
+	movefa	ALTband,temp2			; check for the "nocollide" flag on this band
+	moveq	#BND_FLAGS,temp
+	add	temp2,temp
+	load	(temp),temp
+	btst	#0,temp
+	moveta	temp,ALTbndflags
+	jump	NE,(outerLoop)			; if it's set, skip all collision detection
+	nop
+
+	; load band radius
+	movei	#RADIUS,temp
+	add	temp2,temp
+	load	(temp),radius
+	movei	#CAR_RADIUS,temp2
+	add	temp2,radius
+
+	;load car center (global coords)
+	movefa	ALTplayer,temp
+	nop
+.if CAR_POSN
+	addqt	#CAR_POSN,temp
+.endif
+	load		(temp), ox
+	addqt	#4,temp
+	load		(temp), oy
+	addqt	#4,temp
+	load		(temp), oz
+	;load band center
+	movefa	ALTband,temp2
+	addqt	#XORIG,temp2
+	load	(temp2), temp
+	addqt	#4, temp2
+	sub	temp,ox
+	load	(temp2), temp
+	addqt	#4, temp2
+	sub	temp,oy
+	load	(temp2), temp
+	sub	temp,oz
+
+	move	ox,xc
+	move	oy,yc
+	move	oz,zc
+
+	sharq	#12,xc			; convert to integer
+	sharq	#12,yc
+	sharq	#12,zc
+
+	move	xc,temp
+	move	yc,temp2
+	abs	temp
+	abs	temp2
+	or	temp2,temp
+	move	zc,temp2
+	abs	temp2
+	or	temp2,temp
+
+	movei	#$8000,temp2		; is any component of the difference > $8000?
+	cmp	temp2,temp
+	jump	PL,(outerLoop)		; if yes, then the car is far away
+
+	; see if the car is far away from the band
+	imultn	xc,xc
+	imacn	yc,yc
+	imacn	zc,zc
+	resmac	dist
+	nop
+
+	cmp	dist,radius		; compare the band center's distance to the car
+	jump	MI,(outerLoop)		; with the band radius; if it's farther away, we don't need to check collisions
+	nop
+
+	movefa	ALTband,temp2
+	movei	#SURF_LIST, temp
+	add	temp2,temp
+	load		(temp), polys
+	movei	#tPOLYS, tPolys
+	add	temp2, tPolys
+	load	(tPolys),tPolys
+	movei	#SURFS_END,surfsend
+	add	temp2,surfsend
+	load	(surfsend),surfsend
+
+	movei	#closetop,outerLoop
+	movei	#enterclose,temp
+	jump	(temp)
+	nop
+
+closetop:
+		move	ox,xc
+		move	oy,yc
+		move	oz,zc
+
+		;shift to band scale
+		sharq	#12, xc
+		sharq	#12, yc
+		sharq	#12, zc
+
+		movefa	ALTband,temp2
+		movei	#tCLOSE_LIST, closeList
+		add	temp2,closeList
+		load	(closeList),closeList
+		movei	#CAR_RADIUS, carRad
+		movei	#colided,bColided
+		movei	#closeLp,outerLoop
+
+closeLp:
+		; should we ignore collisions?
+		btst	#6,polyflags		; is ignore collide flag set?
+		jump	NE,(bColided)		; yes -- no collision
+		nop
+
+		; check closeList
+		addqt	#2, polys
+		loadw	(polys), temp		; divider num
+		subqt	#2, polys			; put it back
+
+		shlq		#1, temp			; word array
+		add		closeList, temp
+		loadw	(temp), temp2
+		cmp		temp2, carRad
+		jump		MI, (bColided)
+		nop
+
+		;load poly info - center, radius
+		move		tPolys, temp		; cuz the end of the loop doesn't know if we were here
+		loadw		(temp),polyRad
+		addqt	#2,temp
+		shlq	#16, polyRad
+;		add	carRad,polyRad
+		loadw		(temp),temp2
+		addqt	#2,temp
+		or	temp2,polyRad
+		loadw		(temp), xp		; and yp
+		addqt	#2,temp
+		loadw	(temp),yp
+		addqt	#2,temp
+		loadw	(temp), zp
+
+		sub		xc, xp			; distance to center of poly
+		sub		yc, yp
+		sub		zc, zp
+
+		imultn	xp, xp	;	distance^2
+		imacn	yp, yp	;
+		imacn	zp, zp	;
+		resmac	xp		;
+
+		cmp		xp,polyRad
+		jump		MI, (bColided)
+		nop
+
+			include "crash.gas"
+		; all registers except polys and tPolys (maybee) are wiped out by now
+		; restore them, as necessary
+		loadw	(polys),numSides
+		movei	#closetop,outerLoop
+		move	numSides,polyflags
+		shlq		#28,numSides		; strip flags
+		movefa	ALTband,temp2
+		shrq		#27, numSides		; number words to bytes (multiply by 2)
+		movei	#SURFS_END,surfsend
+		add	temp2,surfsend
+		load	(surfsend),surfsend
+
+colided:	; increment pointers (tPolys maybee temporary)
+
+		addqt	#6, polys
+		addqt	#10,tPolys		; 10 for r and center
+		add		numSides, polys
+		add		numSides, tPolys
+		add		numSides, tPolys
+		add		numSides, tPolys
+enterclose:
+		; check for null		
+		loadw	(polys), numSides
+		move	numSides,polyflags
+		shlq	#28,numSides
+		shrq	#27,numSides
+		or	numSides, numSides
+		jump		NE, (outerLoop)
+		nop
+
+		; It's a NULL!!!!		Is it the last one?
+		addqt	#2,polys
+		loadw	(polys),numSides
+		move	numSides,polyflags
+		shlq	#28,numSides
+		cmp		surfsend, polys
+		jump		MI, (outerLoop)
+		shrq	#27,numSides
+
+
+;
+; if we're passing through a portal, zero all collision forces
+;
+		movefa	ALTplayer,temp
+		movei	#CUR_PORTAL,temp2
+		add	temp,temp2
+		load	(temp2),temp2
+		movei	#doneclose,innerLoop
+		cmpq	#0,temp2
+		movei	#CAR_FORCE,temp2
+		jump	EQ,(innerLoop)
+		add	temp,temp2
+			moveq	#0,temp
+			store	temp,(temp2)
+			addqt	#4,temp2
+			store	temp,(temp2)
+			addqt	#4,temp2
+			store	temp,(temp2)
+
+doneclose:
+
+REGUNDEF	polys
+REGUNDEF	tPolys
+REGUNDEF	xc
+REGUNDEF	yc
+REGUNDEF	zc
+REGUNDEF	xp
+REGUNDEF	yp
+REGUNDEF	zp
+REGUNDEF	closeList
+REGUNDEF	numSides
+REGUNDEF	polyRad
+REGUNDEF	carRad
+REGUNDEF	bColided
+REGUNDEF	outerLoop
+REGUNDEF	radius
+REGUNDEF	dist
+REGUNDEF	ox
+REGUNDEF	oy
+REGUNDEF	oz
+

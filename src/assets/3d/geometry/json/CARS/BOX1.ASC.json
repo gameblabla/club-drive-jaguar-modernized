@@ -1,0 +1,93 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "CARS/BOX1.ASC",
+  "template_sha256": "1105acf6d5131151d75662b11fd8b8fc3ee57e612cb5885648377822c193f28a",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 5,
+      "mesh": "Object01",
+      "index": 0,
+      "xyz": [
+        -3979.0485,
+        -1418.8587,
+        8749.6307
+      ]
+    },
+    {
+      "line": 6,
+      "mesh": "Object01",
+      "index": 1,
+      "xyz": [
+        -3979.0485,
+        7094.2955,
+        8749.6307
+      ]
+    },
+    {
+      "line": 7,
+      "mesh": "Object01",
+      "index": 2,
+      "xyz": [
+        -3979.0485,
+        -1418.8591,
+        0.0
+      ]
+    },
+    {
+      "line": 8,
+      "mesh": "Object01",
+      "index": 3,
+      "xyz": [
+        -3979.0485,
+        7094.2955,
+        0.0
+      ]
+    },
+    {
+      "line": 9,
+      "mesh": "Object01",
+      "index": 4,
+      "xyz": [
+        6708.2474,
+        -1418.8587,
+        8749.6307
+      ]
+    },
+    {
+      "line": 10,
+      "mesh": "Object01",
+      "index": 5,
+      "xyz": [
+        6708.2474,
+        7094.2955,
+        8749.6307
+      ]
+    },
+    {
+      "line": 11,
+      "mesh": "Object01",
+      "index": 6,
+      "xyz": [
+        6708.2474,
+        -1418.8591,
+        0.0
+      ]
+    },
+    {
+      "line": 12,
+      "mesh": "Object01",
+      "index": 7,
+      "xyz": [
+        6708.2474,
+        7094.2955,
+        0.0
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

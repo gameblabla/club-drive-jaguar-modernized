@@ -1,0 +1,74 @@
+	include "eq.s"
+
+doneadr	REGEQU	r0
+temp		REGEQU	r1
+num1		REGEQU	r2					;contains the number 1
+start_adr	REGEQU	r3					;contains starting address of compressed data
+dest_adr	REGEQU	r4					;contains destination address for uncompressed data
+end_adr	REGEQU	r5					;contains end address for uncompressed data
+
+ctrlbyte	REGEQU	r10
+temp2	REGEQU	r11
+loop		REGEQU	r12					;address of beginning of loop
+
+numff	REGEQU	r13
+
+	ORG	UNCOMP_PRG
+
+		movei	#UNCOMP_DONE,doneadr	;address in GPU ram
+		moveq	#0,temp				;0 = not done
+		store	temp,(doneadr)			;initialize done flag
+
+		movei	#UNCOMP_START,temp		;address in GPU ram
+		load		(temp),start_adr		;get the start address of compressed data
+		addq		#4,temp
+		load		(temp),dest_adr		;get the destination address for uncompressed data
+		addq		#4,temp
+		load		(temp),end_adr			;get the end address for uncompressed data
+		movei	#uncomp,loop
+
+		movei	#$FF,numff
+		movei	#1,num1
+uncomp:
+		loadb	(start_adr),ctrlbyte	;get the control byte
+		btst		#7,ctrlbyte			;see if byte is negative
+		jr		NE,do_rep				;if negative bit is set, replicate next byte
+		add		num1,start_adr			;**** always move to next byte ****
+
+;do copy
+cpyloop:	loadb	(start_adr),temp2		;get the byte to copy
+		storeb	temp2,(dest_adr)		;write it in destination
+		add		num1,start_adr			;go to next byte to copy
+		add		num1,dest_adr			;next byte in destination
+		sub		num1,ctrlbyte			;decrease loop counter
+		jr		PL,cpyloop			;keep copying until counter is negative
+		nop
+		jr		checkend				;see if uncomp is finished yet
+		nop
+do_rep:
+		neg		ctrlbyte				;number of bytes to replicate is ctrlbyte made positive
+		and		numff,ctrlbyte			;clear everything except a byte
+		loadb	(start_adr),temp2		;get the byte to replicate
+reploop:	storeb	temp2,(dest_adr)		;write replicated byte
+		add		num1,dest_adr			;next byte in destination
+		sub		num1,ctrlbyte			;decrease loop counter
+		jr		PL,reploop			;keep going until counter is negative
+		nop
+		add		num1,start_adr			;skip the replicated byte
+checkend:
+		cmp		end_adr,dest_adr		;compare current address to end address	
+		jump		CS,(loop)				;continue until end address is reached
+		nop
+		store	num1,(doneadr)			;1 indicates program is finished
+
+;stop the GPU
+		movei	#$00000008,R30
+		movei	#G_CTRL,R31
+		store	R30,(R31)
+
+		nop
+		nop
+		nop
+		nop
+
+

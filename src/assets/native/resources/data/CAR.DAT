@@ -1,0 +1,103 @@
+; car control data points
+
+.if 1
+BXVAL	EQU	50		; X,Y,Z for bottom rectangle
+BYVAL	EQU	15
+BZVAL	EQU	100
+MXVAL	EQU	50		; X,Y,Z for middle struts
+MYVAL	EQU	0
+MZVAL	EQU	100
+TXVAL	EQU	30		; X,Y,Z for top rectanlge
+TYVAL	EQU	-25
+TZVAL	EQU	70
+
+WXVAL	EQU	40
+WZVAL	EQU	80
+WBYVAL	EQU	35		; Y for bottom of wheels
+WTYVAL	EQU	0		; Y for top of wheels
+
+.else
+
+BXVAL	EQU	45		; X,Y,Z for bottom rectangle
+BYVAL	EQU	20
+BZVAL	EQU	90
+MXVAL	EQU	45		; X,Y,Z for middle struts
+MYVAL	EQU	15
+MZVAL	EQU	90
+TXVAL	EQU	28		; X,Y,Z for top rectanlge
+TYVAL	EQU	-20
+TZVAL	EQU	60
+
+WXVAL	EQU	40
+WZVAL	EQU	80
+WBYVAL	EQU	35		; Y for bottom of wheels
+WTYVAL	EQU	0		; Y for top of wheels
+
+.endif
+
+o_car_dat::
+	; middle struts			; this must go first!! 
+	dc.w	0, MYVAL, -MZVAL
+	dc.w	0,MYVAL,MZVAL
+	dc.w	-MXVAL,MYVAL,0
+	dc.w	MXVAL,MYVAL,0
+	dc.w	0,TYVAL,0
+	dc.w	0,BYVAL,0
+
+	; body edges
+	; bottom rectangle
+ 	dc.w	-BXVAL, BYVAL, BZVAL	;front
+	dc.w	BXVAL, BYVAL, BZVAL		;(left->right)
+
+	dc.w	BXVAL, BYVAL, BZVAL	;right side (front->rear)
+	dc.w	BXVAL, BYVAL,  -BZVAL	;
+
+	dc.w	BXVAL, BYVAL,  -BZVAL	;rear (right->left)
+	dc.w	-BXVAL, BYVAL, -BZVAL	;
+
+	dc.w	-BXVAL, BYVAL, -BZVAL	;left side (rear->front)
+ 	dc.w	-BXVAL, BYVAL, BZVAL	;
+
+	; top rectangle
+ 	dc.w	-TXVAL, TYVAL, TZVAL	;front
+	dc.w	TXVAL, TYVAL, TZVAL		;(left->right)
+
+	dc.w	TXVAL, TYVAL, TZVAL		;right side (front->rear)
+	dc.w	TXVAL, TYVAL,  -TZVAL	;
+
+	dc.w	TXVAL, TYVAL,  -TZVAL	;rear (right->left)
+	dc.w	-TXVAL, TYVAL, -TZVAL	;
+
+	dc.w	-TXVAL, TYVAL, -TZVAL	;left side (rear->front)
+ 	dc.w	-TXVAL, TYVAL, TZVAL	;
+
+
+	; sides
+	dc.w	-BXVAL, BYVAL, BZVAL	; left front
+	dc.w	-TXVAL, TYVAL, TZVAL
+
+	dc.w	BXVAL, BYVAL, BZVAL	; right front
+	dc.w	TXVAL, TYVAL, TZVAL
+
+	dc.w	BXVAL, BYVAL, -BZVAL	; right rear
+	dc.w	TXVAL, TYVAL, -TZVAL
+
+	dc.w	-BXVAL, BYVAL, -BZVAL	; left rear
+	dc.w	-TXVAL, TYVAL, -TZVAL
+
+
+	; wheels (must always be last, and in this order)
+	dc.w	-WXVAL, WBYVAL, WZVAL	; left front
+	dc.w	-WXVAL, WTYVAL, WZVAL
+
+	dc.w	WXVAL, WBYVAL, WZVAL	; right front
+	dc.w	WXVAL, WTYVAL, WZVAL
+
+	dc.w	WXVAL, WBYVAL, -WZVAL	; right rear
+	dc.w	WXVAL, WTYVAL, -WZVAL
+
+	dc.w	-WXVAL, WBYVAL, -WZVAL	; left rear
+	dc.w	-WXVAL, WTYVAL, -WZVAL
+
+
+

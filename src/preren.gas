@@ -1,0 +1,107 @@
+;----------------------------------------------------------------------------
+;	comp.gas
+;
+;----------------------------------------------------------------------------
+
+	include "jaguar.inc"
+	include "blit.inc"
+
+	include "3d.inc"
+	include "68kequ.inc"
+
+; global register defines
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+return	REGEQU	R31
+
+; global alternate register usage
+ALTplayer	REGEQU	R27
+
+	ORG	Overlay
+
+	include "3dds.inc"
+
+	include	"time.gas"
+
+	MACRO cutItOut
+		moveq	#@1, temp2
+		movei	#(SEMAPHORE+8), innerLoop
+		movei	#thatsAllFolks, temp
+		jump		(temp)
+		store	temp2, (innerLoop)
+	ENDM
+
+; code start ----------------------------------------------------------------
+
+	StartTimer	$0c
+	movei	#player,temp2
+	load	(temp2),temp
+	or	temp,temp
+	moveta	temp,ALTplayer
+	include	"marktree.gas"
+	SaveTimer	$0c
+
+	StartTimer	$10
+
+	; wait for blitter to finish with sky
+	movei	#B_CMD,temp2
+_CDLOCAL_11_48:
+	load	(temp2),temp
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_11_48
+	nop
+
+	SaveTimer	$10
+
+	; set up the blitter for the renderer
+	movei	#screen_addr,temp
+	load	(temp),temp
+	movei	#A2_BASE,temp2
+	store	temp,(temp2)
+	movei	#PITCH1|PIXEL16|WID320|XADDPHR,temp
+	addqt	#4,temp2		; move to A2_FLAGS
+	store	temp,(temp2)
+.if 0
+	movei	#DRAWRECT,temp
+	load	(temp),temp
+	addqt	#4,temp2		; move to A1_CLIP
+	store	temp,(temp2)
+.endif
+
+	movei	#debugflg,temp2
+	loadb	(temp2),temp2
+	cmpq	#0,temp2
+	jr	NE,_CDLOCAL_10_81
+	nop
+	; load rendering routines
+	movei	#rgpprog, temp
+	movei	#loadIt, temp2
+	jump		(temp2)
+	nop
+_CDLOCAL_10_81:
+	; if debugging, then load up the 3dend functions
+	movei	#egpprog,temp
+	movei	#loadIt, temp2
+	jump	(temp2)
+	nop
+
+
+; halt the GPU --------------------------------------------------------------
+thatsAllFolks:
+; stolen code
+		movei	#G_CTRL, temp2
+		load		(temp2), temp
+		bclr #0, temp
+		bset #1, temp
+		store	temp, (temp2)
+
+_CDLOCAL_10_98:	jr	_CDLOCAL_10_98
+		nop
+
+;-------------------------------------------------------------------
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop

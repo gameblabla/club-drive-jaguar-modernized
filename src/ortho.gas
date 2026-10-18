@@ -1,0 +1,304 @@
+;
+; code for orthogonalizing the matrix
+;
+
+roll	REGEQU	r7
+ptr	REGEQU	r8
+half	REGEQU	r9
+
+xrite	REGEQU	r10
+yrite	REGEQU	r11
+zrite	REGEQU	r12
+xdown	REGEQU	r13
+ydown	REGEQU	r14
+zdown	REGEQU	r15
+xhead	REGEQU	r16
+yhead	REGEQU	r17
+zhead	REGEQU	r18
+xposn	REGEQU	r19
+yposn	REGEQU	r20
+zposn	REGEQU	r21
+
+ORTHOGONALIZE	EQU	1
+
+.if ORTHOGONALIZE
+;
+; load up the matrix
+;
+	movei	#player,temp2
+	load	(temp2),temp
+	addqt	#CAR_MATRIX,temp
+	move	temp,ptr
+
+		loadw	(temp),xrite		; Fetch Turtle into registers
+		addq		#2,temp
+		loadw	(temp),xdown
+		addq		#2,temp
+		loadw	(temp),xhead
+		addq		#2,temp
+		loadw	(temp),yrite
+		addq		#2,temp
+		loadw	(temp),ydown
+		addq		#2,temp
+		loadw	(temp),yhead
+		addq		#2,temp
+		loadw	(temp),zrite
+		addq		#2,temp
+		loadw	(temp),zdown
+		addq		#2,temp
+		loadw	(temp),zhead
+
+
+;
+; Do Gram-Schmidt orthogonalization on the matrix
+;
+	movei	#G_DIVCTRL,temp2	; make 16.16 division
+	moveq	#1,temp
+	store	temp,(temp2)
+
+	imultn	xrite,xrite
+	imacn	yrite,yrite
+	imacn	zrite,zrite
+	resmac	temp
+;	abs	temp
+; "temp" is now the magnitude of col 1, squared. This is close to being 1; if we assume that the error is x, then
+; using (1+x)^2 = 1+2x+x^2, and assuming x to be small, we can find x to be approximately (temp-1)/2
+; (this is quicker than finding the square root)
+	moveq	#1,half
+	shlq	#13,half		; make "half" = 1/2 (in 14 bits)
+	move	half,roll		; and "roll" = 1 (in 28 bits)
+	shlq	#15,roll
+	sub	roll,temp
+	sharq	#1,temp			; divide by 2
+	add	roll,temp		; add 1 again
+
+	move	roll,xposn		; find 1/(1+x) for the (inverse of) the magnitude of row 1
+	div	temp,xposn
+
+	shlq	#16,xdown			; sign extend col 2
+	shlq	#16,ydown
+	shlq	#16,zdown
+	sharq	#16,xdown
+	sharq	#16,ydown
+	sharq	#16,zdown
+
+; multiply col 1 by the inverse of its magnitude
+	normi	xposn,temp
+	addqt	#9,temp
+	sha	temp, xposn
+	imult	xposn,xrite
+	imult	xposn,yrite
+	imult	xposn,zrite
+	neg	temp
+	addqt	#16,temp
+	sha	temp,xrite
+	sha	temp,yrite
+	sha	temp,zrite
+; make col2 = col2 - (col2.col1)col1
+	move	xrite,xposn
+	move	yrite,yposn
+	move	zrite,zposn
+	imultn	xdown,xrite
+	imacn	ydown,yrite
+	imacn	zdown,zrite
+	resmac	temp
+	sharq	#14,temp
+	imult	temp,xposn
+	imult	temp,yposn
+	imult	temp,zposn
+	sharq	#14,xposn
+	sharq	#14,yposn
+	sharq	#14,zposn
+	sub	xposn,xdown
+	sub	yposn,ydown
+	sub	zposn,zdown
+; normalize col2; again, assume that it's almost normal already, so we can use the
+; square root shortcut above
+
+	imultn	xdown,xdown
+	imacn	ydown,ydown
+	imacn	zdown,zdown
+	resmac	temp
+	abs	temp
+
+	sub	roll,temp		; roll still contains a 28 bit "1" (from above)
+	sharq	#1,temp			; divide by 2
+	add	roll,temp		; add 1 again
+
+	move	roll,yposn		; find 1/(1+x) for the (inverse of) the magnitude of row 1
+	div	temp,yposn
+
+	shlq	#16,xhead			; sign extend col 3 while we're waiting for the divide
+	shlq	#16,yhead
+	shlq	#16,zhead
+	sharq	#16,xhead
+	sharq	#16,yhead
+	sharq	#16,zhead
+
+; finish normalizing row 2
+	normi	yposn,temp
+	addqt	#9,temp
+	sha	temp,yposn
+	imult	yposn,xdown
+	imult	yposn,ydown
+	imult	yposn,zdown
+	neg	temp
+	addqt	#16,temp
+	sha	temp,xdown
+	sha	temp,ydown
+	sha	temp,zdown
+
+.if 0
+; finally, calculate col 3 to be col3-(col3.col1)col1-(col3.col2)col2
+
+	imultn	xhead,xrite
+	imacn	yhead,yrite
+	imacn	zhead,zrite
+	resmac	temp
+	sharq	#14,temp
+	imultn	xhead,xdown
+	imacn	yhead,ydown
+	imacn	zhead,zdown
+	resmac	temp2
+	sharq	#14,temp2
+	move	xrite,xposn
+	move	yrite,yposn
+	move	zrite,zposn
+	imult	temp,xposn
+	imult	temp,yposn
+	imult	temp,zposn
+	sharq	#14,xposn
+	sharq	#14,yposn
+	sharq	#14,zposn
+	sub	xposn,xhead
+	sub	yposn,yhead
+	sub	zposn,zhead
+
+	move	xdown,xposn
+	move	ydown,yposn
+	move	zdown,zposn
+	imult	temp2,xposn
+	imult	temp2,yposn
+	imult	temp2,zposn
+	sharq	#14,xposn
+	sharq	#14,yposn
+	sharq	#14,zposn
+	sub	xposn,xhead
+	sub	yposn,yhead
+	sub	zposn,zhead
+;
+; finally, normalize col 3
+;
+	imultn	xhead,xhead
+	imacn	yhead,yhead
+	imacn	zhead,zhead
+	resmac	temp
+	abs	temp
+
+	sub	roll,temp		; roll still contains a 28 bit "1" (from above)
+	sharq	#1,temp			; divide by 2
+	add	roll,temp		; add 1 again
+
+	move	roll,zposn		; find 1/(1+x) for the (inverse of) the magnitude of row 1
+	div	temp,zposn
+
+	normi	zposn,temp
+	addqt	#9,temp
+	sha	temp,zposn
+	imult	zposn,xhead
+	imult	zposn,yhead
+	imult	zposn,zhead
+	neg	temp
+	addqt	#16,temp
+	sha	temp,xhead
+	sha	temp,yhead
+	sha	temp,zhead
+
+.else
+; calculate col. 3 as col. 1 X col. 2
+
+	move	xdown,xposn
+	move	ydown,yposn
+	move	zdown,zposn
+	neg	xposn
+	neg	yposn
+	neg	zposn
+	imultn	yrite,zdown
+	imacn	zrite,yposn
+	resmac	xhead
+	imultn	zrite,xdown
+	imacn	xrite,zposn
+	resmac	yhead
+	imultn	xrite,ydown
+	imacn	yrite,xposn
+	resmac	zhead
+	sharq	#14,xhead
+	sharq	#14,yhead
+	sharq	#14,zhead
+.endif
+;
+; finally, normalize col 3
+;
+	imultn	xhead,xhead
+	imacn	yhead,yhead
+	imacn	zhead,zhead
+	resmac	temp
+	abs	temp
+
+	sub	roll,temp		; roll still contains a 28 bit "1" (from above)
+	sharq	#1,temp			; divide by 2
+	add	roll,temp		; add 1 again
+
+	move	roll,zposn		; find 1/(1+x) for the (inverse of) the magnitude of row 1
+	div	temp,zposn
+
+	normi	zposn,temp
+	addqt	#9,temp
+	sha	temp,zposn
+	imult	zposn,xhead
+	imult	zposn,yhead
+	imult	zposn,zhead
+	neg	temp
+	addqt	#16,temp
+	sha	temp,xhead
+	sha	temp,yhead
+	sha	temp,zhead
+
+	movei	#G_DIVCTRL,temp2	; make 16.16 division
+	moveq	#0,temp
+	store	temp,(temp2)
+
+	storew	xrite,(ptr)
+	addq	#2,ptr
+	storew	xdown,(ptr)
+	addq	#2,ptr
+	storew	xhead,(ptr)
+	addq	#2,ptr
+	storew	yrite,(ptr)		; Write back turtle
+	addq	#2,ptr
+	storew	ydown,(ptr)
+	addq	#2,ptr
+	storew	yhead,(ptr)
+	addq	#2,ptr
+	storew	zrite,(ptr)
+	addq	#2,ptr
+	storew	zdown,(ptr)
+	addq	#2,ptr
+	storew	zhead,(ptr)
+.endif
+
+REGUNDEF	roll
+REGUNDEF	half
+REGUNDEF	xrite
+REGUNDEF	yrite
+REGUNDEF	zrite
+REGUNDEF	xdown
+REGUNDEF	ydown
+REGUNDEF	zdown
+REGUNDEF	xhead
+REGUNDEF	yhead
+REGUNDEF	zhead
+REGUNDEF	xposn
+REGUNDEF	yposn
+REGUNDEF	zposn
+

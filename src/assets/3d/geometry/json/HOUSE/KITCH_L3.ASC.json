@@ -1,0 +1,233 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "HOUSE/KITCH_L3.ASC",
+  "template_sha256": "fc93378b943403e2c30c6d6c11542147cbc95ac61f48f5039925fad0d8952b57",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 42,
+      "mesh": "kitchen",
+      "index": 0,
+      "xyz": [
+        654.145142,
+        -10854.458008,
+        1855.572998
+      ]
+    },
+    {
+      "line": 43,
+      "mesh": "kitchen",
+      "index": 1,
+      "xyz": [
+        654.145142,
+        -10854.458008,
+        170.106339
+      ]
+    },
+    {
+      "line": 44,
+      "mesh": "kitchen",
+      "index": 2,
+      "xyz": [
+        3387.162109,
+        -10854.458008,
+        1855.572998
+      ]
+    },
+    {
+      "line": 45,
+      "mesh": "kitchen",
+      "index": 3,
+      "xyz": [
+        3387.162109,
+        -10854.458008,
+        170.107071
+      ]
+    },
+    {
+      "line": 46,
+      "mesh": "kitchen",
+      "index": 4,
+      "xyz": [
+        5550.572266,
+        -9093.953125,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 47,
+      "mesh": "kitchen",
+      "index": 5,
+      "xyz": [
+        5550.572266,
+        -7416.175293,
+        -2172.47583
+      ]
+    },
+    {
+      "line": 48,
+      "mesh": "kitchen",
+      "index": 6,
+      "xyz": [
+        5550.564453,
+        -9093.953125,
+        1837.078003
+      ]
+    },
+    {
+      "line": 49,
+      "mesh": "kitchen",
+      "index": 7,
+      "xyz": [
+        5550.564453,
+        -7416.177246,
+        1837.077759
+      ]
+    },
+    {
+      "line": 50,
+      "mesh": "kitchen",
+      "index": 8,
+      "xyz": [
+        -4468.737305,
+        -3129.265137,
+        2812.454346
+      ]
+    },
+    {
+      "line": 51,
+      "mesh": "kitchen",
+      "index": 9,
+      "xyz": [
+        -4468.737305,
+        -3129.265137,
+        -2172.47583
+      ]
+    },
+    {
+      "line": 52,
+      "mesh": "kitchen",
+      "index": 10,
+      "xyz": [
+        -890.905518,
+        -3135.297363,
+        -2172.47583
+      ]
+    },
+    {
+      "line": 53,
+      "mesh": "kitchen",
+      "index": 11,
+      "xyz": [
+        -890.905518,
+        -3135.297363,
+        2812.454346
+      ]
+    },
+    {
+      "line": 54,
+      "mesh": "kitchen",
+      "index": 12,
+      "xyz": [
+        5416.284668,
+        -3135.297363,
+        -2172.47583
+      ]
+    },
+    {
+      "line": 55,
+      "mesh": "kitchen",
+      "index": 13,
+      "xyz": [
+        5416.284668,
+        -3135.297363,
+        2812.454346
+      ]
+    },
+    {
+      "line": 56,
+      "mesh": "kitchen",
+      "index": 14,
+      "xyz": [
+        5416.284668,
+        -10854.458008,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 57,
+      "mesh": "kitchen",
+      "index": 15,
+      "xyz": [
+        5416.284668,
+        -10854.458008,
+        2812.454102
+      ]
+    },
+    {
+      "line": 58,
+      "mesh": "kitchen",
+      "index": 16,
+      "xyz": [
+        5416.284668,
+        -9093.953125,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 59,
+      "mesh": "kitchen",
+      "index": 17,
+      "xyz": [
+        5416.284668,
+        -7416.175293,
+        -2172.47583
+      ]
+    },
+    {
+      "line": 60,
+      "mesh": "kitchen",
+      "index": 18,
+      "xyz": [
+        5416.276367,
+        -9093.953125,
+        1837.078003
+      ]
+    },
+    {
+      "line": 66,
+      "mesh": "kitchen",
+      "index": 19,
+      "xyz": [
+        5416.276367,
+        -7416.177246,
+        1837.077759
+      ]
+    },
+    {
+      "line": 67,
+      "mesh": "kitchen",
+      "index": 20,
+      "xyz": [
+        -4468.737305,
+        -10854.458008,
+        2812.454102
+      ]
+    },
+    {
+      "line": 68,
+      "mesh": "kitchen",
+      "index": 21,
+      "xyz": [
+        -4468.737305,
+        -10854.458008,
+        -2172.476074
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

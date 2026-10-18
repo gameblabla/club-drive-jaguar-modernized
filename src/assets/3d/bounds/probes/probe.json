@@ -1,0 +1,24 @@
+{
+  "model": "CARS/CAR2.BND",
+  "points": 95,
+  "normals": 32,
+  "dividers": 55,
+  "original_edges": 143,
+  "cp_groups": 4,
+  "polygons": 63,
+  "new_edges": 4,
+  "changed": true,
+  "original_area": 14136.5,
+  "edited_area": 14136.5,
+  "area_difference": 0.0,
+  "added_point": [
+    0,
+    20,
+    36
+  ],
+  "added_normal": [
+    0,
+    32767,
+    0
+  ]
+}

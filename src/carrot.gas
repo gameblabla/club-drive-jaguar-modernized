@@ -1,0 +1,84 @@
+	.include "rot.inc"
+
+; Rotate and transform the car control points
+; (from car space to global space)
+; adding the car origin gets done in "crash", so
+; don't do it here
+
+	; read in rotation matrix (optimize for space)
+	movei	#player,temp2
+	load	(temp2),temp
+	movei	#CAR_POSNS,dest
+	add	temp,dest
+
+	moveq	#(CAR_MATRIX), source
+	add	temp,source
+
+	loadw	(source), m0
+	addqt	#2, source
+	loadw	(source), m1
+	addqt	#2, source
+	loadw	(source), m2
+	addqt	#2, source
+	loadw	(source), m3
+	addqt	#2, source
+	loadw	(source), m4
+	addqt	#2, source
+	loadw	(source), m5
+	addqt	#2, source
+	loadw	(source), m6
+	addqt	#2, source
+	loadw	(source), m7
+	addqt	#2, source
+	loadw	(source), m8
+
+	movei	#car_dat, source
+	movei	#CAR_NUM_PNTS,numPnts
+
+	move		dest, dest2
+	move		dest, dest3
+	subqt	#6, dest
+	subqt	#4, dest2
+	subqt	#2, dest3
+
+	movei	#_CDLOCAL_10_45, innerLoop
+	loadw	(source),x
+_CDLOCAL_10_45:
+	; get data
+	addqt	#6, dest
+	addqt	#2, source
+	addqt	#6, dest2
+	loadw	(source), y
+	addqt	#2, source
+	addqt	#6, dest3
+	loadw	(source), z
+
+	; do multiply by matrix transpose
+	imultn	m0, x	;
+	imacn	m3, y	;
+	imacn	m6, z	;
+	resmac	resultX	;
+	addqt	#2, source
+	sharq	#14, resultX
+	storew	resultX, (dest)
+
+	imultn	m1, x	;
+	imacn	m4, y	;
+	imacn	m7, z	;
+	resmac	resultY	;
+	sharq	#14, resultY
+
+	imultn	m2, x	;
+	imacn	m5, y	;
+	imacn	m8, z	;
+	resmac	resultZ	;
+	storew	resultY, (dest2)
+	sharq	#14, resultZ
+
+	subq		#1, numPnts
+	storew	resultZ, (dest3)
+	jump		NE, (innerLoop)
+	loadw	(source), x
+
+	.include "rotc.inc"
+

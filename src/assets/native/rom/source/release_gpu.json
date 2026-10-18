@@ -1,0 +1,105 @@
+{
+  "retail_window_start": 79224,
+  "retail_window_end": 110088,
+  "bytes": 30864,
+  "sha256": "7ebebab6abb1e78c6014c0338836cf12323e56a427c775f32604466e9f5d11b8",
+  "containers": [
+    {
+      "name": "3d",
+      "symbol": "gpprog",
+      "offset": 79224,
+      "container_bytes": 54,
+      "destination": 15740928,
+      "opcodes_bytes": 46
+    },
+    {
+      "name": "casbeg",
+      "symbol": "casbeg",
+      "offset": 79280,
+      "container_bytes": 2696,
+      "destination": 15740984,
+      "opcodes_bytes": 2688
+    },
+    {
+      "name": "tagbeg",
+      "symbol": "tagbeg",
+      "offset": 81976,
+      "container_bytes": 1872,
+      "destination": 15740984,
+      "opcodes_bytes": 1864
+    },
+    {
+      "name": "racbeg",
+      "symbol": "racbeg",
+      "offset": 83848,
+      "container_bytes": 2460,
+      "destination": 15740984,
+      "opcodes_bytes": 2452
+    },
+    {
+      "name": "comp",
+      "symbol": "cgpprog",
+      "offset": 86312,
+      "container_bytes": 3662,
+      "destination": 15740984,
+      "opcodes_bytes": 3654
+    },
+    {
+      "name": "ren",
+      "symbol": "rgpprog",
+      "offset": 89976,
+      "container_bytes": 3758,
+      "destination": 15740984,
+      "opcodes_bytes": 3750
+    },
+    {
+      "name": "casend",
+      "symbol": "casend",
+      "offset": 93736,
+      "container_bytes": 3710,
+      "destination": 15740984,
+      "opcodes_bytes": 3702
+    },
+    {
+      "name": "tagend",
+      "symbol": "tagend",
+      "offset": 97448,
+      "container_bytes": 3838,
+      "destination": 15740984,
+      "opcodes_bytes": 3830
+    },
+    {
+      "name": "racend",
+      "symbol": "racend",
+      "offset": 101288,
+      "container_bytes": 3774,
+      "destination": 15740984,
+      "opcodes_bytes": 3766
+    },
+    {
+      "name": "gpunzip",
+      "symbol": "_gpunzip",
+      "offset": 105064,
+      "container_bytes": 968,
+      "destination": 15740928,
+      "opcodes_bytes": 960
+    },
+    {
+      "name": "precomp",
+      "symbol": "precomp",
+      "offset": 106032,
+      "container_bytes": 2740,
+      "destination": 15740984,
+      "opcodes_bytes": 2732
+    },
+    {
+      "name": "preren",
+      "symbol": "preren",
+      "offset": 108776,
+      "container_bytes": 1310,
+      "destination": 15740984,
+      "opcodes_bytes": 1302
+    }
+  ],
+  "required_linker_padding_words": 2
+}

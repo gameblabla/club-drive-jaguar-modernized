@@ -1,0 +1,9 @@
+{
+  "generated_from": "ART.S",
+  "decompressed_bytes": 27088,
+  "compression": "original gzip if source identical, newly generated gzip otherwise",
+  "exact_original_source": true,
+  "source_sha256": "479377290b39c20703fc2c06e00daf1b607e3e9d5a14d906c2073bdb67bf42af",
+  "packed_sha256": "5433b852fa09456a4674b664399aec8606787c71c5a373e8ee4e2f4508d501fc",
+  "output": "build/source_generated/art.gz"
+}

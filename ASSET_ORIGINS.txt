@@ -1,0 +1,16 @@
+Club Drive — asset origins
+
+This repository is a reconstruction, not a historically complete or officially
+published Atari source tree. Some resources were preserved in surviving 3D Studio
+and assembly-era source files; other portions were recovered from the retail
+cartridge and converted into editable authoring formats.
+
+The folders under src/assets are named for what they contain, not how they
+were obtained. Editable PNG, WAV, MIDI, ASC and OBJ inputs are separate from
+Jaguar-native compressed/packed resources under src/assets/native. The native
+references remain necessary for byte-for-byte reproduction of the retail ROM.
+
+The generated 3D/BSP data and the editable score representations are not
+represented as original 1990s release formats unless supported by the inputs.
+
+This project is unofficial and conveys no license from Atari or other rightsholders.

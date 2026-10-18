@@ -1,0 +1,719 @@
+{
+  "note": "Pixel-identical PNG conversions; archive preserves TGA original bytes",
+  "images": [
+    {
+      "png": "PICS/ATARI.png",
+      "width": 605,
+      "height": 219,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "ATARI.TGA",
+          "sha256": "41d6bd8584efed9972131e67dba7e89cb7044deab53951a2731ec52a165acf58"
+        },
+        {
+          "file": "atari.tga",
+          "sha256": "41d6bd8584efed9972131e67dba7e89cb7044deab53951a2731ec52a165acf58"
+        }
+      ],
+      "png_sha256": "bc0703cded2cf292a061095a4710a55d55c3c2dcd90875a5dc39a947031896a8"
+    },
+    {
+      "png": "PICS/BEACHL.png",
+      "width": 63,
+      "height": 20,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "BEACHL.TGA",
+          "sha256": "b584a1c38e36a6ac15d952bf9ee3d2fb0d6c232d28596b976f91185a0ca260a1"
+        },
+        {
+          "file": "beachl.tga",
+          "sha256": "b584a1c38e36a6ac15d952bf9ee3d2fb0d6c232d28596b976f91185a0ca260a1"
+        }
+      ],
+      "png_sha256": "b3765f5e7985155ac60294f371e87dc2d828980ddb3aa83d38dbb4d71c18bc93"
+    },
+    {
+      "png": "PICS/BEACHR.png",
+      "width": 63,
+      "height": 20,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "BEACHR.TGA",
+          "sha256": "9ee41ceeaa938c9b12f71c920d1c01820b6e4dd7724563f19dc5d3c14465456b"
+        },
+        {
+          "file": "beachr.tga",
+          "sha256": "9ee41ceeaa938c9b12f71c920d1c01820b6e4dd7724563f19dc5d3c14465456b"
+        }
+      ],
+      "png_sha256": "cfeb53d3eac18987a78d5f67150221753962658f43c4603df7517ff4308b136a"
+    },
+    {
+      "png": "PICS/BRIDGEL.png",
+      "width": 64,
+      "height": 20,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "BRIDGEL.TGA",
+          "sha256": "14ee6e23c24042d720c0f8a556a992c8c2096ffc19d98a51363eac94d87247cc"
+        },
+        {
+          "file": "bridgel.tga",
+          "sha256": "14ee6e23c24042d720c0f8a556a992c8c2096ffc19d98a51363eac94d87247cc"
+        }
+      ],
+      "png_sha256": "f6734ff464d2b30198b9c33416df7a7cdeab9cd98bf7c25677b1e663e39213f5"
+    },
+    {
+      "png": "PICS/BRIDGER.png",
+      "width": 64,
+      "height": 20,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "BRIDGER.TGA",
+          "sha256": "d78ef9c64680e1052372a44b3be7411f2a4029b18dd5211c8775d7f1ad624955"
+        },
+        {
+          "file": "bridger.tga",
+          "sha256": "d78ef9c64680e1052372a44b3be7411f2a4029b18dd5211c8775d7f1ad624955"
+        }
+      ],
+      "png_sha256": "9c5a4dcb7f25d7f5826fcd2f369e965c2b19f1480ccb0c713e2bec74ad6071b3"
+    },
+    {
+      "png": "PICS/CHIC.png",
+      "width": 96,
+      "height": 145,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "CHIC.TGA",
+          "sha256": "51814d037164a375a17a9371e7f9508f39aa8c8690556fa20095d08f164c24b0"
+        },
+        {
+          "file": "chic.tga",
+          "sha256": "51814d037164a375a17a9371e7f9508f39aa8c8690556fa20095d08f164c24b0"
+        }
+      ],
+      "png_sha256": "0292eca32a619d7cd18315c8a887fc21c37d4d1ac12b0c92567ca7e51edf05fd"
+    },
+    {
+      "png": "PICS/CREDITS.png",
+      "width": 448,
+      "height": 288,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "CREDITS.TGA",
+          "sha256": "86aae52841554353899ac527d71d865151f9e1ec81be7e54d1e45b99cc33f2ed"
+        },
+        {
+          "file": "credits.tga",
+          "sha256": "86aae52841554353899ac527d71d865151f9e1ec81be7e54d1e45b99cc33f2ed"
+        }
+      ],
+      "png_sha256": "072da4b8ae43891b3e260f46689250a723795b5d98f343bf3d0d8c87a3adf289"
+    },
+    {
+      "png": "PICS/FINISH.png",
+      "width": 64,
+      "height": 64,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "FINISH.TGA",
+          "sha256": "fb7262dc2c2497f978fa35a6a035bc0fbcfbb8be5bbe48e9c4f72e70eda5cfaa"
+        },
+        {
+          "file": "finish.tga",
+          "sha256": "fb7262dc2c2497f978fa35a6a035bc0fbcfbb8be5bbe48e9c4f72e70eda5cfaa"
+        }
+      ],
+      "png_sha256": "00242fb8853aaf25396d3d36ac3670e3c8e24ba4281903be60a297211c3d148a"
+    },
+    {
+      "png": "PICS/FUTURE4.png",
+      "width": 96,
+      "height": 24,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "FUTURE4.TGA",
+          "sha256": "09ec4f17cf04fd7367674995e22e9fe0a793f35d62363517911ab47521402983"
+        },
+        {
+          "file": "future4.tga",
+          "sha256": "09ec4f17cf04fd7367674995e22e9fe0a793f35d62363517911ab47521402983"
+        }
+      ],
+      "png_sha256": "737e2a58baea7b367ac92a658fb7cb9d63effd6413205e8f237acfd092337b1b"
+    },
+    {
+      "png": "PICS/GAME-OVR.png",
+      "width": 320,
+      "height": 200,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "GAME-OVR.TGA",
+          "sha256": "5212cffc68ca68ccdffdcc1b6fb202b181f6abe73c558d0a9bd47e8131fe03e3"
+        },
+        {
+          "file": "game-ovr.tga",
+          "sha256": "5212cffc68ca68ccdffdcc1b6fb202b181f6abe73c558d0a9bd47e8131fe03e3"
+        }
+      ],
+      "png_sha256": "8970810bbbab1ab676be5059ae1f19ed55d35668771772d93f3cb610afdbdf9b"
+    },
+    {
+      "png": "PICS/GARASKY.png",
+      "width": 640,
+      "height": 100,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "GARASKY.TGA",
+          "sha256": "d923b8657a531a6eea98efade28b610fb166b728f6fdcfead8aac221841a4d7f"
+        },
+        {
+          "file": "garasky.tga",
+          "sha256": "d923b8657a531a6eea98efade28b610fb166b728f6fdcfead8aac221841a4d7f"
+        }
+      ],
+      "png_sha256": "80482830bf1f203480ef66a6fb7a837087a538d1d7f06d0e185e18d03da7414c"
+    },
+    {
+      "png": "PICS/HOOD-R.png",
+      "width": 320,
+      "height": 200,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "HOOD-R.TGA",
+          "sha256": "090dc76205265226767d9228c24395c870096f8a119b7b5f8a98e399282a541b"
+        },
+        {
+          "file": "hood-r.tga",
+          "sha256": "090dc76205265226767d9228c24395c870096f8a119b7b5f8a98e399282a541b"
+        }
+      ],
+      "png_sha256": "ac02e1e374354b09e0849283c348e23505b8710000dda9c263c72e824e554dd4"
+    },
+    {
+      "png": "PICS/HOOD-W.png",
+      "width": 320,
+      "height": 200,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "HOOD-W.TGA",
+          "sha256": "550b9cd16e64fd0c6d8d331373669bbe78d8daa6c09992dc4467f8fa3c4f8edd"
+        },
+        {
+          "file": "hood-w.tga",
+          "sha256": "550b9cd16e64fd0c6d8d331373669bbe78d8daa6c09992dc4467f8fa3c4f8edd"
+        }
+      ],
+      "png_sha256": "612f4a2b945c17c24122c08a6d320a04d274eda481b9818e8c2e042e28c0835f"
+    },
+    {
+      "png": "PICS/HOOD-Y.png",
+      "width": 320,
+      "height": 200,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "HOOD-Y.TGA",
+          "sha256": "9edf7ced996a4223fa6fcba204d852ae17672e4d25e81074e2d0643bbb910c5f"
+        },
+        {
+          "file": "hood-y.tga",
+          "sha256": "9edf7ced996a4223fa6fcba204d852ae17672e4d25e81074e2d0643bbb910c5f"
+        }
+      ],
+      "png_sha256": "bfbea1b482c5806ff59b699e68c8980396dc35a26de87c9cfdd5c490a63c64fc"
+    },
+    {
+      "png": "PICS/LOADHS.png",
+      "width": 320,
+      "height": 104,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "LOADHS.TGA",
+          "sha256": "0d934f533f31799ed3d02fe509868b92f3812c33853b487bde62c13798ad27bd"
+        },
+        {
+          "file": "loadhs.tga",
+          "sha256": "0d934f533f31799ed3d02fe509868b92f3812c33853b487bde62c13798ad27bd"
+        }
+      ],
+      "png_sha256": "acd729795900c6276d6bc40eca5765fc545e45a03ff5face0936aec7d22bd00e"
+    },
+    {
+      "png": "PICS/LOADSF.png",
+      "width": 320,
+      "height": 104,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "LOADSF.TGA",
+          "sha256": "08993601a0d22dc147b27cb2d2914cf867ea4082efbc7dcd739e6e569de9d654"
+        },
+        {
+          "file": "loadsf.tga",
+          "sha256": "08993601a0d22dc147b27cb2d2914cf867ea4082efbc7dcd739e6e569de9d654"
+        }
+      ],
+      "png_sha256": "f76df5e17e7b6185ea72800203a7eeaca1c2807e4aae48b0de8868644eed1683"
+    },
+    {
+      "png": "PICS/LOADSF2.png",
+      "width": 320,
+      "height": 104,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "LOADSF2.TGA",
+          "sha256": "77a607cde46807edefdcf23e908757aa64f9367aa73a0383dfd08146bc4c45be"
+        },
+        {
+          "file": "loadsf2.tga",
+          "sha256": "77a607cde46807edefdcf23e908757aa64f9367aa73a0383dfd08146bc4c45be"
+        }
+      ],
+      "png_sha256": "eed1cd0c44adb287452371646a715ede140598651f3aaa5844eadeacf916fce7"
+    },
+    {
+      "png": "PICS/LOADVP.png",
+      "width": 320,
+      "height": 104,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "LOADVP.TGA",
+          "sha256": "9e590e560683f8c577fa11c551e872cd03e7e41c192b3c9b8a4b498a9c0f7ee1"
+        },
+        {
+          "file": "loadvp.tga",
+          "sha256": "9e590e560683f8c577fa11c551e872cd03e7e41c192b3c9b8a4b498a9c0f7ee1"
+        }
+      ],
+      "png_sha256": "5913c513f4431ea4927044f96976f14a7c04fa21fa8fa73711b7126ba93b7a0d"
+    },
+    {
+      "png": "PICS/LOADWST.png",
+      "width": 320,
+      "height": 104,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "LOADWST.TGA",
+          "sha256": "19fcfcc71408cd62aa5b69522bbcb97cc2a27058eae8b7571f2734b6f21019e5"
+        },
+        {
+          "file": "loadwst.tga",
+          "sha256": "19fcfcc71408cd62aa5b69522bbcb97cc2a27058eae8b7571f2734b6f21019e5"
+        }
+      ],
+      "png_sha256": "39f6134b270c83cbb894c536b23fbcdc41f15038a0bc1cd21917e932742bfe85"
+    },
+    {
+      "png": "PICS/MP_BILL.png",
+      "width": 192,
+      "height": 96,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "MP_BILL.TGA",
+          "sha256": "c17e3eb50205934bd56bbe754824e6501c7dcacc7831814a93ea99aad5db401a"
+        },
+        {
+          "file": "mp_bill.tga",
+          "sha256": "c17e3eb50205934bd56bbe754824e6501c7dcacc7831814a93ea99aad5db401a"
+        }
+      ],
+      "png_sha256": "f028a893af985ccd6dd8f7d49c40744e6c80d279e2bee5f922583d2d5a31df93"
+    },
+    {
+      "png": "PICS/MP_CLUB.png",
+      "width": 160,
+      "height": 80,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "MP_CLUB.TGA",
+          "sha256": "c2924ca9caecd3838d550058538bdf3383e8986720396698e3b8154bb467ec9d"
+        },
+        {
+          "file": "mp_club.tga",
+          "sha256": "c2924ca9caecd3838d550058538bdf3383e8986720396698e3b8154bb467ec9d"
+        }
+      ],
+      "png_sha256": "f21bd2d622f9d2f2020be6c12f6b343e2d718b25d1faac50efe3de738ba82eac"
+    },
+    {
+      "png": "PICS/MP_FUT.png",
+      "width": 320,
+      "height": 136,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "MP_FUT.TGA",
+          "sha256": "44a78092ad2973de694a36ed696f21b801bc32894f4eee8673502dfbde775364"
+        },
+        {
+          "file": "mp_fut.tga",
+          "sha256": "44a78092ad2973de694a36ed696f21b801bc32894f4eee8673502dfbde775364"
+        }
+      ],
+      "png_sha256": "077997f55a0fb81a2d9a188d9b3e902678a8df6e33498fea8ba97516df5bc549"
+    },
+    {
+      "png": "PICS/MP_HS.png",
+      "width": 384,
+      "height": 200,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "MP_HS.TGA",
+          "sha256": "3c2ba02a30f80878b0ea75922d5703d8321e84dff06208b6669de7ca879162c4"
+        },
+        {
+          "file": "mp_hs.tga",
+          "sha256": "3c2ba02a30f80878b0ea75922d5703d8321e84dff06208b6669de7ca879162c4"
+        }
+      ],
+      "png_sha256": "707186fe641259f54a05880b42f8afce2e53739f2d9053ea831ff7ac0a397a80"
+    },
+    {
+      "png": "PICS/MP_HS2.png",
+      "width": 384,
+      "height": 88,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "MP_HS2.TGA",
+          "sha256": "ed611f7df5d109f0e38ea752eab68c3ba80bd219189fd88291b22fdc6a0b5dd9"
+        },
+        {
+          "file": "mp_hs2.tga",
+          "sha256": "ed611f7df5d109f0e38ea752eab68c3ba80bd219189fd88291b22fdc6a0b5dd9"
+        }
+      ],
+      "png_sha256": "349647a93b6a10608a9a88c0f436ea6306ee8773919625c8d57f889a693617c4"
+    },
+    {
+      "png": "PICS/MP_HS3.png",
+      "width": 256,
+      "height": 56,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "MP_HS3.TGA",
+          "sha256": "06709b38c32b0153f65bf33330efe571147621b0c77fa1787999e1d70d3c702e"
+        },
+        {
+          "file": "mp_hs3.tga",
+          "sha256": "06709b38c32b0153f65bf33330efe571147621b0c77fa1787999e1d70d3c702e"
+        }
+      ],
+      "png_sha256": "6b36279f0d09b6a64ca60d80d9752545d7c93bad1dee75d6bfaef093a3150c5c"
+    },
+    {
+      "png": "PICS/MP_SF.png",
+      "width": 256,
+      "height": 232,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "MP_SF.TGA",
+          "sha256": "3eb96232a68665fadc50852f90a96f62dc19342b20d7a241c1ca92bdbaa1aaa9"
+        },
+        {
+          "file": "mp_sf.tga",
+          "sha256": "3eb96232a68665fadc50852f90a96f62dc19342b20d7a241c1ca92bdbaa1aaa9"
+        }
+      ],
+      "png_sha256": "edf06300c023c9d72fe937977317e8ec52c141ad9780e5fd8e6f98506481ac51"
+    },
+    {
+      "png": "PICS/PAUSE.png",
+      "width": 160,
+      "height": 104,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "PAUSE.TGA",
+          "sha256": "d46fe5a10887f28675a624e516e37057fca7b6b31da2f92ec6893f69d1fd250a"
+        },
+        {
+          "file": "pause.tga",
+          "sha256": "d46fe5a10887f28675a624e516e37057fca7b6b31da2f92ec6893f69d1fd250a"
+        }
+      ],
+      "png_sha256": "0ce94918bd79bd31321544e73dd7a9d30c422c46b092f801fd705822477e1109"
+    },
+    {
+      "png": "PICS/ROKLTRS.png",
+      "width": 448,
+      "height": 288,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "ROKLTRS.TGA",
+          "sha256": "78ca6fb9cdbc591f26763a63e5ccdf15781baafb4036fd4e9e36c148eb6a94ef"
+        },
+        {
+          "file": "rokltrs.tga",
+          "sha256": "78ca6fb9cdbc591f26763a63e5ccdf15781baafb4036fd4e9e36c148eb6a94ef"
+        }
+      ],
+      "png_sha256": "2a928638144ceac9d57e40d48293c47598b8bd55975d08164593af7597d28593"
+    },
+    {
+      "png": "PICS/SALOON.png",
+      "width": 128,
+      "height": 71,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "SALOON.TGA",
+          "sha256": "224bba67efeff7e8fc43f99401d4bceccf75bd759afd4a30cfb688dedde3e709"
+        },
+        {
+          "file": "saloon.tga",
+          "sha256": "224bba67efeff7e8fc43f99401d4bceccf75bd759afd4a30cfb688dedde3e709"
+        }
+      ],
+      "png_sha256": "7ffc252c0036d21d501f3bc6f3e425088a245aaafc1c2c0bfb68fe27f105d33f"
+    },
+    {
+      "png": "PICS/SEAMAP.png",
+      "width": 448,
+      "height": 288,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "SEAMAP.TGA",
+          "sha256": "1db980746d724e615b606e7c701d629953a4a9c0b3b7f6f2aa454efbcf385116"
+        },
+        {
+          "file": "seamap.tga",
+          "sha256": "1db980746d724e615b606e7c701d629953a4a9c0b3b7f6f2aa454efbcf385116"
+        }
+      ],
+      "png_sha256": "6d26344b3570343d0c4121682bacf19a071c28d097af1b94aeaebe9c6d5c543d"
+    },
+    {
+      "png": "PICS/SFWORLD.png",
+      "width": 96,
+      "height": 24,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "SFWORLD.TGA",
+          "sha256": "46ce728021378020a25bcaacc7c50c316678b491ffcd8d2d3324319bc36d80c3"
+        },
+        {
+          "file": "sfworld.tga",
+          "sha256": "46ce728021378020a25bcaacc7c50c316678b491ffcd8d2d3324319bc36d80c3"
+        }
+      ],
+      "png_sha256": "bc488c0d1b7e35afaacc790eb9f89d310c68796078014ebe31b724d9e84101ec"
+    },
+    {
+      "png": "PICS/SIGN_CL.png",
+      "width": 218,
+      "height": 26,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "SIGN_CL.TGA",
+          "sha256": "962af6f1f1c712c416cb8738e96bdbee8623c7c0bc132265335d1e04e06e0329"
+        },
+        {
+          "file": "sign_cl.tga",
+          "sha256": "962af6f1f1c712c416cb8738e96bdbee8623c7c0bc132265335d1e04e06e0329"
+        }
+      ],
+      "png_sha256": "fe2565767774fad45a23b33d50d3ade833eb377f46d18feed9aa4b53ae1f5fe2"
+    },
+    {
+      "png": "PICS/SIGN_PK.png",
+      "width": 332,
+      "height": 259,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "SIGN_PK.TGA",
+          "sha256": "de5859198ec883d69548bafbb746c37a11c6c14b157cf6a83fd79829262f91e0"
+        },
+        {
+          "file": "sign_pk.tga",
+          "sha256": "de5859198ec883d69548bafbb746c37a11c6c14b157cf6a83fd79829262f91e0"
+        }
+      ],
+      "png_sha256": "dea7a678b867b1babd77ccaed83b06775fead846ba60eab72536fbf28df29791"
+    },
+    {
+      "png": "PICS/SIGN_UL.png",
+      "width": 206,
+      "height": 249,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "SIGN_UL.TGA",
+          "sha256": "5bb9d28266404c48be65777d8ab2cafae11457ae20639644dc9156d2d18a7c1b"
+        },
+        {
+          "file": "sign_ul.tga",
+          "sha256": "5bb9d28266404c48be65777d8ab2cafae11457ae20639644dc9156d2d18a7c1b"
+        }
+      ],
+      "png_sha256": "6ee6be2930cde8959b60a7c970773867a0e44ddeee188c6dbdba02c698a094b0"
+    },
+    {
+      "png": "PICS/SKY.png",
+      "width": 640,
+      "height": 100,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "SKY.TGA",
+          "sha256": "f1a0ebb9d39df0faa134bb3cd094500c8213e7bb660ab2d1bf01fe01823acafe"
+        },
+        {
+          "file": "sky.tga",
+          "sha256": "f1a0ebb9d39df0faa134bb3cd094500c8213e7bb660ab2d1bf01fe01823acafe"
+        }
+      ],
+      "png_sha256": "dda5195cceecff6bca5128977a797eb59efd1be26acfa00c8194eb1275442b49"
+    },
+    {
+      "png": "PICS/START.png",
+      "width": 64,
+      "height": 64,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "START.TGA",
+          "sha256": "82fbcea16f7a81f4b946369d9419046cd0e26bd9d327aaad2c680d02ff753aff"
+        },
+        {
+          "file": "start.tga",
+          "sha256": "82fbcea16f7a81f4b946369d9419046cd0e26bd9d327aaad2c680d02ff753aff"
+        }
+      ],
+      "png_sha256": "90c2e13b7dc9619e1582079cbf00c6b2a1cc888c19c58ee1ce18a0bbb0479d6c"
+    },
+    {
+      "png": "PICS/STUDIO.png",
+      "width": 96,
+      "height": 24,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "STUDIO.TGA",
+          "sha256": "9718bb9a683f814d1d7c7fb04c7adf9909d2d53f25578727990969674aec4586"
+        },
+        {
+          "file": "studio.tga",
+          "sha256": "9718bb9a683f814d1d7c7fb04c7adf9909d2d53f25578727990969674aec4586"
+        }
+      ],
+      "png_sha256": "11be8c668718a284b694fb44d3def660886d38a1b76a17a5d03533ed0a83b766"
+    },
+    {
+      "png": "PICS/TITLEBK.png",
+      "width": 448,
+      "height": 288,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "TITLEBK.TGA",
+          "sha256": "8198d124e295baca2036100c2ca7445a620a4d36d32874bbdd9c15f2c1c43fe2"
+        },
+        {
+          "file": "titlebk.tga",
+          "sha256": "8198d124e295baca2036100c2ca7445a620a4d36d32874bbdd9c15f2c1c43fe2"
+        }
+      ],
+      "png_sha256": "044f061acc2874a085869db2dec8052fa0aafa309b1d578f2b6996715c4c8c6d"
+    },
+    {
+      "png": "PICS/TTLCAR.png",
+      "width": 256,
+      "height": 72,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "TTLCAR.TGA",
+          "sha256": "8c1e30a6c84c3f419f2b4b059bcda28dae747420518b94cc80ca3166b564603d"
+        },
+        {
+          "file": "ttlcar.tga",
+          "sha256": "8c1e30a6c84c3f419f2b4b059bcda28dae747420518b94cc80ca3166b564603d"
+        }
+      ],
+      "png_sha256": "5b9bc6b7e9e200ef8f8961febda7f60c133eda8be83176844647988476d47bdf"
+    },
+    {
+      "png": "PICS/VLCTYPRK.png",
+      "width": 320,
+      "height": 200,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "VLCTYPRK.TGA",
+          "sha256": "81dd9bbe8622d30022de1e523abebd618afbfd4940cacf8d4efe8c0baba3a951"
+        },
+        {
+          "file": "vlctyprk.tga",
+          "sha256": "81dd9bbe8622d30022de1e523abebd618afbfd4940cacf8d4efe8c0baba3a951"
+        }
+      ],
+      "png_sha256": "f55114a6573de305ab0f9e7aab0391d04a2ca1f535496e83ba32bd31228cb9a6"
+    },
+    {
+      "png": "PICS/WINDOW.png",
+      "width": 464,
+      "height": 237,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "WINDOW.TGA",
+          "sha256": "0666c61733f16790edce4cf6a621b3c8a3d7c2de121cb8ab2e8a2b2c268a4318"
+        },
+        {
+          "file": "window.tga",
+          "sha256": "0666c61733f16790edce4cf6a621b3c8a3d7c2de121cb8ab2e8a2b2c268a4318"
+        }
+      ],
+      "png_sha256": "3ab93ad798f7298d64e4f92be3b5d497b845448484d06c23e701bcbaafcfe6ea"
+    },
+    {
+      "png": "PICS/WSTWRLD.png",
+      "width": 320,
+      "height": 200,
+      "mode": "RGB",
+      "source_tga": [
+        {
+          "file": "WSTWRLD.TGA",
+          "sha256": "53322fbc5c081b3db84adbe4441cc0fcd9d0e94a729c047bf6912ba3b1c5dcb7"
+        },
+        {
+          "file": "wstwrld.tga",
+          "sha256": "53322fbc5c081b3db84adbe4441cc0fcd9d0e94a729c047bf6912ba3b1c5dcb7"
+        }
+      ],
+      "png_sha256": "41dc2d61b74c86fdf442ab78864d52cff36f70f93e94e15e3d8dd8e1b48aacc3"
+    }
+  ]
+}

@@ -1,0 +1,471 @@
+	.long
+car2_head:
+	dc.l	0	; band flags
+	dc.w	94	; NUM_PNTS
+	dc.w	31	; NUM_VECTORS
+	dc.w	54	; NUM_DIVIDERS
+	dc.w	143	; NUM_EDGES
+	dc.w	3	; NUM_CPS
+	dc.w	32	; NUM_COLORS
+	dc.l	$0067d000,$ffb1e000,$fd0ce000	; ORIGIN
+	dc.l	$00003f42	; RADIUS
+	dc.l	0	; PROP_LIST
+	dc.l	car2_data+0	; dividers
+	dc.l	car2_data+216	; edges
+	dc.l	car2_data+788	; points
+	dc.l	car2_data+1538	; tris
+	dc.l	car2_data+2368	; end of tris
+	dc.l	car2_data+2368	; tree
+	dc.l	0	; texture data
+	dc.l	car2_data+2392	; calculated colors
+	dc.l	0	; CAMERA list
+	dc.l	0	; ROTATED POINTLIST
+	dc.l	0	; tVECTORS
+	dc.l	0	; tCOLORS
+	dc.l	0	; tEDGES
+	dc.l	0	; tDIVIDERS
+	dc.l	0	; tCLOSE_LIST
+	dc.l	0	; tPNTS
+	dc.l	0	; tPOLYS
+	dc.l	0	; BND_MATRIX
+	dc.l	0	; tNUM_EXTRAS
+	dc.l	0	; USE_COUNT
+			; BND_LIST
+	dc.l	car2_head
+	dc.l	0
+	.long
+car2_data:
+	dc.w	$3, $0
+	dc.w	$4, $1
+	dc.w	$5, $1
+	dc.w	$1b, $1
+	dc.w	$5c, $1
+	dc.w	$35, $1
+	dc.w	$3e, $1
+	dc.w	$8, $2
+	dc.w	$1, $3
+	dc.w	$a, $4
+	dc.w	$8, $5
+	dc.w	$b, $6
+	dc.w	$6, $7
+	dc.w	$0, $8
+	dc.w	$e, $9
+	dc.w	$14, $a
+	dc.w	$19, $b
+	dc.w	$17, $c
+	dc.w	$e, $d
+	dc.w	$17, $e
+	dc.w	$19, $f
+	dc.w	$11, $10
+	dc.w	$11, $11
+	dc.w	$14, $12
+	dc.w	$19, $13
+	dc.w	$11, $14
+	dc.w	$4, $15
+	dc.w	$4, $16
+	dc.w	$6, $17
+	dc.w	$2, $18
+	dc.w	$d, $19
+	dc.w	$51, $1a
+	dc.w	$5d, $1a
+	dc.w	$34, $1a
+	dc.w	$3d, $1a
+	dc.w	$50, $1b
+	dc.w	$5b, $1b
+	dc.w	$2e, $1b
+	dc.w	$37, $1b
+	dc.w	$24, $1c
+	dc.w	$23, $1c
+	dc.w	$1c, $1c
+	dc.w	$2d, $1c
+	dc.w	$2c, $1c
+	dc.w	$25, $1c
+	dc.w	$53, $1c
+	dc.w	$57, $1c
+	dc.w	$36, $1d
+	dc.w	$2f, $1d
+	dc.w	$3f, $1d
+	dc.w	$38, $1d
+	dc.w	$1b, $1d
+	dc.w	$5c, $1d
+	dc.w	$43, $1e
+; edges
+	dc.w	$4, $8	; edge #$0
+	dc.w	$5, $8	; edge #$1
+	dc.w	$5, $1	; edge #$2
+	dc.w	$1, $4	; edge #$3
+	dc.w	$7, $8	; edge #$4
+	dc.w	$6, $7	; edge #$5
+	dc.w	$5, $6	; edge #$6
+	dc.w	$9, $2	; edge #$7
+	dc.w	$9, $a	; edge #$8
+	dc.w	$a, $3	; edge #$9
+	dc.w	$2, $3	; edge #$a
+	dc.w	$b, $6	; edge #$b
+	dc.w	$b, $2	; edge #$c
+	dc.w	$9, $b	; edge #$d
+	dc.w	$b, $c	; edge #$e
+	dc.w	$c, $a	; edge #$f
+	dc.w	$c, $7	; edge #$10
+	dc.w	$7, $a	; edge #$11
+	dc.w	$7, $3	; edge #$12
+	dc.w	$1, $d	; edge #$13
+	dc.w	$d, $e	; edge #$14
+	dc.w	$e, $4	; edge #$15
+	dc.w	$2, $d	; edge #$16
+	dc.w	$3, $e	; edge #$17
+	dc.w	$f, $11	; edge #$18
+	dc.w	$f, $10	; edge #$19
+	dc.w	$12, $10	; edge #$1a
+	dc.w	$11, $12	; edge #$1b
+	dc.w	$15, $13	; edge #$1c
+	dc.w	$18, $15	; edge #$1d
+	dc.w	$18, $13	; edge #$1e
+	dc.w	$1a, $16	; edge #$1f
+	dc.w	$14, $16	; edge #$20
+	dc.w	$1a, $14	; edge #$21
+	dc.w	$18, $19	; edge #$22
+	dc.w	$19, $13	; edge #$23
+	dc.w	$f, $19	; edge #$24
+	dc.w	$11, $19	; edge #$25
+	dc.w	$f, $18	; edge #$26
+	dc.w	$1a, $17	; edge #$27
+	dc.w	$17, $16	; edge #$28
+	dc.w	$12, $17	; edge #$29
+	dc.w	$10, $17	; edge #$2a
+	dc.w	$12, $1a	; edge #$2b
+	dc.w	$15, $16	; edge #$2c
+	dc.w	$13, $14	; edge #$2d
+	dc.w	$19, $1a	; edge #$2e
+	dc.w	$5, $d	; edge #$2f
+	dc.w	$6, $d	; edge #$30
+	dc.w	$3, $8	; edge #$31
+	dc.w	$e, $8	; edge #$32
+	dc.w	$52, $23	; edge #$33
+	dc.w	$52, $1b	; edge #$34
+	dc.w	$23, $22	; edge #$35
+	dc.w	$1b, $22	; edge #$36
+	dc.w	$1c, $24	; edge #$37
+	dc.w	$1c, $52	; edge #$38
+	dc.w	$24, $23	; edge #$39
+	dc.w	$51, $1d	; edge #$3a
+	dc.w	$51, $1c	; edge #$3b
+	dc.w	$1d, $24	; edge #$3c
+	dc.w	$1e, $1d	; edge #$3d
+	dc.w	$1d, $25	; edge #$3e
+	dc.w	$1e, $1f	; edge #$3f
+	dc.w	$1f, $20	; edge #$40
+	dc.w	$25, $21	; edge #$41
+	dc.w	$20, $21	; edge #$42
+	dc.w	$21, $22	; edge #$43
+	dc.w	$24, $25	; edge #$44
+	dc.w	$5e, $2c	; edge #$45
+	dc.w	$5e, $5b	; edge #$46
+	dc.w	$2c, $2b	; edge #$47
+	dc.w	$5b, $2b	; edge #$48
+	dc.w	$5d, $2d	; edge #$49
+	dc.w	$5d, $5e	; edge #$4a
+	dc.w	$2d, $2c	; edge #$4b
+	dc.w	$5c, $26	; edge #$4c
+	dc.w	$5c, $5d	; edge #$4d
+	dc.w	$26, $2d	; edge #$4e
+	dc.w	$27, $26	; edge #$4f
+	dc.w	$26, $2e	; edge #$50
+	dc.w	$27, $28	; edge #$51
+	dc.w	$2e, $29	; edge #$52
+	dc.w	$28, $29	; edge #$53
+	dc.w	$29, $2a	; edge #$54
+	dc.w	$2a, $2b	; edge #$55
+	dc.w	$2d, $2e	; edge #$56
+	dc.w	$35, $56	; edge #$57
+	dc.w	$35, $34	; edge #$58
+	dc.w	$56, $53	; edge #$59
+	dc.w	$34, $53	; edge #$5a
+	dc.w	$36, $55	; edge #$5b
+	dc.w	$36, $35	; edge #$5c
+	dc.w	$55, $56	; edge #$5d
+	dc.w	$2f, $54	; edge #$5e
+	dc.w	$2f, $36	; edge #$5f
+	dc.w	$54, $55	; edge #$60
+	dc.w	$30, $2f	; edge #$61
+	dc.w	$30, $37	; edge #$62
+	dc.w	$30, $31	; edge #$63
+	dc.w	$31, $32	; edge #$64
+	dc.w	$32, $33	; edge #$65
+	dc.w	$33, $34	; edge #$66
+	dc.w	$37, $34	; edge #$67
+	dc.w	$37, $35	; edge #$68
+	dc.w	$3e, $5a	; edge #$69
+	dc.w	$3e, $3d	; edge #$6a
+	dc.w	$5a, $57	; edge #$6b
+	dc.w	$3d, $57	; edge #$6c
+	dc.w	$3f, $59	; edge #$6d
+	dc.w	$3f, $3e	; edge #$6e
+	dc.w	$59, $5a	; edge #$6f
+	dc.w	$38, $58	; edge #$70
+	dc.w	$38, $3f	; edge #$71
+	dc.w	$58, $59	; edge #$72
+	dc.w	$39, $38	; edge #$73
+	dc.w	$39, $40	; edge #$74
+	dc.w	$39, $3a	; edge #$75
+	dc.w	$3a, $3b	; edge #$76
+	dc.w	$3b, $3c	; edge #$77
+	dc.w	$40, $3c	; edge #$78
+	dc.w	$3c, $3d	; edge #$79
+	dc.w	$40, $3d	; edge #$7a
+	dc.w	$44, $43	; edge #$7b
+	dc.w	$42, $44	; edge #$7c
+	dc.w	$41, $43	; edge #$7d
+	dc.w	$42, $41	; edge #$7e
+	dc.w	$48, $47	; edge #$7f
+	dc.w	$46, $48	; edge #$80
+	dc.w	$45, $47	; edge #$81
+	dc.w	$46, $45	; edge #$82
+	dc.w	$4c, $4b	; edge #$83
+	dc.w	$4a, $4c	; edge #$84
+	dc.w	$49, $4b	; edge #$85
+	dc.w	$4a, $49	; edge #$86
+	dc.w	$50, $4f	; edge #$87
+	dc.w	$4e, $50	; edge #$88
+	dc.w	$4d, $4f	; edge #$89
+	dc.w	$4e, $4d	; edge #$8a
+	dc.w	$51, $1b	; edge #$8b
+	dc.w	$54, $53	; edge #$8c
+	dc.w	$58, $57	; edge #$8d
+	dc.w	$5c, $5b	; edge #$8e
+; points
+	dc.w	54, -12, -112	; pt#$1
+	dc.w	54, -12, 30	; pt#$2
+	dc.w	-53, -12, 30	; pt#$3
+	dc.w	-54, -12, -112	; pt#$4
+	dc.w	54, 20, -102	; pt#$5
+	dc.w	54, 20, 30	; pt#$6
+	dc.w	-53, 20, 30	; pt#$7
+	dc.w	-54, 20, -101	; pt#$8
+	dc.w	55, 0, 95	; pt#$9
+	dc.w	-53, 0, 95	; pt#$a
+	dc.w	55, 20, 113	; pt#$b
+	dc.w	-52, 20, 113	; pt#$c
+	dc.w	54, -12, -94	; pt#$d
+	dc.w	-54, -12, -94	; pt#$e
+	dc.w	45, -12, 30	; pt#$f
+	dc.w	-44, -12, 30	; pt#$10
+	dc.w	29, -30, 3	; pt#$11
+	dc.w	-28, -30, 3	; pt#$12
+	dc.w	29, -28, -69	; pt#$13
+	dc.w	-28, -28, -68	; pt#$14
+	dc.w	44, -12, -94	; pt#$15
+	dc.w	-44, -12, -94	; pt#$16
+	dc.w	-44, -12, -74	; pt#$17
+	dc.w	45, -12, -75	; pt#$18
+	dc.w	29, -29, -59	; pt#$19
+	dc.w	-28, -29, -58	; pt#$1a
+	dc.w	-28, 19, 37	; pt#$1b
+	dc.w	-27, 29, 65	; pt#$1c
+	dc.w	-53, 19, 76	; pt#$1d
+	dc.w	-53, 6, 76	; pt#$1e
+	dc.w	-53, -4, 65	; pt#$1f
+	dc.w	-53, -4, 49	; pt#$20
+	dc.w	-53, 6, 37	; pt#$21
+	dc.w	-53, 19, 37	; pt#$22
+	dc.w	-53, 29, 49	; pt#$23
+	dc.w	-53, 29, 65	; pt#$24
+	dc.w	-53, 12, 57	; pt#$25
+	dc.w	-54, 19, -57	; pt#$26
+	dc.w	-54, 6, -57	; pt#$27
+	dc.w	-54, -4, -68	; pt#$28
+	dc.w	-54, -4, -84	; pt#$29
+	dc.w	-54, 6, -96	; pt#$2a
+	dc.w	-54, 19, -96	; pt#$2b
+	dc.w	-54, 29, -84	; pt#$2c
+	dc.w	-54, 29, -68	; pt#$2d
+	dc.w	-54, 12, -76	; pt#$2e
+	dc.w	55, 19, 76	; pt#$2f
+	dc.w	55, 6, 76	; pt#$30
+	dc.w	55, -4, 64	; pt#$31
+	dc.w	55, -4, 48	; pt#$32
+	dc.w	54, 6, 37	; pt#$33
+	dc.w	54, 19, 37	; pt#$34
+	dc.w	55, 29, 48	; pt#$35
+	dc.w	55, 29, 64	; pt#$36
+	dc.w	55, 12, 56	; pt#$37
+	dc.w	54, 19, -57	; pt#$38
+	dc.w	54, 6, -57	; pt#$39
+	dc.w	54, -4, -69	; pt#$3a
+	dc.w	54, -4, -85	; pt#$3b
+	dc.w	54, 6, -96	; pt#$3c
+	dc.w	54, 19, -96	; pt#$3d
+	dc.w	54, 29, -85	; pt#$3e
+	dc.w	54, 29, -69	; pt#$3f
+	dc.w	54, 12, -77	; pt#$40
+	dc.w	46, 1, -108	; pt#$41
+	dc.w	46, -9, -111	; pt#$42
+	dc.w	36, 1, -108	; pt#$43
+	dc.w	36, -9, -111	; pt#$44
+	dc.w	33, 1, -108	; pt#$45
+	dc.w	33, -9, -111	; pt#$46
+	dc.w	23, 1, -108	; pt#$47
+	dc.w	23, -9, -111	; pt#$48
+	dc.w	-22, 1, -108	; pt#$49
+	dc.w	-22, -9, -111	; pt#$4a
+	dc.w	-33, 1, -108	; pt#$4b
+	dc.w	-33, -9, -111	; pt#$4c
+	dc.w	-35, 1, -108	; pt#$4d
+	dc.w	-35, -9, -111	; pt#$4e
+	dc.w	-45, 1, -108	; pt#$4f
+	dc.w	-45, -9, -111	; pt#$50
+	dc.w	-27, 19, 76	; pt#$51
+	dc.w	-27, 29, 48	; pt#$52
+	dc.w	29, 19, 37	; pt#$53
+	dc.w	29, 19, 76	; pt#$54
+	dc.w	29, 29, 64	; pt#$55
+	dc.w	29, 29, 48	; pt#$56
+	dc.w	29, 19, -96	; pt#$57
+	dc.w	29, 19, -57	; pt#$58
+	dc.w	29, 29, -68	; pt#$59
+	dc.w	29, 29, -85	; pt#$5a
+	dc.w	-28, 19, -96	; pt#$5b
+	dc.w	-28, 19, -57	; pt#$5c
+	dc.w	-28, 29, -68	; pt#$5d
+	dc.w	-28, 29, -84	; pt#$5e
+; vectors
+	dc.w	-135, 10171, -31148	; vector#$0
+	dc.w	0, 32767, -3	; vector#$1
+	dc.w	25, -32255, 5772	; vector#$2
+	dc.w	32764, 387, -194	; vector#$3
+	dc.w	32762, 529, -248	; vector#$4
+	dc.w	107, -21904, 24370	; vector#$5
+	dc.w	-32763, 519, 102	; vector#$6
+	dc.w	-32765, 387, 61	; vector#$7
+	dc.w	0, -32767, 0	; vector#$8
+	dc.w	77, -27191, 18284	; vector#$9
+	dc.w	23665, -22663, -113	; vector#$a
+	dc.w	-22539, -23743, -1399	; vector#$b
+	dc.w	23376, -22908, -1567	; vector#$c
+	dc.w	24644, -21592, -326	; vector#$d
+	dc.w	24092, -22209, -103	; vector#$e
+	dc.w	-24158, -22137, 116	; vector#$f
+	dc.w	-24549, -21702, 105	; vector#$10
+	dc.w	-24046, -22259, -129	; vector#$11
+	dc.w	-76, -27427, -17929	; vector#$12
+	dc.w	-8, -32701, -2072	; vector#$13
+	dc.w	-3, -32765, -338	; vector#$14
+	dc.w	32765, -381, 128	; vector#$15
+	dc.w	32765, -398, 58	; vector#$16
+	dc.w	-32763, 387, 338	; vector#$17
+	dc.w	-32764, -426, 142	; vector#$18
+	dc.w	-32763, -368, 386	; vector#$19
+	dc.w	-98, 24802, -21414	; vector#$1a
+	dc.w	98, 24801, 21415	; vector#$1b
+	dc.w	-32767, 0, 158	; vector#$1c
+	dc.w	32767, 0, -159	; vector#$1d
+	dc.w	0, 10176, -31147	; vector#$1e
+; cpnode #0  offset 0
+	dc.w	0
+; cpnode #1  offset 2
+	dc.w	$2004, $1, $8004, $8005, $8006, $1, $1 ;; "bottom"
+	dc.w	$2004, $2, $8010, $800e, $b, $5, $1 ;; "bottom"
+	dc.w	$2004, $3, $38, $33, $8039, $8037, $1b ;; "rhs wheel bottom"
+	dc.w	$2004, $1f, $8035, $8033, $34, $36, $1a ;; "rhs wheel bottom"
+	dc.w	$2004, $23, $3b, $37, $803c, $803a, $1c ;; "rhs wheel bottom"
+	dc.w	$2004, $33, $8034, $8038, $803b, $8b, $1e ;; "rhs wheel inside"
+	dc.w	$2004, $4, $4a, $45, $804b, $8049, $1b ;; "rhs wheel bottom"
+	dc.w	$2004, $20, $8047, $8045, $46, $48, $1a ;; "rhs wheel bottom"
+	dc.w	$2004, $24, $4d, $49, $804e, $804c, $1c ;; "rhs wheel bottom"
+	dc.w	$2004, $34, $8046, $804a, $804d, $8e, $1e ;; "rhs wheel inside"
+	dc.w	$2004, $5, $5c, $57, $805d, $805b, $1b ;; "lhs wheel bottom"
+	dc.w	$2004, $21, $8059, $8057, $58, $5a, $1a ;; "lhs wheel bottom"
+	dc.w	$2004, $25, $5f, $5b, $8060, $805e, $1c ;; "lhs wheel bottom"
+	dc.w	$2004, $2d, $60, $5d, $59, $808c, $1d ;; "lhs wheel inside"
+	dc.w	$2004, $6, $6e, $69, $806f, $806d, $1b ;; "lhs wheel bottom"
+	dc.w	$2004, $22, $806b, $8069, $6a, $6c, $1a ;; "lhs wheel bottom"
+	dc.w	$2004, $26, $71, $6d, $8072, $8070, $1c ;; "lhs wheel bottom"
+	dc.w	$2004, $2e, $72, $6f, $6b, $808d, $1d ;; "lhs wheel inside"
+	dc.w	$2004, $8, $8030, $800b, $c, $16, $3 ;; "lhs"
+	dc.w	$2003, $9, $800c, $800d, $7, $4 ;; "lhs"
+	dc.w	$2003, $1b, $6, $30, $802f, $16 ;; "lhs"
+	dc.w	$2003, $1a, $8002, $2f, $8013, $15 ;; "lhs spoiler"
+	dc.w	$2005, $2f, $68, $805c, $805f, $8061, $62, $1e ;; "lhs wheel"
+	dc.w	$2006, $30, $65, $66, $8067, $8062, $63, $64, $1e ;; "lhs wheel"
+	dc.w	$2003, $2f, $8058, $8068, $67, $1e ;; "lhs wheel"
+	dc.w	$2006, $31, $7a, $806a, $806e, $8071, $8073, $74, $1e ;; "lhs wheel"
+	dc.w	$2005, $32, $77, $8078, $8074, $75, $76, $1e ;; "lhs wheel"
+	dc.w	$2003, $31, $79, $807a, $78, $1e ;; "lhs wheel"
+	dc.w	$2003, $b, $10, $11, $800f, $6 ;; "rhs"
+	dc.w	$2003, $c, $8011, $12, $8009, $7 ;; "rhs"
+	dc.w	$2003, $1c, $4, $8031, $8012, $17 ;; "rhs"
+	dc.w	$2003, $1d, $31, $8032, $8017, $18 ;; "rhs"
+	dc.w	$2003, $1e, $32, $8000, $8015, $19 ;; "rhs spoiler"
+	dc.w	$2005, $28, $8044, $39, $35, $8043, $8041, $1d ;; "rhs wheel"
+	dc.w	$2003, $29, $3c, $44, $803e, $1d ;; "rhs wheel"
+	dc.w	$2006, $27, $803f, $3d, $3e, $41, $8042, $8040, $1d ;; "rhs wheel"
+	dc.w	$2006, $2b, $8052, $8056, $4b, $47, $8055, $8054, $1d ;; "rhs wheel"
+	dc.w	$2003, $2c, $4e, $56, $8050, $1d ;; "rhs wheel"
+	dc.w	$2005, $2a, $8051, $4f, $50, $52, $8053, $1d ;; "rhs wheel"
+	dc.w	$2004, $d, $13, $14, $15, $8003, $8 ;; "top spoiler"
+	dc.w	$2004, $d, $a, $17, $8014, $8016, $8 ;; "inside"
+	dc.w	$2004, $a, $d, $e, $f, $8008, $5 ;; "front"
+	dc.w	$2004, $7, $8007, $8, $9, $800a, $2 ;; "hood"
+	dc.w	$2004, $0, $0, $8001, $2, $3, $0 ;; "rear"
+	dc.w	$2004, $35, $7b, $807d, $807e, $7c, $1f ;; "brake"
+	dc.w	$2004, $35, $7f, $8081, $8082, $80, $1f ;; "brake"
+	dc.w	$2004, $35, $83, $8085, $8086, $84, $1f ;; "brake"
+	dc.w	$2004, $35, $87, $8089, $808a, $88, $1f ;; "brake"
+	dc.w	0
+; cpnode #2  offset 676
+	dc.w	$2004, $19, $2b, $802e, $8025, $1b, $14 ;; "top"
+	dc.w	$2003, $11, $801e, $22, $23, $c ;; "lhs strut"
+	dc.w	$2003, $14, $28, $801f, $27, $f ;; "rhs strut"
+	dc.w	$2004, $18, $21, $802d, $8023, $2e, $13 ;; "top strut"
+	dc.w	$2003, $f, $801d, $1e, $801c, $a ;; "lhs strut"
+	dc.w	$2003, $10, $1f, $8020, $8021, $b ;; "rhs strut"
+	dc.w	$a004, $e, $8018, $19, $801a, $801b, $9 ;; "front windshield"
+	dc.w	$a003, $12, $8024, $18, $25, $d ;; "lhs window"
+	dc.w	$a003, $13, $8026, $24, $8022, $e ;; "lhs window"
+	dc.w	$a003, $15, $1a, $2a, $8029, $10 ;; "rhs window"
+	dc.w	$a003, $16, $29, $8027, $802b, $11 ;; "rhs window"
+	dc.w	$a004, $17, $20, $802c, $1c, $2d, $12 ;; "back window"
+	dc.w	0
+; tree
+	.long
+			; Node 0
+	dc.w	0, 13, 16, 8
+			; Node 8
+	dc.w	1, 0
+	dc.l	2
+			; Node 16
+	dc.w	1, 0
+	dc.l	676
+; colors
+	dc.w	0, $0, $ff80, $60
+	dc.w	0, $1, $ff80, $60
+	dc.w	0, $2, $ff80, $60
+	dc.w	0, $3, $ff80, $60
+	dc.w	0, $4, $ff80, $60
+	dc.w	0, $5, $ff80, $60
+	dc.w	0, $6, $ff80, $60
+	dc.w	0, $7, $ff80, $60
+	dc.w	0, $8, $ff80, $60
+	dc.w	0, $9, $80, $20
+	dc.w	0, $a, $ff80, $60
+	dc.w	0, $b, $ff80, $60
+	dc.w	0, $c, $ff80, $60
+	dc.w	0, $d, $80, $20
+	dc.w	0, $e, $80, $20
+	dc.w	0, $f, $ff80, $60
+	dc.w	0, $10, $80, $20
+	dc.w	0, $11, $80, $20
+	dc.w	0, $12, $80, $20
+	dc.w	0, $13, $ff80, $60
+	dc.w	0, $14, $ff80, $60
+	dc.w	0, $15, $ff80, $60
+	dc.w	0, $16, $ff80, $60
+	dc.w	0, $17, $ff80, $60
+	dc.w	0, $18, $ff80, $60
+	dc.w	0, $19, $ff80, $60
+	dc.w	0, $1a, $7820, $30
+	dc.w	0, $1, $7820, $30
+	dc.w	0, $1b, $7820, $30
+	dc.w	0, $1c, $7820, $30
+	dc.w	0, $1d, $7820, $30
+	dc.w	1, $1e, $e180, $20

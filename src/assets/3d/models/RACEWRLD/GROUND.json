@@ -1,0 +1,79 @@
+{
+ "source": "RACEWRLD/GROUND.ASC",
+ "sha256": "1d78b486dfe6e2df0f8f81b627d437622de5844526a18bd1bed9a217d422cb70",
+ "objects": [
+  {
+   "name": "Light01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Camera01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "GROUND",
+   "vertices": [
+    [
+     "-21220.001953",
+     "-21220.240234",
+     "-773.350464"
+    ],
+    [
+     "21220",
+     "-21220.240234",
+     "-773.350464"
+    ],
+    [
+     "21220",
+     "21029.884766",
+     "-773.361328"
+    ],
+    [
+     "-21220.001953",
+     "21029.884766",
+     "-773.361328"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      0,
+      1,
+      2
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      0,
+      2,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    }
+   ],
+   "declared_vertices": 4,
+   "declared_faces": 2
+  }
+ ],
+ "material_names": [
+  "GREEN MATTE"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

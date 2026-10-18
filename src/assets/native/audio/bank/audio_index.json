@@ -1,0 +1,912 @@
+{
+  "reference_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "asset_count": 49,
+  "sample_count": 42,
+  "bank_start": 352720,
+  "bank_end": 939664,
+  "score_count": 7,
+  "patch_references": [
+    {
+      "symbol": "tkick",
+      "source_line": 1049,
+      "rom_patch_length_offset": 34908,
+      "sample_length": 2431,
+      "address": "0x889038"
+    },
+    {
+      "symbol": "tsnare",
+      "source_line": 1070,
+      "rom_patch_length_offset": 34988,
+      "sample_length": 4780,
+      "address": "0x886d68"
+    },
+    {
+      "symbol": "tconga",
+      "source_line": 1093,
+      "rom_patch_length_offset": 35068,
+      "sample_length": 4127,
+      "address": "0x888018"
+    },
+    {
+      "symbol": "sfbass",
+      "source_line": 1116,
+      "rom_patch_length_offset": 35148,
+      "sample_length": 11753,
+      "address": "0x8a1ea8"
+    },
+    {
+      "symbol": "marimba",
+      "source_line": 1160,
+      "rom_patch_length_offset": 35308,
+      "sample_length": 12032,
+      "address": "0x8899b8"
+    },
+    {
+      "symbol": "tmtwo",
+      "source_line": 1186,
+      "rom_patch_length_offset": 35388,
+      "sample_length": 14861,
+      "address": "0x88f3a8"
+    },
+    {
+      "symbol": "tmthree",
+      "source_line": 1209,
+      "rom_patch_length_offset": 35468,
+      "sample_length": 12884,
+      "address": "0x892db8"
+    },
+    {
+      "symbol": "tmfour",
+      "source_line": 1232,
+      "rom_patch_length_offset": 35548,
+      "sample_length": 12575,
+      "address": "0x896010"
+    },
+    {
+      "symbol": "tritone",
+      "source_line": 1255,
+      "rom_patch_length_offset": 35628,
+      "sample_length": 5852,
+      "address": "0x899130"
+    },
+    {
+      "symbol": "sfbass",
+      "source_line": 1278,
+      "rom_patch_length_offset": 35708,
+      "sample_length": 11773,
+      "address": "0x8a1ea8"
+    },
+    {
+      "symbol": "rockkick",
+      "source_line": 1301,
+      "rom_patch_length_offset": 35788,
+      "sample_length": 3321,
+      "address": "0x8e4990"
+    },
+    {
+      "symbol": "roksnare",
+      "source_line": 1324,
+      "rom_patch_length_offset": 35868,
+      "sample_length": 9406,
+      "address": "0x8e24d0"
+    },
+    {
+      "symbol": "sfkick",
+      "source_line": 1350,
+      "rom_patch_length_offset": 35948,
+      "sample_length": 10935,
+      "address": "0x89f3f0"
+    },
+    {
+      "symbol": "sfbass",
+      "source_line": 1372,
+      "rom_patch_length_offset": 36028,
+      "sample_length": 11773,
+      "address": "0x8a1ea8"
+    },
+    {
+      "symbol": "trumpet",
+      "source_line": 1394,
+      "rom_patch_length_offset": 36108,
+      "sample_length": 11753,
+      "address": "0x8a4ca8"
+    },
+    {
+      "symbol": "clsd_hat",
+      "source_line": 1416,
+      "rom_patch_length_offset": 36188,
+      "sample_length": 4488,
+      "address": "0x8a7a98"
+    },
+    {
+      "symbol": "sfsnare",
+      "source_line": 1438,
+      "rom_patch_length_offset": 36268,
+      "sample_length": 16059,
+      "address": "0x8aa1b0"
+    },
+    {
+      "symbol": "ride",
+      "source_line": 1460,
+      "rom_patch_length_offset": 36348,
+      "sample_length": 43051,
+      "address": "0x8ae070"
+    },
+    {
+      "symbol": "rim",
+      "source_line": 1482,
+      "rom_patch_length_offset": 36428,
+      "sample_length": 2715,
+      "address": "0x8b88a0"
+    },
+    {
+      "symbol": "toms",
+      "source_line": 1504,
+      "rom_patch_length_offset": 36508,
+      "sample_length": 16916,
+      "address": "0x8b9340"
+    },
+    {
+      "symbol": "open_hat",
+      "source_line": 1526,
+      "rom_patch_length_offset": 36588,
+      "sample_length": 5520,
+      "address": "0x8a8c20"
+    },
+    {
+      "symbol": "rapkick",
+      "source_line": 1576,
+      "rom_patch_length_offset": 36748,
+      "sample_length": 1284,
+      "address": "0x8c9828"
+    },
+    {
+      "symbol": "rapsnr2",
+      "source_line": 1623,
+      "rom_patch_length_offset": 36908,
+      "sample_length": 1209,
+      "address": "0x8cf698"
+    },
+    {
+      "symbol": "rapkick",
+      "source_line": 1902,
+      "rom_patch_length_offset": 37868,
+      "sample_length": 2568,
+      "address": "0x8c9828"
+    },
+    {
+      "symbol": "rapsnr1",
+      "source_line": 1925,
+      "rom_patch_length_offset": 37948,
+      "sample_length": 2203,
+      "address": "0x8cedf8"
+    },
+    {
+      "symbol": "rapsnr2",
+      "source_line": 1948,
+      "rom_patch_length_offset": 38028,
+      "sample_length": 2418,
+      "address": "0x8cf698"
+    },
+    {
+      "symbol": "raphat",
+      "source_line": 1971,
+      "rom_patch_length_offset": 38108,
+      "sample_length": 1879,
+      "address": "0x8c90d0"
+    },
+    {
+      "symbol": "squeekie",
+      "source_line": 2015,
+      "rom_patch_length_offset": 38268,
+      "sample_length": 20778,
+      "address": "0x8d0010"
+    },
+    {
+      "symbol": "rappiano",
+      "source_line": 2037,
+      "rom_patch_length_offset": 38348,
+      "sample_length": 19397,
+      "address": "0x8ca230"
+    },
+    {
+      "symbol": "wahguitr",
+      "source_line": 2059,
+      "rom_patch_length_offset": 38428,
+      "sample_length": 3902,
+      "address": "0x8d5140"
+    },
+    {
+      "symbol": "balloon",
+      "source_line": 2103,
+      "rom_patch_length_offset": 38588,
+      "sample_length": 23329,
+      "address": "0x8c35a8"
+    },
+    {
+      "symbol": "chord1",
+      "source_line": 2150,
+      "rom_patch_length_offset": 38748,
+      "sample_length": 7913,
+      "address": "0x8d77d0"
+    },
+    {
+      "symbol": "rapkick",
+      "source_line": 2194,
+      "rom_patch_length_offset": 38908,
+      "sample_length": 2568,
+      "address": "0x8c9828"
+    },
+    {
+      "symbol": "rapsnr2",
+      "source_line": 2216,
+      "rom_patch_length_offset": 38988,
+      "sample_length": 2418,
+      "address": "0x8cf698"
+    },
+    {
+      "symbol": "raphat",
+      "source_line": 2238,
+      "rom_patch_length_offset": 39068,
+      "sample_length": 1879,
+      "address": "0x8c90d0"
+    },
+    {
+      "symbol": "chord2",
+      "source_line": 2260,
+      "rom_patch_length_offset": 39148,
+      "sample_length": 4555,
+      "address": "0x8d96c0"
+    },
+    {
+      "symbol": "toms",
+      "source_line": 2282,
+      "rom_patch_length_offset": 39228,
+      "sample_length": 16916,
+      "address": "0x8b9340"
+    },
+    {
+      "symbol": "cabas1",
+      "source_line": 2304,
+      "rom_patch_length_offset": 39308,
+      "sample_length": 3468,
+      "address": "0x8da890"
+    },
+    {
+      "symbol": "cabas3",
+      "source_line": 2326,
+      "rom_patch_length_offset": 39388,
+      "sample_length": 3468,
+      "address": "0x8db620"
+    },
+    {
+      "symbol": "rockkick",
+      "source_line": 2354,
+      "rom_patch_length_offset": 39468,
+      "sample_length": 2568,
+      "address": "0x8e4990"
+    },
+    {
+      "symbol": "roksnare",
+      "source_line": 2377,
+      "rom_patch_length_offset": 39548,
+      "sample_length": 9406,
+      "address": "0x8e24d0"
+    },
+    {
+      "symbol": "sawwave",
+      "source_line": 2401,
+      "rom_patch_length_offset": 39628,
+      "sample_length": 7418,
+      "address": "0x8e07d0"
+    }
+  ],
+  "assets": [
+    {
+      "file": "woo1.f16",
+      "symbol": "winsnd",
+      "rom_start": 352720,
+      "size": 9387,
+      "played_sample_length": 9387,
+      "address": "0x8561d0",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[0], samplen[0] at ROM 0x8014/0x8084",
+      "sha256": "83857df824ec408e5e8684d254518b365b9109bce376de6a96e0d6bc528e9f64"
+    },
+    {
+      "file": "aescrash.f16",
+      "symbol": "crashsnd",
+      "rom_start": 362112,
+      "size": 21255,
+      "played_sample_length": 21255,
+      "address": "0x858680",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[1], samplen[1] at ROM 0x8014/0x8084",
+      "sha256": "63ed9afd17af9796e7975af8c31cc07896517534164f5cd6e317a77333c8ee3c"
+    },
+    {
+      "file": "right7.f16",
+      "symbol": "p1yea",
+      "rom_start": 383368,
+      "size": 13504,
+      "played_sample_length": 13483,
+      "address": "0x85d988",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[8], samplen[8] at ROM 0x8014/0x8084",
+      "sha256": "5abc695effd2a17884bb05f58378e3d2f8cdc4dbd22eb2df2d33b3ea2111fb03"
+    },
+    {
+      "file": "yes1.f16",
+      "symbol": "p2yea",
+      "rom_start": 396872,
+      "size": 7672,
+      "played_sample_length": 7672,
+      "address": "0x860e48",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[9], samplen[9] at ROM 0x8014/0x8084",
+      "sha256": "f5016a820f2e408be6e06b0201df9cb15ca684e1430012c9282e784e858b8e52"
+    },
+    {
+      "file": "flush20k.f16",
+      "symbol": "flushsnd",
+      "rom_start": 404544,
+      "size": 56011,
+      "played_sample_length": 56011,
+      "address": "0x862c40",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[2], samplen[2] at ROM 0x8014/0x8084",
+      "sha256": "4e9b5f09f168fb52f75eee475129afae02efd5474e67d315e80d734b7a90f4de"
+    },
+    {
+      "file": "pno2_20k.f16",
+      "symbol": "pianosnd",
+      "rom_start": 460560,
+      "size": 8370,
+      "played_sample_length": 8370,
+      "address": "0x870710",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[3], samplen[3] at ROM 0x8014/0x8084",
+      "sha256": "f4a13961eec03d9b53b369cd0cb7413d11b03a6087fba23c6afee27faa9860e7"
+    },
+    {
+      "file": "meow30k.f16",
+      "symbol": "meowsnd",
+      "rom_start": 468936,
+      "size": 22409,
+      "played_sample_length": 22409,
+      "address": "0x8727c8",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[4], samplen[4] at ROM 0x8014/0x8084",
+      "sha256": "4a9662ee3fff7177f13e484009d28327b93e5a58cd395144e78f63ad643334be"
+    },
+    {
+      "file": "mouse20k.f16",
+      "symbol": "mousesnd",
+      "rom_start": 491352,
+      "size": 2142,
+      "played_sample_length": 2142,
+      "address": "0x877f58",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[5], samplen[5] at ROM 0x8014/0x8084",
+      "sha256": "d5fb08550f501973dcfa5bd15d9f6e8404e11179d010a3e27fed37616f920653"
+    },
+    {
+      "file": "door_20k.f16",
+      "symbol": "doorsnd",
+      "rom_start": 493496,
+      "size": 24254,
+      "played_sample_length": 24254,
+      "address": "0x8787b8",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[6], samplen[6] at ROM 0x8014/0x8084",
+      "sha256": "bd6634b9bbcc52cc0b543ba6882ff349d73f8a18ea52396c8cb5e973f3621840"
+    },
+    {
+      "file": "ouch_17k.f16",
+      "symbol": "ouchsnd",
+      "rom_start": 517752,
+      "size": 20941,
+      "played_sample_length": 20941,
+      "address": "0x87e678",
+      "kind": "f16",
+      "evidence": "SOUND.S snd_addr[7], samplen[7] at ROM 0x8014/0x8084",
+      "sha256": "d01b61566aa1e1ca5ea9772757ed2900b0ea9b259e8276c4cfde44c31d21971c"
+    },
+    {
+      "file": "conga.scr",
+      "symbol": "congams",
+      "rom_start": 538696,
+      "size": 13596,
+      "address": "0x883848",
+      "kind": "scr",
+      "evidence": "SOUND.S mus_info[0] at ROM 0x7D44, terminated by 0x7FFFFFFF",
+      "sha256": "7220286b02414b6e0baf27bd844fccf4e637c0c90b30af415155772e05a3d8b0"
+    },
+    {
+      "file": "brushsnr.f16",
+      "symbol": "tsnare",
+      "rom_start": 552296,
+      "size": 4780,
+      "address": "0x886d68",
+      "kind": "f16",
+      "patch_records": [
+        34972
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "b3f75d56480315bf9b597e3762c9da1a93bacff54fe642eb77922e5e78fb13bc"
+    },
+    {
+      "file": "conga.f16",
+      "symbol": "tconga",
+      "rom_start": 557080,
+      "size": 4127,
+      "address": "0x888018",
+      "kind": "f16",
+      "patch_records": [
+        35052
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "e6c540c61feaf90086e5dd994a5e9e995336ed684da6bfae1bb5b570c6009789"
+    },
+    {
+      "file": "kick2.f16",
+      "symbol": "tkick",
+      "rom_start": 561208,
+      "size": 2431,
+      "address": "0x889038",
+      "kind": "f16",
+      "patch_records": [
+        34892
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "984ebd50ac152bbb143d34d324b524e99634a1ed83fdaebe4800dcfb058261e2"
+    },
+    {
+      "file": "marimba2.f16",
+      "symbol": "marimba",
+      "rom_start": 563640,
+      "size": 12032,
+      "address": "0x8899b8",
+      "kind": "f16",
+      "patch_records": [
+        35292
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "6fcb5f6519286b83d78820cee978518e9cc94863c062775dc8de2b16d07aba78"
+    },
+    {
+      "file": "honky.scr",
+      "symbol": "honky",
+      "rom_start": 575672,
+      "size": 10988,
+      "address": "0x88c8b8",
+      "kind": "scr",
+      "evidence": "SOUND.S mus_info[1] at ROM 0x7D44, terminated by 0x7FFFFFFF",
+      "sha256": "24919cea182084d49e7b717b1b67e6cdf9370ad64397b88e59239ec5716993f0"
+    },
+    {
+      "file": "honkyc2.f16",
+      "symbol": "tmtwo",
+      "rom_start": 586664,
+      "size": 14861,
+      "address": "0x88f3a8",
+      "kind": "f16",
+      "patch_records": [
+        35372
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "c361c9c8ecb774efae4c9aca242da5ba5d51dc999035964f2a3799bf37d422d5"
+    },
+    {
+      "file": "honkyc3.f16",
+      "symbol": "tmthree",
+      "rom_start": 601528,
+      "size": 12884,
+      "address": "0x892db8",
+      "kind": "f16",
+      "patch_records": [
+        35452
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "bbd137192cbf33d2e77c5e3820013184bfeb3e51b8707298ce6098b55b414143"
+    },
+    {
+      "file": "honkyc4.f16",
+      "symbol": "tmfour",
+      "rom_start": 614416,
+      "size": 12575,
+      "address": "0x896010",
+      "kind": "f16",
+      "patch_records": [
+        35532
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "0b4714f034bf996995b49ea91f18a30799aaca1d2ac38c4d1e143de2801c3ad4"
+    },
+    {
+      "file": "pnotri.f16",
+      "symbol": "tritone",
+      "rom_start": 626992,
+      "size": 5852,
+      "address": "0x899130",
+      "kind": "f16",
+      "patch_records": [
+        35612
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "ef20016e05e38accb3e3e10afe2fcc30e64edb0eccc6e03051e99ab2573d9a82"
+    },
+    {
+      "file": "sfjazz.scr",
+      "symbol": "sfjazz",
+      "rom_start": 632848,
+      "size": 19420,
+      "address": "0x89a810",
+      "kind": "scr",
+      "evidence": "SOUND.S mus_info[2] at ROM 0x7D44, terminated by 0x7FFFFFFF",
+      "sha256": "f65304e263ac46aa313a38c73f27f4982abd0827f50c8f24891a1533433c8786"
+    },
+    {
+      "file": "kick.f16",
+      "symbol": "sfkick",
+      "rom_start": 652272,
+      "size": 10935,
+      "address": "0x89f3f0",
+      "kind": "f16",
+      "patch_records": [
+        35932
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "55ba72fec11f61d3f891bd1aae227a135bc995a8d0f17ef28fb11f96f973187f"
+    },
+    {
+      "file": "bass.f16",
+      "symbol": "sfbass",
+      "rom_start": 663208,
+      "size": 11773,
+      "address": "0x8a1ea8",
+      "kind": "f16",
+      "patch_records": [
+        35132,
+        35692,
+        36012
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "c8294f3a96b6316472d57f6bccfc734a4c2a5e93cc2645ed1099e02ff1a53b27"
+    },
+    {
+      "file": "trumpet.f16",
+      "symbol": "trumpet",
+      "rom_start": 674984,
+      "size": 11753,
+      "address": "0x8a4ca8",
+      "kind": "f16",
+      "patch_records": [
+        36092
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "3351e893adae893a6eb0c183c635066b302fc6d9061f230a5183c685862af11d"
+    },
+    {
+      "file": "clsd_hat.f16",
+      "symbol": "clsd_hat",
+      "rom_start": 686744,
+      "size": 4488,
+      "address": "0x8a7a98",
+      "kind": "f16",
+      "patch_records": [
+        36172
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "732e43911bf9a96b98d9925cf5feab38e271defe64fdf1f8c1437c590914f7a1"
+    },
+    {
+      "file": "open_hat.f16",
+      "symbol": "open_hat",
+      "rom_start": 691232,
+      "size": 5520,
+      "address": "0x8a8c20",
+      "kind": "f16",
+      "patch_records": [
+        36572
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "8ef5adba36f3ecf855f9cc2b1d74ba4e489f41abdaea08e7f80f650c10a8b518"
+    },
+    {
+      "file": "snare.f16",
+      "symbol": "sfsnare",
+      "rom_start": 696752,
+      "size": 16059,
+      "address": "0x8aa1b0",
+      "kind": "f16",
+      "patch_records": [
+        36252
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "d0dc182717192e62dea46e5037d4258013492d04c90b124402c957a451021b32"
+    },
+    {
+      "file": "ride.f16",
+      "symbol": "ride",
+      "rom_start": 712816,
+      "size": 43051,
+      "address": "0x8ae070",
+      "kind": "f16",
+      "patch_records": [
+        36332
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "d3de28da46083dc7ca449ad7d6ccf3eb1ca638ec6d5b49d61b5a123a705989a8"
+    },
+    {
+      "file": "rim.f16",
+      "symbol": "rim",
+      "rom_start": 755872,
+      "size": 2715,
+      "address": "0x8b88a0",
+      "kind": "f16",
+      "patch_records": [
+        36412
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "2be4ac3fc67e837550584d738c742cd88f66d15db0fdc8bb00f01c93144f11e0"
+    },
+    {
+      "file": "toms.f16",
+      "symbol": "toms",
+      "rom_start": 758592,
+      "size": 16916,
+      "address": "0x8b9340",
+      "kind": "f16",
+      "patch_records": [
+        36492,
+        39212
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "d2087b5126701da13bbff0c07207b7e73a3e76a72de269508e6b89e08f2b9e75"
+    },
+    {
+      "file": "techno.scr",
+      "symbol": "tech",
+      "rom_start": 775512,
+      "size": 11724,
+      "address": "0x8bd558",
+      "kind": "scr",
+      "evidence": "SOUND.S mus_info[3] at ROM 0x7D44, terminated by 0x7FFFFFFF",
+      "sha256": "4cd46bad056f178099566df2b7d3d7fa8a11f85bbb34586d5a7e24277c5e89de"
+    },
+    {
+      "file": "gang.scr",
+      "symbol": "rapmus",
+      "rom_start": 787240,
+      "size": 12924,
+      "address": "0x8c0328",
+      "kind": "scr",
+      "evidence": "SOUND.S mus_info[4] at ROM 0x7D44, terminated by 0x7FFFFFFF",
+      "sha256": "03158b3f63318420ef617654e54bed0a09cd6c5bacf31c276a0f79298b5be0c6"
+    },
+    {
+      "file": "balloon.f16",
+      "symbol": "balloon",
+      "rom_start": 800168,
+      "size": 23329,
+      "address": "0x8c35a8",
+      "kind": "f16",
+      "patch_records": [
+        38572
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "e4bb1c580a68438526e4d882ea62d1d6c704728bd3a38f6e8e9d95813e017fc4"
+    },
+    {
+      "file": "raphat.f16",
+      "symbol": "raphat",
+      "rom_start": 823504,
+      "size": 1879,
+      "address": "0x8c90d0",
+      "kind": "f16",
+      "patch_records": [
+        38092,
+        39052
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "6473d845fae9e61b512b9ef3b7f417e4c31f19845caa0374549143d82242534c"
+    },
+    {
+      "file": "rapkick.f16",
+      "symbol": "rapkick",
+      "rom_start": 825384,
+      "size": 2568,
+      "address": "0x8c9828",
+      "kind": "f16",
+      "patch_records": [
+        36732,
+        37852,
+        38892
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "0f3d1129f018b7f0b18b7b9ab3b08094f8511e334dfd8ec603d272d511cdb538"
+    },
+    {
+      "file": "rappiano.f16",
+      "symbol": "rappiano",
+      "rom_start": 827952,
+      "size": 19397,
+      "address": "0x8ca230",
+      "kind": "f16",
+      "patch_records": [
+        38332
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "2fc0977c0aa2115d5207a62b9e37c7705cf268d940c20e9471b01dfa64f2ec0e"
+    },
+    {
+      "file": "rapsnr1.f16",
+      "symbol": "rapsnr1",
+      "rom_start": 847352,
+      "size": 2203,
+      "address": "0x8cedf8",
+      "kind": "f16",
+      "patch_records": [
+        37932
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "3e76c3caa2f2608bf656f12d423c67ca92d057dbeed7bcd6f0caf8150d7b2fac"
+    },
+    {
+      "file": "rapsnr2.f16",
+      "symbol": "rapsnr2",
+      "rom_start": 849560,
+      "size": 2418,
+      "address": "0x8cf698",
+      "kind": "f16",
+      "patch_records": [
+        36892,
+        38012,
+        38972
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "9e5e2e7b6fd7e88f4ba4f648bef33241c3bd3db6813e2505bdfef2e3ea74528e"
+    },
+    {
+      "file": "sax.f16",
+      "symbol": "squeekie",
+      "rom_start": 851984,
+      "size": 20778,
+      "address": "0x8d0010",
+      "kind": "f16",
+      "patch_records": [
+        38252
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "3837d315e572f2d7be52b0fe9bf0b50ca7da6b95de1ef7a9562c6a2ba7478aad"
+    },
+    {
+      "file": "wahguitr.f16",
+      "symbol": "wahguitr",
+      "rom_start": 872768,
+      "size": 3902,
+      "address": "0x8d5140",
+      "kind": "f16",
+      "patch_records": [
+        38412
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "78ef9b8d4f5df9b5c04a93ff663d3c14589398115ccc5e614ce0f3e53da2d786"
+    },
+    {
+      "file": "reggae.scr",
+      "symbol": "reggae",
+      "rom_start": 876672,
+      "size": 5964,
+      "address": "0x8d6080",
+      "kind": "scr",
+      "evidence": "SOUND.S mus_info[5] at ROM 0x7D44, terminated by 0x7FFFFFFF",
+      "sha256": "abcf319bc358c1de3f2b957c640077b186524f19a58e9b755f65d145725e5855"
+    },
+    {
+      "file": "chord1.f16",
+      "symbol": "chord1",
+      "rom_start": 882640,
+      "size": 7913,
+      "address": "0x8d77d0",
+      "kind": "f16",
+      "patch_records": [
+        38732
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "be46013f3bd4ed2114bdd2c7d9324119a97b56e37f9b67ede61aece3df0eaee8"
+    },
+    {
+      "file": "chord2.f16",
+      "symbol": "chord2",
+      "rom_start": 890560,
+      "size": 4555,
+      "address": "0x8d96c0",
+      "kind": "f16",
+      "patch_records": [
+        39132
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "59c3a11164e2744e9905dbcd326f15567ee874de7a051ba5665b82020f9045fc"
+    },
+    {
+      "file": "cabassa1.f16",
+      "symbol": "cabas1",
+      "rom_start": 895120,
+      "size": 3468,
+      "address": "0x8da890",
+      "kind": "f16",
+      "patch_records": [
+        39292
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "1b6d6bb71be90598e59db22ac3c2aef2ceebbe0eb96297780fd5ef11244e7148"
+    },
+    {
+      "file": "cabassa3.f16",
+      "symbol": "cabas3",
+      "rom_start": 898592,
+      "size": 3468,
+      "address": "0x8db620",
+      "kind": "f16",
+      "patch_records": [
+        39372
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "5af22cd668cdc022f550c28b3f2cd8aeea70aa4d2c028f12c12ec957b79f4818"
+    },
+    {
+      "file": "clubwave.scr",
+      "symbol": "clubwave",
+      "rom_start": 902064,
+      "size": 17436,
+      "address": "0x8dc3b0",
+      "kind": "scr",
+      "evidence": "SOUND.S mus_info[6] at ROM 0x7D44, terminated by 0x7FFFFFFF",
+      "sha256": "e77bb80f794c176343e6491fbd5c60af3033e83764868cfc38b2c711b9ee487b"
+    },
+    {
+      "file": "sawwave2.f16",
+      "symbol": "sawwave",
+      "rom_start": 919504,
+      "size": 7418,
+      "address": "0x8e07d0",
+      "kind": "f16",
+      "patch_records": [
+        39612
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "b5bf3d552c3ac843b34fa31941ee623d501115df5b5eed6a4d3e4f40c78f47f9"
+    },
+    {
+      "file": "roksnare.f16",
+      "symbol": "roksnare",
+      "rom_start": 926928,
+      "size": 9406,
+      "address": "0x8e24d0",
+      "kind": "f16",
+      "patch_records": [
+        35852,
+        39532
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "459ba876ce0cd01db9c0cfc8473ffee10cadd3ac8b1ba176fb1778ad545297e5"
+    },
+    {
+      "file": "rockkick.f16",
+      "symbol": "rockkick",
+      "rom_start": 936336,
+      "size": 3321,
+      "address": "0x8e4990",
+      "kind": "f16",
+      "patch_records": [
+        35772,
+        39452
+      ],
+      "evidence": "SOUND.S instrument patch (type 0x20/address/sample length)",
+      "sha256": "82272029372b5a20b53021b9674a10333034db90b9b804c0d951eaa9dace2038"
+    }
+  ]
+}

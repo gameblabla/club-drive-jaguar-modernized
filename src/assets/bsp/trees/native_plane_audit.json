@@ -1,0 +1,200 @@
+{
+  "schema": "club-native-plane-audit",
+  "provenance": "BNDHEAD.INC, mktp.c, crash.gas, native .MDL/.BND vertex/normal/divider/edge arrays",
+  "meaning": "Unsigned reference indices, signed normals, plane equation n dot (p - point) = 0",
+  "quantization_tolerance_native_units": 2.0,
+  "models": {
+    "CAR1.MDL": {
+      "source": "CAR1.MDL",
+      "document_sha256": "62eabf049f87c03e2eca20d8d0c3ed819736a38b662581a332f17aa0d90e673d",
+      "dividers": 53,
+      "normals": 36,
+      "vertices": 84,
+      "polygon_surfaces": 58,
+      "referenced_dividers": 43,
+      "max_plane_residual_native_units": 1.204959,
+      "mean_polygon_max_residual_native_units": 0.328835,
+      "worst_surface": {
+        "surface_index": 56,
+        "divider_index": 36,
+        "residual_native_units": 1.204959218901564
+      }
+    },
+    "CAR2.MDL": {
+      "source": "CAR2.MDL",
+      "document_sha256": "f6b75d2c8be1de36cda51626232d31ee54160c2a23b5edb21d2cf9643a96377c",
+      "dividers": 54,
+      "normals": 31,
+      "vertices": 94,
+      "polygon_surfaces": 60,
+      "referenced_dividers": 54,
+      "max_plane_residual_native_units": 0.907793,
+      "mean_polygon_max_residual_native_units": 0.317481,
+      "worst_surface": {
+        "surface_index": 24,
+        "divider_index": 47,
+        "residual_native_units": 0.9077928953979679
+      }
+    },
+    "CAR3.MDL": {
+      "source": "CAR3.MDL",
+      "document_sha256": "e0c2be76aa7935ab706f0bb254de39a7cf4882e8acc4102ca191b5f9e35b0b8e",
+      "dividers": 40,
+      "normals": 31,
+      "vertices": 90,
+      "polygon_surfaces": 59,
+      "referenced_dividers": 39,
+      "max_plane_residual_native_units": 1.027067,
+      "mean_polygon_max_residual_native_units": 0.313311,
+      "worst_surface": {
+        "surface_index": 7,
+        "divider_index": 30,
+        "residual_native_units": 1.0270667477747253
+      }
+    },
+    "CAR4.MDL": {
+      "source": "CAR4.MDL",
+      "document_sha256": "4ac7ba91f4c86a84144ebeaefa045e492b53d35b98b223219d9a247a25a030b3",
+      "dividers": 40,
+      "normals": 31,
+      "vertices": 90,
+      "polygon_surfaces": 59,
+      "referenced_dividers": 39,
+      "max_plane_residual_native_units": 1.027067,
+      "mean_polygon_max_residual_native_units": 0.313311,
+      "worst_surface": {
+        "surface_index": 7,
+        "divider_index": 30,
+        "residual_native_units": 1.0270667477747253
+      }
+    },
+    "CAR5.MDL": {
+      "source": "CAR5.MDL",
+      "document_sha256": "3c7141469a9c23ba92708055e16d33a20329f99db82c92972e68875825004652",
+      "dividers": 54,
+      "normals": 31,
+      "vertices": 94,
+      "polygon_surfaces": 60,
+      "referenced_dividers": 54,
+      "max_plane_residual_native_units": 0.907793,
+      "mean_polygon_max_residual_native_units": 0.317481,
+      "worst_surface": {
+        "surface_index": 24,
+        "divider_index": 47,
+        "residual_native_units": 0.9077928953979679
+      }
+    },
+    "CAR6.MDL": {
+      "source": "CAR6.MDL",
+      "document_sha256": "97220ef8a679cdbb97eaaa383b764cf089750c2807bc48ab4e471b312ca21f1a",
+      "dividers": 53,
+      "normals": 36,
+      "vertices": 84,
+      "polygon_surfaces": 58,
+      "referenced_dividers": 43,
+      "max_plane_residual_native_units": 1.204959,
+      "mean_polygon_max_residual_native_units": 0.328835,
+      "worst_surface": {
+        "surface_index": 56,
+        "divider_index": 36,
+        "residual_native_units": 1.204959218901564
+      }
+    },
+    "CARS/CAR2.MDL": {
+      "source": "CARS/CAR2.MDL",
+      "document_sha256": "9941057b9dd0afafbf44a52f898bd84a303c2e46ac5b4f6d8547f1458e40501a",
+      "dividers": 54,
+      "normals": 31,
+      "vertices": 94,
+      "polygon_surfaces": 60,
+      "referenced_dividers": 54,
+      "max_plane_residual_native_units": 0.907793,
+      "mean_polygon_max_residual_native_units": 0.317481,
+      "worst_surface": {
+        "surface_index": 24,
+        "divider_index": 47,
+        "residual_native_units": 0.9077928953979679
+      }
+    },
+    "CARS/CAR3.MDL": {
+      "source": "CARS/CAR3.MDL",
+      "document_sha256": "a76fa0c32bc26b7abc493c8ee0a5c4cd99a475148685c3fcb98be598ea9671f9",
+      "dividers": 40,
+      "normals": 31,
+      "vertices": 90,
+      "polygon_surfaces": 59,
+      "referenced_dividers": 39,
+      "max_plane_residual_native_units": 1.027067,
+      "mean_polygon_max_residual_native_units": 0.313311,
+      "worst_surface": {
+        "surface_index": 7,
+        "divider_index": 30,
+        "residual_native_units": 1.0270667477747253
+      }
+    },
+    "CARS/DRONE.MDL": {
+      "source": "CARS/DRONE.MDL",
+      "document_sha256": "dd62f6d4be98524ed65c066810d1c02852515c23e081a2652ac64a94e6942963",
+      "dividers": 18,
+      "normals": 12,
+      "vertices": 68,
+      "polygon_surfaces": 35,
+      "referenced_dividers": 18,
+      "max_plane_residual_native_units": 0.462296,
+      "mean_polygon_max_residual_native_units": 0.116784,
+      "worst_surface": {
+        "surface_index": 31,
+        "divider_index": 10,
+        "residual_native_units": 0.462295957442052
+      }
+    },
+    "CARS/CAR2.BND": {
+      "source": "CARS/CAR2.BND",
+      "document_sha256": "194ace14d0553cb03bb3ce0b56ab49b7782bf5d7c1958d14bdc78a6b858d7545",
+      "dividers": 54,
+      "normals": 31,
+      "vertices": 94,
+      "polygon_surfaces": 60,
+      "referenced_dividers": 54,
+      "max_plane_residual_native_units": 0.907793,
+      "mean_polygon_max_residual_native_units": 0.317481,
+      "worst_surface": {
+        "surface_index": 24,
+        "divider_index": 47,
+        "residual_native_units": 0.9077928953979679
+      }
+    },
+    "CARS/CAR3.BND": {
+      "source": "CARS/CAR3.BND",
+      "document_sha256": "e83b750831bb2eb42b948d8e6ea23384da49f8938b4c0378908058c4a1d3045f",
+      "dividers": 40,
+      "normals": 31,
+      "vertices": 90,
+      "polygon_surfaces": 60,
+      "referenced_dividers": 40,
+      "max_plane_residual_native_units": 1.027067,
+      "mean_polygon_max_residual_native_units": 0.314254,
+      "worst_surface": {
+        "surface_index": 47,
+        "divider_index": 31,
+        "residual_native_units": 1.0270667477747253
+      }
+    },
+    "CARS/DRONE.BND": {
+      "source": "CARS/DRONE.BND",
+      "document_sha256": "cfaa97ebfa3b6cca569a8717fd6f68b9b29ae42e861d5f75cd6a4cfe488ea03b",
+      "dividers": 35,
+      "normals": 12,
+      "vertices": 68,
+      "polygon_surfaces": 35,
+      "referenced_dividers": 35,
+      "max_plane_residual_native_units": 0.462296,
+      "mean_polygon_max_residual_native_units": 0.116784,
+      "worst_surface": {
+        "surface_index": 31,
+        "divider_index": 23,
+        "residual_native_units": 0.462295957442052
+      }
+    }
+  }
+}

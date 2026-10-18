@@ -1,0 +1,204 @@
+# Club Drive Jaguar native model: reconstructed 2026
+# Vertex coordinates are original signed 16-bit words
+# This is a visual OBJ export, not the Jaguar BSP/collision tree
+o CAR6_MDL
+v 54 -11 -109
+v 54 -11 33
+v -53 -11 33
+v -53 -11 -109
+v 54 21 -94
+v 53 21 33
+v -53 21 33
+v -53 21 -94
+v 54 0 118
+v -53 0 118
+v 54 21 99
+v -53 21 99
+v 35 -31 1
+v -34 -31 1
+v 35 -29 -59
+v -34 -29 -59
+v 54 -11 -77
+v -53 -11 -77
+v 38 -27 -70
+v -37 -27 -70
+v 50 -16 -98
+v 50 -24 -119
+v -49 -16 -98
+v -50 -24 -119
+v -28 20 84
+v -28 20 46
+v -28 30 57
+v -28 30 73
+v -53 20 84
+v -53 7 84
+v -53 -3 73
+v -53 -3 57
+v -53 7 46
+v -53 20 46
+v -53 30 57
+v -53 30 73
+v -53 13 65
+v -28 20 -47
+v -28 20 -86
+v -53 20 -47
+v -53 7 -47
+v -53 -3 -59
+v -53 -3 -75
+v -53 7 -86
+v -53 20 -86
+v -53 30 -75
+v -53 30 -59
+v -53 13 -67
+v 54 20 84
+v 54 7 84
+v 54 -3 73
+v 54 -3 57
+v 54 7 46
+v 54 20 46
+v 54 30 57
+v 54 30 73
+v 54 13 65
+v 54 20 -47
+v 54 7 -47
+v 54 -3 -59
+v 54 -3 -75
+v 54 7 -86
+v 54 20 -86
+v 54 30 -75
+v 54 30 -59
+v 29 20 -47
+v 29 20 -86
+v 29 30 -75
+v 29 30 -59
+v 54 13 -67
+v 47 3 -103
+v 47 -7 -107
+v 27 3 -103
+v 27 -7 -107
+v -25 3 -103
+v -25 -7 -107
+v -45 3 -103
+v -45 -7 -107
+v -28 30 -59
+v -28 30 -75
+v 28 20 84
+v 28 20 46
+v 28 30 57
+v 28 30 73
+# flags=0x2000, original_vector=17, color_word=4
+f 5 8 7 6
+# flags=0x2000, original_vector=17, color_word=4
+f 6 7 12 11
+# flags=0x2040, original_vector=39, color_word=24
+f 68 64 63 67
+# flags=0x2040, original_vector=18, color_word=25
+f 69 65 64 68
+# flags=0x2040, original_vector=41, color_word=26
+f 66 58 65 69
+# flags=0x2040, original_vector=38, color_word=24
+f 83 55 54 82
+# flags=0x2040, original_vector=18, color_word=25
+f 84 56 55 83
+# flags=0x2040, original_vector=40, color_word=26
+f 81 49 56 84
+# flags=0x2040, original_vector=39, color_word=24
+f 46 80 39 45
+# flags=0x2040, original_vector=18, color_word=25
+f 47 79 80 46
+# flags=0x2040, original_vector=41, color_word=26
+f 40 38 79 47
+# flags=0x2040, original_vector=38, color_word=24
+f 35 27 26 34
+# flags=0x2040, original_vector=40, color_word=26
+f 29 25 28 36
+# flags=0x2040, original_vector=18, color_word=25
+f 36 28 27 35
+# flags=0x2040, original_vector=12, color_word=27
+f 69 68 67 66
+# flags=0x2040, original_vector=13, color_word=27
+f 84 83 82 81
+# flags=0x2040, original_vector=6, color_word=28
+f 80 79 38 39
+# flags=0x2040, original_vector=5, color_word=28
+f 27 28 25 26
+# flags=0x2000, original_vector=7, color_word=1
+f 3 10 12 7 8
+# flags=0x2000, original_vector=14, color_word=2
+f 3 8 4 18
+# flags=0x2000, original_vector=20, color_word=6
+f 2 17 6 11 9
+# flags=0x2000, original_vector=0, color_word=0
+f 1 5 6 17
+# flags=0x2000, original_vector=19, color_word=5
+f 2 9 10 3
+# flags=0x2000, original_vector=42, color_word=30
+f 2 3 18
+# flags=0x2000, original_vector=42, color_word=30
+f 17 2 18 4
+# flags=0x2040, original_vector=3, color_word=28
+f 70 63 64 65 58 59
+# flags=0x2040, original_vector=4, color_word=28
+f 70 59 60 61 62
+# flags=0x2040, original_vector=3, color_word=28
+f 70 62 63
+# flags=0x2040, original_vector=10, color_word=27
+f 48 44 43 42 41 40
+# flags=0x2040, original_vector=11, color_word=27
+f 48 47 46 45 44
+# flags=0x2040, original_vector=11, color_word=27
+f 48 40 47
+# flags=0x2040, original_vector=1, color_word=28
+f 57 54 55 56 49 50
+# flags=0x2040, original_vector=2, color_word=28
+f 57 50 51 52 53
+# flags=0x2040, original_vector=1, color_word=28
+f 57 53 54
+# flags=0x2040, original_vector=8, color_word=27
+f 37 33 32 31 30 29
+# flags=0x2040, original_vector=9, color_word=27
+f 37 36 35 34 33
+# flags=0x2040, original_vector=9, color_word=27
+f 37 29 36
+# flags=0x2000, original_vector=15, color_word=3
+f 4 8 5 1
+# flags=0x2040, original_vector=16, color_word=29
+f 74 73 71 72
+# flags=0x2040, original_vector=16, color_word=29
+f 78 77 75 76
+# flags=0x2000, original_vector=42, color_word=30
+f 17 4 1
+# flags=0x2000, original_vector=21, color_word=7
+f 9 11 12 10
+# flags=0x2000, original_vector=22, color_word=8
+f 15 13 14 16
+# flags=0xA000, original_vector=23, color_word=9
+f 15 17 2
+# flags=0xA000, original_vector=24, color_word=10
+f 15 2 13
+# flags=0xA000, original_vector=25, color_word=11
+f 13 2 3 14
+# flags=0xA000, original_vector=26, color_word=12
+f 14 3 18
+# flags=0xA000, original_vector=27, color_word=13
+f 14 18 16
+# flags=0x2000, original_vector=28, color_word=14
+f 19 15 16 20
+# flags=0x2000, original_vector=29, color_word=15
+f 1 17 19
+# flags=0x2000, original_vector=30, color_word=16
+f 16 18 20
+# flags=0x2000, original_vector=31, color_word=17
+f 19 17 15
+# flags=0x2000, original_vector=32, color_word=18
+f 20 18 4
+# flags=0xA000, original_vector=33, color_word=19
+f 1 19 20 4
+# flags=0x2000, original_vector=34, color_word=20
+f 24 22 21 23
+# flags=0x2000, original_vector=35, color_word=21
+f 4 1 22 24
+# flags=0x2000, original_vector=36, color_word=22
+f 21 22 1
+# flags=0x2000, original_vector=37, color_word=23
+f 4 24 23

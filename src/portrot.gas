@@ -1,0 +1,127 @@
+;
+; portrot.gas: do portal dependent rotations
+;
+sin	REGEQU	R0
+cos	REGEQU	R1
+msin	REGEQU	R2
+srcx	REGEQU	R3
+;srcy	REGEQU	R4
+srcz	REGEQU	R5
+destx	REGEQU	R6
+;desty	REGEQU	R7
+destz	REGEQU	R8
+thePlayer	REGEQU	R9
+
+	movefa	ALTplayer,thePlayer
+	movei	#PORTAL_ROT,temp2
+	add	thePlayer,temp2
+	load	(temp2),sin
+	movei	#noport,innerLoop
+	cmpq	#0,sin
+	jump	EQ,(innerLoop)
+	nop
+
+	moveq	#0,temp
+	store	temp,(temp2)	; zero the portal rotation
+
+; we have to rotate the velocity vector and the car's rotation matrix by the matrix
+;	cos	0	-sin
+;	0	1	0
+;	sin	0	cos
+; where "sin" is the high 16 bits of PORTAL_ROT, and "cos" is the low 16 bits
+
+	move	sin,cos
+	sharq	#16,sin
+	move	sin,msin
+	neg	msin
+
+; first, do velocity (a 20.12 number, but it can't get very big...)
+	movei	#CAR_VELOCITY,temp2
+	add	thePlayer,temp2
+	load	(temp2),srcx
+	addqt	#8,temp2
+	load	(temp2),srcz
+	subqt	#8,temp2
+	sharq	#10,srcx
+	sharq	#10,srcz
+
+	imultn	cos,srcx
+	imacn	msin,srcz
+	resmac	destx
+	imultn	sin,srcx
+	imacn	cos,srcz
+	resmac	destz
+	sharq	#4,destx
+	sharq	#4,destz
+	store	destx,(temp2)
+	addqt	#8,temp2
+	store	destz,(temp2)
+
+; next, do the matrix (0.14 numbers, all of them)
+
+	move	thePlayer,temp2
+	addqt	#CAR_MATRIX,temp2
+
+	loadw	(temp2),srcx
+	addqt	#12,temp2
+	loadw	(temp2),srcz
+	subqt	#12,temp2
+
+	imultn	cos,srcx
+	imacn	msin,srcz
+	resmac	destx
+	imultn	sin,srcx
+	imacn	cos,srcz
+	resmac	destz
+	sharq	#14,destx
+	sharq	#14,destz
+	storew	destx,(temp2)
+	addqt	#12,temp2
+	storew	destz,(temp2)
+	subqt	#10,temp2
+
+	loadw	(temp2),srcx
+	addqt	#12,temp2
+	loadw	(temp2),srcz
+	subqt	#12,temp2
+
+	imultn	cos,srcx
+	imacn	msin,srcz
+	resmac	destx
+	imultn	sin,srcx
+	imacn	cos,srcz
+	resmac	destz
+	sharq	#14,destx
+	sharq	#14,destz
+	storew	destx,(temp2)
+	addqt	#12,temp2
+	storew	destz,(temp2)
+	subqt	#10,temp2
+
+	loadw	(temp2),srcx
+	addqt	#12,temp2
+	loadw	(temp2),srcz
+	subqt	#12,temp2
+
+	imultn	cos,srcx
+	imacn	msin,srcz
+	resmac	destx
+	imultn	sin,srcx
+	imacn	cos,srcz
+	resmac	destz
+	sharq	#14,destx
+	sharq	#14,destz
+	storew	destx,(temp2)
+	addqt	#12,temp2
+	storew	destz,(temp2)
+
+noport:
+
+REGUNDEF sin
+REGUNDEF cos
+REGUNDEF msin
+REGUNDEF srcx
+REGUNDEF srcz
+REGUNDEF destx
+REGUNDEF destz
+REGUNDEF thePlayer

@@ -1,0 +1,3 @@
+; Recovered from original retail ROM offset $0E5A24-$0E7FA4
+origdash::
+	.incbin "assets/native/rom/fragments/dashpal.bin"

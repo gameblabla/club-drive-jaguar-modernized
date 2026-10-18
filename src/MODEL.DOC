@@ -1,0 +1,112 @@
+Some notes on Club Drive model files (.mdl):
+
+(1) Band header flags:
+
+The first long word in the band header consists of various
+flags about the band:
+
+	bit 0: band cannot be collided with
+	bit 1: draw a cloudy sky with this band
+	bit 2: band is a bonus world (don't count time here, and don't draw a map)
+
+	bit 13: (set in code): 0 if band has been visited by "comp"
+			       1 if band is in comp list but not yet computed
+	bit 14: (set in code): band has been clipped from view
+	bit 16: (set in code): band is moveable
+	bit 17: (set in code): band is another car
+
+(2) Polygons:
+
+The first word of any polygon contains 12 bits of flags, and 4 bits for the
+number of sides of the polygon. The flag bits have been assigned the following
+meanings:
+
+	bit 15: polygon is translucent or transparent (i.e. use ADDDSEL to draw it)
+	bit 14: polygon is texture mapped
+	bit 13: polygon's color must be computed
+	bit 12: polygon is a special surface; in this case, the next 4 bits give the
+		index into the surface property list (prop_list)
+	bits 11-8: special surface index (see above)
+	bit 7:	polygon should never be drawn
+	bit 6:	polygon can't collide with anything
+
+If both bits 7 and 6 are set, the polygon doesn't exist and is deleted by bnd2mdl
+(since it can't do anything).
+
+The polygon's color is used as follows:
+
+(1) If the texture map bit is set, then the color is an index into the texture map
+table. Each entry is 12 bytes long: 4 bytes for a pointer to the texture data,
+4 bytes for blitter flags, 2 bytes each for the width and height of the texture.
+
+(2) If the bFLASH flag is set, the color is an index into the color table. This
+table has the following organization:
+	struct shadeentry {
+		short type;
+		short vector;
+		short ambient;
+		short diffuse;
+	};
+
+The interpretation of these fields depends on the value of "type", as follows:
+	0: ordinary dynamic lighting: "vector" is the normal vector index, "ambient"
+	   the base color, "diffuse" the amount that can be added based on the dot
+	   product of the normal and the light direction
+	1: brake light: same as 0, except that if the player's brakes are on,
+	   intensity is set to 0xff (maximum)
+
+ Lighting based on time ("timestamp") in 300ths of a second:
+	2: flashing light: "vector" is divided into 4 nybbles t,x,y,z, and then
+	   the color is computed as
+		color = ((timestamp >> x) % y) == z ? diffuse : ambient
+	   t (the highest nybble) is currently unused and should be left as 0
+	3: pulsing light: ambient is the base color, and its intensity is calculated as:
+		intensity = ambient intensity + abs((((timestamp/16) % vector) - vector/2)) * diffuse 
+
+(3) If both bTEXTURE and bFLASH are clear, then the polygon color value gives the CRY color directly.
+If bGLASS is set, this is used as a "transparent" color (i.e. it is added into whatever is drawn
+behind the object); this is how the "smoky glass" effect on the cars is achieved.
+WARNING: once a glass polygon gets drawn, the rest of the CP will probably come out glass, too .
+This is a bug in surf.gas, and shouldn't be hard to fix.
+
+
+The polygon special surface structure consists of 8 long words, as follows:
+
+PORTAL_BND	the destination band for a portal, or 0 if surface is not a portal
+PORTAL_X	next 3 longs are destination coordinates for a portal, or 0
+PORTAL_Y		if surface is not a portal
+PORTAL_Z
+SP_SOUND	sound to be made when car collides with this surface. In a race
+		world, the starting line is always marked with sound -1, and
+		the finishing line with sound -2
+SURF_PROP	a long word giving surface friction and similar properties:
+		$ddddffss, where dddd=drag, ff=dynamic coefficient of friction,
+		ss=static coefficient of friction
+POWER_UP	not used, reserved for future use
+PROTATE		rotation to be applied for a portal, or 0 if surface is not a
+		portal or is a portal with no rotation. The rotation is given
+		by a sine,cosine pair; the sine of the rotation angle is in the
+		high word, the cosine in the low word.
+
+
+(2) Cameras:
+
+The camera list is given by a pointer in the header (at offset
+CAMERA_LIST). If this pointer is 0, then the camera is always
+located at the center of the band. Otherwise, the pointer
+points at a list of camera positions. Each camera position
+is 8 longs long, and looks like:
+
+	dc.l	A,B,C,D
+	dc.l	band_head,X,Y,Z
+
+If A=B=C=D=0, then the position (X,Y,Z) in the band with
+the indicated header is always used for the camera.
+Otherwise, the position is used only if Ax+By+Cz+D >= 0,
+where (x,y,z) is the car's current position. In other words,
+we give a plane, and if the car is on the positive side of the
+plane, then the camera gets used. The camera code steps
+through the list of camera positions until it finds one
+that it can use. Thus, the list *must* be terminated by
+an always usable position.
+

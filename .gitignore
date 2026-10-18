@@ -1,0 +1,31 @@
+# Python and local caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+
+# Build outputs and ROMs
+*.j64
+*.rom
+*.abs
+*.lst
+*.o
+*.oj
+*.log
+*.tmp
+src/build/obj/
+src/build/png_art/
+src/build/*_test_output/
+assets/audio/compiled/
+assets/audio/validation.json
+
+# Experiment and local tooling
+*.bak
+*~
+
+/src/assets/sounds/compiled/
+/src/assets/sounds/validation.json
+
+# Original reference inputs are source assets, not compiler outputs.
+!src/assets/**/*.oj
+!src/assets/**/*.bak

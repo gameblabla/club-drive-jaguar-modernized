@@ -1,0 +1,145 @@
+{
+  "version": 19,
+  "note": "Reconstruction analysis of surviving native Jaguar assembly source, not a replacement for the original bnd2mdl converter",
+  "files": [
+    {
+      "file": "CAR1.MDL",
+      "sha256": "2dbaee9f126cfbe8a9c938162ce54b189f844ebef7bf3cba24c88bec4e9090bd",
+      "vertices": 84,
+      "normals": 36,
+      "edges": 133,
+      "surfaces": 58,
+      "closed_face_loops": 58,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CAR2.MDL",
+      "sha256": "f464ab84aaae0433feaa1690dd0116b59af7158f8a179475e227a99dfc2af29d",
+      "vertices": 94,
+      "normals": 31,
+      "edges": 143,
+      "surfaces": 60,
+      "closed_face_loops": 60,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CAR3.MDL",
+      "sha256": "0b1b579a81038f25a0ae3833bc35f1f64f43da759ea5888dee1254dfe2695094",
+      "vertices": 90,
+      "normals": 31,
+      "edges": 138,
+      "surfaces": 59,
+      "closed_face_loops": 59,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CAR4.MDL",
+      "sha256": "8360f0cbfcda96a19cabfa437c805b337e2494cfc0f16c5cd3481dc7ddf428c7",
+      "vertices": 90,
+      "normals": 31,
+      "edges": 138,
+      "surfaces": 59,
+      "closed_face_loops": 59,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CAR5.MDL",
+      "sha256": "ba6acdff403d3888d183dc4088347475e1205016337dae54b3fe9aa6e3e74d58",
+      "vertices": 94,
+      "normals": 31,
+      "edges": 143,
+      "surfaces": 60,
+      "closed_face_loops": 60,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CAR6.MDL",
+      "sha256": "bb92f413bb48b2d2fc4f9c07314536becb6c507e9ec8565cdb6d6bf2254ef140",
+      "vertices": 84,
+      "normals": 36,
+      "edges": 133,
+      "surfaces": 58,
+      "closed_face_loops": 58,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CARS/CAR2.MDL",
+      "sha256": "cba8bbec62bc51a599141ab37205473f5efe0317787c0d7044be9a5d11ef680d",
+      "vertices": 94,
+      "normals": 31,
+      "edges": 143,
+      "surfaces": 60,
+      "closed_face_loops": 60,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CARS/CAR3.MDL",
+      "sha256": "e23d9af99b38d15a7207e7c383c4fd889201f72caf9326875917e3de313277f5",
+      "vertices": 90,
+      "normals": 31,
+      "edges": 138,
+      "surfaces": 59,
+      "closed_face_loops": 59,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CARS/DRONE.MDL",
+      "sha256": "04eba007f9389398b89856ec0b84a990c1ba6eaa31a151d1c5b2f606b40b9700",
+      "vertices": 68,
+      "normals": 12,
+      "edges": 96,
+      "surfaces": 35,
+      "closed_face_loops": 35,
+      "collision_divider_records": 0,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CARS/CAR2.BND",
+      "sha256": "94db53b6787edeca0a793dc51b5c2df1a24ac8c5304e14da4af3bdbb0a847c9a",
+      "vertices": 94,
+      "normals": 31,
+      "edges": 143,
+      "surfaces": 60,
+      "closed_face_loops": 60,
+      "collision_divider_records": 54,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CARS/CAR3.BND",
+      "sha256": "665162fafccd64229f00d4f393f608057b859a9a5fd1286031abcec20014260b",
+      "vertices": 90,
+      "normals": 31,
+      "edges": 139,
+      "surfaces": 60,
+      "closed_face_loops": 60,
+      "collision_divider_records": 40,
+      "round_trip_identical": true
+    },
+    {
+      "file": "CARS/DRONE.BND",
+      "sha256": "20865a4532bc22719a5fb35e0dc8a5fc37c67e4010ebb0ae07fffc4899de5fb0",
+      "vertices": 68,
+      "normals": 12,
+      "edges": 96,
+      "surfaces": 35,
+      "closed_face_loops": 35,
+      "collision_divider_records": 35,
+      "round_trip_identical": true
+    }
+  ],
+  "total": {
+    "vertices": 1040,
+    "normals": 344,
+    "edges": 1583,
+    "surfaces": 663,
+    "collision_divider_records": 129
+  }
+}

@@ -1,0 +1,985 @@
+; texture map module - tex.gas
+cornert	equ	$1ffd00
+CORNER_BIT	equ	4
+;- Texture map inner loop register defines ----------------------------------
+	; data for blitter registers
+	a1pix		REGEQU	R0
+	a1pixf		REGEQU	R1
+	a2pix		REGEQU	R2
+	count		REGEQU	R3
+	doit			REGEQU	R4
+
+	a1step		REGEQU	R5
+	a1stepf		REGEQU	R6
+
+	; blitter addresses
+	aa1pix		REGEQU	R7
+	aa1pixf		REGEQU	R8
+	aa2pix		REGEQU	R9
+	acount		REGEQU	R10
+	command		REGEQU	R11
+
+	; totals
+	ltX			REGEQU	R12	; left side texture coords
+	ltY			REGEQU	R13
+	rtX			REGEQU	R14	; right side texture coords
+	rtY			REGEQU	R15
+	leftX		REGEQU	R16	; left destination coords
+	rightX		REGEQU	R17	; right destination coords
+
+	; increments
+	iltX			REGEQU	R18
+	iltY			REGEQU	R19
+	irtX			REGEQU	R20
+	irtY			REGEQU	R21
+	ileftX		REGEQU	R22
+	irightX		REGEQU	R23
+
+	texLines		REGEQU	R24	; number of lines in trapezoid
+
+	itemp		REGEQU	R25
+	itemp2		REGEQU	R26
+	itemp3		REGEQU	R27
+
+	; interrupt routine uses r28-r31
+	; interrupt vars
+	rtiAddr	REGEQU	R28
+	aFlags	REGEQU	R29
+	flags	REGEQU	R30
+	istack	REGEQU	R31
+
+	; primary register set
+	diffs	REGEQU	theEdge
+
+	ultx		REGEQU	points
+	ulty		REGEQU	tEdges
+	urtx		REGEQU	dataHi
+	urty		REGEQU	stack
+	sltx		REGEQU	polyPtr
+	slty		REGEQU	clr
+	srtx		REGEQU	colors
+	srty		REGEQU	hiPoint
+	lltx		REGEQU	hiY
+	llty		REGEQU	dividers
+	lrtx		REGEQU	polyflags
+	lrty		REGEQU	edgeCrosses
+
+; ----------------------------------------------------------------
+texTop:
+	; theEdge has the polygon "color" (actually texture map index)
+	movei	#GEO_BND_PTR,temp2
+	load	(temp2),temp2
+	movei	#TEXTURES,temp
+	add	temp,temp2
+	load	(temp2),clr
+	add	theEdge,clr
+
+	; store some registers whilst doing the texture
+	movei	#(CORNERS-8), temp	; store in the last light source space
+	store	stack, (temp)
+	addqt	#4, temp
+	store	polyPtr, (temp)
+	subqt	#8, temp
+	store	polygon, (temp)
+	; retraverse edges for map-side info
+	move		polyPtr, numSides
+	sub		edgeCrosses, numSides
+	move		edgeCrosses, polyPtr
+	shrq		#1, numSides
+	subqt	#2, polyPtr
+	loadw	(polyPtr), theEdge					; get first edge
+	addqt	#2, polyPtr
+	; reset numSides
+;cutItOut $14
+;	move		polyflags, numSides
+;	shlq		#28, numSides	; strip flags
+	movei	#(POLYGON+12), polygon
+;	shrq		#28, numSides
+	moveq	#5, ys		; starting side#
+	sub		numSides, ys
+	move		ys, edgeCrosses	; keep for aFirst side#
+
+	movei	#renextEdge, dontDoItMan
+	movei	#reenterTrav, noWayA
+	movei	#redoneCorn, noCorner
+	movei	#retraverse, innerLoop
+
+	bset		#31, bPrev	; it is our first time!
+	;--------------------------------------------------------------
+;	movei	#$17028, temp
+;	store	numSides, (temp)
+;	nop
+retraverse:	;-------------------------------------------------------------------------
+		move		theEdge, temp2
+		bclr		#15, theEdge
+		shlq		#4, theEdge	; x16 (sizeof tEDGE)
+		add		tEdges, theEdge
+		shrq		#15, temp2	; if reverse bit set
+;	move	theEdge, clr
+		loadp	(theEdge), a
+		shlq		#4, temp2		; if reverse bit set
+		addqt	#8, theEdge	; to t values
+		ror		temp2, a		; swap a and b
+		or		a, a			; test if on screen edge
+		jump		EQ, (dontDoItMan)
+		; seperate
+		move		a, b
+
+		; get the rest of the edge
+		load		(theEdge), slp	; ta, tb
+;	move	slp, hiPoint
+
+		; compute addresses (don't allways need both, but it interleaves so well...)
+		shrq		#16, a
+		shlq		#16, b
+		shlq		#5, a
+		shrq		#11, b ; now shifted left 5
+		add		points, a
+		add		points, b
+
+		btst		#31, bPrev	; is it our first time?
+		jr		EQ, _CDLOCAL_23_145
+		cmp		bPrev, a		; is this a new point?
+			move		slp, hiPoint
+			jump		(noWayA)
+			move		a, aFirst
+		_CDLOCAL_23_145:
+
+		jump		EQ, (noWayA)
+doA:		moveq	#0, xs ; (not really xs!!!)
+			; check for corners
+			load		(a), secIn
+			move		secOut, temp
+			and		secIn, temp	; check for edge differences
+			moveq	#3, temp2		; mask for wrap
+			jump		NE, (noCorner)
+			normi	secIn, secIn
+				normi	secOut, secOut
+				and		temp2, secIn		; wrap to 32 bits
+				and		temp2, secOut		; test for zero (edge 3 - right side) - wrap to 32 bits
+
+				readdCorner:
+					bset		#CORNER_BIT, secOut		; mark as screen corner
+					store	secOut, (polygon)	; store source coord marker :$100|secOut
+					addqt	#1, secOut
+					and		temp2, secOut		; wrap corners
+					cmp		secOut, secIn
+					jr		NE, readdCorner
+					addqt	#16, polygon		; advance to next tEdgenum
+			redoneCorn:
+			; add the real point
+			move		slp, xs
+			shrq		#16, xs
+			shlq		#16, xs
+			or		ys, xs		; edge#
+			store	xs, (polygon)	; t-edge#
+	;store a t value for corner approx
+	btst		#0,ys
+	movei	#cornert,temp
+	jr		EQ,_CDLOCAL_10_181
+	cmpq		#3,ys
+		addqt	#4,temp
+	_CDLOCAL_10_181:
+	jr		MI,_CDLOCAL_11_185
+			addqt	#16, polygon	; advance to n+1 slope
+		neg	xs
+	_CDLOCAL_11_185:
+	store	xs,(temp)
+
+		; check for no more sides
+		or		numSides, numSides
+		movei	#reDone,temp
+		jump		EQ, (temp)
+
+reenterTrav:
+		load		(b), secOut
+
+		shlq		#16, slp		; ta
+		or		ys, slp		; edge#
+	cmpq	#0,secOut
+		store	slp, (polygon) ; tEdgenum
+	jr	EQ,_CDLOCAL_12_215
+		addqt	#16, polygon	; advance to next edge
+	;store a t value for corner approx
+	btst		#0,ys
+	movei	#cornert,temp
+	jr		EQ,_CDLOCAL_10_208
+	nop
+		addqt	#4,temp
+	_CDLOCAL_10_208:
+	cmpq		#3,ys
+	jr		MI,_CDLOCAL_11_213
+	nop
+		neg	slp
+	_CDLOCAL_11_213:
+	store	slp,(temp)
+_CDLOCAL_12_215:
+
+renextEdge:
+		loadw	(polyPtr), theEdge
+		addqt	#1, ys		; side#
+		subq		#1, numSides
+		move		b, bPrev		; store old b
+		jump		NE, (innerLoop)
+		addqt	#2, polyPtr	; point to next edge record
+
+	; optional install aFirst
+	movei	#doA, innerLoop
+	cmp		bPrev, aFirst		; is this a new point?
+reDone:
+	move		edgeCrosses, ys	; back to first side#
+;	moveq	#1, ys			; back to first
+	move		hiPoint, slp
+	jump		NE, (innerLoop)
+	move		aFirst, a
+
+.if 0
+;------------------------------------------------------------------------------
+;DEBUG
+	movei	#(SEMAPHORE+12), temp
+	load		(temp), temp
+	or		temp, temp
+	jr		NE, lookAt
+	nop
+cutItOut $13
+lookAt:
+;DEBUG
+.endif
+		movei	#(CORNERS-12), temp
+		load		(temp), polygon
+	; set up divide for texture inner loop
+	movei	#G_DIVCTRL, temp
+	moveq	#0, temp2
+	store	temp2, (temp)
+
+; wait for the blitter to become free
+	movei	#B_CMD,temp2
+_CDLOCAL_23_256:
+		load		(temp2), temp
+		btst		#0, temp
+		jr		EQ, _CDLOCAL_23_256
+		nop
+.if 0
+	; load some blitter regs for texture
+	movei	#screen_addr,temp
+	load		(temp),temp
+	movei	#A2_BASE,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2		; move to A2_FLAGS
+.else
+;	movei	#A2_FLAGS,temp2
+	subqt	#(B_CMD-A2_FLAGS),temp2
+.endif
+	movei	#PITCH1|PIXEL16|WID320|XADDPIX,temp
+	store	temp,(temp2)
+
+	load	(clr),temp		; get texture base address
+	movei	#A1_BASE,temp2
+	store	temp,(temp2)
+	addqt	#4,clr			; advance to texture flags
+.if 0
+	movei	#PITCH1|PIXEL16|WID128|XADDINC,temp
+.else
+	load	(clr),temp
+.endif
+	addqt	#4,temp2		; move to A1_FLAGS
+	store	temp,(temp2)
+	addqt	#4,clr
+	load	(clr),clr		; get texture size
+	movei	#TXTSIZE,temp2
+	store	clr,(temp2)		; save texture size
+
+nospec:
+	; load address registers
+	; insert jump instruct sequence into flat fetchTrap:
+	movei	#doTrap, temp
+	movei	#odoTexTrap, temp2
+	load		(temp2), diffs
+	addqt	#4, temp2
+	store	diffs, (temp)
+	addqt	#4, temp
+	load		(temp2), diffs
+	store	diffs, (temp)
+
+	; set up initial map-space coords
+	moveta	startLine, a2pix
+		; new point - left
+		addqt	#8, lPtr		; to t-edge#
+		moveq	#31, temp2
+		load		(lPtr), temp
+		subqt	#8, lPtr		; to xs
+		and		temp, temp2	; edge#
+		shrq		#15, temp		; t value
+		subqt	#1, temp		; make zero one (messy)
+.if 0
+		movei	#128, lltx		; get map dimensions
+		movei	#105, llty
+.else
+		movei	#TXTSIZE,lltx
+		load	(lltx), lltx		; get map dimensions
+		move	lltx,llty
+		shlq	#16,llty
+		shrq	#16,lltx
+		shrq	#16,llty
+.endif
+		btst		#CORNER_BIT, temp2		; look for corner flag
+;		movei	#findUV, ?
+;		jump		NE, (?)
+	;for corner coord approx
+	jr	EQ,	_CDLOCAL_20_339
+	nop
+		movei	#cornert,temp
+		load		(temp),temp2
+		addqt	#4,temp
+		load		(temp),temp
+		shrq		#15,temp2
+		shrq		#15,temp
+;		mult		temp,llty
+		jr		_CDLOCAL_42_345
+		mult		temp2,lltx
+	_CDLOCAL_20_339:
+		cmpq		#1, temp2
+		jr		NE, _CDLOCAL_4_348
+		cmpq		#2, temp2
+			; side 1
+			moveq	#0, lltx
+			_CDLOCAL_42_345:
+			jr		_CDLOCAL_10_366
+			mult		temp, llty
+		_CDLOCAL_4_348:
+		jr		NE, _CDLOCAL_5_355
+		cmpq		#3, temp2
+			; side 2
+			mult		temp, lltx
+			jr		_CDLOCAL_10_366
+			shlq		#16, llty
+		_CDLOCAL_5_355:
+		jr		NE, _CDLOCAL_6_362
+		neg		temp
+			; side 3
+			mult		temp, llty
+			jr		_CDLOCAL_10_366
+			shlq		#16, lltx
+		_CDLOCAL_6_362:
+			; side 4
+			moveq	#0, llty
+			mult		temp, lltx
+		_CDLOCAL_10_366:
+;	moveq	#0, lltx
+;	moveq	#0, llty
+	move		lltx, lrtx	; start from the same point
+	move		llty, lrty
+	; set overPtr to texOver for cleanup
+	movei	#texOver, overPtr
+	movei	#doTexTrap, innerLoop	; gives this module a shot at zero line traps
+	; jump to fetchTrap
+	movei	#fetchTrap, temp
+	moveq	#0, diffs
+	jump		(temp)
+	nop
+
+texOver:	; replace instructs at doTrap
+	movei	#doTrap, temp
+	movei	#odoTrap, temp2
+	load		(temp2), diffs
+	addqt	#4, temp2
+	store	diffs, (temp)
+	addqt	#4, temp
+	load		(temp2), diffs
+	store	diffs, (temp)
+
+	; set up the blitter for the renderer
+.if 0
+	movei	#screen_addr,temp
+	load		(temp),temp
+	movei	#A1_BASE,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2	; move to A1_FLAGS
+.else
+	movei	#A2_FLAGS,temp2
+.endif
+	movei	#PITCH1|PIXEL16|WID320|XADDPHR,temp
+	store	temp,(temp2)
+
+	; replace some wiped out registers
+	movei	#(CORNERS-8), temp	; stored in the last light source space
+	load		(temp), stack
+	addqt	#4, temp
+	load		(temp), polyPtr
+
+	movei	#G_HIDATA,dataHi
+	movei	#GEO_BND_PTR,temp2
+	movei	#rlPolyLp, temp	; go back to flat world
+	jump		(temp)
+	load		(temp2),temp2
+
+; copys of code to stick in at doTrap ----------------------------
+.align 4
+odoTrap:		; original code
+		movei	#G_FLAGS, temp
+		load		(temp), temp2
+odoTexTrap:
+		movei	#doTexTrap, temp
+		jump		(temp)
+
+		nop		; just to keep the ASSembler quiet
+; ----------------------------------------------------------------
+doTexTrap:
+	btst		#1, diffs
+	movei	#_CDLOCAL_11_526, temp
+	jump		NE, (temp)
+	nop
+		; lower points => upper points
+		move		lltx, ultx
+		move		llty, ulty
+		; new point - left
+		addqt	#12, lPtr		; to t-edge#
+		moveq	#31, temp2
+		load		(lPtr), temp
+		subqt	#12, lPtr		; to xs
+		and		temp, temp2	; edge#
+		shrq		#15, temp		; t value
+		subqt	#1, temp		; make zero one (messy)
+.if 0
+		movei	#128, sltx		; get map dimensions
+		movei	#105, slty
+.else
+		movei	#TXTSIZE,sltx
+		load	(sltx),sltx
+		move	sltx,slty
+		shrq	#16,sltx
+		shlq	#16,slty
+		shrq	#16,slty
+.endif
+		btst		#CORNER_BIT, temp2		; look for corner flag
+	;for corner coord approx
+	jr	EQ,	_CDLOCAL_20_466
+	nop
+		movei	#cornert,temp
+		load		(temp),temp2
+		addqt	#4,temp
+		load		(temp),temp
+		shrq		#15,temp2
+		shrq		#15,temp
+;		mult		temp,slty
+		jr		_CDLOCAL_42_472
+		mult		temp2,sltx
+	_CDLOCAL_20_466:
+		cmpq		#1, temp2
+		jr		NE, _CDLOCAL_4_475
+		cmpq		#2, temp2
+			; side 1
+			moveq	#0, sltx
+			_CDLOCAL_42_472:
+			jr		_CDLOCAL_10_493
+			mult		temp, slty
+		_CDLOCAL_4_475:
+		jr		NE, _CDLOCAL_5_482
+		cmpq		#3, temp2
+			; side 2
+			mult		temp, sltx
+			jr		_CDLOCAL_10_493
+			shlq		#16, slty
+		_CDLOCAL_5_482:
+		jr		NE, _CDLOCAL_6_489
+		neg		temp
+			; side 3
+			mult		temp, slty
+			jr		_CDLOCAL_10_493
+			shlq		#16, sltx
+		_CDLOCAL_6_489:
+			; side 4
+			moveq	#0, slty
+			mult		temp, sltx
+		_CDLOCAL_10_493:
+
+;		shlq		#16, sltx
+;		shlq		#16, slty
+		move		sltx, lltx
+		move		slty, llty
+		sub		ultx, sltx
+		sub		ulty, slty
+		; compute slope
+		move		sltx, temp
+		abs		sltx
+		div		lCount, sltx
+		move		slty, temp2
+		abs		slty
+		div		lCount, slty
+		; replace signs
+		btst		#31, temp
+		jr		EQ, _CDLOCAL_8_513
+		nop
+			neg	sltx
+		_CDLOCAL_8_513:
+		btst		#31, temp2
+		jr		EQ, _CDLOCAL_9_518
+		nop
+			neg	slty
+		_CDLOCAL_9_518:
+.if 0
+		movei	#$17008, temp
+		store	lltx, (temp)
+		addqt	#4, temp
+		store	llty, (temp)
+		nop
+.endif
+	_CDLOCAL_11_526:
+	; right side map coords
+	btst		#0, diffs
+	movei	#_CDLOCAL_111_624, temp
+	jump		NE, (temp)
+	nop
+		; lower points => upper points
+		move		lrtx, urtx
+		move		lrty, urty
+		; new point - right
+		addqt	#12, rPtr		; to t-edge#
+		moveq	#31, temp2
+		load		(rPtr), temp
+		subqt	#12, rPtr		; to xs
+		and		temp, temp2	; edge#
+		shrq		#15, temp		; t value
+		subqt	#1, temp
+.if 0
+		movei	#128, srtx		; get map dimensions
+		movei	#105, srty
+.else
+		movei	#TXTSIZE,srtx
+		load	(srtx),srtx
+		move	srtx,srty
+		shrq	#16,srtx
+		shlq	#16,srty
+		shrq	#16,srty
+.endif
+		btst		#CORNER_BIT, temp2		; look for corner flag
+	;for corner coord approx
+	jr	EQ,	_CDLOCAL_120_567
+	nop
+		movei	#cornert,temp
+		load		(temp),temp2
+		addqt	#4,temp
+		load		(temp),temp
+		shrq		#15,temp2
+		shrq		#15,temp
+;		mult		temp,srty
+		jr		_CDLOCAL_142_573
+		mult		temp2,srtx
+	_CDLOCAL_120_567:
+		cmpq		#1, temp2
+		jr		NE, _CDLOCAL_104_576
+		cmpq		#2, temp2
+			; side 1
+			moveq	#0, srtx
+			_CDLOCAL_142_573:
+			jr		_CDLOCAL_110_594
+			mult		temp, srty
+		_CDLOCAL_104_576:
+		jr		NE, _CDLOCAL_105_583
+		cmpq		#3, temp2
+			; side 2
+			mult		temp, srtx
+			jr		_CDLOCAL_110_594
+			shlq		#16, srty
+		_CDLOCAL_105_583:
+		jr		NE, _CDLOCAL_106_590
+		neg		temp
+			; side 3
+			mult		temp, srty
+			jr		_CDLOCAL_110_594
+			shlq		#16, srtx
+		_CDLOCAL_106_590:
+			; side 4
+			moveq	#0, srty
+			mult		temp, srtx
+		_CDLOCAL_110_594:
+
+		move		srtx, lrtx
+		move		srty, lrty
+		sub		urtx, srtx
+		sub		urty, srty
+		; compute slope
+		move		srtx, temp
+		abs		srtx
+		div		rCount, srtx
+		move		srty, temp2
+		abs		srty
+		div		rCount, srty
+		; replace signs
+		btst		#31, temp
+		jr		EQ, _CDLOCAL_108_612
+		nop
+			neg	srtx
+		_CDLOCAL_108_612:
+		btst		#31, temp2
+		jr		EQ, _CDLOCAL_109_617
+		nop
+			neg	srty
+		_CDLOCAL_109_617:
+;	movei	#$17000, temp
+;	store	lrtx, (temp)
+;	addqt	#4, temp
+;	store	lrty, (temp)
+;	nop
+
+	_CDLOCAL_111_624:
+
+	; temporary reverse feed
+	btst		#1, diffs
+	jr		NE, _CDLOCAL_33_637
+	moveta	numLines,		texLines
+		; gon data - left
+		moveta	ultx,		ltX
+		moveta	ulty,		ltY
+		moveta	lX,			leftX
+		moveta	sltx,		iltX	; increments
+		moveta	slty, 		iltY
+		moveta	lSlp,		ileftX
+	_CDLOCAL_33_637:
+	btst		#0, diffs
+	jr		NE, _CDLOCAL_44_648
+	nop
+		; gon data - right
+		moveta	urtx,		rtX
+		moveta	urty,		rtY
+		moveta	rX,			rightX
+		moveta	srtx,		irtX	; increments
+		moveta	srty, 		irtY
+		moveta	rSlp,		irightX
+	_CDLOCAL_44_648:
+
+	; find diffs
+	moveta	diffs, temp
+	moveq	#0, diffs
+	cmp		lCount, numLines
+	addc		diffs, diffs
+	cmp		rCount, numLines
+	addc		diffs, diffs
+
+	or		numLines, numLines ; if anything to do..
+	movei	#nextPoint, temp
+	jump		EQ, (temp)
+	nop
+
+		; set alternate bank	: Why? - because someday, I want to write the blitter loop as an interrupt routine and have the rest of the renderrrer c
+		movei	#G_FLAGS, temp
+		load		(temp), temp2
+		bset		#14, temp2	; REG_PAGE
+		store	temp2, (temp)
+		nop
+		nop
+
+; assume earlier setup by 68K of A2BASE, A2FLAGS
+; set up blitter registers
+	movei	#B_CMD,	command
+_CDLOCAL_22_674:		; wait for blitter
+		load		(command), itemp
+		btst		#0, itemp
+		jr		EQ, _CDLOCAL_22_674
+		nop
+; set up registers
+	movei	#A1_PIXEL, aa1pix
+	movei	#A1_FPIXEL, aa1pixf
+	movei	#A2_PIXEL, aa2pix
+	movei	#B_COUNT, acount
+;	movei	#B_CMD, command
+	movei	#SRCEN|DSTA2|LFU_A|LFU_AN, doit
+;	movei	#$390000,		leftX
+;	movei	#$9b0000,		rightX
+;	movei	#$200000,		a2pix
+;	movefa	startLine,	a2pix
+;	movei	#$ffffe000, 	ileftX
+;	movei	#$00003000, 	irightX
+;	movei	#52,			texLines
+;	movefa	diffs, temp
+
+;	btst		#1, temp
+;	jr		NE, 33$
+;	movefa	numLines,		texLines
+;		; gon data - left
+;		movefa	ultx,		ltX
+;		movefa	ulty,		ltY
+;		movefa	lX,			leftX
+;		movefa	sltx,		iltX	; increments
+;		movefa	slty, 		iltY
+;		movefa	lSlp,		ileftX
+;	33$:
+;	btst		#0, temp
+;	jr		NE, 44$
+;	nop
+;		; gon data - right
+;		;movei	#$30000,		rtX
+;		;movei	#$300000,		rtY
+;		movefa	urtx,		rtX
+;		movefa	urty,		rtY
+;		movefa	rX,			rightX
+;		movefa	srtx,		irtX	; increments
+;		;movei	#$ceed,		irtX	; increments
+;		movefa	srty, 		irtY
+;		movefa	rSlp,		irightX
+;	44$:
+
+	movei	#texEnt, itemp3	; jump in
+	jump		(itemp3)
+	nop
+
+texInt:
+;	movei	#B_CMD,	command
+_CDLOCAL_52_727:
+		load		(command), itemp3
+		btst		#0, itemp3
+		jr		EQ, _CDLOCAL_52_727
+		nop
+					;waitForBlitter
+
+.if 0
+	movei	#$17010, itemp3
+	store	a1step, (itemp3)
+	addqt	#4, itemp3
+	store	a1stepf, (itemp3)
+.endif
+	; feed the blitter ------------------------------------------------
+	store	a1step, (itemp)
+	store	a1stepf, (itemp2)
+	store	a1pix, (aa1pix)
+	store	a1pixf, (aa1pixf)
+	store	a2pix, (aa2pix)
+	store	count, (acount)
+	store	doit, (command)
+;	load		(aFlags), flags
+
+skpTexLine:
+	; add the increments
+	add		iltX, ltX
+	add		irtX, rtX
+	add		ileftX, leftX
+	add		irightX, rightX
+
+	; add more increments
+	add		iltY, ltY
+	add		irtY, rtY
+
+	; are we done?
+	subq		#1, texLines
+	; trapeziod end?
+					movei	#tdone, itemp
+					jump		EQ, (itemp)
+;					nop
+texEnt:
+	; set start dest pixel - inc line
+	shrq		#16, a2pix	;clear old x
+	addqt	#1, a2pix		;next line
+	shlq		#16, a2pix	;y back
+	; compute the count
+	move		leftX, count
+	move		rightX, itemp
+	shrq		#16, itemp
+	shrq		#16, count
+	or		count, a2pix	;insert new x
+	sub		itemp, count
+	movei	#skpTexLine, itemp
+	jump		PL, (itemp)
+	neg		count
+
+	; compute x step
+	move		rtX, rtiAddr
+	sub		ltX, rtiAddr
+;		movei	#$17000, itemp3
+;		store	itemp, (itemp3)
+;		addqt	#4, itemp3
+;		store	count, (itemp3)
+	move		rtiAddr, itemp
+	abs		itemp
+	div		count, itemp
+;		addqt	#4, itemp3
+;		store	itemp, (itemp3)
+
+	; rearrange ltX,ltY into a1pix,a1pixf
+	move		ltY, itemp3
+	move		ltX, itemp2
+	shlq		#16, itemp2	;x
+	shrq		#16, itemp3	;y
+	shrq		#16, itemp2	;x
+	shlq		#16, itemp3	;y
+
+	move		ltY, a1pixf
+	move		ltX, a1pix
+	shrq		#16, a1pix
+	shlq		#16, a1pixf
+	or		itemp2, a1pixf
+	; finish rearrange
+	or		itemp3, a1pix
+
+	; compute y step
+	move		rtY, itemp3
+	sub		ltY, itemp3
+	move		itemp3, itemp2
+	abs		itemp2
+	div		count, itemp2
+
+	; replace xinc (itemp) sign
+	btst		#31, rtiAddr
+	jr		EQ, _CDLOCAL_40_825
+	; finish count
+	bset		#16, count	; set y to 1 line
+		neg	itemp
+_CDLOCAL_40_825:
+	; setup for interrupt return
+	bclr		#3, flags
+;	load		(istack), rtiAddr
+	bset		#13, flags
+	addq		#2, rtiAddr
+	addq		#4, istack
+
+	; replace yinc (itemp2) sign
+	btst		#31, itemp3
+	jr		EQ, _CDLOCAL_30_838
+	nop
+		neg	itemp2
+_CDLOCAL_30_838:
+	; rearrange step
+	move		itemp, a1step
+	move		itemp2, a1stepf
+	shrq		#16, a1step
+	shlq		#16, a1stepf
+	shlq		#16, itemp
+	shrq		#16, itemp2
+	shrq		#16, itemp
+	shlq		#16, itemp2
+	or		itemp, a1stepf
+	or		itemp2, a1step
+
+	; setup regs
+	movei	#texInt, itemp3	; for loop
+
+	; complete all address registers for blit pump
+	move		aa1pix, itemp2
+	move		aa1pix, itemp
+	addqt	#16, itemp
+	addqt	#20, itemp2
+
+;					subq		#1, texLines
+					jump		(itemp3)
+					nop
+;	; exit interrupt
+;	jump		(rtiAddr)
+;	store	flags, (aFlags)
+;
+;~75 cycles
+tdone:
+	shlq		#16, a2pix	;y back
+;cutItOut $14
+_CDLOCAL_22_871:
+		load		(command), itemp
+		btst		#0, itemp
+		jr		EQ, _CDLOCAL_22_871
+		nop
+
+		; set primary bank
+		movei	#G_FLAGS, itemp
+		load		(itemp), itemp2
+		bclr		#14, itemp2	; REG_PAGE
+		store	itemp2, (itemp)
+		nop
+;can't do in primary bank - command is secondary def
+;	movei	#B_CMD,	command
+;	waitForBlitter
+;	nop
+;----------------------------------------------------------------------------
+REGUNDEF	a1pix
+REGUNDEF	a1pixf
+REGUNDEF	a2pix
+REGUNDEF	count
+REGUNDEF	doit
+REGUNDEF	a1step
+REGUNDEF	a1stepf
+REGUNDEF	aa1pix
+REGUNDEF	aa1pixf
+REGUNDEF	aa2pix
+REGUNDEF	acount
+REGUNDEF	command
+REGUNDEF	ltX
+REGUNDEF	ltY
+REGUNDEF	rtX
+REGUNDEF	rtY
+REGUNDEF	leftX
+REGUNDEF	rightX
+REGUNDEF	iltX
+REGUNDEF	iltY
+REGUNDEF	irtX
+REGUNDEF	irtY
+REGUNDEF	ileftX
+REGUNDEF	irightX
+REGUNDEF	texLines
+REGUNDEF	itemp
+REGUNDEF	itemp2
+REGUNDEF	itemp3
+REGUNDEF	rtiAddr
+REGUNDEF	aFlags
+REGUNDEF	flags
+REGUNDEF	istack
+;----------------------------------------------------------------------------
+;	; set up the blitter for the renderer
+;	movei	#PITCH1|PIXEL16|WID320|XADDPHR,temp
+;	movei	#A1_FLAGS,temp2
+;	store	temp,(temp2)
+;	movei	#screen_addr,temp
+;	load		(temp),temp
+;	movei	#A1_BASE,temp2
+;	store	temp,(temp2)
+
+;		addqt	#2, polyPtr
+;		movei	#polyLp, temp
+;		jump		(temp)
+;	jump	(innerLoop)
+		movei	#nextPoint, temp
+		jump		(temp)
+		nop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+; junk
+;--- optional install aFirst
+	; check for NULL aFirst
+;	or		aFirst, aFirst
+;	movei	#redidIt, temp
+;	jump		EQ, (temp)
+;	; check for different aFirst
+;	cmp		aFirst, b
+;	movei	#redoneCornL, noCorner
+;	jump		EQ, (temp) ;didIt
+;	moveq	#0, xs ; (not really xs!!!)
+;		; check for corners
+;		load		(aFirst), secIn
+;		move		secOut, temp
+;		and		secIn, temp	; check for edge differences
+;		moveq	#3, temp2	; mask for wrap of corner list
+;		jump		NE, (noCorner)
+;		normi	secIn, secIn
+;			normi	secOut, secOut
+;			and		temp2, secIn		; wrap to 32 bits
+;			and		temp2, secOut		; test for zero (edge 3 - right side) - wrap to 32 bits
+;			move		secIn, temp
+;			readdCornerL:
+;				store	temp, (polygon)	; ys
+;				cmp		secOut, secIn
+;				jr		NE, readdCornerL
+;				addqt	#16, polygon		; advance to n+1 slope
+;		redoneCornL:
+;		store	xs, (polygon) ; x
+;		addqt	#16, polygon ; advance to n+1 slope
+
+	.align 4
+TXTSIZE:	dc.l	0
+;cornert:	dc.l 0,0

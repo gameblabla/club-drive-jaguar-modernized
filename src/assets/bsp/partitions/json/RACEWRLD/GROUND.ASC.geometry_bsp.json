@@ -1,0 +1,71 @@
+{
+  "schema": "club-geometry-bsp",
+  "original": "RACEWRLD/GROUND.ASC",
+  "generated_from_asc_sha256": "1d78b486dfe6e2df0f8f81b627d437622de5844526a18bd1bed9a217d422cb70",
+  "provenance": "2026 geometry-derived BSP, NOT byte-compatible Jaguar .BND/.MDL or original mkbnd",
+  "limitations": [
+    "New geometry-based collision BSP only; existing runtime collision trees are not replaced.",
+    "No native divider normals, BSP CP records, polygon flags, or Jaguar linker offsets generated."
+  ],
+  "meshes": [
+    {
+      "name": "GROUND",
+      "source_vertices": 4,
+      "source_faces": 2,
+      "nondegenerate_faces": 2,
+      "nodes": [
+        {
+          "type": "leaf",
+          "depth": 0,
+          "start": 0,
+          "count": 2
+        }
+      ],
+      "fragments": [
+        {
+          "source_face": 0,
+          "material": "GREEN MATTE",
+          "vertices": [
+            [
+              -21220.001953,
+              -21220.240234,
+              -773.350464
+            ],
+            [
+              21220.0,
+              -21220.240234,
+              -773.350464
+            ],
+            [
+              21220.0,
+              21029.884766,
+              -773.361328
+            ]
+          ]
+        },
+        {
+          "source_face": 1,
+          "material": "GREEN MATTE",
+          "vertices": [
+            [
+              -21220.001953,
+              -21220.240234,
+              -773.350464
+            ],
+            [
+              21220.0,
+              21029.884766,
+              -773.361328
+            ],
+            [
+              -21220.001953,
+              21029.884766,
+              -773.361328
+            ]
+          ]
+        }
+      ],
+      "area_error_max": 0.0
+    }
+  ]
+}

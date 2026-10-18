@@ -1,0 +1,299 @@
+	.long
+drone_data:
+	dc.w	$1, $0
+	dc.w	$9, $0
+	dc.w	$0, $1
+	dc.w	$30, $1
+	dc.w	$1, $2
+	dc.w	$2, $3
+	dc.w	$23, $3
+	dc.w	$3, $4
+	dc.w	$4, $5
+	dc.w	$13, $5
+	dc.w	$c, $6
+	dc.w	$d, $7
+	dc.w	$a, $8
+	dc.w	$b, $9
+	dc.w	$12, $a
+	dc.w	$3f, $a
+	dc.w	$10, $b
+	dc.w	$1d, $b
+; edges
+	dc.w	$2, $1	; edge #$0
+	dc.w	$2, $3	; edge #$1
+	dc.w	$3, $4	; edge #$2
+	dc.w	$1, $4	; edge #$3
+	dc.w	$1, $5	; edge #$4
+	dc.w	$6, $5	; edge #$5
+	dc.w	$2, $6	; edge #$6
+	dc.w	$6, $7	; edge #$7
+	dc.w	$3, $7	; edge #$8
+	dc.w	$7, $8	; edge #$9
+	dc.w	$4, $8	; edge #$a
+	dc.w	$5, $8	; edge #$b
+	dc.w	$a, $9	; edge #$c
+	dc.w	$a, $b	; edge #$d
+	dc.w	$b, $c	; edge #$e
+	dc.w	$9, $c	; edge #$f
+	dc.w	$d, $9	; edge #$10
+	dc.w	$e, $d	; edge #$11
+	dc.w	$e, $a	; edge #$12
+	dc.w	$e, $f	; edge #$13
+	dc.w	$b, $f	; edge #$14
+	dc.w	$f, $10	; edge #$15
+	dc.w	$c, $10	; edge #$16
+	dc.w	$d, $10	; edge #$17
+	dc.w	$13, $1b	; edge #$18
+	dc.w	$12, $13	; edge #$19
+	dc.w	$1a, $1b	; edge #$1a
+	dc.w	$12, $1a	; edge #$1b
+	dc.w	$14, $1c	; edge #$1c
+	dc.w	$13, $14	; edge #$1d
+	dc.w	$1b, $1c	; edge #$1e
+	dc.w	$11, $15	; edge #$1f
+	dc.w	$11, $14	; edge #$20
+	dc.w	$15, $1c	; edge #$21
+	dc.w	$16, $15	; edge #$22
+	dc.w	$1d, $15	; edge #$23
+	dc.w	$17, $16	; edge #$24
+	dc.w	$18, $17	; edge #$25
+	dc.w	$19, $1d	; edge #$26
+	dc.w	$18, $19	; edge #$27
+	dc.w	$19, $1a	; edge #$28
+	dc.w	$1d, $1c	; edge #$29
+	dc.w	$40, $26	; edge #$2a
+	dc.w	$1f, $40	; edge #$2b
+	dc.w	$25, $26	; edge #$2c
+	dc.w	$1f, $25	; edge #$2d
+	dc.w	$3f, $27	; edge #$2e
+	dc.w	$3f, $40	; edge #$2f
+	dc.w	$26, $27	; edge #$30
+	dc.w	$1e, $20	; edge #$31
+	dc.w	$1e, $3f	; edge #$32
+	dc.w	$20, $27	; edge #$33
+	dc.w	$21, $20	; edge #$34
+	dc.w	$28, $20	; edge #$35
+	dc.w	$22, $21	; edge #$36
+	dc.w	$23, $22	; edge #$37
+	dc.w	$24, $28	; edge #$38
+	dc.w	$23, $24	; edge #$39
+	dc.w	$24, $25	; edge #$3a
+	dc.w	$28, $27	; edge #$3b
+	dc.w	$2f, $43	; edge #$3c
+	dc.w	$2e, $2f	; edge #$3d
+	dc.w	$42, $43	; edge #$3e
+	dc.w	$2e, $42	; edge #$3f
+	dc.w	$30, $44	; edge #$40
+	dc.w	$2f, $30	; edge #$41
+	dc.w	$43, $44	; edge #$42
+	dc.w	$29, $41	; edge #$43
+	dc.w	$29, $30	; edge #$44
+	dc.w	$41, $44	; edge #$45
+	dc.w	$2a, $29	; edge #$46
+	dc.w	$2a, $31	; edge #$47
+	dc.w	$2b, $2a	; edge #$48
+	dc.w	$2c, $2b	; edge #$49
+	dc.w	$2c, $2d	; edge #$4a
+	dc.w	$2d, $31	; edge #$4b
+	dc.w	$2d, $2e	; edge #$4c
+	dc.w	$31, $2e	; edge #$4d
+	dc.w	$38, $3c	; edge #$4e
+	dc.w	$37, $38	; edge #$4f
+	dc.w	$3b, $3c	; edge #$50
+	dc.w	$37, $3b	; edge #$51
+	dc.w	$39, $3d	; edge #$52
+	dc.w	$38, $39	; edge #$53
+	dc.w	$3c, $3d	; edge #$54
+	dc.w	$32, $3a	; edge #$55
+	dc.w	$32, $39	; edge #$56
+	dc.w	$3a, $3d	; edge #$57
+	dc.w	$33, $32	; edge #$58
+	dc.w	$33, $3e	; edge #$59
+	dc.w	$34, $33	; edge #$5a
+	dc.w	$35, $34	; edge #$5b
+	dc.w	$35, $36	; edge #$5c
+	dc.w	$36, $3e	; edge #$5d
+	dc.w	$36, $37	; edge #$5e
+	dc.w	$3e, $37	; edge #$5f
+; points
+	dc.w	54, -6, -90	; pt#$1
+	dc.w	54, -6, 81	; pt#$2
+	dc.w	-55, -6, 81	; pt#$3
+	dc.w	-55, -6, -90	; pt#$4
+	dc.w	54, 24, -90	; pt#$5
+	dc.w	54, 24, 90	; pt#$6
+	dc.w	-55, 24, 90	; pt#$7
+	dc.w	-55, 24, -90	; pt#$8
+	dc.w	40, -34, -65	; pt#$9
+	dc.w	40, -34, 20	; pt#$a
+	dc.w	-41, -34, 20	; pt#$b
+	dc.w	-41, -34, -65	; pt#$c
+	dc.w	54, -6, -90	; pt#$d
+	dc.w	54, -6, 40	; pt#$e
+	dc.w	-55, -6, 40	; pt#$f
+	dc.w	-55, -6, -90	; pt#$10
+	dc.w	-30, 23, 76	; pt#$11
+	dc.w	-30, 23, 37	; pt#$12
+	dc.w	-30, 33, 49	; pt#$13
+	dc.w	-30, 33, 65	; pt#$14
+	dc.w	-55, 23, 76	; pt#$15
+	dc.w	-55, 10, 76	; pt#$16
+	dc.w	-55, 0, 65	; pt#$17
+	dc.w	-55, 0, 49	; pt#$18
+	dc.w	-55, 10, 37	; pt#$19
+	dc.w	-55, 23, 37	; pt#$1a
+	dc.w	-55, 33, 49	; pt#$1b
+	dc.w	-55, 33, 65	; pt#$1c
+	dc.w	-55, 16, 57	; pt#$1d
+	dc.w	-30, 23, -44	; pt#$1e
+	dc.w	-30, 23, -83	; pt#$1f
+	dc.w	-56, 23, -44	; pt#$20
+	dc.w	-56, 10, -44	; pt#$21
+	dc.w	-56, 0, -55	; pt#$22
+	dc.w	-56, 0, -71	; pt#$23
+	dc.w	-56, 10, -83	; pt#$24
+	dc.w	-56, 23, -83	; pt#$25
+	dc.w	-56, 33, -71	; pt#$26
+	dc.w	-56, 33, -55	; pt#$27
+	dc.w	-56, 16, -63	; pt#$28
+	dc.w	55, 23, 76	; pt#$29
+	dc.w	55, 10, 76	; pt#$2a
+	dc.w	55, 0, 65	; pt#$2b
+	dc.w	55, 0, 49	; pt#$2c
+	dc.w	55, 10, 37	; pt#$2d
+	dc.w	55, 23, 37	; pt#$2e
+	dc.w	55, 33, 49	; pt#$2f
+	dc.w	55, 33, 65	; pt#$30
+	dc.w	55, 16, 57	; pt#$31
+	dc.w	55, 23, -44	; pt#$32
+	dc.w	55, 10, -44	; pt#$33
+	dc.w	55, 0, -55	; pt#$34
+	dc.w	55, 0, -71	; pt#$35
+	dc.w	55, 10, -83	; pt#$36
+	dc.w	55, 23, -83	; pt#$37
+	dc.w	55, 33, -71	; pt#$38
+	dc.w	55, 33, -55	; pt#$39
+	dc.w	30, 23, -44	; pt#$3a
+	dc.w	30, 23, -83	; pt#$3b
+	dc.w	30, 33, -71	; pt#$3c
+	dc.w	30, 33, -55	; pt#$3d
+	dc.w	55, 16, -63	; pt#$3e
+	dc.w	-30, 33, -55	; pt#$3f
+	dc.w	-30, 33, -71	; pt#$40
+	dc.w	29, 23, 76	; pt#$41
+	dc.w	29, 23, 37	; pt#$42
+	dc.w	29, 33, 49	; pt#$43
+	dc.w	29, 33, 65	; pt#$44
+; vectors
+	dc.w	0, -32767, 0	; vector#$0
+	dc.w	32767, 0, 0	; vector#$1
+	dc.w	0, -9656, 31312	; vector#$2
+	dc.w	-32767, 0, 0	; vector#$3
+	dc.w	0, 0, -32767	; vector#$4
+	dc.w	0, 32767, 0	; vector#$5
+	dc.w	29088, -15085, 0	; vector#$6
+	dc.w	0, -19157, 26584	; vector#$7
+	dc.w	-29088, -15085, 0	; vector#$8
+	dc.w	0, -21931, -24346	; vector#$9
+	dc.w	0, 24807, -21408	; vector#$a
+	dc.w	0, 24807, 21408	; vector#$b
+; cpnode #1  offset 0
+	dc.w	$2004, $8, $8009, $8007, $5, $b, $5
+	dc.w	$2004, $9, $8041, $3c, $42, $8040, $b
+	dc.w	$2004, $9, $801d, $18, $1e, $801c, $b
+	dc.w	$2004, $9, $2f, $2a, $30, $802e, $b
+	dc.w	$2004, $9, $8053, $4e, $54, $8052, $b
+	dc.w	$2004, $e, $3e, $803c, $803d, $3f, $a
+	dc.w	$2004, $e, $1a, $8018, $8019, $1b, $a
+	dc.w	$2004, $f, $2c, $802a, $802b, $2d, $a
+	dc.w	$2004, $f, $50, $804e, $804f, $51, $a
+	dc.w	$2004, $10, $44, $40, $8045, $8043, $c
+	dc.w	$2004, $10, $20, $1c, $8021, $801f, $c
+	dc.w	$2004, $11, $32, $2e, $8033, $8031, $c
+	dc.w	$2004, $11, $56, $52, $8057, $8055, $c
+	dc.w	$2004, $0, $1, $2, $8003, $8000, $0
+	dc.w	$2004, $2, $4, $8005, $8006, $0, $1
+	dc.w	$2004, $4, $6, $7, $8008, $8001, $2
+	dc.w	$2004, $5, $8, $9, $800a, $8002, $3
+	dc.w	$2004, $7, $a, $800b, $8004, $3, $4
+	dc.w	$2006, $3, $4d, $3d, $41, $8044, $8046, $47, $e
+	dc.w	$2006, $3, $5f, $4f, $53, $8056, $8058, $59, $e
+	dc.w	$2005, $3, $5c, $5d, $8059, $805a, $805b, $e
+	dc.w	$2003, $3, $5e, $805f, $805d, $e
+	dc.w	$2005, $3, $4a, $4b, $8047, $8048, $8049, $e
+	dc.w	$2003, $3, $4c, $804d, $804b, $e
+	dc.w	$2006, $5, $24, $22, $8023, $8026, $8027, $25, $d
+	dc.w	$2005, $5, $29, $801e, $801a, $8028, $26, $d
+	dc.w	$2003, $5, $21, $8029, $23, $d
+	dc.w	$2006, $6, $36, $34, $8035, $8038, $8039, $37, $d
+	dc.w	$2005, $6, $3b, $8030, $802c, $803a, $38, $d
+	dc.w	$2003, $6, $33, $803b, $35, $d
+	dc.w	0
+; cpnode #2  offset 438
+	dc.w	$2004, $1, $d, $e, $800f, $800c, $0
+	dc.w	$2004, $a, $8010, $8011, $12, $c, $6
+	dc.w	$2004, $b, $8012, $13, $8014, $800d, $7
+	dc.w	$2004, $c, $14, $15, $8016, $800e, $8
+	dc.w	$2004, $d, $16, $8017, $10, $f, $9
+	dc.w	0
+; tree
+	.long
+			; Node 0
+	dc.w	0, 0, 16, 8
+			; Node 8
+	dc.w	1, 0
+	dc.l	0
+			; Node 16
+	dc.w	1, 0
+	dc.l	438
+; colors
+	dc.w	0, $0, $ff80, $60
+	dc.w	0, $1, $ff80, $60
+	dc.w	0, $2, $ff80, $60
+	dc.w	0, $3, $ff80, $60
+	dc.w	0, $4, $ff80, $60
+	dc.w	0, $5, $ff80, $60
+	dc.w	0, $6, $430, $70
+	dc.w	0, $7, $430, $70
+	dc.w	0, $8, $430, $70
+	dc.w	0, $9, $430, $70
+	dc.w	0, $a, $7820, $30
+	dc.w	0, $5, $7820, $30
+	dc.w	0, $b, $7820, $30
+	dc.w	0, $3, $7820, $30
+	dc.w	0, $1, $7820, $30
+	.long
+drone_head:
+	dc.l	0	; band flags
+	dc.w	68	; NUM_PNTS
+	dc.w	12	; NUM_VECTORS
+	dc.w	18	; NUM_DIVIDERS
+	dc.w	96	; NUM_EDGES
+	dc.w	3	; NUM_CPS
+	dc.w	15	; NUM_COLORS
+	dc.l	$0066b000,$ffac7000,$fd0ba000	; ORIGIN
+	dc.l	$00002db5	; RADIUS
+	dc.l	0	; PROP_LIST
+	dc.l	drone_data+0	; dividers
+	dc.l	drone_data+72	; edges
+	dc.l	drone_data+456	; points
+	dc.l	drone_data+936	; tris
+	dc.l	drone_data+1446	; end of tris
+	dc.l	drone_data+1448	; tree
+	dc.l	0	; texture data
+	dc.l	drone_data+1472	; calculated colors
+	dc.l	0	; CAMERA list
+	dc.l	0	; ROTATED POINTLIST
+	dc.l	0	; tVECTORS
+	dc.l	0	; tCOLORS
+	dc.l	0	; tEDGES
+	dc.l	0	; tDIVIDERS
+	dc.l	0	; tCLOSE_LIST
+	dc.l	0	; tPNTS
+	dc.l	0	; tPOLYS
+	dc.l	0	; BND_MATRIX
+	dc.l	0	; tNUM_EXTRAS
+	dc.l	0	; USE_COUNT
+			; BND_LIST
+	dc.l	drone_head
+	dc.l	0

@@ -1,0 +1,675 @@
+{
+  "schema": "club-native-collision",
+  "source_model": "CARS/CAR3.MDL",
+  "source_template_sha256": "e23d9af99b38d15a7207e7c383c4fd889201f72caf9326875917e3de313277f5",
+  "provenance": "2026 reconstructed native .MDL tables and directed edge bits; NOT Atari mkbnd",
+  "limitations": "Original point/normal/divider tables and CP memberships only; no Jaguar runtime replacement",
+  "cp_lists": [
+    {
+      "cp_index": 0,
+      "polygons": []
+    },
+    {
+      "cp_index": 1,
+      "polygons": [
+        {
+          "vertices": [
+            8,
+            7,
+            6,
+            5
+          ],
+          "flags": 8192,
+          "divider": 2,
+          "color": 1
+        },
+        {
+          "vertices": [
+            7,
+            12,
+            11,
+            6
+          ],
+          "flags": 8192,
+          "divider": 3,
+          "color": 1
+        },
+        {
+          "vertices": [
+            90,
+            89,
+            56,
+            57
+          ],
+          "flags": 8192,
+          "divider": 4,
+          "color": 26
+        },
+        {
+          "vertices": [
+            55,
+            56,
+            89,
+            88
+          ],
+          "flags": 8192,
+          "divider": 29,
+          "color": 25
+        },
+        {
+          "vertices": [
+            87,
+            90,
+            57,
+            50
+          ],
+          "flags": 8192,
+          "divider": 31,
+          "color": 27
+        },
+        {
+          "vertices": [
+            88,
+            89,
+            90,
+            87
+          ],
+          "flags": 8192,
+          "divider": 35,
+          "color": 28
+        },
+        {
+          "vertices": [
+            78,
+            77,
+            47,
+            48
+          ],
+          "flags": 8192,
+          "divider": 5,
+          "color": 26
+        },
+        {
+          "vertices": [
+            46,
+            47,
+            77,
+            76
+          ],
+          "flags": 8192,
+          "divider": 30,
+          "color": 25
+        },
+        {
+          "vertices": [
+            75,
+            78,
+            48,
+            41
+          ],
+          "flags": 8192,
+          "divider": 32,
+          "color": 27
+        },
+        {
+          "vertices": [
+            76,
+            77,
+            78,
+            75
+          ],
+          "flags": 8192,
+          "divider": 35,
+          "color": 28
+        },
+        {
+          "vertices": [
+            39,
+            38,
+            81,
+            82
+          ],
+          "flags": 8192,
+          "divider": 5,
+          "color": 26
+        },
+        {
+          "vertices": [
+            80,
+            81,
+            38,
+            37
+          ],
+          "flags": 8192,
+          "divider": 30,
+          "color": 25
+        },
+        {
+          "vertices": [
+            32,
+            39,
+            82,
+            79
+          ],
+          "flags": 8192,
+          "divider": 32,
+          "color": 27
+        },
+        {
+          "vertices": [
+            79,
+            82,
+            81,
+            80
+          ],
+          "flags": 8192,
+          "divider": 37,
+          "color": 29
+        },
+        {
+          "vertices": [
+            30,
+            29,
+            85,
+            86
+          ],
+          "flags": 8192,
+          "divider": 4,
+          "color": 26
+        },
+        {
+          "vertices": [
+            84,
+            85,
+            29,
+            28
+          ],
+          "flags": 8192,
+          "divider": 29,
+          "color": 25
+        },
+        {
+          "vertices": [
+            23,
+            30,
+            86,
+            83
+          ],
+          "flags": 8192,
+          "divider": 31,
+          "color": 27
+        },
+        {
+          "vertices": [
+            83,
+            86,
+            85,
+            84
+          ],
+          "flags": 8192,
+          "divider": 37,
+          "color": 29
+        },
+        {
+          "vertices": [
+            21,
+            13,
+            6,
+            11,
+            2
+          ],
+          "flags": 8192,
+          "divider": 7,
+          "color": 3
+        },
+        {
+          "vertices": [
+            2,
+            11,
+            9
+          ],
+          "flags": 8192,
+          "divider": 8,
+          "color": 4
+        },
+        {
+          "vertices": [
+            1,
+            5,
+            6,
+            13
+          ],
+          "flags": 8192,
+          "divider": 13,
+          "color": 9
+        },
+        {
+          "vertices": [
+            31,
+            28,
+            29,
+            30,
+            23,
+            24
+          ],
+          "flags": 8192,
+          "divider": 33,
+          "color": 28
+        },
+        {
+          "vertices": [
+            26,
+            27,
+            31,
+            24,
+            25
+          ],
+          "flags": 8192,
+          "divider": 33,
+          "color": 28
+        },
+        {
+          "vertices": [
+            27,
+            28,
+            31
+          ],
+          "flags": 8192,
+          "divider": 33,
+          "color": 28
+        },
+        {
+          "vertices": [
+            40,
+            37,
+            38,
+            39,
+            32,
+            33
+          ],
+          "flags": 8192,
+          "divider": 34,
+          "color": 28
+        },
+        {
+          "vertices": [
+            35,
+            36,
+            40,
+            33,
+            34
+          ],
+          "flags": 8192,
+          "divider": 34,
+          "color": 28
+        },
+        {
+          "vertices": [
+            36,
+            37,
+            40
+          ],
+          "flags": 8192,
+          "divider": 34,
+          "color": 28
+        },
+        {
+          "vertices": [
+            12,
+            7,
+            10
+          ],
+          "flags": 8192,
+          "divider": 10,
+          "color": 6
+        },
+        {
+          "vertices": [
+            10,
+            7,
+            3
+          ],
+          "flags": 8192,
+          "divider": 11,
+          "color": 7
+        },
+        {
+          "vertices": [
+            7,
+            8,
+            3
+          ],
+          "flags": 8192,
+          "divider": 14,
+          "color": 10
+        },
+        {
+          "vertices": [
+            22,
+            3,
+            8,
+            14
+          ],
+          "flags": 8192,
+          "divider": 15,
+          "color": 11
+        },
+        {
+          "vertices": [
+            14,
+            8,
+            4
+          ],
+          "flags": 8192,
+          "divider": 16,
+          "color": 12
+        },
+        {
+          "vertices": [
+            58,
+            57,
+            56,
+            55,
+            54
+          ],
+          "flags": 8192,
+          "divider": 36,
+          "color": 29
+        },
+        {
+          "vertices": [
+            50,
+            57,
+            58
+          ],
+          "flags": 8192,
+          "divider": 36,
+          "color": 29
+        },
+        {
+          "vertices": [
+            52,
+            51,
+            50,
+            58,
+            54,
+            53
+          ],
+          "flags": 8192,
+          "divider": 36,
+          "color": 29
+        },
+        {
+          "vertices": [
+            49,
+            48,
+            47,
+            46,
+            45
+          ],
+          "flags": 8192,
+          "divider": 36,
+          "color": 29
+        },
+        {
+          "vertices": [
+            41,
+            48,
+            49
+          ],
+          "flags": 8192,
+          "divider": 36,
+          "color": 29
+        },
+        {
+          "vertices": [
+            43,
+            42,
+            41,
+            49,
+            45,
+            44
+          ],
+          "flags": 8192,
+          "divider": 36,
+          "color": 29
+        },
+        {
+          "vertices": [
+            9,
+            11,
+            12,
+            10
+          ],
+          "flags": 8192,
+          "divider": 9,
+          "color": 5
+        },
+        {
+          "vertices": [
+            22,
+            14,
+            13,
+            21,
+            2,
+            3
+          ],
+          "flags": 8192,
+          "divider": 38,
+          "color": 31
+        },
+        {
+          "vertices": [
+            2,
+            9,
+            10,
+            3
+          ],
+          "flags": 8192,
+          "divider": 6,
+          "color": 2
+        }
+      ]
+    },
+    {
+      "cp_index": 2,
+      "polygons": [
+        {
+          "vertices": [
+            1,
+            13,
+            14,
+            4
+          ],
+          "flags": 8192,
+          "divider": 12,
+          "color": 8
+        },
+        {
+          "vertices": [
+            4,
+            8,
+            5,
+            1
+          ],
+          "flags": 8192,
+          "divider": 0,
+          "color": 0
+        },
+        {
+          "vertices": [
+            62,
+            61,
+            59,
+            60
+          ],
+          "flags": 8192,
+          "divider": 1,
+          "color": 30
+        },
+        {
+          "vertices": [
+            66,
+            65,
+            63,
+            64
+          ],
+          "flags": 8192,
+          "divider": 1,
+          "color": 30
+        },
+        {
+          "vertices": [
+            70,
+            69,
+            67,
+            68
+          ],
+          "flags": 8192,
+          "divider": 1,
+          "color": 30
+        },
+        {
+          "vertices": [
+            74,
+            73,
+            71,
+            72
+          ],
+          "flags": 8192,
+          "divider": 1,
+          "color": 30
+        }
+      ]
+    },
+    {
+      "cp_index": 3,
+      "polygons": [
+        {
+          "vertices": [
+            16,
+            20,
+            19,
+            15
+          ],
+          "flags": 8192,
+          "divider": 28,
+          "color": 24
+        },
+        {
+          "vertices": [
+            17,
+            21,
+            19
+          ],
+          "flags": 8192,
+          "divider": 20,
+          "color": 16
+        },
+        {
+          "vertices": [
+            22,
+            14,
+            20
+          ],
+          "flags": 8192,
+          "divider": 23,
+          "color": 19
+        },
+        {
+          "vertices": [
+            18,
+            17,
+            19,
+            20
+          ],
+          "flags": 8192,
+          "divider": 27,
+          "color": 23
+        },
+        {
+          "vertices": [
+            13,
+            21,
+            17
+          ],
+          "flags": 8192,
+          "divider": 18,
+          "color": 14
+        },
+        {
+          "vertices": [
+            20,
+            14,
+            18
+          ],
+          "flags": 8192,
+          "divider": 19,
+          "color": 15
+        },
+        {
+          "vertices": [
+            15,
+            2,
+            3,
+            16
+          ],
+          "flags": 40960,
+          "divider": 17,
+          "color": 13
+        },
+        {
+          "vertices": [
+            19,
+            2,
+            15
+          ],
+          "flags": 40960,
+          "divider": 21,
+          "color": 17
+        },
+        {
+          "vertices": [
+            21,
+            2,
+            19
+          ],
+          "flags": 40960,
+          "divider": 22,
+          "color": 18
+        },
+        {
+          "vertices": [
+            16,
+            3,
+            22
+          ],
+          "flags": 40960,
+          "divider": 24,
+          "color": 20
+        },
+        {
+          "vertices": [
+            16,
+            22,
+            20
+          ],
+          "flags": 40960,
+          "divider": 25,
+          "color": 21
+        },
+        {
+          "vertices": [
+            18,
+            14,
+            13,
+            17
+          ],
+          "flags": 40960,
+          "divider": 26,
+          "color": 22
+        }
+      ]
+    }
+  ]
+}

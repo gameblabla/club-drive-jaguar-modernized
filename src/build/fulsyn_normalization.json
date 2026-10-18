@@ -1,0 +1,79 @@
+{
+  "original_sha256": "febf92bbaf688a7c369fe6ffe812252a8830ae37f556ae4f0244308f44d045f2",
+  "normalized_sha256": "aff801a821cc58db60c6a0ec38678629e787ce71824889e8971583633a2ba5e7",
+  "symbols": [
+    {
+      "symbol": "DSPORG",
+      "address": "0xf1b000",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "TIMELEFT",
+      "address": "0xf1b01c",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "VOLUME",
+      "address": "0xf1b030",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "simpmod2",
+      "address": "0xf1b4c0",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "SHUTDOWN",
+      "address": "0xf1b59a",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "SEMAPHOR",
+      "address": "0xf1b9b8",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "buffstar",
+      "address": "0xf1ba24",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "SCORE_AD",
+      "address": "0xf1bb54",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "TIMER_AD",
+      "address": "0xf1bb58",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "PATCHLOC",
+      "address": "0xf1bb5c",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "SYNTHEND",
+      "address": "0xf1bb94",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    },
+    {
+      "symbol": "FULSYN_E",
+      "address": "0xf1bb94",
+      "old_flag": "0xA000",
+      "new_flag": "0x8000"
+    }
+  ],
+  "code_section_identical": true
+}

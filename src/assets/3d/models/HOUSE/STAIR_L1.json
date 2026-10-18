@@ -1,0 +1,381 @@
+{
+ "source": "HOUSE/STAIR_L1.ASC",
+ "sha256": "411dcf8d5c468b8da3f97d18f5d31060247f72a82656cd1d58f93a1478ee2b0c",
+ "objects": [
+  {
+   "name": "Light01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light04",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light05",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light02",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Light06",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Camera01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "strwy",
+   "vertices": [
+    [
+     "-6526.92334",
+     "-2863.967285",
+     "-2172.476074"
+    ],
+    [
+     "-6526.92334",
+     "-2863.967285",
+     "2812.45459"
+    ],
+    [
+     "-6526.92334",
+     "2639.716064",
+     "2812.45459"
+    ],
+    [
+     "-4604.37207",
+     "-2863.967285",
+     "2812.45459"
+    ],
+    [
+     "-4604.37207",
+     "-2863.967285",
+     "-2172.476074"
+    ],
+    [
+     "-4604.37207",
+     "-135.88736",
+     "-1786.129883"
+    ],
+    [
+     "-4604.37207",
+     "2639.716064",
+     "-1786.129639"
+    ],
+    [
+     "-4604.37207",
+     "-135.88736",
+     "-2172.476074"
+    ],
+    [
+     "-4604.37207",
+     "-135.887421",
+     "2812.45459"
+    ],
+    [
+     "-4606.946289",
+     "-2862.168701",
+     "530.902588"
+    ],
+    [
+     "-6526.920898",
+     "-2862.168701",
+     "530.903687"
+    ],
+    [
+     "-4604.37207",
+     "2639.716064",
+     "-2172.476074"
+    ],
+    [
+     "-6526.92334",
+     "2639.716064",
+     "-2172.476074"
+    ],
+    [
+     "-4468.734375",
+     "-135.88736",
+     "-2172.476074"
+    ],
+    [
+     "-4468.734375",
+     "-135.887421",
+     "2812.45459"
+    ],
+    [
+     "-4468.734375",
+     "2639.716064",
+     "2812.45459"
+    ],
+    [
+     "-4468.734375",
+     "2639.716064",
+     "-2172.476074"
+    ],
+    [
+     "-6526.922363",
+     "-1637.788818",
+     "2812.46875"
+    ],
+    [
+     "-6526.92334",
+     "-2863.967285",
+     "2812.45459"
+    ],
+    [
+     "-4604.37207",
+     "-2863.967285",
+     "2812.45459"
+    ],
+    [
+     "-6526.92334",
+     "2639.716064",
+     "2812.45459"
+    ],
+    [
+     "-4604.37207",
+     "2639.716064",
+     "2812.45459"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      1,
+      0,
+      12
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      12,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      5,
+      7,
+      11
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "STAIR-CLR"
+    },
+    {
+     "vertices": [
+      5,
+      11,
+      6
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "STAIR-CLR"
+    },
+    {
+     "vertices": [
+      3,
+      8,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      4,
+      3
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      14,
+      13,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      7,
+      8,
+      14
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      12,
+      15,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      12,
+      16,
+      15
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      4,
+      1
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      4,
+      0,
+      1
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      13,
+      16,
+      11
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "BROWN MATTE"
+    },
+    {
+     "vertices": [
+      11,
+      7,
+      13
+     ],
+     "edges": [
+      1,
+      1,
+      1
+     ],
+     "material": "BROWN MATTE"
+    },
+    {
+     "vertices": [
+      19,
+      18,
+      20
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "BEIGE MATTE"
+    },
+    {
+     "vertices": [
+      20,
+      21,
+      19
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "BEIGE MATTE"
+    }
+   ],
+   "declared_vertices": 22,
+   "declared_faces": 16
+  }
+ ],
+ "material_names": [
+  "BEIGE MATTE",
+  "BROWN MATTE",
+  "STAIR-CLR"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

@@ -1,0 +1,23 @@
+{
+  "scope": "Separate RMAC-accepted standalone Car3 MDL, not a modified game ROM",
+  "rmac_accepted_original_and_generated": true,
+  "baseline_binary_bytes": 2688,
+  "edited_binary_bytes": 2756,
+  "growth_bytes": 68,
+  "old_cp_offsets": {
+    "0": 0,
+    "1": 2,
+    "2": 590,
+    "3": 676
+  },
+  "new_cp_offsets": {
+    "0": 0,
+    "1": 2,
+    "2": 624,
+    "3": 710
+  },
+  "original_bsp_nodes": 5,
+  "color_payload_bytes": 256,
+  "original_binary_sha256": "f9d9506e0fc76ff8c49b46a86813744cf87db43d5cde52629aa4cab19f3ff16a",
+  "generated_binary_sha256": "8c625927af9bb5c98d0eb1e29ed4ed06c4fdcb8dfa62750452fcbd493c913470"
+}

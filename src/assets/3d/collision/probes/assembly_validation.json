@@ -1,0 +1,22 @@
+{
+  "scope": "standalone Jaguar RMAC model binary only; NOT game collision parity",
+  "rmac_success": true,
+  "original_size_bytes": 2920,
+  "edited_size_bytes": 2936,
+  "size_increase_bytes": 16,
+  "added_edges": 1,
+  "added_triangles_net": 1,
+  "cp_bytes_added": 10,
+  "tree_relocation_bytes": 16,
+  "rebound_second_cp_offset": [
+    676,
+    686
+  ],
+  "unaltered_post_tree_bytes": 372,
+  "original_sha256": "dd69471309c08ef367252c6e0696edd74773729b4af8bba6cd6ce29e455fd525",
+  "modified_sha256": "16a79e4bad40acb2002991ab3e6c76a1049d4cc8bab01b0d62d6e11db5834609",
+  "area_conservation_error": 0.0,
+  "point_normal_arrays_identical": true,
+  "untouched_cp_payload_identical": true,
+  "untouched_color_payload_identical": true
+}

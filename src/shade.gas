@@ -1,0 +1,266 @@
+; Shade.gas - compute lighting
+;
+;
+; The following types of lighting are supported
+; Lighting based on world lights:
+;	0: ordinary dynamic lighting: "vector" is the normal vector index, "ambient" the base color, "diffuse" the amount that can be
+;					added based on the dot product of the normal and the light direction
+;	1: brake light: same as 0, except that if the player's brakes are on, intensity is set to 0xff (maximum)
+;
+; Lighting based on time ("timestamp") in 300ths of a second:
+;	2: flashing light: "vector" is divided into 4 nybbles t,x,y,z, and then the color is computed as
+;		color = ((timestamp >> x) % y) == z ? diffuse : ambient
+;	   t (the highest nybble) is currently unused and should be left as 0
+;	3: pulsing light: ambient is the base color, and its intensity is calculated as:
+;		intensity = ambient intensity + abs((((timestamp/16) % vector) - vector/2)) * diffuse 
+;
+;- Shading loop register defines ----------------------------------------------
+
+; blitter data
+ix		REGEQU	R0	; incident x
+iy		REGEQU	R1	; incident y
+iz		REGEQU	R2	; incident z
+
+snx		REGEQU	R3	; surface normal x
+sny		REGEQU	R4	; surface normal y
+snz		REGEQU	R5	; surface normal z
+
+; addresses
+vectorList	REGEQU	R6
+colorList		REGEQU	R7
+lightList		REGEQU	R8
+light		REGEQU	R9
+
+; counters
+numLights		REGEQU	R10
+lightCounter	REGEQU	R11
+numColors		REGEQU	R12
+
+result		REGEQU	R13
+vector		REGEQU	R14
+sum			REGEQU	R15
+
+tColorList	REGEQU	R16
+six			REGEQU	R17
+ambient		REGEQU	R18
+diffuse		REGEQU	R19
+
+; global .bnd pointer
+geoband		REGEQU	R20
+
+type		REGEQU	R21
+thePlayer	REGEQU	R22
+branch		REGEQU	R23
+
+;innerLoop	REGEQU	R27
+;---------------------------------------------------------------------------
+
+	.include	"joypad.inc"
+
+; read color data
+
+		moveq	#6, six
+		movefa	ALTband,geoband
+		movei	#tCOLORS, tColorList
+		add	geoband, tColorList
+		load	(tColorList), tColorList
+
+	; use global vectors
+	movei	#ROTPNT_LIST, temp
+	add	geoband,temp
+	load		(temp), vectorList
+	movei	#NUM_PNTS, temp
+	add	geoband,temp
+	loadw	(temp), temp2
+	mult		six, temp2
+	add		temp2, vectorList
+
+		subqt	#2, tColorList		; ready to preincrement
+		movei	#COLOR_LIST, temp
+		add	geoband,temp
+		load		(temp), colorList
+		movei	#LIGHTS, lightList
+
+		movei	#NUM_COLORS, temp
+		add	geoband,temp
+		moveq	#2, numLights			; stand in
+		loadw	(temp), numColors
+		movei	#outLLoop, innerLoop
+		movei	#endIt,temp
+		cmpq	#0,numColors
+		jump	EQ,(temp)
+		nop
+outLLoop:
+		loadw	(colorList),type
+		addqt	#2,colorList
+		loadw	(colorList), vector
+		addqt	#2, colorList
+		loadw	(colorList), ambient
+		addqt	#2, colorList
+		loadw	(colorList), diffuse
+
+		cmpq	#2,type
+		movei	#timestuff,temp2
+		jump	PL,(temp2)
+		nop
+
+		imult	six, vector
+		add		vectorList, vector
+
+		loadw	(vector), snx
+		addqt	#2, vector
+;	cmp snx,snx
+		loadw	(vector), sny
+		addqt	#2, vector
+;	cmp sny,sny
+		loadw	(vector), snz
+
+		move		numLights, lightCounter
+		move		lightList, light
+		moveq	#0, sum
+inLLoop:
+			load		(light), ix
+			addqt	#4, light
+			load		(light), iy
+			addqt	#4, light
+			load		(light), iz
+			addqt	#4, light
+
+			imultn	iz, snz	;
+			imacn	iy, sny	;
+			imacn	ix, snx	;
+			resmac	result	;
+
+
+			sharq	#15, result
+			sat16	result
+			subq		#1, lightCounter
+			jr		NE, inLLoop
+			add		result, sum
+
+		shrq	#2,sum				; divide sum by 4 to avoid overflow
+		mult	sum, diffuse
+		addqt	#2, tColorList
+		move	ambient,temp
+		shrq	#13,diffuse			; make up for earlier division by 4
+		shlq	#24,temp			; extract the intensity
+		shrq	#8,ambient
+		shrq	#24,temp
+		add	diffuse,temp
+		shlq	#8,ambient
+		sat8	temp
+		movei	#stowIt,branch
+		cmpq	#1,type
+		jump	NE,(branch)
+		nop
+	; a brake light
+			movefa	ALTplayer,thePlayer
+			movei	#CAR_MODEL,temp2
+			add	thePlayer,temp2
+			load	(temp2),temp2
+			cmp	geoband,temp2		; drawing our own car?
+			jr	EQ,_CDLOCAL_10_165			; yes
+			nop
+			movei	#(PLAYER1^PLAYER2),temp2
+			xor	temp2,thePlayer
+_CDLOCAL_10_165:
+			movei	#CAR_CTRL,temp2
+			add	thePlayer,temp2
+			load	(temp2),temp2
+			btst	#FIRE_A,temp2		; brake on?
+			jump	EQ,(branch)
+			nop
+				movei	#$ff,temp	; max intensity
+stowIt:
+		or		temp, ambient
+		subq		#1, numColors
+		storew	ambient, (tColorList)
+
+		jump		NE, (innerLoop)
+		addqt	#2, colorList
+		movei	#endIt,temp2
+		jump	(temp2)
+		nop
+timestuff:
+		movei	#framecnt,temp
+		addqt	#2,tColorList
+		load	(temp),temp
+		cmpq	#2,type
+		movei	#pulsing,temp2
+		jump	NE,(temp2)
+		nop
+flashing:
+		move	vector,ix
+		move	vector,iy
+		move	vector,iz
+		shlq	#20,ix
+		shlq	#24,iy
+		shlq	#28,iz
+		shrq	#28,ix
+		shrq	#28,iy
+		shrq	#28,iz
+		sha	ix,temp
+		div	iy,temp
+		movei	#G_REMAIN,temp2
+		or	temp,temp
+		load	(temp2),temp2		; get remainder
+		cmpq	#0,temp2
+		jr	PL,_CDLOCAL_10_210
+		nop
+			add	iy,temp2
+_CDLOCAL_10_210:
+		cmp	iz,temp2
+		jr	NE,stowAmbient
+		nop
+			move	diffuse,ambient
+stowAmbient:
+		subq	#1,numColors
+		storew	ambient,(tColorList)
+		jump	NE,(innerLoop)
+		addqt	#2,colorList
+
+	movei	#endIt,temp2
+	jump	(temp2)
+	nop
+
+pulsing:
+		shrq	#4,temp			; divide by 16 (so we've got roughly 20ths of a second)
+		div	vector,temp
+		movei	#G_REMAIN,temp2
+		or	temp,temp
+		load	(temp2),temp2		; get remainder
+		cmpq	#0,temp2
+		jr	PL,_CDLOCAL_10_235
+		nop
+			add	vector,temp2
+_CDLOCAL_10_235:
+		shrq	#1,vector
+		sub	vector,temp2
+		abs	temp2
+		mult	diffuse,temp2
+		move	ambient,temp
+		shlq	#24,temp
+		shrq	#8,ambient
+		shrq	#24,temp
+		shlq	#8,ambient
+		add	temp2,temp
+		sat8	temp
+		movei	#stowAmbient,temp2
+		jump	(temp2)
+		or	temp,ambient
+
+;
+; data storage
+; the longs are word-swapped because of a GASM bug
+;
+	.align 4
+LIGHTS:
+	; Original GASM/LTXCONV emitted word-swapped longs for this table.
+	; Modern RMAC does not: represent retail halfword order explicitly.
+	dc.w	$0000,$13fd,$ffff,$880f,$0000,$27fb
+	dc.w	$0000,$0000,$ffff,$fc77,$ffff,$e032
+
+endIt:
+
+REGUNDEF geoband
+

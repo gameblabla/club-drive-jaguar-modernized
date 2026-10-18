@@ -1,0 +1,113 @@
+{
+  "CARS/CAR2.BND": {
+    "source_bnd": "CARS/CAR2.BND",
+    "matched_mdl": "CARS/CAR2.MDL",
+    "coordinate_rule": "MDL=(-BND.x, BND.y, -BND.z)",
+    "coordinate_match": true,
+    "points": 94,
+    "normal_transform_matches": 31,
+    "normals_total": 31,
+    "exact_edges_at_same_index": 143,
+    "bnd_edges": 143,
+    "mdl_edges": 143,
+    "bnd_polygons": 60,
+    "mdl_polygons": 60,
+    "geometry_matched_polygons": 60,
+    "geometry_and_flags_color_matched_polygons": 60,
+    "unmatched_BND_vertex_sets": [],
+    "unmatched_MDL_vertex_sets": [],
+    "mdl_CP_record_count": 3,
+    "mdl_header_CP_count": 3,
+    "mdl_tree_nodes": 3,
+    "bnd_group_polygon_counts": [
+      0,
+      48,
+      12,
+      0
+    ],
+    "bnd_sizeCPsTable": 7,
+    "warning": "Sets ignore winding; material/CP ownership must be independently recovered before runtime use"
+  },
+  "CARS/CAR3.BND": {
+    "source_bnd": "CARS/CAR3.BND",
+    "matched_mdl": "CARS/CAR3.MDL",
+    "coordinate_rule": "MDL=(-BND.x, BND.y, -BND.z)",
+    "coordinate_match": true,
+    "points": 90,
+    "normal_transform_matches": 10,
+    "normals_total": 31,
+    "exact_edges_at_same_index": 11,
+    "bnd_edges": 139,
+    "mdl_edges": 138,
+    "bnd_polygons": 60,
+    "mdl_polygons": 59,
+    "geometry_matched_polygons": 58,
+    "geometry_and_flags_color_matched_polygons": 10,
+    "unmatched_BND_vertex_sets": [
+      [
+        2,
+        6,
+        11
+      ],
+      [
+        2,
+        6,
+        13,
+        21
+      ]
+    ],
+    "unmatched_MDL_vertex_sets": [
+      [
+        2,
+        6,
+        11,
+        13,
+        21
+      ]
+    ],
+    "mdl_CP_record_count": 4,
+    "mdl_header_CP_count": 4,
+    "mdl_tree_nodes": 5,
+    "bnd_group_polygon_counts": [
+      0,
+      18,
+      1,
+      12,
+      1,
+      7,
+      7,
+      7,
+      7
+    ],
+    "bnd_sizeCPsTable": 9,
+    "warning": "Sets ignore winding; material/CP ownership must be independently recovered before runtime use"
+  },
+  "CARS/DRONE.BND": {
+    "source_bnd": "CARS/DRONE.BND",
+    "matched_mdl": "CARS/DRONE.MDL",
+    "coordinate_rule": "MDL=(-BND.x, BND.y, -BND.z)",
+    "coordinate_match": true,
+    "points": 68,
+    "normal_transform_matches": 12,
+    "normals_total": 12,
+    "exact_edges_at_same_index": 96,
+    "bnd_edges": 96,
+    "mdl_edges": 96,
+    "bnd_polygons": 35,
+    "mdl_polygons": 35,
+    "geometry_matched_polygons": 35,
+    "geometry_and_flags_color_matched_polygons": 35,
+    "unmatched_BND_vertex_sets": [],
+    "unmatched_MDL_vertex_sets": [],
+    "mdl_CP_record_count": 2,
+    "mdl_header_CP_count": 3,
+    "mdl_tree_nodes": 3,
+    "bnd_group_polygon_counts": [
+      0,
+      30,
+      5
+    ],
+    "bnd_sizeCPsTable": 2,
+    "warning": "Sets ignore winding; material/CP ownership must be independently recovered before runtime use"
+  }
+}

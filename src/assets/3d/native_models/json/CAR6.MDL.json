@@ -1,0 +1,3617 @@
+{
+  "schema": "club-native-model",
+  "original": "CAR6.MDL",
+  "template_sha256": "bb92f413bb48b2d2fc4f9c07314536becb6c507e9ec8565cdb6d6bf2254ef140",
+  "notes": [
+    "2026 reconstruction; native numeric values only; historical comments live in template",
+    "Vertex indices in edge lists are 1-based; polygon edge IDs are 0-based, bit 15 encodes edge direction",
+    "Leave counts unchanged: collision BSP trees, pointer offsets and bounding radius are NOT regenerated",
+    "Faces/OBJ are derived previews; change surfaces[*].values and edges[*].values to edit actual model"
+  ],
+  "groups": {
+    "vertices": [
+      {
+        "line": 225,
+        "group": "vertices",
+        "values": [
+          54,
+          -11,
+          -109
+        ]
+      },
+      {
+        "line": 226,
+        "group": "vertices",
+        "values": [
+          54,
+          -11,
+          33
+        ]
+      },
+      {
+        "line": 227,
+        "group": "vertices",
+        "values": [
+          -53,
+          -11,
+          33
+        ]
+      },
+      {
+        "line": 228,
+        "group": "vertices",
+        "values": [
+          -53,
+          -11,
+          -109
+        ]
+      },
+      {
+        "line": 229,
+        "group": "vertices",
+        "values": [
+          54,
+          21,
+          -94
+        ]
+      },
+      {
+        "line": 230,
+        "group": "vertices",
+        "values": [
+          53,
+          21,
+          33
+        ]
+      },
+      {
+        "line": 231,
+        "group": "vertices",
+        "values": [
+          -53,
+          21,
+          33
+        ]
+      },
+      {
+        "line": 232,
+        "group": "vertices",
+        "values": [
+          -53,
+          21,
+          -94
+        ]
+      },
+      {
+        "line": 233,
+        "group": "vertices",
+        "values": [
+          54,
+          0,
+          118
+        ]
+      },
+      {
+        "line": 234,
+        "group": "vertices",
+        "values": [
+          -53,
+          0,
+          118
+        ]
+      },
+      {
+        "line": 235,
+        "group": "vertices",
+        "values": [
+          54,
+          21,
+          99
+        ]
+      },
+      {
+        "line": 236,
+        "group": "vertices",
+        "values": [
+          -53,
+          21,
+          99
+        ]
+      },
+      {
+        "line": 237,
+        "group": "vertices",
+        "values": [
+          35,
+          -31,
+          1
+        ]
+      },
+      {
+        "line": 238,
+        "group": "vertices",
+        "values": [
+          -34,
+          -31,
+          1
+        ]
+      },
+      {
+        "line": 239,
+        "group": "vertices",
+        "values": [
+          35,
+          -29,
+          -59
+        ]
+      },
+      {
+        "line": 240,
+        "group": "vertices",
+        "values": [
+          -34,
+          -29,
+          -59
+        ]
+      },
+      {
+        "line": 241,
+        "group": "vertices",
+        "values": [
+          54,
+          -11,
+          -77
+        ]
+      },
+      {
+        "line": 242,
+        "group": "vertices",
+        "values": [
+          -53,
+          -11,
+          -77
+        ]
+      },
+      {
+        "line": 243,
+        "group": "vertices",
+        "values": [
+          38,
+          -27,
+          -70
+        ]
+      },
+      {
+        "line": 244,
+        "group": "vertices",
+        "values": [
+          -37,
+          -27,
+          -70
+        ]
+      },
+      {
+        "line": 245,
+        "group": "vertices",
+        "values": [
+          50,
+          -16,
+          -98
+        ]
+      },
+      {
+        "line": 246,
+        "group": "vertices",
+        "values": [
+          50,
+          -24,
+          -119
+        ]
+      },
+      {
+        "line": 247,
+        "group": "vertices",
+        "values": [
+          -49,
+          -16,
+          -98
+        ]
+      },
+      {
+        "line": 248,
+        "group": "vertices",
+        "values": [
+          -50,
+          -24,
+          -119
+        ]
+      },
+      {
+        "line": 249,
+        "group": "vertices",
+        "values": [
+          -28,
+          20,
+          84
+        ]
+      },
+      {
+        "line": 250,
+        "group": "vertices",
+        "values": [
+          -28,
+          20,
+          46
+        ]
+      },
+      {
+        "line": 251,
+        "group": "vertices",
+        "values": [
+          -28,
+          30,
+          57
+        ]
+      },
+      {
+        "line": 252,
+        "group": "vertices",
+        "values": [
+          -28,
+          30,
+          73
+        ]
+      },
+      {
+        "line": 253,
+        "group": "vertices",
+        "values": [
+          -53,
+          20,
+          84
+        ]
+      },
+      {
+        "line": 254,
+        "group": "vertices",
+        "values": [
+          -53,
+          7,
+          84
+        ]
+      },
+      {
+        "line": 255,
+        "group": "vertices",
+        "values": [
+          -53,
+          -3,
+          73
+        ]
+      },
+      {
+        "line": 256,
+        "group": "vertices",
+        "values": [
+          -53,
+          -3,
+          57
+        ]
+      },
+      {
+        "line": 257,
+        "group": "vertices",
+        "values": [
+          -53,
+          7,
+          46
+        ]
+      },
+      {
+        "line": 258,
+        "group": "vertices",
+        "values": [
+          -53,
+          20,
+          46
+        ]
+      },
+      {
+        "line": 259,
+        "group": "vertices",
+        "values": [
+          -53,
+          30,
+          57
+        ]
+      },
+      {
+        "line": 260,
+        "group": "vertices",
+        "values": [
+          -53,
+          30,
+          73
+        ]
+      },
+      {
+        "line": 261,
+        "group": "vertices",
+        "values": [
+          -53,
+          13,
+          65
+        ]
+      },
+      {
+        "line": 262,
+        "group": "vertices",
+        "values": [
+          -28,
+          20,
+          -47
+        ]
+      },
+      {
+        "line": 263,
+        "group": "vertices",
+        "values": [
+          -28,
+          20,
+          -86
+        ]
+      },
+      {
+        "line": 264,
+        "group": "vertices",
+        "values": [
+          -53,
+          20,
+          -47
+        ]
+      },
+      {
+        "line": 265,
+        "group": "vertices",
+        "values": [
+          -53,
+          7,
+          -47
+        ]
+      },
+      {
+        "line": 266,
+        "group": "vertices",
+        "values": [
+          -53,
+          -3,
+          -59
+        ]
+      },
+      {
+        "line": 267,
+        "group": "vertices",
+        "values": [
+          -53,
+          -3,
+          -75
+        ]
+      },
+      {
+        "line": 268,
+        "group": "vertices",
+        "values": [
+          -53,
+          7,
+          -86
+        ]
+      },
+      {
+        "line": 269,
+        "group": "vertices",
+        "values": [
+          -53,
+          20,
+          -86
+        ]
+      },
+      {
+        "line": 270,
+        "group": "vertices",
+        "values": [
+          -53,
+          30,
+          -75
+        ]
+      },
+      {
+        "line": 271,
+        "group": "vertices",
+        "values": [
+          -53,
+          30,
+          -59
+        ]
+      },
+      {
+        "line": 272,
+        "group": "vertices",
+        "values": [
+          -53,
+          13,
+          -67
+        ]
+      },
+      {
+        "line": 273,
+        "group": "vertices",
+        "values": [
+          54,
+          20,
+          84
+        ]
+      },
+      {
+        "line": 274,
+        "group": "vertices",
+        "values": [
+          54,
+          7,
+          84
+        ]
+      },
+      {
+        "line": 275,
+        "group": "vertices",
+        "values": [
+          54,
+          -3,
+          73
+        ]
+      },
+      {
+        "line": 276,
+        "group": "vertices",
+        "values": [
+          54,
+          -3,
+          57
+        ]
+      },
+      {
+        "line": 277,
+        "group": "vertices",
+        "values": [
+          54,
+          7,
+          46
+        ]
+      },
+      {
+        "line": 278,
+        "group": "vertices",
+        "values": [
+          54,
+          20,
+          46
+        ]
+      },
+      {
+        "line": 279,
+        "group": "vertices",
+        "values": [
+          54,
+          30,
+          57
+        ]
+      },
+      {
+        "line": 280,
+        "group": "vertices",
+        "values": [
+          54,
+          30,
+          73
+        ]
+      },
+      {
+        "line": 281,
+        "group": "vertices",
+        "values": [
+          54,
+          13,
+          65
+        ]
+      },
+      {
+        "line": 282,
+        "group": "vertices",
+        "values": [
+          54,
+          20,
+          -47
+        ]
+      },
+      {
+        "line": 283,
+        "group": "vertices",
+        "values": [
+          54,
+          7,
+          -47
+        ]
+      },
+      {
+        "line": 284,
+        "group": "vertices",
+        "values": [
+          54,
+          -3,
+          -59
+        ]
+      },
+      {
+        "line": 285,
+        "group": "vertices",
+        "values": [
+          54,
+          -3,
+          -75
+        ]
+      },
+      {
+        "line": 286,
+        "group": "vertices",
+        "values": [
+          54,
+          7,
+          -86
+        ]
+      },
+      {
+        "line": 287,
+        "group": "vertices",
+        "values": [
+          54,
+          20,
+          -86
+        ]
+      },
+      {
+        "line": 288,
+        "group": "vertices",
+        "values": [
+          54,
+          30,
+          -75
+        ]
+      },
+      {
+        "line": 289,
+        "group": "vertices",
+        "values": [
+          54,
+          30,
+          -59
+        ]
+      },
+      {
+        "line": 290,
+        "group": "vertices",
+        "values": [
+          29,
+          20,
+          -47
+        ]
+      },
+      {
+        "line": 291,
+        "group": "vertices",
+        "values": [
+          29,
+          20,
+          -86
+        ]
+      },
+      {
+        "line": 292,
+        "group": "vertices",
+        "values": [
+          29,
+          30,
+          -75
+        ]
+      },
+      {
+        "line": 293,
+        "group": "vertices",
+        "values": [
+          29,
+          30,
+          -59
+        ]
+      },
+      {
+        "line": 294,
+        "group": "vertices",
+        "values": [
+          54,
+          13,
+          -67
+        ]
+      },
+      {
+        "line": 295,
+        "group": "vertices",
+        "values": [
+          47,
+          3,
+          -103
+        ]
+      },
+      {
+        "line": 296,
+        "group": "vertices",
+        "values": [
+          47,
+          -7,
+          -107
+        ]
+      },
+      {
+        "line": 297,
+        "group": "vertices",
+        "values": [
+          27,
+          3,
+          -103
+        ]
+      },
+      {
+        "line": 298,
+        "group": "vertices",
+        "values": [
+          27,
+          -7,
+          -107
+        ]
+      },
+      {
+        "line": 299,
+        "group": "vertices",
+        "values": [
+          -25,
+          3,
+          -103
+        ]
+      },
+      {
+        "line": 300,
+        "group": "vertices",
+        "values": [
+          -25,
+          -7,
+          -107
+        ]
+      },
+      {
+        "line": 301,
+        "group": "vertices",
+        "values": [
+          -45,
+          3,
+          -103
+        ]
+      },
+      {
+        "line": 302,
+        "group": "vertices",
+        "values": [
+          -45,
+          -7,
+          -107
+        ]
+      },
+      {
+        "line": 303,
+        "group": "vertices",
+        "values": [
+          -28,
+          30,
+          -59
+        ]
+      },
+      {
+        "line": 304,
+        "group": "vertices",
+        "values": [
+          -28,
+          30,
+          -75
+        ]
+      },
+      {
+        "line": 305,
+        "group": "vertices",
+        "values": [
+          28,
+          20,
+          84
+        ]
+      },
+      {
+        "line": 306,
+        "group": "vertices",
+        "values": [
+          28,
+          20,
+          46
+        ]
+      },
+      {
+        "line": 307,
+        "group": "vertices",
+        "values": [
+          28,
+          30,
+          57
+        ]
+      },
+      {
+        "line": 308,
+        "group": "vertices",
+        "values": [
+          28,
+          30,
+          73
+        ]
+      }
+    ],
+    "normals": [
+      {
+        "line": 310,
+        "group": "normals",
+        "values": [
+          32764,
+          -365,
+          202
+        ]
+      },
+      {
+        "line": 311,
+        "group": "normals",
+        "values": [
+          -32764,
+          381,
+          202
+        ]
+      },
+      {
+        "line": 312,
+        "group": "normals",
+        "values": [
+          -32764,
+          -417,
+          0
+        ]
+      },
+      {
+        "line": 313,
+        "group": "normals",
+        "values": [
+          0,
+          13593,
+          -29815
+        ]
+      },
+      {
+        "line": 314,
+        "group": "normals",
+        "values": [
+          0,
+          32767,
+          -3
+        ]
+      },
+      {
+        "line": 315,
+        "group": "normals",
+        "values": [
+          0,
+          -32485,
+          4287
+        ]
+      },
+      {
+        "line": 316,
+        "group": "normals",
+        "values": [
+          32765,
+          381,
+          -54
+        ]
+      },
+      {
+        "line": 317,
+        "group": "normals",
+        "values": [
+          0,
+          22177,
+          24122
+        ]
+      },
+      {
+        "line": 318,
+        "group": "normals",
+        "values": [
+          -2,
+          -32760,
+          -690
+        ]
+      },
+      {
+        "line": 319,
+        "group": "normals",
+        "values": [
+          22463,
+          -23855,
+          0
+        ]
+      },
+      {
+        "line": 320,
+        "group": "normals",
+        "values": [
+          23649,
+          -22676,
+          -476
+        ]
+      },
+      {
+        "line": 321,
+        "group": "normals",
+        "values": [
+          0,
+          -28071,
+          16902
+        ]
+      },
+      {
+        "line": 322,
+        "group": "normals",
+        "values": [
+          -23333,
+          -23005,
+          0
+        ]
+      },
+      {
+        "line": 323,
+        "group": "normals",
+        "values": [
+          -22291,
+          -24011,
+          -505
+        ]
+      },
+      {
+        "line": 324,
+        "group": "normals",
+        "values": [
+          0,
+          -31956,
+          -7244
+        ]
+      },
+      {
+        "line": 325,
+        "group": "normals",
+        "values": [
+          22838,
+          -23497,
+          100
+        ]
+      },
+      {
+        "line": 326,
+        "group": "normals",
+        "values": [
+          -23075,
+          -23236,
+          1140
+        ]
+      },
+      {
+        "line": 327,
+        "group": "normals",
+        "values": [
+          23049,
+          -23257,
+          1253
+        ]
+      },
+      {
+        "line": 328,
+        "group": "normals",
+        "values": [
+          -22883,
+          -23452,
+          101
+        ]
+      },
+      {
+        "line": 329,
+        "group": "normals",
+        "values": [
+          0,
+          -30399,
+          -12230
+        ]
+      },
+      {
+        "line": 330,
+        "group": "normals",
+        "values": [
+          0,
+          -30095,
+          12961
+        ]
+      },
+      {
+        "line": 331,
+        "group": "normals",
+        "values": [
+          0,
+          19835,
+          -26081
+        ]
+      },
+      {
+        "line": 332,
+        "group": "normals",
+        "values": [
+          29158,
+          -13248,
+          6927
+        ]
+      },
+      {
+        "line": 333,
+        "group": "normals",
+        "values": [
+          -29165,
+          -13256,
+          6880
+        ]
+      },
+      {
+        "line": 334,
+        "group": "normals",
+        "values": [
+          0,
+          24807,
+          -21408
+        ]
+      },
+      {
+        "line": 335,
+        "group": "normals",
+        "values": [
+          0,
+          24807,
+          21408
+        ]
+      },
+      {
+        "line": 336,
+        "group": "normals",
+        "values": [
+          0,
+          -32767,
+          0
+        ]
+      },
+      {
+        "line": 337,
+        "group": "normals",
+        "values": [
+          215,
+          -21983,
+          -24297
+        ]
+      },
+      {
+        "line": 338,
+        "group": "normals",
+        "values": [
+          0,
+          29814,
+          13592
+        ]
+      },
+      {
+        "line": 339,
+        "group": "normals",
+        "values": [
+          32734,
+          -576,
+          -1339
+        ]
+      },
+      {
+        "line": 340,
+        "group": "normals",
+        "values": [
+          -32767,
+          0,
+          0
+        ]
+      },
+      {
+        "line": 341,
+        "group": "normals",
+        "values": [
+          0,
+          -7244,
+          31956
+        ]
+      },
+      {
+        "line": 342,
+        "group": "normals",
+        "values": [
+          32766,
+          -1,
+          0
+        ]
+      },
+      {
+        "line": 343,
+        "group": "normals",
+        "values": [
+          0,
+          689,
+          -32759
+        ]
+      },
+      {
+        "line": 344,
+        "group": "normals",
+        "values": [
+          -6097,
+          7590,
+          31287
+        ]
+      },
+      {
+        "line": 345,
+        "group": "normals",
+        "values": [
+          -6877,
+          -6817,
+          -31303
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "line": 91,
+        "group": "edges",
+        "values": [
+          5,
+          1
+        ]
+      },
+      {
+        "line": 92,
+        "group": "edges",
+        "values": [
+          5,
+          6
+        ]
+      },
+      {
+        "line": 93,
+        "group": "edges",
+        "values": [
+          17,
+          6
+        ]
+      },
+      {
+        "line": 94,
+        "group": "edges",
+        "values": [
+          1,
+          17
+        ]
+      },
+      {
+        "line": 95,
+        "group": "edges",
+        "values": [
+          7,
+          8
+        ]
+      },
+      {
+        "line": 96,
+        "group": "edges",
+        "values": [
+          3,
+          8
+        ]
+      },
+      {
+        "line": 97,
+        "group": "edges",
+        "values": [
+          3,
+          18
+        ]
+      },
+      {
+        "line": 98,
+        "group": "edges",
+        "values": [
+          4,
+          8
+        ]
+      },
+      {
+        "line": 99,
+        "group": "edges",
+        "values": [
+          5,
+          8
+        ]
+      },
+      {
+        "line": 100,
+        "group": "edges",
+        "values": [
+          1,
+          4
+        ]
+      },
+      {
+        "line": 101,
+        "group": "edges",
+        "values": [
+          6,
+          7
+        ]
+      },
+      {
+        "line": 102,
+        "group": "edges",
+        "values": [
+          9,
+          2
+        ]
+      },
+      {
+        "line": 103,
+        "group": "edges",
+        "values": [
+          9,
+          10
+        ]
+      },
+      {
+        "line": 104,
+        "group": "edges",
+        "values": [
+          3,
+          10
+        ]
+      },
+      {
+        "line": 105,
+        "group": "edges",
+        "values": [
+          2,
+          3
+        ]
+      },
+      {
+        "line": 106,
+        "group": "edges",
+        "values": [
+          11,
+          6
+        ]
+      },
+      {
+        "line": 107,
+        "group": "edges",
+        "values": [
+          9,
+          11
+        ]
+      },
+      {
+        "line": 108,
+        "group": "edges",
+        "values": [
+          11,
+          12
+        ]
+      },
+      {
+        "line": 109,
+        "group": "edges",
+        "values": [
+          12,
+          10
+        ]
+      },
+      {
+        "line": 110,
+        "group": "edges",
+        "values": [
+          7,
+          12
+        ]
+      },
+      {
+        "line": 111,
+        "group": "edges",
+        "values": [
+          15,
+          13
+        ]
+      },
+      {
+        "line": 112,
+        "group": "edges",
+        "values": [
+          13,
+          14
+        ]
+      },
+      {
+        "line": 113,
+        "group": "edges",
+        "values": [
+          14,
+          16
+        ]
+      },
+      {
+        "line": 114,
+        "group": "edges",
+        "values": [
+          15,
+          16
+        ]
+      },
+      {
+        "line": 115,
+        "group": "edges",
+        "values": [
+          17,
+          15
+        ]
+      },
+      {
+        "line": 116,
+        "group": "edges",
+        "values": [
+          2,
+          17
+        ]
+      },
+      {
+        "line": 117,
+        "group": "edges",
+        "values": [
+          2,
+          15
+        ]
+      },
+      {
+        "line": 118,
+        "group": "edges",
+        "values": [
+          2,
+          13
+        ]
+      },
+      {
+        "line": 119,
+        "group": "edges",
+        "values": [
+          14,
+          3
+        ]
+      },
+      {
+        "line": 120,
+        "group": "edges",
+        "values": [
+          14,
+          18
+        ]
+      },
+      {
+        "line": 121,
+        "group": "edges",
+        "values": [
+          16,
+          18
+        ]
+      },
+      {
+        "line": 122,
+        "group": "edges",
+        "values": [
+          19,
+          15
+        ]
+      },
+      {
+        "line": 123,
+        "group": "edges",
+        "values": [
+          17,
+          19
+        ]
+      },
+      {
+        "line": 124,
+        "group": "edges",
+        "values": [
+          1,
+          19
+        ]
+      },
+      {
+        "line": 125,
+        "group": "edges",
+        "values": [
+          20,
+          18
+        ]
+      },
+      {
+        "line": 126,
+        "group": "edges",
+        "values": [
+          16,
+          20
+        ]
+      },
+      {
+        "line": 127,
+        "group": "edges",
+        "values": [
+          18,
+          4
+        ]
+      },
+      {
+        "line": 128,
+        "group": "edges",
+        "values": [
+          20,
+          4
+        ]
+      },
+      {
+        "line": 129,
+        "group": "edges",
+        "values": [
+          19,
+          20
+        ]
+      },
+      {
+        "line": 130,
+        "group": "edges",
+        "values": [
+          22,
+          24
+        ]
+      },
+      {
+        "line": 131,
+        "group": "edges",
+        "values": [
+          22,
+          21
+        ]
+      },
+      {
+        "line": 132,
+        "group": "edges",
+        "values": [
+          23,
+          24
+        ]
+      },
+      {
+        "line": 133,
+        "group": "edges",
+        "values": [
+          21,
+          23
+        ]
+      },
+      {
+        "line": 134,
+        "group": "edges",
+        "values": [
+          1,
+          22
+        ]
+      },
+      {
+        "line": 135,
+        "group": "edges",
+        "values": [
+          24,
+          4
+        ]
+      },
+      {
+        "line": 136,
+        "group": "edges",
+        "values": [
+          1,
+          21
+        ]
+      },
+      {
+        "line": 137,
+        "group": "edges",
+        "values": [
+          23,
+          4
+        ]
+      },
+      {
+        "line": 138,
+        "group": "edges",
+        "values": [
+          27,
+          35
+        ]
+      },
+      {
+        "line": 139,
+        "group": "edges",
+        "values": [
+          26,
+          27
+        ]
+      },
+      {
+        "line": 140,
+        "group": "edges",
+        "values": [
+          34,
+          35
+        ]
+      },
+      {
+        "line": 141,
+        "group": "edges",
+        "values": [
+          26,
+          34
+        ]
+      },
+      {
+        "line": 142,
+        "group": "edges",
+        "values": [
+          28,
+          36
+        ]
+      },
+      {
+        "line": 143,
+        "group": "edges",
+        "values": [
+          27,
+          28
+        ]
+      },
+      {
+        "line": 144,
+        "group": "edges",
+        "values": [
+          35,
+          36
+        ]
+      },
+      {
+        "line": 145,
+        "group": "edges",
+        "values": [
+          25,
+          29
+        ]
+      },
+      {
+        "line": 146,
+        "group": "edges",
+        "values": [
+          25,
+          28
+        ]
+      },
+      {
+        "line": 147,
+        "group": "edges",
+        "values": [
+          29,
+          36
+        ]
+      },
+      {
+        "line": 148,
+        "group": "edges",
+        "values": [
+          30,
+          29
+        ]
+      },
+      {
+        "line": 149,
+        "group": "edges",
+        "values": [
+          37,
+          29
+        ]
+      },
+      {
+        "line": 150,
+        "group": "edges",
+        "values": [
+          31,
+          30
+        ]
+      },
+      {
+        "line": 151,
+        "group": "edges",
+        "values": [
+          32,
+          31
+        ]
+      },
+      {
+        "line": 152,
+        "group": "edges",
+        "values": [
+          33,
+          37
+        ]
+      },
+      {
+        "line": 153,
+        "group": "edges",
+        "values": [
+          32,
+          33
+        ]
+      },
+      {
+        "line": 154,
+        "group": "edges",
+        "values": [
+          33,
+          34
+        ]
+      },
+      {
+        "line": 155,
+        "group": "edges",
+        "values": [
+          37,
+          36
+        ]
+      },
+      {
+        "line": 156,
+        "group": "edges",
+        "values": [
+          80,
+          46
+        ]
+      },
+      {
+        "line": 157,
+        "group": "edges",
+        "values": [
+          39,
+          80
+        ]
+      },
+      {
+        "line": 158,
+        "group": "edges",
+        "values": [
+          45,
+          46
+        ]
+      },
+      {
+        "line": 159,
+        "group": "edges",
+        "values": [
+          39,
+          45
+        ]
+      },
+      {
+        "line": 160,
+        "group": "edges",
+        "values": [
+          79,
+          47
+        ]
+      },
+      {
+        "line": 161,
+        "group": "edges",
+        "values": [
+          79,
+          80
+        ]
+      },
+      {
+        "line": 162,
+        "group": "edges",
+        "values": [
+          46,
+          47
+        ]
+      },
+      {
+        "line": 163,
+        "group": "edges",
+        "values": [
+          38,
+          40
+        ]
+      },
+      {
+        "line": 164,
+        "group": "edges",
+        "values": [
+          38,
+          79
+        ]
+      },
+      {
+        "line": 165,
+        "group": "edges",
+        "values": [
+          40,
+          47
+        ]
+      },
+      {
+        "line": 166,
+        "group": "edges",
+        "values": [
+          41,
+          40
+        ]
+      },
+      {
+        "line": 167,
+        "group": "edges",
+        "values": [
+          48,
+          40
+        ]
+      },
+      {
+        "line": 168,
+        "group": "edges",
+        "values": [
+          42,
+          41
+        ]
+      },
+      {
+        "line": 169,
+        "group": "edges",
+        "values": [
+          43,
+          42
+        ]
+      },
+      {
+        "line": 170,
+        "group": "edges",
+        "values": [
+          44,
+          48
+        ]
+      },
+      {
+        "line": 171,
+        "group": "edges",
+        "values": [
+          43,
+          44
+        ]
+      },
+      {
+        "line": 172,
+        "group": "edges",
+        "values": [
+          44,
+          45
+        ]
+      },
+      {
+        "line": 173,
+        "group": "edges",
+        "values": [
+          48,
+          47
+        ]
+      },
+      {
+        "line": 174,
+        "group": "edges",
+        "values": [
+          55,
+          83
+        ]
+      },
+      {
+        "line": 175,
+        "group": "edges",
+        "values": [
+          54,
+          55
+        ]
+      },
+      {
+        "line": 176,
+        "group": "edges",
+        "values": [
+          82,
+          83
+        ]
+      },
+      {
+        "line": 177,
+        "group": "edges",
+        "values": [
+          54,
+          82
+        ]
+      },
+      {
+        "line": 178,
+        "group": "edges",
+        "values": [
+          56,
+          84
+        ]
+      },
+      {
+        "line": 179,
+        "group": "edges",
+        "values": [
+          55,
+          56
+        ]
+      },
+      {
+        "line": 180,
+        "group": "edges",
+        "values": [
+          83,
+          84
+        ]
+      },
+      {
+        "line": 181,
+        "group": "edges",
+        "values": [
+          49,
+          81
+        ]
+      },
+      {
+        "line": 182,
+        "group": "edges",
+        "values": [
+          49,
+          56
+        ]
+      },
+      {
+        "line": 183,
+        "group": "edges",
+        "values": [
+          81,
+          84
+        ]
+      },
+      {
+        "line": 184,
+        "group": "edges",
+        "values": [
+          50,
+          49
+        ]
+      },
+      {
+        "line": 185,
+        "group": "edges",
+        "values": [
+          50,
+          57
+        ]
+      },
+      {
+        "line": 186,
+        "group": "edges",
+        "values": [
+          51,
+          50
+        ]
+      },
+      {
+        "line": 187,
+        "group": "edges",
+        "values": [
+          52,
+          51
+        ]
+      },
+      {
+        "line": 188,
+        "group": "edges",
+        "values": [
+          52,
+          53
+        ]
+      },
+      {
+        "line": 189,
+        "group": "edges",
+        "values": [
+          53,
+          57
+        ]
+      },
+      {
+        "line": 190,
+        "group": "edges",
+        "values": [
+          53,
+          54
+        ]
+      },
+      {
+        "line": 191,
+        "group": "edges",
+        "values": [
+          57,
+          54
+        ]
+      },
+      {
+        "line": 192,
+        "group": "edges",
+        "values": [
+          64,
+          68
+        ]
+      },
+      {
+        "line": 193,
+        "group": "edges",
+        "values": [
+          63,
+          64
+        ]
+      },
+      {
+        "line": 194,
+        "group": "edges",
+        "values": [
+          67,
+          68
+        ]
+      },
+      {
+        "line": 195,
+        "group": "edges",
+        "values": [
+          63,
+          67
+        ]
+      },
+      {
+        "line": 196,
+        "group": "edges",
+        "values": [
+          65,
+          69
+        ]
+      },
+      {
+        "line": 197,
+        "group": "edges",
+        "values": [
+          64,
+          65
+        ]
+      },
+      {
+        "line": 198,
+        "group": "edges",
+        "values": [
+          68,
+          69
+        ]
+      },
+      {
+        "line": 199,
+        "group": "edges",
+        "values": [
+          58,
+          66
+        ]
+      },
+      {
+        "line": 200,
+        "group": "edges",
+        "values": [
+          58,
+          65
+        ]
+      },
+      {
+        "line": 201,
+        "group": "edges",
+        "values": [
+          66,
+          69
+        ]
+      },
+      {
+        "line": 202,
+        "group": "edges",
+        "values": [
+          59,
+          58
+        ]
+      },
+      {
+        "line": 203,
+        "group": "edges",
+        "values": [
+          59,
+          70
+        ]
+      },
+      {
+        "line": 204,
+        "group": "edges",
+        "values": [
+          60,
+          59
+        ]
+      },
+      {
+        "line": 205,
+        "group": "edges",
+        "values": [
+          61,
+          60
+        ]
+      },
+      {
+        "line": 206,
+        "group": "edges",
+        "values": [
+          61,
+          62
+        ]
+      },
+      {
+        "line": 207,
+        "group": "edges",
+        "values": [
+          62,
+          70
+        ]
+      },
+      {
+        "line": 208,
+        "group": "edges",
+        "values": [
+          62,
+          63
+        ]
+      },
+      {
+        "line": 209,
+        "group": "edges",
+        "values": [
+          70,
+          63
+        ]
+      },
+      {
+        "line": 210,
+        "group": "edges",
+        "values": [
+          74,
+          73
+        ]
+      },
+      {
+        "line": 211,
+        "group": "edges",
+        "values": [
+          72,
+          74
+        ]
+      },
+      {
+        "line": 212,
+        "group": "edges",
+        "values": [
+          71,
+          73
+        ]
+      },
+      {
+        "line": 213,
+        "group": "edges",
+        "values": [
+          72,
+          71
+        ]
+      },
+      {
+        "line": 214,
+        "group": "edges",
+        "values": [
+          78,
+          77
+        ]
+      },
+      {
+        "line": 215,
+        "group": "edges",
+        "values": [
+          76,
+          78
+        ]
+      },
+      {
+        "line": 216,
+        "group": "edges",
+        "values": [
+          75,
+          77
+        ]
+      },
+      {
+        "line": 217,
+        "group": "edges",
+        "values": [
+          76,
+          75
+        ]
+      },
+      {
+        "line": 218,
+        "group": "edges",
+        "values": [
+          26,
+          25
+        ]
+      },
+      {
+        "line": 219,
+        "group": "edges",
+        "values": [
+          39,
+          38
+        ]
+      },
+      {
+        "line": 220,
+        "group": "edges",
+        "values": [
+          67,
+          66
+        ]
+      },
+      {
+        "line": 221,
+        "group": "edges",
+        "values": [
+          82,
+          81
+        ]
+      },
+      {
+        "line": 222,
+        "group": "edges",
+        "values": [
+          17,
+          4
+        ]
+      },
+      {
+        "line": 223,
+        "group": "edges",
+        "values": [
+          2,
+          18
+        ]
+      }
+    ],
+    "surfaces": [
+      {
+        "line": 349,
+        "group": "surfaces",
+        "values": [
+          8196,
+          17,
+          8,
+          32772,
+          32778,
+          32769,
+          4
+        ]
+      },
+      {
+        "line": 350,
+        "group": "surfaces",
+        "values": [
+          8196,
+          17,
+          10,
+          19,
+          32785,
+          15,
+          4
+        ]
+      },
+      {
+        "line": 352,
+        "group": "surfaces",
+        "values": [
+          8260,
+          39,
+          32869,
+          32870,
+          104,
+          103,
+          24
+        ]
+      },
+      {
+        "line": 353,
+        "group": "surfaces",
+        "values": [
+          8260,
+          18,
+          32873,
+          32874,
+          101,
+          107,
+          25
+        ]
+      },
+      {
+        "line": 354,
+        "group": "surfaces",
+        "values": [
+          8260,
+          41,
+          32876,
+          109,
+          105,
+          32878,
+          26
+        ]
+      },
+      {
+        "line": 355,
+        "group": "surfaces",
+        "values": [
+          8260,
+          38,
+          32851,
+          32852,
+          86,
+          85,
+          24
+        ]
+      },
+      {
+        "line": 356,
+        "group": "surfaces",
+        "values": [
+          8260,
+          18,
+          32855,
+          32856,
+          83,
+          89,
+          25
+        ]
+      },
+      {
+        "line": 357,
+        "group": "surfaces",
+        "values": [
+          8260,
+          40,
+          32858,
+          91,
+          87,
+          32860,
+          26
+        ]
+      },
+      {
+        "line": 358,
+        "group": "surfaces",
+        "values": [
+          8260,
+          39,
+          32833,
+          32834,
+          68,
+          67,
+          24
+        ]
+      },
+      {
+        "line": 359,
+        "group": "surfaces",
+        "values": [
+          8260,
+          18,
+          32837,
+          70,
+          65,
+          71,
+          25
+        ]
+      },
+      {
+        "line": 360,
+        "group": "surfaces",
+        "values": [
+          8260,
+          41,
+          32840,
+          73,
+          69,
+          32842,
+          26
+        ]
+      },
+      {
+        "line": 361,
+        "group": "surfaces",
+        "values": [
+          8260,
+          38,
+          32815,
+          32816,
+          50,
+          49,
+          24
+        ]
+      },
+      {
+        "line": 362,
+        "group": "surfaces",
+        "values": [
+          8260,
+          40,
+          32822,
+          55,
+          51,
+          32824,
+          26
+        ]
+      },
+      {
+        "line": 363,
+        "group": "surfaces",
+        "values": [
+          8260,
+          18,
+          32819,
+          32820,
+          47,
+          53,
+          25
+        ]
+      },
+      {
+        "line": 365,
+        "group": "surfaces",
+        "values": [
+          8260,
+          12,
+          32875,
+          32871,
+          129,
+          110,
+          27
+        ]
+      },
+      {
+        "line": 366,
+        "group": "surfaces",
+        "values": [
+          8260,
+          13,
+          32857,
+          32853,
+          130,
+          92,
+          27
+        ]
+      },
+      {
+        "line": 367,
+        "group": "surfaces",
+        "values": [
+          8260,
+          6,
+          32838,
+          32841,
+          32896,
+          66,
+          28
+        ]
+      },
+      {
+        "line": 368,
+        "group": "surfaces",
+        "values": [
+          8260,
+          5,
+          52,
+          32823,
+          32895,
+          48,
+          28
+        ]
+      },
+      {
+        "line": 370,
+        "group": "surfaces",
+        "values": [
+          8197,
+          7,
+          13,
+          32786,
+          32787,
+          4,
+          32773,
+          1
+        ]
+      },
+      {
+        "line": 371,
+        "group": "surfaces",
+        "values": [
+          8196,
+          14,
+          5,
+          32775,
+          32804,
+          32774,
+          2
+        ]
+      },
+      {
+        "line": 372,
+        "group": "surfaces",
+        "values": [
+          8197,
+          20,
+          25,
+          2,
+          32783,
+          32784,
+          11,
+          6
+        ]
+      },
+      {
+        "line": 373,
+        "group": "surfaces",
+        "values": [
+          8196,
+          0,
+          32768,
+          1,
+          32770,
+          32771,
+          0
+        ]
+      },
+      {
+        "line": 374,
+        "group": "surfaces",
+        "values": [
+          8196,
+          19,
+          32779,
+          12,
+          32781,
+          32782,
+          5
+        ]
+      },
+      {
+        "line": 375,
+        "group": "surfaces",
+        "values": [
+          8195,
+          42,
+          14,
+          6,
+          32900,
+          30
+        ]
+      },
+      {
+        "line": 376,
+        "group": "surfaces",
+        "values": [
+          8196,
+          42,
+          32793,
+          132,
+          36,
+          32899,
+          30
+        ]
+      },
+      {
+        "line": 378,
+        "group": "surfaces",
+        "values": [
+          8262,
+          3,
+          118,
+          102,
+          106,
+          32877,
+          32879,
+          112,
+          28
+        ]
+      },
+      {
+        "line": 379,
+        "group": "surfaces",
+        "values": [
+          8261,
+          4,
+          32880,
+          32881,
+          32882,
+          115,
+          116,
+          28
+        ]
+      },
+      {
+        "line": 380,
+        "group": "surfaces",
+        "values": [
+          8259,
+          3,
+          32884,
+          117,
+          32886,
+          28
+        ]
+      },
+      {
+        "line": 381,
+        "group": "surfaces",
+        "values": [
+          8262,
+          10,
+          32847,
+          32848,
+          78,
+          77,
+          75,
+          32844,
+          27
+        ]
+      },
+      {
+        "line": 382,
+        "group": "surfaces",
+        "values": [
+          8261,
+          11,
+          82,
+          32839,
+          32835,
+          32849,
+          79,
+          27
+        ]
+      },
+      {
+        "line": 383,
+        "group": "surfaces",
+        "values": [
+          8259,
+          11,
+          76,
+          74,
+          32850,
+          27
+        ]
+      },
+      {
+        "line": 384,
+        "group": "surfaces",
+        "values": [
+          8262,
+          1,
+          100,
+          84,
+          88,
+          32859,
+          32861,
+          94,
+          28
+        ]
+      },
+      {
+        "line": 385,
+        "group": "surfaces",
+        "values": [
+          8261,
+          2,
+          32862,
+          32863,
+          32864,
+          97,
+          98,
+          28
+        ]
+      },
+      {
+        "line": 386,
+        "group": "surfaces",
+        "values": [
+          8259,
+          1,
+          32866,
+          99,
+          32868,
+          28
+        ]
+      },
+      {
+        "line": 387,
+        "group": "surfaces",
+        "values": [
+          8262,
+          8,
+          32829,
+          32830,
+          60,
+          59,
+          57,
+          32826,
+          27
+        ]
+      },
+      {
+        "line": 388,
+        "group": "surfaces",
+        "values": [
+          8261,
+          9,
+          64,
+          32821,
+          32817,
+          32831,
+          61,
+          27
+        ]
+      },
+      {
+        "line": 389,
+        "group": "surfaces",
+        "values": [
+          8259,
+          9,
+          58,
+          56,
+          32832,
+          27
+        ]
+      },
+      {
+        "line": 391,
+        "group": "surfaces",
+        "values": [
+          8196,
+          15,
+          7,
+          32776,
+          0,
+          9,
+          3
+        ]
+      },
+      {
+        "line": 393,
+        "group": "surfaces",
+        "values": [
+          8260,
+          16,
+          119,
+          32889,
+          32890,
+          120,
+          29
+        ]
+      },
+      {
+        "line": 394,
+        "group": "surfaces",
+        "values": [
+          8260,
+          16,
+          123,
+          32893,
+          32894,
+          124,
+          29
+        ]
+      },
+      {
+        "line": 395,
+        "group": "surfaces",
+        "values": [
+          8195,
+          42,
+          131,
+          32777,
+          3,
+          30
+        ]
+      },
+      {
+        "line": 398,
+        "group": "surfaces",
+        "values": [
+          8196,
+          21,
+          16,
+          17,
+          18,
+          32780,
+          7
+        ]
+      },
+      {
+        "line": 401,
+        "group": "surfaces",
+        "values": [
+          8196,
+          22,
+          20,
+          21,
+          22,
+          32791,
+          8
+        ]
+      },
+      {
+        "line": 404,
+        "group": "surfaces",
+        "values": [
+          40963,
+          23,
+          32792,
+          32793,
+          26,
+          9
+        ]
+      },
+      {
+        "line": 407,
+        "group": "surfaces",
+        "values": [
+          40963,
+          24,
+          32794,
+          27,
+          32788,
+          10
+        ]
+      },
+      {
+        "line": 410,
+        "group": "surfaces",
+        "values": [
+          40964,
+          25,
+          32795,
+          14,
+          32796,
+          32789,
+          11
+        ]
+      },
+      {
+        "line": 413,
+        "group": "surfaces",
+        "values": [
+          40963,
+          26,
+          28,
+          6,
+          32797,
+          12
+        ]
+      },
+      {
+        "line": 414,
+        "group": "surfaces",
+        "values": [
+          40963,
+          27,
+          29,
+          32798,
+          32790,
+          13
+        ]
+      },
+      {
+        "line": 417,
+        "group": "surfaces",
+        "values": [
+          8196,
+          28,
+          31,
+          23,
+          35,
+          32806,
+          14
+        ]
+      },
+      {
+        "line": 420,
+        "group": "surfaces",
+        "values": [
+          8195,
+          29,
+          3,
+          32,
+          32801,
+          15
+        ]
+      },
+      {
+        "line": 423,
+        "group": "surfaces",
+        "values": [
+          8195,
+          30,
+          30,
+          32802,
+          32803,
+          16
+        ]
+      },
+      {
+        "line": 426,
+        "group": "surfaces",
+        "values": [
+          8195,
+          31,
+          32800,
+          24,
+          32799,
+          17
+        ]
+      },
+      {
+        "line": 429,
+        "group": "surfaces",
+        "values": [
+          8195,
+          32,
+          34,
+          36,
+          32805,
+          18
+        ]
+      },
+      {
+        "line": 432,
+        "group": "surfaces",
+        "values": [
+          40964,
+          33,
+          33,
+          38,
+          37,
+          32777,
+          19
+        ]
+      },
+      {
+        "line": 435,
+        "group": "surfaces",
+        "values": [
+          8196,
+          34,
+          32807,
+          40,
+          42,
+          41,
+          20
+        ]
+      },
+      {
+        "line": 436,
+        "group": "surfaces",
+        "values": [
+          8196,
+          35,
+          32777,
+          43,
+          39,
+          44,
+          21
+        ]
+      },
+      {
+        "line": 439,
+        "group": "surfaces",
+        "values": [
+          8195,
+          36,
+          32808,
+          32811,
+          45,
+          22
+        ]
+      },
+      {
+        "line": 442,
+        "group": "surfaces",
+        "values": [
+          8195,
+          37,
+          32812,
+          32809,
+          46,
+          23
+        ]
+      }
+    ],
+    "collision_dividers": []
+  },
+  "preview": {
+    "faces": [
+      {
+        "surface_index": 0,
+        "vertices": [
+          5,
+          8,
+          7,
+          6
+        ],
+        "flags": 8192,
+        "normal": 17,
+        "color": 4
+      },
+      {
+        "surface_index": 1,
+        "vertices": [
+          6,
+          7,
+          12,
+          11
+        ],
+        "flags": 8192,
+        "normal": 17,
+        "color": 4
+      },
+      {
+        "surface_index": 2,
+        "vertices": [
+          68,
+          64,
+          63,
+          67
+        ],
+        "flags": 8256,
+        "normal": 39,
+        "color": 24
+      },
+      {
+        "surface_index": 3,
+        "vertices": [
+          69,
+          65,
+          64,
+          68
+        ],
+        "flags": 8256,
+        "normal": 18,
+        "color": 25
+      },
+      {
+        "surface_index": 4,
+        "vertices": [
+          66,
+          58,
+          65,
+          69
+        ],
+        "flags": 8256,
+        "normal": 41,
+        "color": 26
+      },
+      {
+        "surface_index": 5,
+        "vertices": [
+          83,
+          55,
+          54,
+          82
+        ],
+        "flags": 8256,
+        "normal": 38,
+        "color": 24
+      },
+      {
+        "surface_index": 6,
+        "vertices": [
+          84,
+          56,
+          55,
+          83
+        ],
+        "flags": 8256,
+        "normal": 18,
+        "color": 25
+      },
+      {
+        "surface_index": 7,
+        "vertices": [
+          81,
+          49,
+          56,
+          84
+        ],
+        "flags": 8256,
+        "normal": 40,
+        "color": 26
+      },
+      {
+        "surface_index": 8,
+        "vertices": [
+          46,
+          80,
+          39,
+          45
+        ],
+        "flags": 8256,
+        "normal": 39,
+        "color": 24
+      },
+      {
+        "surface_index": 9,
+        "vertices": [
+          47,
+          79,
+          80,
+          46
+        ],
+        "flags": 8256,
+        "normal": 18,
+        "color": 25
+      },
+      {
+        "surface_index": 10,
+        "vertices": [
+          40,
+          38,
+          79,
+          47
+        ],
+        "flags": 8256,
+        "normal": 41,
+        "color": 26
+      },
+      {
+        "surface_index": 11,
+        "vertices": [
+          35,
+          27,
+          26,
+          34
+        ],
+        "flags": 8256,
+        "normal": 38,
+        "color": 24
+      },
+      {
+        "surface_index": 12,
+        "vertices": [
+          29,
+          25,
+          28,
+          36
+        ],
+        "flags": 8256,
+        "normal": 40,
+        "color": 26
+      },
+      {
+        "surface_index": 13,
+        "vertices": [
+          36,
+          28,
+          27,
+          35
+        ],
+        "flags": 8256,
+        "normal": 18,
+        "color": 25
+      },
+      {
+        "surface_index": 14,
+        "vertices": [
+          69,
+          68,
+          67,
+          66
+        ],
+        "flags": 8256,
+        "normal": 12,
+        "color": 27
+      },
+      {
+        "surface_index": 15,
+        "vertices": [
+          84,
+          83,
+          82,
+          81
+        ],
+        "flags": 8256,
+        "normal": 13,
+        "color": 27
+      },
+      {
+        "surface_index": 16,
+        "vertices": [
+          80,
+          79,
+          38,
+          39
+        ],
+        "flags": 8256,
+        "normal": 6,
+        "color": 28
+      },
+      {
+        "surface_index": 17,
+        "vertices": [
+          27,
+          28,
+          25,
+          26
+        ],
+        "flags": 8256,
+        "normal": 5,
+        "color": 28
+      },
+      {
+        "surface_index": 18,
+        "vertices": [
+          3,
+          10,
+          12,
+          7,
+          8
+        ],
+        "flags": 8192,
+        "normal": 7,
+        "color": 1
+      },
+      {
+        "surface_index": 19,
+        "vertices": [
+          3,
+          8,
+          4,
+          18
+        ],
+        "flags": 8192,
+        "normal": 14,
+        "color": 2
+      },
+      {
+        "surface_index": 20,
+        "vertices": [
+          2,
+          17,
+          6,
+          11,
+          9
+        ],
+        "flags": 8192,
+        "normal": 20,
+        "color": 6
+      },
+      {
+        "surface_index": 21,
+        "vertices": [
+          1,
+          5,
+          6,
+          17
+        ],
+        "flags": 8192,
+        "normal": 0,
+        "color": 0
+      },
+      {
+        "surface_index": 22,
+        "vertices": [
+          2,
+          9,
+          10,
+          3
+        ],
+        "flags": 8192,
+        "normal": 19,
+        "color": 5
+      },
+      {
+        "surface_index": 23,
+        "vertices": [
+          2,
+          3,
+          18
+        ],
+        "flags": 8192,
+        "normal": 42,
+        "color": 30
+      },
+      {
+        "surface_index": 24,
+        "vertices": [
+          17,
+          2,
+          18,
+          4
+        ],
+        "flags": 8192,
+        "normal": 42,
+        "color": 30
+      },
+      {
+        "surface_index": 25,
+        "vertices": [
+          70,
+          63,
+          64,
+          65,
+          58,
+          59
+        ],
+        "flags": 8256,
+        "normal": 3,
+        "color": 28
+      },
+      {
+        "surface_index": 26,
+        "vertices": [
+          70,
+          59,
+          60,
+          61,
+          62
+        ],
+        "flags": 8256,
+        "normal": 4,
+        "color": 28
+      },
+      {
+        "surface_index": 27,
+        "vertices": [
+          70,
+          62,
+          63
+        ],
+        "flags": 8256,
+        "normal": 3,
+        "color": 28
+      },
+      {
+        "surface_index": 28,
+        "vertices": [
+          48,
+          44,
+          43,
+          42,
+          41,
+          40
+        ],
+        "flags": 8256,
+        "normal": 10,
+        "color": 27
+      },
+      {
+        "surface_index": 29,
+        "vertices": [
+          48,
+          47,
+          46,
+          45,
+          44
+        ],
+        "flags": 8256,
+        "normal": 11,
+        "color": 27
+      },
+      {
+        "surface_index": 30,
+        "vertices": [
+          48,
+          40,
+          47
+        ],
+        "flags": 8256,
+        "normal": 11,
+        "color": 27
+      },
+      {
+        "surface_index": 31,
+        "vertices": [
+          57,
+          54,
+          55,
+          56,
+          49,
+          50
+        ],
+        "flags": 8256,
+        "normal": 1,
+        "color": 28
+      },
+      {
+        "surface_index": 32,
+        "vertices": [
+          57,
+          50,
+          51,
+          52,
+          53
+        ],
+        "flags": 8256,
+        "normal": 2,
+        "color": 28
+      },
+      {
+        "surface_index": 33,
+        "vertices": [
+          57,
+          53,
+          54
+        ],
+        "flags": 8256,
+        "normal": 1,
+        "color": 28
+      },
+      {
+        "surface_index": 34,
+        "vertices": [
+          37,
+          33,
+          32,
+          31,
+          30,
+          29
+        ],
+        "flags": 8256,
+        "normal": 8,
+        "color": 27
+      },
+      {
+        "surface_index": 35,
+        "vertices": [
+          37,
+          36,
+          35,
+          34,
+          33
+        ],
+        "flags": 8256,
+        "normal": 9,
+        "color": 27
+      },
+      {
+        "surface_index": 36,
+        "vertices": [
+          37,
+          29,
+          36
+        ],
+        "flags": 8256,
+        "normal": 9,
+        "color": 27
+      },
+      {
+        "surface_index": 37,
+        "vertices": [
+          4,
+          8,
+          5,
+          1
+        ],
+        "flags": 8192,
+        "normal": 15,
+        "color": 3
+      },
+      {
+        "surface_index": 38,
+        "vertices": [
+          74,
+          73,
+          71,
+          72
+        ],
+        "flags": 8256,
+        "normal": 16,
+        "color": 29
+      },
+      {
+        "surface_index": 39,
+        "vertices": [
+          78,
+          77,
+          75,
+          76
+        ],
+        "flags": 8256,
+        "normal": 16,
+        "color": 29
+      },
+      {
+        "surface_index": 40,
+        "vertices": [
+          17,
+          4,
+          1
+        ],
+        "flags": 8192,
+        "normal": 42,
+        "color": 30
+      },
+      {
+        "surface_index": 41,
+        "vertices": [
+          9,
+          11,
+          12,
+          10
+        ],
+        "flags": 8192,
+        "normal": 21,
+        "color": 7
+      },
+      {
+        "surface_index": 42,
+        "vertices": [
+          15,
+          13,
+          14,
+          16
+        ],
+        "flags": 8192,
+        "normal": 22,
+        "color": 8
+      },
+      {
+        "surface_index": 43,
+        "vertices": [
+          15,
+          17,
+          2
+        ],
+        "flags": 40960,
+        "normal": 23,
+        "color": 9
+      },
+      {
+        "surface_index": 44,
+        "vertices": [
+          15,
+          2,
+          13
+        ],
+        "flags": 40960,
+        "normal": 24,
+        "color": 10
+      },
+      {
+        "surface_index": 45,
+        "vertices": [
+          13,
+          2,
+          3,
+          14
+        ],
+        "flags": 40960,
+        "normal": 25,
+        "color": 11
+      },
+      {
+        "surface_index": 46,
+        "vertices": [
+          14,
+          3,
+          18
+        ],
+        "flags": 40960,
+        "normal": 26,
+        "color": 12
+      },
+      {
+        "surface_index": 47,
+        "vertices": [
+          14,
+          18,
+          16
+        ],
+        "flags": 40960,
+        "normal": 27,
+        "color": 13
+      },
+      {
+        "surface_index": 48,
+        "vertices": [
+          19,
+          15,
+          16,
+          20
+        ],
+        "flags": 8192,
+        "normal": 28,
+        "color": 14
+      },
+      {
+        "surface_index": 49,
+        "vertices": [
+          1,
+          17,
+          19
+        ],
+        "flags": 8192,
+        "normal": 29,
+        "color": 15
+      },
+      {
+        "surface_index": 50,
+        "vertices": [
+          16,
+          18,
+          20
+        ],
+        "flags": 8192,
+        "normal": 30,
+        "color": 16
+      },
+      {
+        "surface_index": 51,
+        "vertices": [
+          19,
+          17,
+          15
+        ],
+        "flags": 8192,
+        "normal": 31,
+        "color": 17
+      },
+      {
+        "surface_index": 52,
+        "vertices": [
+          20,
+          18,
+          4
+        ],
+        "flags": 8192,
+        "normal": 32,
+        "color": 18
+      },
+      {
+        "surface_index": 53,
+        "vertices": [
+          1,
+          19,
+          20,
+          4
+        ],
+        "flags": 40960,
+        "normal": 33,
+        "color": 19
+      },
+      {
+        "surface_index": 54,
+        "vertices": [
+          24,
+          22,
+          21,
+          23
+        ],
+        "flags": 8192,
+        "normal": 34,
+        "color": 20
+      },
+      {
+        "surface_index": 55,
+        "vertices": [
+          4,
+          1,
+          22,
+          24
+        ],
+        "flags": 8192,
+        "normal": 35,
+        "color": 21
+      },
+      {
+        "surface_index": 56,
+        "vertices": [
+          21,
+          22,
+          1
+        ],
+        "flags": 8192,
+        "normal": 36,
+        "color": 22
+      },
+      {
+        "surface_index": 57,
+        "vertices": [
+          4,
+          24,
+          23
+        ],
+        "flags": 8192,
+        "normal": 37,
+        "color": 23
+      }
+    ],
+    "unresolved_polygon_cycles": []
+  }
+}

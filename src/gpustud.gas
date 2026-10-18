@@ -1,0 +1,344 @@
+;
+; House animation function
+; parameter block layout:
+;	0	texture
+;	4	player 1 x,y
+;	8	player 2 x,y
+;	12	ball x,y
+;	16	ball velocity (x,y)
+;
+	include "jaguar.inc"
+	include "blit.inc"
+
+	include "3d.inc"
+	include "68kequ.inc"
+	include	"3dds.inc"
+
+	ORG	Overlay
+
+; global register defines
+aclip	REGEQU	R19
+func	REGEQU	R20
+color	REGEQU	R21
+tempcoord	REGEQU	R22
+temprect	REGEQU	R23
+aflags	REGEQU	R24
+screen	REGEQU	R25
+texture	REGEQU	R26
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+parambl	REGEQU	R30
+return	REGEQU	R31
+
+MACRO JSR_FUNC
+	move	PC,return
+	jump	(func)
+	addqt	#6,return
+ENDM
+
+	movei	#animateparam,temp
+	load	(temp),parambl
+	or	parambl,parambl
+	load	(parambl),texture
+	addqt	#4,parambl
+	
+;
+; "pong" game
+;
+width	REGEQU	R0
+height	REGEQU	R1
+initx	REGEQU	R2
+p1x	REGEQU	R3
+p1y	REGEQU	R4
+p2x	REGEQU	R5
+p2y	REGEQU	R6
+ballx	REGEQU	R7
+bally	REGEQU	R8
+velx	REGEQU	R9
+vely	REGEQU	R10
+
+PADDLEWIDTH	EQU	4
+PADDLEHEIGHT	EQU	24
+BALLWIDTH	EQU	5
+BALLHEIGHT	EQU	5
+
+	movei	#plot,func
+
+	load	(parambl),p1x
+	addqt	#4,parambl
+	load	(parambl),p2x
+	addqt	#4,parambl
+	load	(parambl),ballx
+	addqt	#4,parambl
+	load	(parambl),velx
+	addqt	#4,parambl
+
+	load	(texture),screen
+	addqt	#4,texture
+	load	(texture),aflags
+	addqt	#4,texture
+	load	(texture),width
+	addqt	#4,texture
+
+	move	width,aclip
+	rorq	#16,aclip
+	move	width,height
+	shlq	#16,height
+	shrq	#16,width
+	shrq	#16,height
+
+;
+; clear the rectangle while we're doing some calculations
+;
+	moveq	#0,tempcoord
+	move	width,temprect
+	move	height,temp
+	shlq	#16,temp
+	or	temp,temprect
+	movei	#$ab00ab00,color
+	JSR_FUNC
+
+	move	p1x,p1y
+	shlq	#16,p1y
+	sharq	#16,p1x
+	sharq	#16,p1y
+
+	move	p2x,p2y
+	shlq	#16,p2y
+	sharq	#16,p2x
+	sharq	#16,p2y
+
+	move	ballx,bally
+	shlq	#16,bally
+	sharq	#16,ballx
+	sharq	#16,bally
+
+	move	velx,vely
+	shlq	#16,vely
+	sharq	#16,velx
+	sharq	#16,vely
+
+	add	velx,ballx
+	add	vely,bally
+;
+; bounce off top or bottom
+;
+	cmpq	#0,bally
+	jr	PL,_CDLOCAL_10_131
+	nop
+		moveq	#0,bally
+		neg	vely
+_CDLOCAL_10_131:
+	move	height,temp
+	subqt	#BALLHEIGHT,temp
+	cmp	temp,bally
+	jr	MI,_CDLOCAL_11_140
+	nop
+		move	temp,bally
+		neg	vely
+		subqt	#1,bally
+_CDLOCAL_11_140:
+
+;
+; bounce off paddle 1, if:
+; ballx >= paddlex-BALLWIDTH && ballx <= paddlex+PADDLEWIDTH &&
+; bally >= paddley-BALLHEIGHT && bally <= paddley+PADDLEHEIGHT
+
+	movei	#nobounce1,innerLoop
+	move	p1x,temp
+	move	p1x,temp2
+	subqt	#BALLWIDTH,temp
+	addqt	#PADDLEWIDTH,temp2
+	cmp	temp,ballx
+	jump	MI,(innerLoop)
+	nop
+	cmp	temp2,ballx
+	jump	PL,(innerLoop)
+	move	p1y,temp
+	move	p1y,temp2
+	subqt	#BALLHEIGHT,temp
+	addqt	#PADDLEHEIGHT,temp2
+	cmp	temp,bally
+	jump	MI,(innerLoop)
+	nop
+	cmp	temp2,bally
+	jump	PL,(innerLoop)
+	nop
+		neg	velx
+nobounce1:
+
+;
+; bounce off paddle 2, if:
+; ballx >= paddlex-BALLWIDTH && ballx <= paddlex+PADDLEWIDTH &&
+; bally >= paddley-BALLHEIGHT && bally <= paddley+PADDLEHEIGHT
+
+	movei	#nobounce2,innerLoop
+	move	p2x,temp
+	move	p2x,temp2
+	subqt	#BALLWIDTH,temp
+	addqt	#PADDLEWIDTH,temp2
+	cmp	temp,ballx
+	jump	MI,(innerLoop)
+	nop
+	cmp	temp2,ballx
+	jump	PL,(innerLoop)
+	move	p2y,temp
+	move	p2y,temp2
+	subqt	#BALLHEIGHT,temp
+	addqt	#PADDLEHEIGHT,temp2
+	cmp	temp,bally
+	jump	MI,(innerLoop)
+	nop
+	cmp	temp2,bally
+	jump	PL,(innerLoop)
+	nop
+		neg	velx
+nobounce2:
+
+;
+; check for off edges of screen
+;
+	cmpq	#0,ballx
+	jr	PL,_CDLOCAL_10_206
+	nop
+		moveq	#0,ballx
+		neg	velx
+_CDLOCAL_10_206:
+	cmp	width,ballx
+	jr	MI,_CDLOCAL_11_213
+	nop
+		move	width,ballx
+		neg	velx
+		subqt	#1,ballx
+_CDLOCAL_11_213:
+;
+; move paddles
+;
+	move	bally,p1y
+	subqt	#PADDLEHEIGHT/2,p1y
+	cmpq	#0,p1y
+	jr	PL,_CDLOCAL_30_223
+	nop
+		moveq	#0,p1y
+_CDLOCAL_30_223:
+	move	height,temp
+	subqt	#PADDLEHEIGHT,temp
+	cmp	temp,p1y
+	jr	MI,_CDLOCAL_31_231
+	nop
+		move	temp,p1y
+		subqt	#1,p1y
+_CDLOCAL_31_231:
+	move	p1y,p2y
+
+;
+; now plot paddles and ball
+;
+drawpong:
+	movei	#$78c078c0,color
+	move	p1y,temp
+	shlq	#16,temp
+	move	p1x,tempcoord
+	or	temp,tempcoord
+	moveq	#PADDLEHEIGHT,temprect
+	shlq	#16,temprect
+	addqt	#PADDLEWIDTH,temprect
+	JSR_FUNC
+	move	p2y,temp
+	shlq	#16,temp
+	move	p2x,tempcoord
+	or	temp,tempcoord
+	JSR_FUNC
+
+	move	bally,temp
+	shlq	#16,temp
+	move	ballx,tempcoord
+	or	temp,tempcoord
+	moveq	#BALLHEIGHT,temprect
+	shlq	#16,temprect
+	addqt	#BALLWIDTH,temprect
+	JSR_FUNC
+
+;
+; save all the variables
+;
+	subqt	#2,parambl
+	storew	vely, (parambl)
+	subqt	#2,parambl
+	storew	velx,(parambl)
+	subqt	#2,parambl
+	storew	bally,(parambl)
+	subqt	#2,parambl
+	storew	ballx,(parambl)
+	subqt	#2,parambl
+	storew	p2y,(parambl)
+	subqt	#2,parambl
+	storew	p2x,(parambl)
+	subqt	#2,parambl
+	storew	p1y,(parambl)
+	subqt	#2,parambl
+	storew	p1x,(parambl)
+
+; finish up
+; load pre-rendering routines
+	movei	#loadIt,temp2
+	movei	#prprog, temp
+	jump		(temp2)
+	nop
+
+;
+; plot: draw a rectangle into "screen"
+; the rectangle should be plotted at "tempcoord"
+; have height and width "temprect", color "color"
+; flags for the rectangle are in "aflags"
+;
+plot:
+	movei	#$00007e00,temp
+	and	temp,aflags
+	movei	#PIXEL16|XADDPHR,temp
+	or	temp,aflags
+
+; wait for the blitter
+	movei	#B_CMD,temp2
+_CDLOCAL_10_303:
+	load	(temp2),temp
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_10_303
+	nop
+
+	movei	#A1_BASE,temp2
+	store	screen,(temp2)
+	addqt	#4,temp2
+	store	aflags,(temp2)
+	addqt	#4,temp2
+	store	aclip,(temp2)
+	addqt	#4,temp2
+	store	tempcoord,(temp2)
+	addqt	#4,temp2
+	move	temprect,temp		; get the width (in the low word)
+	add	tempcoord,temp		; add the starting coordinate
+	addqt	#3,temp			; 4 pixels per phrase
+	bclr	#0,temp			; round to start of phrase
+	bclr	#1,temp
+	sub	tempcoord,temp		; subtract the starting coordinate to get the width
+	neg	temp
+	shlq	#16,temp
+	shrq	#16,temp
+	bset	#16,temp		; set the Y step to 1
+	store	temp,(temp2)		; A1_STEP
+	addqt	#4,temp2
+	moveq	#0,temp
+	store	temp,(temp2)		; A1_FSTEP
+	addqt	#4,temp2
+	store	temp,(temp2)		; A1_FPIXEL
+	movei	#B_COUNT,temp2
+	store	temprect,(temp2)
+	movei	#B_PATD,temp2
+	store	color,(temp2)
+	addqt	#4,temp2
+	store	color,(temp2)
+	movei	#UPDA1|PATDSEL,temp
+	movei	#B_CMD,temp2
+	jump	(return)
+	store	temp,(temp2)

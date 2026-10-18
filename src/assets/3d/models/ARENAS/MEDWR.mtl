@@ -1,0 +1,28 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BLUE128
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLUE128
+
+newmtl BRNGRN
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BRNGRN
+
+newmtl DARK_BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN MATTE
+
+newmtl DARK_GRAY_MATTE2
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK GRAY MATTE2
+
+newmtl GRAY_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY MATTE
+
+newmtl GREEN_MATTE4
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GREEN MATTE4
+
+newmtl GREEN_MATTE5
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GREEN MATTE5

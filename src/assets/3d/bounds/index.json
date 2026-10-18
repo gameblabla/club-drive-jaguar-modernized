@@ -1,0 +1,35 @@
+{
+  "CARS/CAR2.BND": {
+    "model": "CARS/CAR2.BND",
+    "points": 94,
+    "normals": 31,
+    "dividers": 54,
+    "original_edges": 143,
+    "cp_groups": 4,
+    "polygons": 60,
+    "new_edges": 0,
+    "changed": false
+  },
+  "CARS/CAR3.BND": {
+    "model": "CARS/CAR3.BND",
+    "points": 90,
+    "normals": 31,
+    "dividers": 40,
+    "original_edges": 139,
+    "cp_groups": 9,
+    "polygons": 60,
+    "new_edges": 0,
+    "changed": false
+  },
+  "CARS/DRONE.BND": {
+    "model": "CARS/DRONE.BND",
+    "points": 68,
+    "normals": 12,
+    "dividers": 35,
+    "original_edges": 96,
+    "cp_groups": 3,
+    "polygons": 35,
+    "new_edges": 0,
+    "changed": false
+  }
+}

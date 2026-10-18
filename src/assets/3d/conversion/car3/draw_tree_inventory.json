@@ -1,0 +1,164 @@
+{
+  "schema": "club-native-gpu-draw-tree-audit",
+  "gpu_source": "tree.gas",
+  "gpu_source_sha256": "4561c5caf851a45badb2bedcf4af7b951102d387c60d3c474e98bd82d6100eca",
+  "semantics": {
+    "node_offsets": "Eight-byte records; child offsets are relative to tree base",
+    "negative_child": "Bit 15 set in child offset means return without drawing that branch",
+    "split_divider_minus_one": "Skip camera-facing divider-sign swap",
+    "positive_divider": "Read camera-transformed divider sign byte and conditionally swap front/back",
+    "traversal": "Draw back first, then front, with camera-dependent order for non-sentinel split planes",
+    "leaf": "Draw the CP polygon-list offset supplied by leaf record",
+    "solid_empty_collision": "Not demonstrated by tree.gas; no volume ownership inferred"
+  },
+  "models": [
+    {
+      "model": "CAR1.MDL",
+      "nodes": 31,
+      "split_nodes": 15,
+      "leaves": 16,
+      "leaf_cp_indices": [
+        9,
+        11,
+        5,
+        4,
+        10,
+        12,
+        3,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        16,
+        1,
+        2
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 2,
+      "source_tree_sha256": "2dbaee9f126cfbe8a9c938162ce54b189f844ebef7bf3cba24c88bec4e9090bd"
+    },
+    {
+      "model": "CAR2.MDL",
+      "nodes": 3,
+      "split_nodes": 1,
+      "leaves": 2,
+      "leaf_cp_indices": [
+        2,
+        1
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 0,
+      "source_tree_sha256": "f464ab84aaae0433feaa1690dd0116b59af7158f8a179475e227a99dfc2af29d"
+    },
+    {
+      "model": "CAR3.MDL",
+      "nodes": 5,
+      "split_nodes": 2,
+      "leaves": 3,
+      "leaf_cp_indices": [
+        2,
+        3,
+        1
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 0,
+      "source_tree_sha256": "0b1b579a81038f25a0ae3833bc35f1f64f43da759ea5888dee1254dfe2695094"
+    },
+    {
+      "model": "CAR4.MDL",
+      "nodes": 5,
+      "split_nodes": 2,
+      "leaves": 3,
+      "leaf_cp_indices": [
+        2,
+        3,
+        1
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 0,
+      "source_tree_sha256": "8360f0cbfcda96a19cabfa437c805b337e2494cfc0f16c5cd3481dc7ddf428c7"
+    },
+    {
+      "model": "CAR5.MDL",
+      "nodes": 3,
+      "split_nodes": 1,
+      "leaves": 2,
+      "leaf_cp_indices": [
+        2,
+        1
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 0,
+      "source_tree_sha256": "ba6acdff403d3888d183dc4088347475e1205016337dae54b3fe9aa6e3e74d58"
+    },
+    {
+      "model": "CAR6.MDL",
+      "nodes": 31,
+      "split_nodes": 15,
+      "leaves": 16,
+      "leaf_cp_indices": [
+        9,
+        11,
+        5,
+        4,
+        10,
+        12,
+        3,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        16,
+        1,
+        2
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 2,
+      "source_tree_sha256": "bb92f413bb48b2d2fc4f9c07314536becb6c507e9ec8565cdb6d6bf2254ef140"
+    },
+    {
+      "model": "CARS/CAR2.MDL",
+      "nodes": 3,
+      "split_nodes": 1,
+      "leaves": 2,
+      "leaf_cp_indices": [
+        2,
+        1
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 0,
+      "source_tree_sha256": "cba8bbec62bc51a599141ab37205473f5efe0317787c0d7044be9a5d11ef680d"
+    },
+    {
+      "model": "CARS/CAR3.MDL",
+      "nodes": 5,
+      "split_nodes": 2,
+      "leaves": 3,
+      "leaf_cp_indices": [
+        2,
+        3,
+        1
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 0,
+      "source_tree_sha256": "e23d9af99b38d15a7207e7c383c4fd889201f72caf9326875917e3de313277f5"
+    },
+    {
+      "model": "CARS/DRONE.MDL",
+      "nodes": 3,
+      "split_nodes": 1,
+      "leaves": 2,
+      "leaf_cp_indices": [
+        2,
+        1
+      ],
+      "negative_child_sentinels": 0,
+      "negative_divider_sentinels": 0,
+      "source_tree_sha256": "04eba007f9389398b89856ec0b84a990c1ba6eaa31a151d1c5b2f606b40b9700"
+    }
+  ]
+}

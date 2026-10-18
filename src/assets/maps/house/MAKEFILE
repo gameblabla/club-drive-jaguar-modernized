@@ -1,0 +1,24 @@
+IPATH	=	..\include
+
+.SUFFIXES: .mdl .bnd .asc
+
+.asc.mdl:
+	mkbnd $*.asc house.clr -l jag.lyt
+	findbg $*.bnd $*.bnd
+	bnd2mdl -sky -link house.lnk $*.bnd $*.mdl
+	rm $*.bnd
+
+.bnd.mdl:
+	bnd2mdl -sky -link house.lnk $*.bnd $*.mdl
+
+
+medwr.mdl: medwr.asc
+	mkbnd $*.asc house.clr -l jag.lyt -t 100
+	findbg $*.bnd $*.bnd
+	bnd2mdl -sky -link house.lnk $*.bnd $*.mdl
+
+maus.mdl: maus.asc
+	mkbnd $*.asc house.clr -l jag.lyt -t 100
+	findbg $*.bnd $*.bnd
+	bnd2mdl -split -link house.lnk $*.bnd $*.mdl
+	rm $*.bnd

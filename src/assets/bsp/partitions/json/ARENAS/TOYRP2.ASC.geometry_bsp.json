@@ -1,0 +1,197 @@
+{
+  "schema": "club-geometry-bsp",
+  "original": "ARENAS/TOYRP2.ASC",
+  "generated_from_asc_sha256": "7933d998fd52575810f24c288f7bcc0eef0ff208b03259bc302bd4c3e18cd139",
+  "provenance": "2026 geometry-derived BSP, NOT byte-compatible Jaguar .BND/.MDL or original mkbnd",
+  "limitations": [
+    "New geometry-based collision BSP only; existing runtime collision trees are not replaced.",
+    "No native divider normals, BSP CP records, polygon flags, or Jaguar linker offsets generated."
+  ],
+  "meshes": [
+    {
+      "name": "hall",
+      "source_vertices": 8,
+      "source_faces": 8,
+      "nondegenerate_faces": 8,
+      "nodes": [
+        {
+          "type": "leaf",
+          "depth": 0,
+          "start": 0,
+          "count": 8
+        }
+      ],
+      "fragments": [
+        {
+          "source_face": 0,
+          "material": "AQUA GLAZE",
+          "vertices": [
+            [
+              456.257568,
+              -1490.295532,
+              611.237488
+            ],
+            [
+              456.257568,
+              -2562.86499,
+              611.238098
+            ],
+            [
+              -368.656311,
+              -2601.230469,
+              566.966614
+            ]
+          ]
+        },
+        {
+          "source_face": 1,
+          "material": "AQUA GLAZE",
+          "vertices": [
+            [
+              -368.65625,
+              -1532.818726,
+              570.10614
+            ],
+            [
+              456.257568,
+              -1490.295532,
+              611.237488
+            ],
+            [
+              -368.656311,
+              -2601.230469,
+              566.966614
+            ]
+          ]
+        },
+        {
+          "source_face": 2,
+          "material": "AQUA GLAZE",
+          "vertices": [
+            [
+              456.257568,
+              -2562.865723,
+              173.187775
+            ],
+            [
+              -368.656311,
+              -2601.230957,
+              133.799118
+            ],
+            [
+              -368.656311,
+              -2601.230469,
+              566.966614
+            ]
+          ]
+        },
+        {
+          "source_face": 3,
+          "material": "AQUA GLAZE",
+          "vertices": [
+            [
+              456.257568,
+              -2562.86499,
+              611.238098
+            ],
+            [
+              456.257568,
+              -2562.865723,
+              173.187775
+            ],
+            [
+              -368.656311,
+              -2601.230469,
+              566.966614
+            ]
+          ]
+        },
+        {
+          "source_face": 4,
+          "material": "AQUA GLAZE",
+          "vertices": [
+            [
+              -368.65625,
+              -1532.818848,
+              126.738991
+            ],
+            [
+              456.257568,
+              -1495.238037,
+              173.18718
+            ],
+            [
+              456.257568,
+              -1490.295532,
+              611.237488
+            ]
+          ]
+        },
+        {
+          "source_face": 5,
+          "material": "AQUA GLAZE",
+          "vertices": [
+            [
+              -368.65625,
+              -1532.818726,
+              570.10614
+            ],
+            [
+              -368.65625,
+              -1532.818848,
+              126.738991
+            ],
+            [
+              456.257568,
+              -1490.295532,
+              611.237488
+            ]
+          ]
+        },
+        {
+          "source_face": 6,
+          "material": "WHITE MATTE",
+          "vertices": [
+            [
+              456.257568,
+              -1495.238037,
+              173.18718
+            ],
+            [
+              -368.65625,
+              -1532.818848,
+              126.738991
+            ],
+            [
+              -368.656311,
+              -2601.230957,
+              133.799118
+            ]
+          ]
+        },
+        {
+          "source_face": 7,
+          "material": "WHITE MATTE",
+          "vertices": [
+            [
+              456.257568,
+              -2562.865723,
+              173.187775
+            ],
+            [
+              456.257568,
+              -1495.238037,
+              173.18718
+            ],
+            [
+              -368.656311,
+              -2601.230957,
+              133.799118
+            ]
+          ]
+        }
+      ],
+      "area_error_max": 0.0
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "ARENAS/TOYRP2.ASC",
+  "template_sha256": "7933d998fd52575810f24c288f7bcc0eef0ff208b03259bc302bd4c3e18cd139",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 5,
+      "mesh": "hall",
+      "index": 0,
+      "xyz": [
+        -368.656311,
+        -2601.230957,
+        133.799118
+      ]
+    },
+    {
+      "line": 6,
+      "mesh": "hall",
+      "index": 1,
+      "xyz": [
+        -368.656311,
+        -2601.230469,
+        566.966614
+      ]
+    },
+    {
+      "line": 7,
+      "mesh": "hall",
+      "index": 2,
+      "xyz": [
+        -368.65625,
+        -1532.818848,
+        126.738991
+      ]
+    },
+    {
+      "line": 8,
+      "mesh": "hall",
+      "index": 3,
+      "xyz": [
+        -368.65625,
+        -1532.818726,
+        570.10614
+      ]
+    },
+    {
+      "line": 9,
+      "mesh": "hall",
+      "index": 4,
+      "xyz": [
+        456.257568,
+        -2562.865723,
+        173.187775
+      ]
+    },
+    {
+      "line": 10,
+      "mesh": "hall",
+      "index": 5,
+      "xyz": [
+        456.257568,
+        -2562.86499,
+        611.238098
+      ]
+    },
+    {
+      "line": 11,
+      "mesh": "hall",
+      "index": 6,
+      "xyz": [
+        456.257568,
+        -1495.238037,
+        173.18718
+      ]
+    },
+    {
+      "line": 12,
+      "mesh": "hall",
+      "index": 7,
+      "xyz": [
+        456.257568,
+        -1490.295532,
+        611.237488
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

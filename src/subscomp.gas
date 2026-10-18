@@ -1,0 +1,63 @@
+;
+;	SUBROUTINE AREA for beginning overload module
+;
+; rotVects
+;; -----------------------------------------------------------------------
+; vector rotate subroutine ----------------------------------------------
+;	args:
+	; dest	- destination address
+	; temp	- number of vectors to rotate
+	; source	- source address
+
+	.include	"rot.inc"
+
+rotVects:
+	move		dest, dest2
+	move		dest, dest3
+	subqt	#6, dest
+	subqt	#4, dest2
+	subqt	#2, dest3
+	movei	#_CDLOCAL_10_20, innerLoop
+_CDLOCAL_10_20:
+	; get data
+	addqt	#6, dest
+	addqt	#2, source
+	addqt	#6, dest2
+	loadw	(source), y
+	addqt	#2, source
+	addqt	#6, dest3
+	loadw	(source), z
+
+	; do multiply
+	imultn	m0, x	;
+	imacn	m1, y	;
+	imacn	m2, z	;
+	resmac	resultX	;
+	addqt	#2, source
+	sharq	#14, resultX
+	storew	resultX, (dest)
+
+	imultn	m3, x	;
+	imacn	m4, y	;
+	imacn	m5, z	;
+	resmac	resultX	;
+	sharq	#14, resultX
+
+	imultn	m6, x	;
+	imacn	m7, y	;
+	imacn	m8, z	;
+	resmac	resultY	;
+	storew	resultX, (dest2)
+	sharq	#14, resultY
+
+	subq		#1, numPnts
+	storew	resultY, (dest3)
+	jump		NE, (innerLoop)
+	loadw	(source), x
+
+	jump		(return)
+	cmp x,x ;kills last read
+
+	.include	"rotc.inc" ; register cleanup
+;-------------------------------------------------------------------
+

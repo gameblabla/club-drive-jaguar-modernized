@@ -1,0 +1,333 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "HOUSE/DNINR_L3.ASC",
+  "template_sha256": "32e61c97a3815b26a9bbb937a27b80046f8796b82fdc57e5e7253f543fa4749b",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 41,
+      "mesh": "diningroom",
+      "index": 0,
+      "xyz": [
+        -7999.105469,
+        -2864.536865,
+        1843.996826
+      ]
+    },
+    {
+      "line": 42,
+      "mesh": "diningroom",
+      "index": 1,
+      "xyz": [
+        -7999.105469,
+        -2864.536865,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 43,
+      "mesh": "diningroom",
+      "index": 2,
+      "xyz": [
+        -7999.105469,
+        -2996.532715,
+        1843.996826
+      ]
+    },
+    {
+      "line": 44,
+      "mesh": "diningroom",
+      "index": 3,
+      "xyz": [
+        -7999.105469,
+        -2996.532715,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 45,
+      "mesh": "diningroom",
+      "index": 4,
+      "xyz": [
+        -10770.868164,
+        2767.158691,
+        1843.996826
+      ]
+    },
+    {
+      "line": 46,
+      "mesh": "diningroom",
+      "index": 5,
+      "xyz": [
+        -7999.105469,
+        2767.158691,
+        1843.996826
+      ]
+    },
+    {
+      "line": 47,
+      "mesh": "diningroom",
+      "index": 6,
+      "xyz": [
+        -10770.868164,
+        2767.158691,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 48,
+      "mesh": "diningroom",
+      "index": 7,
+      "xyz": [
+        -7999.105469,
+        2767.158691,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 49,
+      "mesh": "diningroom",
+      "index": 8,
+      "xyz": [
+        -6660.224609,
+        -2864.536865,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 50,
+      "mesh": "diningroom",
+      "index": 9,
+      "xyz": [
+        -6660.224609,
+        -2864.536865,
+        2812.45459
+      ]
+    },
+    {
+      "line": 51,
+      "mesh": "diningroom",
+      "index": 10,
+      "xyz": [
+        -6660.224609,
+        2639.716064,
+        2812.45459
+      ]
+    },
+    {
+      "line": 52,
+      "mesh": "diningroom",
+      "index": 11,
+      "xyz": [
+        -10770.868164,
+        -2864.536865,
+        1843.996826
+      ]
+    },
+    {
+      "line": 53,
+      "mesh": "diningroom",
+      "index": 12,
+      "xyz": [
+        -7999.105469,
+        -2864.536865,
+        1843.996826
+      ]
+    },
+    {
+      "line": 54,
+      "mesh": "diningroom",
+      "index": 13,
+      "xyz": [
+        -15412.496094,
+        -2864.536865,
+        2812.45459
+      ]
+    },
+    {
+      "line": 55,
+      "mesh": "diningroom",
+      "index": 14,
+      "xyz": [
+        -10770.868164,
+        -2864.536865,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 56,
+      "mesh": "diningroom",
+      "index": 15,
+      "xyz": [
+        -15412.496094,
+        -2864.536865,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 57,
+      "mesh": "diningroom",
+      "index": 16,
+      "xyz": [
+        -10770.868164,
+        2639.716064,
+        1843.996826
+      ]
+    },
+    {
+      "line": 58,
+      "mesh": "diningroom",
+      "index": 17,
+      "xyz": [
+        -7999.105469,
+        2639.716064,
+        1843.996826
+      ]
+    },
+    {
+      "line": 59,
+      "mesh": "diningroom",
+      "index": 18,
+      "xyz": [
+        -15412.496094,
+        2639.716064,
+        2812.45459
+      ]
+    },
+    {
+      "line": 60,
+      "mesh": "diningroom",
+      "index": 19,
+      "xyz": [
+        -15412.496094,
+        1141.776489,
+        -520.609131
+      ]
+    },
+    {
+      "line": 66,
+      "mesh": "diningroom",
+      "index": 20,
+      "xyz": [
+        -15412.496094,
+        -1455.736694,
+        -520.608643
+      ]
+    },
+    {
+      "line": 67,
+      "mesh": "diningroom",
+      "index": 21,
+      "xyz": [
+        -15412.496094,
+        1141.776489,
+        1855.839722
+      ]
+    },
+    {
+      "line": 68,
+      "mesh": "diningroom",
+      "index": 22,
+      "xyz": [
+        -15412.496094,
+        -1455.736694,
+        1855.838257
+      ]
+    },
+    {
+      "line": 69,
+      "mesh": "diningroom",
+      "index": 23,
+      "xyz": [
+        -15412.496094,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 70,
+      "mesh": "diningroom",
+      "index": 24,
+      "xyz": [
+        -15412.496094,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 71,
+      "mesh": "diningroom",
+      "index": 25,
+      "xyz": [
+        -6660.550293,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 72,
+      "mesh": "diningroom",
+      "index": 26,
+      "xyz": [
+        -10770.868164,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 73,
+      "mesh": "diningroom",
+      "index": 27,
+      "xyz": [
+        -7999.105469,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 74,
+      "mesh": "diningroom",
+      "index": 28,
+      "xyz": [
+        -6660.224609,
+        2639.716064,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 75,
+      "mesh": "diningroom",
+      "index": 29,
+      "xyz": [
+        -10770.868164,
+        -2996.532715,
+        1843.996826
+      ]
+    },
+    {
+      "line": 76,
+      "mesh": "diningroom",
+      "index": 30,
+      "xyz": [
+        -7999.105469,
+        -2996.532715,
+        1843.996826
+      ]
+    },
+    {
+      "line": 77,
+      "mesh": "diningroom",
+      "index": 31,
+      "xyz": [
+        -10770.868164,
+        -2996.532715,
+        -2172.476074
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

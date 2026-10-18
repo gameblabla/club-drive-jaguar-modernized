@@ -1,0 +1,383 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "RACEWRLD/RACE16B.ASC",
+  "template_sha256": "895844fff2e0e30d0296074e3ef70de774cbad4caed29ee322b053affdcdc56f",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 18,
+      "mesh": "nuspeedway",
+      "index": 0,
+      "xyz": [
+        -16269.639648,
+        -9474.765625,
+        -225.253235
+      ]
+    },
+    {
+      "line": 19,
+      "mesh": "nuspeedway",
+      "index": 1,
+      "xyz": [
+        -16123.594727,
+        -10370.999023,
+        -29.526154
+      ]
+    },
+    {
+      "line": 20,
+      "mesh": "nuspeedway",
+      "index": 2,
+      "xyz": [
+        -16269.639648,
+        -9474.757813,
+        -518.214294
+      ]
+    },
+    {
+      "line": 21,
+      "mesh": "nuspeedway",
+      "index": 3,
+      "xyz": [
+        -16123.594727,
+        -10370.999023,
+        -406.637421
+      ]
+    },
+    {
+      "line": 22,
+      "mesh": "nuspeedway",
+      "index": 4,
+      "xyz": [
+        -16269.588867,
+        -9474.445313,
+        -776.4729
+      ]
+    },
+    {
+      "line": 23,
+      "mesh": "nuspeedway",
+      "index": 5,
+      "xyz": [
+        -15257.399414,
+        -9923.355469,
+        -543.367859
+      ]
+    },
+    {
+      "line": 24,
+      "mesh": "nuspeedway",
+      "index": 6,
+      "xyz": [
+        -15257.399414,
+        -9923.355469,
+        -596.533691
+      ]
+    },
+    {
+      "line": 25,
+      "mesh": "nuspeedway",
+      "index": 7,
+      "xyz": [
+        -15180.208008,
+        -9882.382813,
+        -776.818848
+      ]
+    },
+    {
+      "line": 26,
+      "mesh": "nuspeedway",
+      "index": 8,
+      "xyz": [
+        -15221.922852,
+        -9904.699219,
+        -543.453369
+      ]
+    },
+    {
+      "line": 27,
+      "mesh": "nuspeedway",
+      "index": 9,
+      "xyz": [
+        -15409.290039,
+        -9354.023438,
+        -575.902954
+      ]
+    },
+    {
+      "line": 28,
+      "mesh": "nuspeedway",
+      "index": 10,
+      "xyz": [
+        -15409.290039,
+        -9354.023438,
+        -633.250305
+      ]
+    },
+    {
+      "line": 29,
+      "mesh": "nuspeedway",
+      "index": 11,
+      "xyz": [
+        -15316.96582,
+        -9340.917969,
+        -776.531494
+      ]
+    },
+    {
+      "line": 30,
+      "mesh": "nuspeedway",
+      "index": 12,
+      "xyz": [
+        -15357.442383,
+        -9346.8125,
+        -576.054626
+      ]
+    },
+    {
+      "line": 31,
+      "mesh": "nuspeedway",
+      "index": 13,
+      "xyz": [
+        -16123.594727,
+        -10371.006836,
+        -776.722534
+      ]
+    },
+    {
+      "line": 32,
+      "mesh": "nuspeedway",
+      "index": 14,
+      "xyz": [
+        -15765.553711,
+        -10753.803711,
+        -29.22464
+      ]
+    },
+    {
+      "line": 33,
+      "mesh": "nuspeedway",
+      "index": 15,
+      "xyz": [
+        -15765.553711,
+        -10753.803711,
+        -405.918762
+      ]
+    },
+    {
+      "line": 34,
+      "mesh": "nuspeedway",
+      "index": 16,
+      "xyz": [
+        -15765.553711,
+        -10753.803711,
+        -776.593506
+      ]
+    },
+    {
+      "line": 35,
+      "mesh": "nuspeedway",
+      "index": 17,
+      "xyz": [
+        -15030.920898,
+        -10201.292969,
+        -596.734375
+      ]
+    },
+    {
+      "line": 36,
+      "mesh": "nuspeedway",
+      "index": 18,
+      "xyz": [
+        -15030.920898,
+        -10201.292969,
+        -542.8302
+      ]
+    },
+    {
+      "line": 37,
+      "mesh": "nuspeedway",
+      "index": 19,
+      "xyz": [
+        -14994.895508,
+        -10174.550781,
+        -542.877075
+      ]
+    },
+    {
+      "line": 38,
+      "mesh": "nuspeedway",
+      "index": 20,
+      "xyz": [
+        -14958.59668,
+        -10148.609375,
+        -776.654541
+      ]
+    },
+    {
+      "line": 39,
+      "mesh": "nuspeedway",
+      "index": 21,
+      "xyz": [
+        -16144.833008,
+        -7919.160156,
+        -711.063965
+      ]
+    },
+    {
+      "line": 40,
+      "mesh": "nuspeedway",
+      "index": 22,
+      "xyz": [
+        -16144.84082,
+        -7919.148438,
+        -744.748108
+      ]
+    },
+    {
+      "line": 41,
+      "mesh": "nuspeedway",
+      "index": 23,
+      "xyz": [
+        -15554.594727,
+        -7919.148438,
+        -744.748108
+      ]
+    },
+    {
+      "line": 42,
+      "mesh": "nuspeedway",
+      "index": 24,
+      "xyz": [
+        -15554.616211,
+        -7919.160156,
+        -711.063965
+      ]
+    },
+    {
+      "line": 43,
+      "mesh": "nuspeedway",
+      "index": 25,
+      "xyz": [
+        -15508.051758,
+        -7919.160156,
+        -711.063965
+      ]
+    },
+    {
+      "line": 44,
+      "mesh": "nuspeedway",
+      "index": 26,
+      "xyz": [
+        -15504.983398,
+        -7919.136719,
+        -776.612732
+      ]
+    },
+    {
+      "line": 45,
+      "mesh": "nuspeedway",
+      "index": 27,
+      "xyz": [
+        -16196.450195,
+        -7919.136719,
+        -776.606628
+      ]
+    },
+    {
+      "line": 46,
+      "mesh": "nuspeedway",
+      "index": 28,
+      "xyz": [
+        -16192.489258,
+        -7919.160156,
+        -711.063965
+      ]
+    },
+    {
+      "line": 47,
+      "mesh": "nuspeedway",
+      "index": 29,
+      "xyz": [
+        -16144.727539,
+        -8604.96875,
+        -647.60907
+      ]
+    },
+    {
+      "line": 48,
+      "mesh": "nuspeedway",
+      "index": 30,
+      "xyz": [
+        -16188.93457,
+        -8604.96875,
+        -647.60907
+      ]
+    },
+    {
+      "line": 49,
+      "mesh": "nuspeedway",
+      "index": 31,
+      "xyz": [
+        -16144.782227,
+        -8604.945313,
+        -695.382202
+      ]
+    },
+    {
+      "line": 50,
+      "mesh": "nuspeedway",
+      "index": 32,
+      "xyz": [
+        -16196.446289,
+        -8605.050781,
+        -776.606628
+      ]
+    },
+    {
+      "line": 51,
+      "mesh": "nuspeedway",
+      "index": 33,
+      "xyz": [
+        -15554.588867,
+        -8604.945313,
+        -695.382202
+      ]
+    },
+    {
+      "line": 52,
+      "mesh": "nuspeedway",
+      "index": 34,
+      "xyz": [
+        -15554.825195,
+        -8604.96875,
+        -647.60907
+      ]
+    },
+    {
+      "line": 53,
+      "mesh": "nuspeedway",
+      "index": 35,
+      "xyz": [
+        -15512.397461,
+        -8604.96875,
+        -647.60907
+      ]
+    },
+    {
+      "line": 54,
+      "mesh": "nuspeedway",
+      "index": 36,
+      "xyz": [
+        -15504.983398,
+        -8605.050781,
+        -776.612732
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

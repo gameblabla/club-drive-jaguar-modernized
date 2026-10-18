@@ -1,0 +1,60 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl AQUA_GLAZE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: AQUA GLAZE
+
+newmtl BLACK_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK MATTE
+
+newmtl BLACK_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK PLASTIC
+
+newmtl BLUE_MATTE1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLUE MATTE1
+
+newmtl COPPER
+Kd 0.7 0.7 0.7
+# Original 1994 material name: COPPER
+
+newmtl DARK_GRAY_MATTE1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK GRAY MATTE1
+
+newmtl DARK_GRAY_MATTE2
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK GRAY MATTE2
+
+newmtl FINISH_LINE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: FINISH-LINE
+
+newmtl GRAY_METALIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY METALIC
+
+newmtl GREEN_GRAY
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GREEN GRAY
+
+newmtl PURPLE_METAL
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PURPLE METAL
+
+newmtl START_LINE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: START-LINE
+
+newmtl TOYPORT
+Kd 0.7 0.7 0.7
+# Original 1994 material name: TOYPORT
+
+newmtl WHITE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE MATTE
+
+newmtl YELLOW_METAL
+Kd 0.7 0.7 0.7
+# Original 1994 material name: YELLOW METAL

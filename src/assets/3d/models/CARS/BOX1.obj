@@ -1,0 +1,21 @@
+# Original file: CARS/BOX1.ASC
+# Coordinates copied verbatim from original 3D Studio ASCII
+mtllib BOX1.mtl
+o Object01_000
+v -3979.0485 -1418.8587 8749.6307
+v -3979.0485 7094.2955 8749.6307
+v -3979.0485 -1418.8591 0
+v -3979.0485 7094.2955 0
+v 6708.2474 -1418.8587 8749.6307
+v 6708.2474 7094.2955 8749.6307
+v 6708.2474 -1418.8591 0
+v 6708.2474 7094.2955 0
+usemtl RED_MATTE
+f 6 5 1
+f 2 6 1
+f 7 3 1
+f 5 7 1
+f 4 8 6
+f 2 4 6
+f 8 4 3
+f 7 8 3

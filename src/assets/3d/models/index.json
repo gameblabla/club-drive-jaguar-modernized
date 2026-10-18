@@ -1,0 +1,662 @@
+{
+  "source_files": 93,
+  "converted": 93,
+  "objects": 779,
+  "meshes": 435,
+  "vertices": 9583,
+  "triangles": 11608,
+  "errors": [],
+  "files": [
+    {
+      "file": "assets/3d/cars/BOX1.ASC",
+      "total_objects": 2,
+      "mesh_count": 1,
+      "vertices": 8,
+      "triangles": 8
+    },
+    {
+      "file": "assets/3d/cars/CAR1.ASC",
+      "total_objects": 2,
+      "mesh_count": 1,
+      "vertices": 84,
+      "triangles": 114
+    },
+    {
+      "file": "assets/3d/cars/CAR2.ASC",
+      "total_objects": 2,
+      "mesh_count": 1,
+      "vertices": 94,
+      "triangles": 112
+    },
+    {
+      "file": "assets/3d/cars/CAR3.ASC",
+      "total_objects": 2,
+      "mesh_count": 1,
+      "vertices": 90,
+      "triangles": 116
+    },
+    {
+      "file": "assets/3d/cars/DRONE.ASC",
+      "total_objects": 4,
+      "mesh_count": 3,
+      "vertices": 68,
+      "triangles": 78
+    },
+    {
+      "file": "assets/3d/cars/INT-RED.ASC",
+      "total_objects": 5,
+      "mesh_count": 3,
+      "vertices": 27,
+      "triangles": 14
+    },
+    {
+      "file": "assets/3d/cars/INT-WHT.ASC",
+      "total_objects": 5,
+      "mesh_count": 3,
+      "vertices": 27,
+      "triangles": 14
+    },
+    {
+      "file": "assets/3d/cars/INT-YEL.ASC",
+      "total_objects": 5,
+      "mesh_count": 3,
+      "vertices": 27,
+      "triangles": 14
+    },
+    {
+      "file": "assets/maps/arenas/FUTURE3.ASC",
+      "total_objects": 15,
+      "mesh_count": 12,
+      "vertices": 193,
+      "triangles": 316
+    },
+    {
+      "file": "assets/maps/arenas/FUTURE4.ASC",
+      "total_objects": 16,
+      "mesh_count": 13,
+      "vertices": 187,
+      "triangles": 278
+    },
+    {
+      "file": "assets/maps/arenas/GARACE.ASC",
+      "total_objects": 19,
+      "mesh_count": 12,
+      "vertices": 304,
+      "triangles": 288
+    },
+    {
+      "file": "assets/maps/arenas/GARAGE.ASC",
+      "total_objects": 16,
+      "mesh_count": 9,
+      "vertices": 348,
+      "triangles": 378
+    },
+    {
+      "file": "assets/maps/arenas/HWTEST.ASC",
+      "total_objects": 5,
+      "mesh_count": 3,
+      "vertices": 334,
+      "triangles": 556
+    },
+    {
+      "file": "assets/maps/arenas/MEDWR.ASC",
+      "total_objects": 28,
+      "mesh_count": 26,
+      "vertices": 411,
+      "triangles": 625
+    },
+    {
+      "file": "assets/maps/arenas/RACE.ASC",
+      "total_objects": 6,
+      "mesh_count": 4,
+      "vertices": 707,
+      "triangles": 1194
+    },
+    {
+      "file": "assets/maps/arenas/RAMPS.ASC",
+      "total_objects": 6,
+      "mesh_count": 5,
+      "vertices": 62,
+      "triangles": 72
+    },
+    {
+      "file": "assets/maps/arenas/SIMP.ASC",
+      "total_objects": 5,
+      "mesh_count": 4,
+      "vertices": 32,
+      "triangles": 34
+    },
+    {
+      "file": "assets/maps/arenas/SIMPRAMP.ASC",
+      "total_objects": 5,
+      "mesh_count": 4,
+      "vertices": 32,
+      "triangles": 34
+    },
+    {
+      "file": "assets/maps/arenas/STUDIO.ASC",
+      "total_objects": 53,
+      "mesh_count": 51,
+      "vertices": 361,
+      "triangles": 336
+    },
+    {
+      "file": "assets/maps/arenas/TEST.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 8,
+      "triangles": 12
+    },
+    {
+      "file": "assets/maps/arenas/TOYRACE.ASC",
+      "total_objects": 9,
+      "mesh_count": 6,
+      "vertices": 161,
+      "triangles": 213
+    },
+    {
+      "file": "assets/maps/arenas/TOYRP1.ASC",
+      "total_objects": 1,
+      "mesh_count": 1,
+      "vertices": 87,
+      "triangles": 102
+    },
+    {
+      "file": "assets/maps/arenas/TOYRP1L2.ASC",
+      "total_objects": 1,
+      "mesh_count": 1,
+      "vertices": 27,
+      "triangles": 26
+    },
+    {
+      "file": "assets/maps/arenas/TOYRP2.ASC",
+      "total_objects": 1,
+      "mesh_count": 1,
+      "vertices": 8,
+      "triangles": 8
+    },
+    {
+      "file": "assets/maps/arenas/TOYRP3.ASC",
+      "total_objects": 1,
+      "mesh_count": 1,
+      "vertices": 70,
+      "triangles": 96
+    },
+    {
+      "file": "assets/maps/arenas/TOYRP3L2.ASC",
+      "total_objects": 1,
+      "mesh_count": 1,
+      "vertices": 49,
+      "triangles": 65
+    },
+    {
+      "file": "assets/maps/arenas/WEST.ASC",
+      "total_objects": 43,
+      "mesh_count": 40,
+      "vertices": 332,
+      "triangles": 289
+    },
+    {
+      "file": "assets/maps/house/CAT.ASC",
+      "total_objects": 6,
+      "mesh_count": 1,
+      "vertices": 47,
+      "triangles": 45
+    },
+    {
+      "file": "assets/maps/house/DNINRM.ASC",
+      "total_objects": 13,
+      "mesh_count": 7,
+      "vertices": 186,
+      "triangles": 203
+    },
+    {
+      "file": "assets/maps/house/DNINR_L1.ASC",
+      "total_objects": 9,
+      "mesh_count": 3,
+      "vertices": 80,
+      "triangles": 92
+    },
+    {
+      "file": "assets/maps/house/DNINR_L2.ASC",
+      "total_objects": 9,
+      "mesh_count": 3,
+      "vertices": 52,
+      "triangles": 56
+    },
+    {
+      "file": "assets/maps/house/DNINR_L3.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 32,
+      "triangles": 42
+    },
+    {
+      "file": "assets/maps/house/FMLYRM.ASC",
+      "total_objects": 14,
+      "mesh_count": 8,
+      "vertices": 222,
+      "triangles": 248
+    },
+    {
+      "file": "assets/maps/house/FMLYR_L1.ASC",
+      "total_objects": 14,
+      "mesh_count": 8,
+      "vertices": 145,
+      "triangles": 141
+    },
+    {
+      "file": "assets/maps/house/FMLYR_L2.ASC",
+      "total_objects": 13,
+      "mesh_count": 7,
+      "vertices": 88,
+      "triangles": 89
+    },
+    {
+      "file": "assets/maps/house/FMLYR_L3.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 23,
+      "triangles": 29
+    },
+    {
+      "file": "assets/maps/house/FOYER.ASC",
+      "total_objects": 13,
+      "mesh_count": 7,
+      "vertices": 128,
+      "triangles": 132
+    },
+    {
+      "file": "assets/maps/house/FOYER_L1.ASC",
+      "total_objects": 11,
+      "mesh_count": 5,
+      "vertices": 67,
+      "triangles": 50
+    },
+    {
+      "file": "assets/maps/house/FOYER_L2.ASC",
+      "total_objects": 10,
+      "mesh_count": 4,
+      "vertices": 57,
+      "triangles": 46
+    },
+    {
+      "file": "assets/maps/house/FOYER_L3.ASC",
+      "total_objects": 8,
+      "mesh_count": 2,
+      "vertices": 35,
+      "triangles": 32
+    },
+    {
+      "file": "assets/maps/house/HALLWAY.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 58,
+      "triangles": 68
+    },
+    {
+      "file": "assets/maps/house/HALLW_L1.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 42,
+      "triangles": 52
+    },
+    {
+      "file": "assets/maps/house/KITCHEN.ASC",
+      "total_objects": 18,
+      "mesh_count": 12,
+      "vertices": 185,
+      "triangles": 195
+    },
+    {
+      "file": "assets/maps/house/KITCH_L1.ASC",
+      "total_objects": 17,
+      "mesh_count": 11,
+      "vertices": 152,
+      "triangles": 135
+    },
+    {
+      "file": "assets/maps/house/KITCH_L2.ASC",
+      "total_objects": 15,
+      "mesh_count": 9,
+      "vertices": 111,
+      "triangles": 84
+    },
+    {
+      "file": "assets/maps/house/KITCH_L3.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 22,
+      "triangles": 28
+    },
+    {
+      "file": "assets/maps/house/LAV1.ASC",
+      "total_objects": 10,
+      "mesh_count": 4,
+      "vertices": 102,
+      "triangles": 112
+    },
+    {
+      "file": "assets/maps/house/LAV1_L1.ASC",
+      "total_objects": 10,
+      "mesh_count": 4,
+      "vertices": 84,
+      "triangles": 80
+    },
+    {
+      "file": "assets/maps/house/LAV1_L2.ASC",
+      "total_objects": 9,
+      "mesh_count": 3,
+      "vertices": 66,
+      "triangles": 64
+    },
+    {
+      "file": "assets/maps/house/LAV1_L3.ASC",
+      "total_objects": 8,
+      "mesh_count": 2,
+      "vertices": 36,
+      "triangles": 42
+    },
+    {
+      "file": "assets/maps/house/LAV2.ASC",
+      "total_objects": 9,
+      "mesh_count": 3,
+      "vertices": 66,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/house/LAV2_L1.ASC",
+      "total_objects": 8,
+      "mesh_count": 2,
+      "vertices": 24,
+      "triangles": 30
+    },
+    {
+      "file": "assets/maps/house/LAV2_L2.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 20,
+      "triangles": 28
+    },
+    {
+      "file": "assets/maps/house/LNDRYRM.ASC",
+      "total_objects": 10,
+      "mesh_count": 4,
+      "vertices": 82,
+      "triangles": 92
+    },
+    {
+      "file": "assets/maps/house/LNDRY_L1.ASC",
+      "total_objects": 9,
+      "mesh_count": 3,
+      "vertices": 64,
+      "triangles": 70
+    },
+    {
+      "file": "assets/maps/house/LNDRY_L2.ASC",
+      "total_objects": 9,
+      "mesh_count": 3,
+      "vertices": 64,
+      "triangles": 70
+    },
+    {
+      "file": "assets/maps/house/LNDRY_L3.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 32,
+      "triangles": 42
+    },
+    {
+      "file": "assets/maps/house/MAUS.ASC",
+      "total_objects": 6,
+      "mesh_count": 1,
+      "vertices": 38,
+      "triangles": 47
+    },
+    {
+      "file": "assets/maps/house/MEDWR.ASC",
+      "total_objects": 18,
+      "mesh_count": 16,
+      "vertices": 364,
+      "triangles": 598
+    },
+    {
+      "file": "assets/maps/house/SITRM.ASC",
+      "total_objects": 16,
+      "mesh_count": 10,
+      "vertices": 295,
+      "triangles": 324
+    },
+    {
+      "file": "assets/maps/house/SITRM_L1.ASC",
+      "total_objects": 16,
+      "mesh_count": 10,
+      "vertices": 221,
+      "triangles": 216
+    },
+    {
+      "file": "assets/maps/house/SITRM_L2.ASC",
+      "total_objects": 14,
+      "mesh_count": 8,
+      "vertices": 131,
+      "triangles": 112
+    },
+    {
+      "file": "assets/maps/house/SITRM_L3.ASC",
+      "total_objects": 8,
+      "mesh_count": 2,
+      "vertices": 32,
+      "triangles": 40
+    },
+    {
+      "file": "assets/maps/house/STAIRWAY.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 46,
+      "triangles": 32
+    },
+    {
+      "file": "assets/maps/house/STAIR_L1.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 22,
+      "triangles": 16
+    },
+    {
+      "file": "assets/maps/house/STUDY.ASC",
+      "total_objects": 15,
+      "mesh_count": 9,
+      "vertices": 294,
+      "triangles": 316
+    },
+    {
+      "file": "assets/maps/house/STUDY_L1.ASC",
+      "total_objects": 15,
+      "mesh_count": 9,
+      "vertices": 230,
+      "triangles": 186
+    },
+    {
+      "file": "assets/maps/house/STUDY_L2.ASC",
+      "total_objects": 14,
+      "mesh_count": 8,
+      "vertices": 168,
+      "triangles": 138
+    },
+    {
+      "file": "assets/maps/house/STUDY_L3.ASC",
+      "total_objects": 7,
+      "mesh_count": 1,
+      "vertices": 90,
+      "triangles": 96
+    },
+    {
+      "file": "assets/maps/race/GROUND.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 4,
+      "triangles": 2
+    },
+    {
+      "file": "assets/maps/race/RACE1.ASC",
+      "total_objects": 4,
+      "mesh_count": 2,
+      "vertices": 20,
+      "triangles": 16
+    },
+    {
+      "file": "assets/maps/race/RACE10A.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 51,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/race/RACE10B.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 51,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/race/RACE11.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 88,
+      "triangles": 138
+    },
+    {
+      "file": "assets/maps/race/RACE12A.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 51,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/race/RACE12B.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 51,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/race/RACE13.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 16,
+      "triangles": 14
+    },
+    {
+      "file": "assets/maps/race/RACE14A.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 51,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/race/RACE14B.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 43,
+      "triangles": 60
+    },
+    {
+      "file": "assets/maps/race/RACE15.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 45,
+      "triangles": 60
+    },
+    {
+      "file": "assets/maps/race/RACE16A.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 29,
+      "triangles": 36
+    },
+    {
+      "file": "assets/maps/race/RACE16B.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 37,
+      "triangles": 50
+    },
+    {
+      "file": "assets/maps/race/RACE2.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 65,
+      "triangles": 104
+    },
+    {
+      "file": "assets/maps/race/RACE3A.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 37,
+      "triangles": 50
+    },
+    {
+      "file": "assets/maps/race/RACE3B.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 37,
+      "triangles": 50
+    },
+    {
+      "file": "assets/maps/race/RACE4.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 61,
+      "triangles": 88
+    },
+    {
+      "file": "assets/maps/race/RACE5A.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 53,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/race/RACE5B.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 53,
+      "triangles": 74
+    },
+    {
+      "file": "assets/maps/race/RACE6.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 61,
+      "triangles": 88
+    },
+    {
+      "file": "assets/maps/race/RACE7A.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 37,
+      "triangles": 50
+    },
+    {
+      "file": "assets/maps/race/RACE7B.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 37,
+      "triangles": 50
+    },
+    {
+      "file": "assets/maps/race/RACE8.ASC",
+      "total_objects": 3,
+      "mesh_count": 1,
+      "vertices": 80,
+      "triangles": 124
+    },
+    {
+      "file": "assets/maps/race/RACE9.ASC",
+      "total_objects": 4,
+      "mesh_count": 2,
+      "vertices": 84,
+      "triangles": 126
+    }
+  ]
+}

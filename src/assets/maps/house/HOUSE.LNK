@@ -1,0 +1,173 @@
+#name: dninrm
+#camera cam1
+#links
+lndry_l3
+kitch_l2
+foyer_l1
+fmlyrm
+sitrm
+dninrm
+
+#name: fmlyrm
+#camera cam2
+#links
+foyer_l3
+sitrm_l2
+lav2_l2
+study_l3
+lndry_l2
+hallw_l1
+kitchen
+dninrm
+fmlyrm
+
+#name: foyer
+#camera cam5
+#links
+kitch_l2
+study_l3
+fmlyr_l3
+lav2
+dninr_l2
+stairway
+sitrm
+hallway
+foyer
+
+#name: hallway
+#camera cam6
+#props
+SOUND: 6
+#links
+sitrm_l2
+fmlyr_l2
+kitchen
+study
+stairway
+foyer
+lav2
+hallway
+
+#name: kitchen
+#camera cam3
+#props
+SOUND: 4
+SOUND: 5
+#links
+sitrm_l3
+foyer
+lav2_l2
+study_l3
+dninr_l2
+stair_l1
+lav1_l1
+lndryrm
+fmlyrm
+hallway
+kitchen 
+
+#name: lav1
+#camera cam8
+#props
+SOUND: 2
+SOUND: -2
+SOUND: 6
+#links
+fmlyr_l2
+kitch_l2
+study
+lndryrm
+lav1
+
+#name: lav2
+#camera cam9
+#props
+SOUND: 2
+SOUND: 6
+#links
+fmlyr_l2
+sitrm_l1
+stairway
+foyer
+hallway
+lav2
+
+#name: lndryrm
+#camera cam4
+#props
+SOUND: 6
+#links
+dninr_l3
+study
+fmlyr_l2
+hallw_l1
+kitchen
+lav1
+lndryrm
+
+#name: sitrm
+#camera cam0
+#props
+SOUND: -1
+SOUND: 3
+PORTAL: medwr $00054000 $003d2000 $00e54000 ROT: 180
+#links
+lav2_l2
+hallw_l1
+fmlyr_l1
+dninrm
+foyer
+sitrm
+
+#name: stairway
+#links
+kitch_l1
+study_l1
+foyer_l1
+lav2
+hallway
+stairway
+
+#name: study
+#camera cam7
+#props
+SOUND: 6
+SOUND: -2
+#links
+sitrm_l3
+foyer_l2
+lndry_l1
+stairway
+hallway
+lav1
+study
+
+#name: study_l2
+#links
+sitrm_l3
+foyer_l2
+lndry_l1
+stairway
+hallway
+lav1
+study
+
+#name: cat
+#props
+SOUND: 4
+#links
+cat
+
+#name: maus
+#props
+SOUND: 5
+#links
+maus
+
+#name: medwr
+#flags 6
+#camera cascam
+#props
+PORTAL: fmlyrm $fe494000 $004db000 $02bcf000
+#links
+medwr

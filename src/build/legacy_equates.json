@@ -1,0 +1,11 @@
+{
+  "JOYIN": "0xf14000",
+  "JOYOUT": "0xf14000",
+  "SCORE_ADD": "0xf1bb54",
+  "TIMER_ADD": "0xf1bb58",
+  "showcoord": "existing tables.s label; no BSS allocated",
+  "DSPORG": "0xf1b000",
+  "VOLUME": "0xf1b030",
+  "PATCHLOC": "0xf1bb5c",
+  "FULSYN_E": "0xf1bb94"
+}

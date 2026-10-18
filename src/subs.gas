@@ -1,0 +1,174 @@
+;
+;	SUBROUTINE AREA
+;
+; sin, cos
+; sqrt
+; rot
+; loadIt
+;; -----------------------------------------------------------------------
+;;	sine & cosine   16-bit table lookup Cosine
+;;
+;;	GIVEN:
+;;		temp = Angle (Binary Radians (1 BRAD = PI/1024))
+;;		pi2 = PI/2 ($200 in Brads)
+;;		sintbl = Ptr to Sine Table
+;;
+;;	RETURNS:
+;;		TEMP = Cos(Angle)*$4000
+;;
+;;	REGISTER USAGE:
+;;		temp, temp2, return
+;;
+;;
+;cosine:
+;	add	pi2,temp	; Cos(a) = Sin(a + pi/2)
+;sine:
+;	move		temp, temp2	; keep quadrant data in temp
+;	shlq		#23, temp2	; strip quadrant data
+;	btst		#9, temp
+;	jr		EQ, 10$
+;	shrq		#22, temp2	; word address
+;		shlq	#1, pi2 ; this is free
+;		neg	temp2
+;		add	pi2, temp2
+;		shrq	#1, pi2 ; this is free
+;10$:
+;	add		sintbl, temp2
+;	btst		#10, temp
+;	loadw	(temp2), temp2
+;	jump		EQ, (return)
+;	nop
+;	jump		(return)
+;	neg		temp2
+;
+;; square root subroutine ------------------------------------------------
+;; uses 768 word long table to provide 10 bit - 3 digit accuracy
+;; ~20 cycles
+;;	args:
+;	; temp	- 32-bit unsigned number
+;;	returns:
+;	; temp	- square root of temp
+;;	munges:
+;	; r30
+;
+;sqrt:
+;	normi	temp, temp2
+;	movei	#(sqrtTab-512), r30
+;	addqt	#13, temp2	; size to 1K max word entries
+;	bset		#0, temp2		; shift an even amount only
+;	sh		temp2, temp
+;	neg		temp2		; shift amount for return flight
+;	add		r30, temp
+;	sharq	#1, temp2		; return shift is half as big
+;	bclr		#0, temp
+;	addqt	#11, temp2	; scale of table
+;	loadw	(temp), temp
+;	jump		(return)
+;	sh		temp2, temp
+;
+;
+; vector rotate subroutine ----------------------------------------------
+;	args:
+	; dest	- destination address
+	; temp	- number of vectors to rotate
+	; source	- source address
+
+	.include	"rot.inc"
+
+rotVects:
+;	movei	#tVECTORS, dest
+	move		dest, dest2
+	move		dest, dest3
+	subqt	#6, dest
+	subqt	#4, dest2
+	subqt	#2, dest3
+.if 0
+										movei #$11030, temp
+										store dest, (temp)
+										addqt #$10, temp
+										store dest2, (temp)
+										addqt #$10, temp
+										store dest3, (temp)
+										moveq #$10, temp
+										nop
+										nop
+										nop
+										nop
+										nop
+.endif
+;	movei	#NUM_VECTORS, temp
+;	loadw	(temp), numPnts
+
+	movei	#_CDLOCAL_10_102, innerLoop
+_CDLOCAL_10_102:
+	; get data
+	addqt	#6, dest
+	addqt	#2, source
+	addqt	#6, dest2
+	loadw	(source), y
+	addqt	#2, source
+	addqt	#6, dest3
+	loadw	(source), z
+
+	; do multiply
+	imultn	m0, x	;
+	imacn	m1, y	;
+	imacn	m2, z	;
+	resmac	resultX	;
+	addqt	#2, source
+	sharq	#14, resultX
+	storew	resultX, (dest)
+
+	imultn	m3, x	;
+	imacn	m4, y	;
+	imacn	m5, z	;
+	resmac	resultX	;
+	sharq	#14, resultX
+
+	imultn	m6, x	;
+	imacn	m7, y	;
+	imacn	m8, z	;
+	resmac	resultY	;
+	storew	resultX, (dest2)
+	sharq	#14, resultY
+
+	subq		#1, numPnts
+	storew	resultY, (dest3)
+	jump		NE, (innerLoop)
+	loadw	(source), x
+
+	jump		(return)
+	cmp x,x ;kills last read
+
+	.include	"rotc.inc" ; register cleanup
+;-------------------------------------------------------------------
+; blit memory into gpu ram
+;	temp - contains address of included gpu file
+
+length	REGEQU	R4
+data		REGEQU	R5
+;command	REGEQU	R11	; B_CMD
+
+
+loadIt:
+		movei	#B_CMD,	command
+;		waitForBlitter
+
+		load		(temp), temp2	; get destination address
+		addqt	#4, temp
+		load		(temp), length	; load length
+		addqt	#4, temp
+
+		addqt	#4, length	; round to word length
+		shrq		#2, length
+
+_CDLOCAL_10_164:
+		load		(temp), data
+		store	data, (temp2)
+		subq		#1, length
+		addqt	#4, temp2
+		jr		PL, _CDLOCAL_10_164
+		addqt	#4, temp
+
+		jump		(return)
+		nop

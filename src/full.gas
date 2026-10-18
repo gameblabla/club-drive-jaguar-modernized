@@ -1,0 +1,175 @@
+; full.gas - full screen robust check
+; theEdge contains the color
+; edgeCrosses - contains ptr to next poly
+topCross	REGEQU	hiY
+topCross1	REGEQU	slp
+edgeList	REGEQU	clr
+yaza		REGEQU	a
+yazb		REGEQU	b
+xa		REGEQU	xs
+ya		REGEQU	ys
+za		REGEQU	polygon
+xb		REGEQU	hiPoint
+yb		REGEQU	hiIndex
+zb		REGEQU	secIn
+x1		REGEQU	secOut
+z1		REGEQU	polyflags
+
+		;change to 16.16 div
+		movei	#G_DIVCTRL, temp
+		moveq	#1, temp2
+		store	temp2, (temp)
+
+		; load edge list address
+		movei	#GEO_BND_PTR,temp2
+		load		(temp2),temp2
+		movei	#EDGE_LIST, edgeList
+		add		temp2,edgeList
+		load		(edgeList), edgeList
+
+		subqt	#12, points	; align with start of record
+
+	; find top crossing edges (two!)
+		subqt	#2, polyPtr	; back up to color
+		moveq	#0, topCross1	; pointer to first top crossing edge
+		move		PC, innerLoop
+findTops:
+		subqt	#2, polyPtr	; point to a previous edge record
+		loadw	(polyPtr), topCross					; get first edge
+		bclr		#15, topCross
+		shlq		#4, topCross
+		add		tEdges, topCross
+
+		load		(topCross), temp 					; get first a, b
+
+		btst		#TOP_EDGE, temp
+		jr		EQ, findTops
+		sub		tEdges, topCross					; back to edge num
+
+	; do top edge crosses
+;clipLp:
+		shrq		#2, topCross	; smaller structure size
+		add		edgeList, topCross
+		load		(topCross), b
+		move		b, a
+		shrq		#16, a
+		shlq		#16, b
+		shlq		#5, a		; make into point address - size to phrase
+		shrq		#11, b
+		add		points, a
+		add		points, b
+
+		; get the rest of point a while we're here(in this page) - xa, ya, xaz, yaz
+		loadp	(a), xa		; get x-y
+		addqt	#8, a		; move to z record
+		cmp	xa, temp	;--- sync for hidata
+		load		(dataHi), ya
+		load		(a), za
+		addqt	#8, a
+		load		(a), yaza
+		; now switch to point b page
+		loadp	(b), xb		; get x-y
+		addqt	#8, b		; move to z record
+		cmp xb, temp	;--- sync for hidata
+		load		(dataHi), yb
+		load		(b), zb
+		addqt	#8, b
+		load		(b), yazb
+
+		; cut this one? top ------------------------------
+			; compute the t
+			add	yaza, ya
+			add	yazb, yb
+			sub	ya, yb
+			abs	ya
+			abs	yb
+			shlq	#1, yb
+			div	yb, ya
+
+			; insert result
+		; compute new point coords
+			; reuse some newly worthless registers
+			edx		REGEQU	yaza
+			edz		REGEQU	yazb
+			; normalize dx, dz
+			sub		xa, xb
+			sub		za, zb
+			move		xb, temp
+			abs		temp
+			move		zb, temp2
+			abs		temp2
+			normi	temp, edx
+			normi	temp2, edz
+			addqt	#9, edx
+			addqt	#9, edz
+			sha		edx, xb
+			sha		edz, zb
+			neg		edx
+			neg		edz
+			addqt	#15, edx
+			addqt	#15, edz
+
+			; compute new x,z
+			imult	ya, xb
+			imult	ya, zb
+			sha		edx, xb
+			sha		edz, zb
+			add		xb, xa
+			add		zb, za
+
+		or		topCross1, topCross1
+		jr		NE, gotATop
+		move		topCross, topCross1	; got one
+			move		xa, x1
+			jump		(innerLoop) ;findTops
+			move		za, z1
+		gotATop:
+		addqt	#12, points	; put it back
+	; zero intersect
+		; test for yz plane cross
+		move	xa, temp
+		xor	x1, temp
+		jump	PL, (dontDoItMan)
+		move	edgeCrosses, polyPtr	; put it back
+		; do intersect
+		sub	x1, xa
+		abs	x1
+		abs	xa
+		shlq	#1, xa
+		div	xa, x1
+	; compute z
+		; normalize dx, dz
+		sub		z1, za
+		move		za, temp
+		abs		temp
+		normi	temp, edz
+		addqt	#9, edz
+		sha		edz, za
+		neg		edz
+		addqt	#15, edz
+
+		; compute new z (in z1)
+		imult	x1, za
+
+		sha		edz, za
+		add		za, z1
+
+	jump		MI, (dontDoItMan)
+	; next instruct in surf does no damage
+
+; cleanup -----------------------------------------------
+REGUNDEF	topCross
+REGUNDEF	topCross1
+REGUNDEF	edgeList
+REGUNDEF	yaza
+REGUNDEF	yazb
+REGUNDEF	xa
+REGUNDEF	ya
+REGUNDEF	za
+REGUNDEF	xb
+REGUNDEF	yb
+REGUNDEF	zb
+REGUNDEF	x1
+REGUNDEF	z1
+REGUNDEF	edx
+REGUNDEF	edz

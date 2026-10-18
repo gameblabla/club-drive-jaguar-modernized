@@ -1,0 +1,247 @@
+{
+  "reference_rom_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "resources": [
+    {
+      "rom_start": 205592,
+      "rom_end": 211331,
+      "packed_capacity": 5739,
+      "raw_size": 36864,
+      "original_sha256": "28356d310d55224c142228e83e6a025a3c452281b9118e8224e4e159afb39460",
+      "file": "032318_auxiliary_image_0.bin",
+      "label": "auxiliary_image_0",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 344344,
+      "rom_end": 347883,
+      "packed_capacity": 3539,
+      "raw_size": 27088,
+      "original_sha256": "479377290b39c20703fc2c06e00daf1b607e3e9d5a14d906c2073bdb67bf42af",
+      "file": "054118_art_archive.bin",
+      "label": "art_archive",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 959376,
+      "rom_end": 959744,
+      "packed_capacity": 368,
+      "raw_size": 16384,
+      "original_sha256": "2879711d1c7d560d7329c3f85354024057b7afd105bc26456961d980c2acaea8",
+      "file": "0EA390_start_icon_candidate.bin",
+      "label": "start_icon_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 959744,
+      "rom_end": 1003377,
+      "packed_capacity": 43633,
+      "raw_size": 68216,
+      "original_sha256": "41c9d84504872bcc822790d668e70868345d3afe77c6a85569ca8246c6acdd08",
+      "file": "0EA500_studio.bin",
+      "label": "studio",
+      "known_gpu": "gpustud",
+      "gpu_uncompressed_offset": 13792
+    },
+    {
+      "rom_start": 1003384,
+      "rom_end": 1011253,
+      "packed_capacity": 7869,
+      "raw_size": 15016,
+      "original_sha256": "9555569a8ceb7b525e435e4d8f2c69be68b1750080105552dc6577b71ab782df",
+      "file": "0F4F78_future_candidate.bin",
+      "label": "future_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1011256,
+      "rom_end": 1044166,
+      "packed_capacity": 32910,
+      "raw_size": 64976,
+      "original_sha256": "14c1c3fd07d959e72c13283da9fead089c6079f90098de780ab0acfb3eba6520",
+      "file": "0F6E38_garage.bin",
+      "label": "garage",
+      "known_gpu": "gpugara",
+      "gpu_uncompressed_offset": 19168
+    },
+    {
+      "rom_start": 1044168,
+      "rom_end": 1067036,
+      "packed_capacity": 22868,
+      "raw_size": 38704,
+      "original_sha256": "7a9caed5992d42ea8011929b412e42fa6353899afd9aafc3ebff38ed911cbcb7",
+      "file": "0FEEC8_westa_candidate.bin",
+      "label": "westa_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1067040,
+      "rom_end": 1069284,
+      "packed_capacity": 2244,
+      "raw_size": 7368,
+      "original_sha256": "b04dd4559a6eb317ff34612d7e587d17590b15f1ddafd85dc103dc43e70e962e",
+      "file": "104820_toy_arena_candidate.bin",
+      "label": "toy_arena_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1069288,
+      "rom_end": 1177012,
+      "packed_capacity": 107724,
+      "raw_size": 236000,
+      "original_sha256": "90e84befda7718b15d17cf31a0eba6c19121eac002f6d2f216c1c114dca7031d",
+      "file": "1050E8_bighouse.bin",
+      "label": "bighouse",
+      "known_gpu": "gpuhouse",
+      "gpu_uncompressed_offset": 131864
+    },
+    {
+      "rom_start": 1177016,
+      "rom_end": 1362463,
+      "packed_capacity": 185447,
+      "raw_size": 278032,
+      "original_sha256": "f89aebdd11cc9e6c983dc79f508f1eded2f9dafbcaa7a0e8cca9421c95527075",
+      "file": "11F5B8_west_world_candidate.bin",
+      "label": "west_world_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1362464,
+      "rom_end": 1761722,
+      "packed_capacity": 399258,
+      "raw_size": 718016,
+      "original_sha256": "b8140517fa13ed6eb1fa7e5642bc1bb90ee39589172593fb41cc6c9dd01d9b3e",
+      "file": "14CA20_city.bin",
+      "label": "city",
+      "known_gpu": "gpucity",
+      "gpu_uncompressed_offset": 705656
+    },
+    {
+      "rom_start": 1761728,
+      "rom_end": 1810284,
+      "packed_capacity": 48556,
+      "raw_size": 82336,
+      "original_sha256": "5bc95622367d243a092d8c7e5517e010c2bd59df0185d231298463c0b01d23d1",
+      "file": "1AE1C0_race_world_candidate.bin",
+      "label": "race_world_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1810288,
+      "rom_end": 1817572,
+      "packed_capacity": 7284,
+      "raw_size": 15264,
+      "original_sha256": "82d65d7613dfedb5346353e0cf8b35db415a82fda111b8b4e80c02da6ea7f74e",
+      "file": "1B9F70_toyrace_candidate.bin",
+      "label": "toyrace_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1817576,
+      "rom_end": 1831508,
+      "packed_capacity": 13932,
+      "raw_size": 24864,
+      "original_sha256": "d3aaaea8e475561740c65d56b1aad144e456a349d5e00b1b0719d3402de84771",
+      "file": "1BBBE8_garage_race_candidate.bin",
+      "label": "garage_race_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1831512,
+      "rom_end": 1877324,
+      "packed_capacity": 45812,
+      "raw_size": 184320,
+      "original_sha256": "3c4578688eefddda81ea99b387533bf57dfdfd49073fc034ce115cbabc462423",
+      "file": "1BF258_sky_cry16.bin",
+      "label": "sky_cry16",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1877328,
+      "rom_end": 1969584,
+      "packed_capacity": 92256,
+      "raw_size": 184320,
+      "original_sha256": "0c4c3caef6ac5c010deca1665829662e89bb0daf19e664b7187a74a3040aa904",
+      "file": "1CA550_garage_sky_cry16.bin",
+      "label": "garage_sky_cry16",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 1969584,
+      "rom_end": 2021047,
+      "packed_capacity": 51463,
+      "raw_size": 165928,
+      "original_sha256": "78321f346f8f8df18acbcdea13ccdbc6320c0b442a91faecc84cb968782a87e8",
+      "file": "1E0DB0_misc_large_resource.bin",
+      "label": "misc_large_resource",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 2021048,
+      "rom_end": 2038743,
+      "packed_capacity": 17695,
+      "raw_size": 33280,
+      "original_sha256": "c537d838ebf2576a8117a3967e503755380807db0fc2d8fdc9cf11dfb8b61f2d",
+      "file": "1ED6B8_pause_candidate.bin",
+      "label": "pause_candidate",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 2038744,
+      "rom_end": 2040416,
+      "packed_capacity": 1672,
+      "raw_size": 6144,
+      "original_sha256": "f69aefee05056a503d5654d5b8f5191514f16818a63162528b0c0c877e0d2cf1",
+      "file": "1F1BD8_short_graphic_1.bin",
+      "label": "short_graphic_1",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 2040416,
+      "rom_end": 2042747,
+      "packed_capacity": 2331,
+      "raw_size": 6144,
+      "original_sha256": "03a55f394e3714638b3f2a01c870ba97c775ea80e1aa9369b7e80a108dc5d8e2",
+      "file": "1F2260_short_graphic_2.bin",
+      "label": "short_graphic_2",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 2048896,
+      "rom_end": 2050985,
+      "packed_capacity": 2089,
+      "raw_size": 38400,
+      "original_sha256": "8f4b8554c3dba0a215ac053ff71c2985f79a6455f09ffc64fa3a068025a5a135",
+      "file": "1F4380_hood_cry16.bin",
+      "label": "hood_cry16",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    },
+    {
+      "rom_start": 2050992,
+      "rom_end": 2063083,
+      "packed_capacity": 12091,
+      "raw_size": 33280,
+      "original_sha256": "ce8b5f3513a51c4fc624a1eb9db64ae38ba0b988eb75fa47207d31452000446a",
+      "file": "1F4BB0_gameover_cry16.bin",
+      "label": "gameover_cry16",
+      "known_gpu": null,
+      "gpu_uncompressed_offset": null
+    }
+  ]
+}

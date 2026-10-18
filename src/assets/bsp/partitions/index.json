@@ -1,0 +1,653 @@
+{
+  "ARENAS/FUTURE3.ASC": {
+    "meshes": 12,
+    "faces": 316,
+    "nodes": 324,
+    "fragments": 1493,
+    "worst_relative_area_error": 1.775975652428502e-14
+  },
+  "ARENAS/FUTURE4.ASC": {
+    "meshes": 13,
+    "faces": 278,
+    "nodes": 277,
+    "fragments": 1299,
+    "worst_relative_area_error": 5.635116694981403e-14
+  },
+  "ARENAS/GARACE.ASC": {
+    "meshes": 12,
+    "faces": 288,
+    "nodes": 282,
+    "fragments": 1323,
+    "worst_relative_area_error": 2.1600468056910827e-13
+  },
+  "ARENAS/GARAGE.ASC": {
+    "meshes": 9,
+    "faces": 378,
+    "nodes": 493,
+    "fragments": 2338,
+    "worst_relative_area_error": 7.839110261713333e-14
+  },
+  "ARENAS/HWTEST.ASC": {
+    "meshes": 3,
+    "faces": 556,
+    "nodes": 541,
+    "fragments": 2552,
+    "worst_relative_area_error": 5.116191349621284e-14
+  },
+  "ARENAS/MEDWR.ASC": {
+    "meshes": 26,
+    "faces": 625,
+    "nodes": 672,
+    "fragments": 3175,
+    "worst_relative_area_error": 1.0056661961988969e-13
+  },
+  "ARENAS/RACE.ASC": {
+    "meshes": 4,
+    "faces": 1194,
+    "nodes": 1624,
+    "fragments": 7553,
+    "worst_relative_area_error": 1.8485949344015959e-13
+  },
+  "ARENAS/RAMPS.ASC": {
+    "meshes": 5,
+    "faces": 72,
+    "nodes": 29,
+    "fragments": 162,
+    "worst_relative_area_error": 1.4808146785728069e-15
+  },
+  "ARENAS/SIMP.ASC": {
+    "meshes": 4,
+    "faces": 34,
+    "nodes": 4,
+    "fragments": 34,
+    "worst_relative_area_error": 0.0
+  },
+  "ARENAS/SIMPRAMP.ASC": {
+    "meshes": 4,
+    "faces": 34,
+    "nodes": 4,
+    "fragments": 34,
+    "worst_relative_area_error": 0.0
+  },
+  "ARENAS/STUDIO.ASC": {
+    "meshes": 51,
+    "faces": 336,
+    "nodes": 129,
+    "fragments": 642,
+    "worst_relative_area_error": 1.5242203299300354e-14
+  },
+  "ARENAS/TEST.ASC": {
+    "meshes": 1,
+    "faces": 12,
+    "nodes": 1,
+    "fragments": 12,
+    "worst_relative_area_error": 0.0
+  },
+  "ARENAS/TOYRACE.ASC": {
+    "meshes": 6,
+    "faces": 213,
+    "nodes": 204,
+    "fragments": 1008,
+    "worst_relative_area_error": 6.1018968584698905e-15
+  },
+  "ARENAS/TOYRP1.ASC": {
+    "meshes": 1,
+    "faces": 102,
+    "nodes": 131,
+    "fragments": 606,
+    "worst_relative_area_error": 2.609484725777519e-15
+  },
+  "ARENAS/TOYRP1L2.ASC": {
+    "meshes": 1,
+    "faces": 26,
+    "nodes": 17,
+    "fragments": 89,
+    "worst_relative_area_error": 5.811802428016488e-16
+  },
+  "ARENAS/TOYRP2.ASC": {
+    "meshes": 1,
+    "faces": 8,
+    "nodes": 1,
+    "fragments": 8,
+    "worst_relative_area_error": 0.0
+  },
+  "ARENAS/TOYRP3.ASC": {
+    "meshes": 1,
+    "faces": 96,
+    "nodes": 119,
+    "fragments": 571,
+    "worst_relative_area_error": 3.0183657747397845e-15
+  },
+  "ARENAS/TOYRP3L2.ASC": {
+    "meshes": 1,
+    "faces": 65,
+    "nodes": 73,
+    "fragments": 351,
+    "worst_relative_area_error": 1.166554271211841e-15
+  },
+  "ARENAS/WEST.ASC": {
+    "meshes": 40,
+    "faces": 289,
+    "nodes": 82,
+    "fragments": 422,
+    "worst_relative_area_error": 5.286764190864924e-15
+  },
+  "CARS/BOX1.ASC": {
+    "meshes": 1,
+    "faces": 8,
+    "nodes": 1,
+    "fragments": 8,
+    "worst_relative_area_error": 0.0
+  },
+  "CARS/CAR1.ASC": {
+    "meshes": 1,
+    "faces": 114,
+    "nodes": 95,
+    "fragments": 479,
+    "worst_relative_area_error": 1.423033854450304e-13
+  },
+  "CARS/CAR2.ASC": {
+    "meshes": 1,
+    "faces": 112,
+    "nodes": 93,
+    "fragments": 449,
+    "worst_relative_area_error": 1.0609059038439443e-13
+  },
+  "CARS/CAR3.ASC": {
+    "meshes": 1,
+    "faces": 116,
+    "nodes": 93,
+    "fragments": 444,
+    "worst_relative_area_error": 1.0122471960309244e-13
+  },
+  "CARS/DRONE.ASC": {
+    "meshes": 3,
+    "faces": 78,
+    "nodes": 21,
+    "fragments": 122,
+    "worst_relative_area_error": 3.945693519239647e-14
+  },
+  "CARS/INT-RED.ASC": {
+    "meshes": 3,
+    "faces": 14,
+    "nodes": 3,
+    "fragments": 14,
+    "worst_relative_area_error": 0.0
+  },
+  "CARS/INT-WHT.ASC": {
+    "meshes": 3,
+    "faces": 14,
+    "nodes": 3,
+    "fragments": 14,
+    "worst_relative_area_error": 0.0
+  },
+  "CARS/INT-YEL.ASC": {
+    "meshes": 3,
+    "faces": 14,
+    "nodes": 3,
+    "fragments": 14,
+    "worst_relative_area_error": 0.0
+  },
+  "HOUSE/CAT.ASC": {
+    "meshes": 1,
+    "faces": 45,
+    "nodes": 27,
+    "fragments": 127,
+    "worst_relative_area_error": 1.889055800822897e-15
+  },
+  "HOUSE/DNINR_L1.ASC": {
+    "meshes": 3,
+    "faces": 92,
+    "nodes": 39,
+    "fragments": 215,
+    "worst_relative_area_error": 1.6279982535342405e-14
+  },
+  "HOUSE/DNINR_L2.ASC": {
+    "meshes": 3,
+    "faces": 56,
+    "nodes": 23,
+    "fragments": 121,
+    "worst_relative_area_error": 1.9091720648508113e-15
+  },
+  "HOUSE/DNINR_L3.ASC": {
+    "meshes": 1,
+    "faces": 42,
+    "nodes": 21,
+    "fragments": 107,
+    "worst_relative_area_error": 1.9091720648508113e-15
+  },
+  "HOUSE/DNINRM.ASC": {
+    "meshes": 7,
+    "faces": 203,
+    "nodes": 87,
+    "fragments": 489,
+    "worst_relative_area_error": 1.6279982535342405e-14
+  },
+  "HOUSE/FMLYR_L1.ASC": {
+    "meshes": 8,
+    "faces": 141,
+    "nodes": 98,
+    "fragments": 520,
+    "worst_relative_area_error": 5.601787647384727e-14
+  },
+  "HOUSE/FMLYR_L2.ASC": {
+    "meshes": 7,
+    "faces": 89,
+    "nodes": 53,
+    "fragments": 271,
+    "worst_relative_area_error": 9.081969348340784e-14
+  },
+  "HOUSE/FMLYR_L3.ASC": {
+    "meshes": 1,
+    "faces": 29,
+    "nodes": 11,
+    "fragments": 61,
+    "worst_relative_area_error": 2.1958619187504496e-15
+  },
+  "HOUSE/FMLYRM.ASC": {
+    "meshes": 8,
+    "faces": 248,
+    "nodes": 188,
+    "fragments": 962,
+    "worst_relative_area_error": 1.8833923004878882e-13
+  },
+  "HOUSE/FOYER.ASC": {
+    "meshes": 7,
+    "faces": 132,
+    "nodes": 67,
+    "fragments": 340,
+    "worst_relative_area_error": 3.154073914036466e-14
+  },
+  "HOUSE/FOYER_L1.ASC": {
+    "meshes": 5,
+    "faces": 50,
+    "nodes": 13,
+    "fragments": 76,
+    "worst_relative_area_error": 3.0965213316876403e-15
+  },
+  "HOUSE/FOYER_L2.ASC": {
+    "meshes": 4,
+    "faces": 46,
+    "nodes": 12,
+    "fragments": 72,
+    "worst_relative_area_error": 3.0965213316876403e-15
+  },
+  "HOUSE/FOYER_L3.ASC": {
+    "meshes": 2,
+    "faces": 32,
+    "nodes": 10,
+    "fragments": 58,
+    "worst_relative_area_error": 3.0965213316876403e-15
+  },
+  "HOUSE/HALLW_L1.ASC": {
+    "meshes": 1,
+    "faces": 52,
+    "nodes": 51,
+    "fragments": 243,
+    "worst_relative_area_error": 3.859664185940743e-15
+  },
+  "HOUSE/HALLWAY.ASC": {
+    "meshes": 1,
+    "faces": 68,
+    "nodes": 69,
+    "fragments": 331,
+    "worst_relative_area_error": 6.12909041978851e-15
+  },
+  "HOUSE/KITCH_L1.ASC": {
+    "meshes": 11,
+    "faces": 135,
+    "nodes": 69,
+    "fragments": 360,
+    "worst_relative_area_error": 5.621490876888445e-15
+  },
+  "HOUSE/KITCH_L2.ASC": {
+    "meshes": 9,
+    "faces": 84,
+    "nodes": 21,
+    "fragments": 118,
+    "worst_relative_area_error": 5.621490876888445e-15
+  },
+  "HOUSE/KITCH_L3.ASC": {
+    "meshes": 1,
+    "faces": 28,
+    "nodes": 13,
+    "fragments": 66,
+    "worst_relative_area_error": 5.621490876888445e-15
+  },
+  "HOUSE/KITCHEN.ASC": {
+    "meshes": 12,
+    "faces": 195,
+    "nodes": 98,
+    "fragments": 515,
+    "worst_relative_area_error": 1.711016216855252e-14
+  },
+  "HOUSE/LAV1.ASC": {
+    "meshes": 4,
+    "faces": 112,
+    "nodes": 78,
+    "fragments": 381,
+    "worst_relative_area_error": 4.793417238101284e-14
+  },
+  "HOUSE/LAV1_L1.ASC": {
+    "meshes": 4,
+    "faces": 80,
+    "nodes": 40,
+    "fragments": 202,
+    "worst_relative_area_error": 1.0666331345023322e-14
+  },
+  "HOUSE/LAV1_L2.ASC": {
+    "meshes": 3,
+    "faces": 64,
+    "nodes": 35,
+    "fragments": 176,
+    "worst_relative_area_error": 1.0666331345023322e-14
+  },
+  "HOUSE/LAV1_L3.ASC": {
+    "meshes": 1,
+    "faces": 42,
+    "nodes": 25,
+    "fragments": 120,
+    "worst_relative_area_error": 8.331245606180388e-15
+  },
+  "HOUSE/LAV2.ASC": {
+    "meshes": 3,
+    "faces": 74,
+    "nodes": 81,
+    "fragments": 396,
+    "worst_relative_area_error": 6.482459993603271e-15
+  },
+  "HOUSE/LAV2_L1.ASC": {
+    "meshes": 2,
+    "faces": 30,
+    "nodes": 36,
+    "fragments": 163,
+    "worst_relative_area_error": 1.382102716510985e-15
+  },
+  "HOUSE/LAV2_L2.ASC": {
+    "meshes": 1,
+    "faces": 28,
+    "nodes": 35,
+    "fragments": 161,
+    "worst_relative_area_error": 1.5356696991094875e-15
+  },
+  "HOUSE/LNDRY_L1.ASC": {
+    "meshes": 3,
+    "faces": 70,
+    "nodes": 49,
+    "fragments": 230,
+    "worst_relative_area_error": 2.711611261972123e-14
+  },
+  "HOUSE/LNDRY_L2.ASC": {
+    "meshes": 3,
+    "faces": 70,
+    "nodes": 49,
+    "fragments": 230,
+    "worst_relative_area_error": 2.711611261972123e-14
+  },
+  "HOUSE/LNDRY_L3.ASC": {
+    "meshes": 1,
+    "faces": 42,
+    "nodes": 29,
+    "fragments": 150,
+    "worst_relative_area_error": 8.583697612676196e-15
+  },
+  "HOUSE/LNDRYRM.ASC": {
+    "meshes": 4,
+    "faces": 92,
+    "nodes": 72,
+    "fragments": 363,
+    "worst_relative_area_error": 6.168930412540288e-14
+  },
+  "HOUSE/MAUS.ASC": {
+    "meshes": 1,
+    "faces": 47,
+    "nodes": 35,
+    "fragments": 176,
+    "worst_relative_area_error": 1.1329745022819898e-14
+  },
+  "HOUSE/MEDWR.ASC": {
+    "meshes": 16,
+    "faces": 598,
+    "nodes": 636,
+    "fragments": 3044,
+    "worst_relative_area_error": 8.857458018092361e-14
+  },
+  "HOUSE/SITRM.ASC": {
+    "meshes": 10,
+    "faces": 324,
+    "nodes": 240,
+    "fragments": 1186,
+    "worst_relative_area_error": 1.7747037909886206e-13
+  },
+  "HOUSE/SITRM_L1.ASC": {
+    "meshes": 10,
+    "faces": 216,
+    "nodes": 144,
+    "fragments": 718,
+    "worst_relative_area_error": 1.7747037909886206e-13
+  },
+  "HOUSE/SITRM_L2.ASC": {
+    "meshes": 8,
+    "faces": 112,
+    "nodes": 46,
+    "fragments": 236,
+    "worst_relative_area_error": 2.3012726127409378e-15
+  },
+  "HOUSE/SITRM_L3.ASC": {
+    "meshes": 2,
+    "faces": 40,
+    "nodes": 18,
+    "fragments": 89,
+    "worst_relative_area_error": 5.883389537744491e-15
+  },
+  "HOUSE/STAIR_L1.ASC": {
+    "meshes": 1,
+    "faces": 16,
+    "nodes": 5,
+    "fragments": 30,
+    "worst_relative_area_error": 1.2052264667725244e-15
+  },
+  "HOUSE/STAIRWAY.ASC": {
+    "meshes": 1,
+    "faces": 32,
+    "nodes": 21,
+    "fragments": 102,
+    "worst_relative_area_error": 3.246845525190597e-15
+  },
+  "HOUSE/STUDY.ASC": {
+    "meshes": 9,
+    "faces": 316,
+    "nodes": 229,
+    "fragments": 1145,
+    "worst_relative_area_error": 2.6563046387657372e-14
+  },
+  "HOUSE/STUDY_L1.ASC": {
+    "meshes": 9,
+    "faces": 186,
+    "nodes": 105,
+    "fragments": 551,
+    "worst_relative_area_error": 4.7367986712362454e-15
+  },
+  "HOUSE/STUDY_L2.ASC": {
+    "meshes": 8,
+    "faces": 138,
+    "nodes": 104,
+    "fragments": 503,
+    "worst_relative_area_error": 4.7367986712362454e-15
+  },
+  "HOUSE/STUDY_L3.ASC": {
+    "meshes": 1,
+    "faces": 96,
+    "nodes": 97,
+    "fragments": 461,
+    "worst_relative_area_error": 4.7367986712362454e-15
+  },
+  "RACEWRLD/GROUND.ASC": {
+    "meshes": 1,
+    "faces": 2,
+    "nodes": 1,
+    "fragments": 2,
+    "worst_relative_area_error": 0.0
+  },
+  "RACEWRLD/RACE1.ASC": {
+    "meshes": 2,
+    "faces": 16,
+    "nodes": 8,
+    "fragments": 34,
+    "worst_relative_area_error": 2.25460507662997e-14
+  },
+  "RACEWRLD/RACE10A.ASC": {
+    "meshes": 1,
+    "faces": 74,
+    "nodes": 63,
+    "fragments": 302,
+    "worst_relative_area_error": 5.3603055093882506e-14
+  },
+  "RACEWRLD/RACE10B.ASC": {
+    "meshes": 1,
+    "faces": 74,
+    "nodes": 59,
+    "fragments": 279,
+    "worst_relative_area_error": 9.291201481244294e-14
+  },
+  "RACEWRLD/RACE11.ASC": {
+    "meshes": 1,
+    "faces": 138,
+    "nodes": 203,
+    "fragments": 926,
+    "worst_relative_area_error": 2.3099235806478526e-14
+  },
+  "RACEWRLD/RACE12A.ASC": {
+    "meshes": 1,
+    "faces": 74,
+    "nodes": 61,
+    "fragments": 290,
+    "worst_relative_area_error": 6.3972542322493694e-15
+  },
+  "RACEWRLD/RACE12B.ASC": {
+    "meshes": 1,
+    "faces": 74,
+    "nodes": 65,
+    "fragments": 305,
+    "worst_relative_area_error": 1.8742283161913593e-14
+  },
+  "RACEWRLD/RACE13.ASC": {
+    "meshes": 1,
+    "faces": 14,
+    "nodes": 7,
+    "fragments": 32,
+    "worst_relative_area_error": 1.2096715419318845e-14
+  },
+  "RACEWRLD/RACE14A.ASC": {
+    "meshes": 1,
+    "faces": 74,
+    "nodes": 67,
+    "fragments": 314,
+    "worst_relative_area_error": 2.6939358297206393e-14
+  },
+  "RACEWRLD/RACE14B.ASC": {
+    "meshes": 1,
+    "faces": 60,
+    "nodes": 53,
+    "fragments": 245,
+    "worst_relative_area_error": 2.977833631520156e-14
+  },
+  "RACEWRLD/RACE15.ASC": {
+    "meshes": 1,
+    "faces": 60,
+    "nodes": 45,
+    "fragments": 225,
+    "worst_relative_area_error": 3.5782430234522224e-14
+  },
+  "RACEWRLD/RACE16A.ASC": {
+    "meshes": 1,
+    "faces": 36,
+    "nodes": 25,
+    "fragments": 126,
+    "worst_relative_area_error": 2.867291976541135e-14
+  },
+  "RACEWRLD/RACE16B.ASC": {
+    "meshes": 1,
+    "faces": 50,
+    "nodes": 35,
+    "fragments": 169,
+    "worst_relative_area_error": 2.6406271390416306e-14
+  },
+  "RACEWRLD/RACE2.ASC": {
+    "meshes": 1,
+    "faces": 104,
+    "nodes": 159,
+    "fragments": 712,
+    "worst_relative_area_error": 5.001149881571667e-14
+  },
+  "RACEWRLD/RACE3A.ASC": {
+    "meshes": 1,
+    "faces": 50,
+    "nodes": 39,
+    "fragments": 182,
+    "worst_relative_area_error": 4.3962760568756897e-14
+  },
+  "RACEWRLD/RACE3B.ASC": {
+    "meshes": 1,
+    "faces": 50,
+    "nodes": 35,
+    "fragments": 167,
+    "worst_relative_area_error": 4.191858055592554e-14
+  },
+  "RACEWRLD/RACE4.ASC": {
+    "meshes": 1,
+    "faces": 88,
+    "nodes": 83,
+    "fragments": 386,
+    "worst_relative_area_error": 7.542717161311935e-14
+  },
+  "RACEWRLD/RACE5A.ASC": {
+    "meshes": 1,
+    "faces": 74,
+    "nodes": 59,
+    "fragments": 278,
+    "worst_relative_area_error": 2.7606730132327097e-14
+  },
+  "RACEWRLD/RACE5B.ASC": {
+    "meshes": 1,
+    "faces": 74,
+    "nodes": 63,
+    "fragments": 303,
+    "worst_relative_area_error": 3.3514752905189783e-14
+  },
+  "RACEWRLD/RACE6.ASC": {
+    "meshes": 1,
+    "faces": 88,
+    "nodes": 81,
+    "fragments": 373,
+    "worst_relative_area_error": 7.289460300062752e-14
+  },
+  "RACEWRLD/RACE7A.ASC": {
+    "meshes": 1,
+    "faces": 50,
+    "nodes": 35,
+    "fragments": 168,
+    "worst_relative_area_error": 7.39603862674853e-14
+  },
+  "RACEWRLD/RACE7B.ASC": {
+    "meshes": 1,
+    "faces": 50,
+    "nodes": 35,
+    "fragments": 166,
+    "worst_relative_area_error": 4.40179307339869e-14
+  },
+  "RACEWRLD/RACE8.ASC": {
+    "meshes": 1,
+    "faces": 124,
+    "nodes": 153,
+    "fragments": 675,
+    "worst_relative_area_error": 3.5372921938798047e-14
+  },
+  "RACEWRLD/RACE9.ASC": {
+    "meshes": 2,
+    "faces": 126,
+    "nodes": 142,
+    "fragments": 618,
+    "worst_relative_area_error": 4.8799099726540113e-14
+  }
+}

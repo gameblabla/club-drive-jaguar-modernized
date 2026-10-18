@@ -1,0 +1,569 @@
+; Copyright 1994 Atari Corporation. All rights reserved.
+;
+; inflate_codes() function for Jaguar GPU
+; Written by Eric R. Smith
+;
+; Parameters:
+; INP_TL,INP_TD:	32 bits each: literal/length and distance decoder tables
+; INP_BL,INP_BD:	32 bits each: number of bits decoded by tl[] and td[]
+; INP_BB:		global variables
+; INP_BK:
+; INP_WP:
+
+	include	"jaguar.inc"
+	include	"blit.inc"
+
+WSIZE	equ	32768
+
+ENDPROG	equ	(G_RAM+3000)
+
+OUTP_RET	equ	ENDPROG-4
+INP_TL	equ	ENDPROG-44
+INP_TD	equ	ENDPROG-40
+INP_BL	equ	ENDPROG-36
+INP_BD	equ	ENDPROG-32
+INP_BB	equ	ENDPROG-28
+INP_BK	equ	ENDPROG-24
+INP_WP	equ	ENDPROG-20
+INP_INPTR equ	ENDPROG-16
+INP_OUTPTR equ	ENDPROG-12
+INP_SLIDE equ	ENDPROG-8
+
+	ORG	G_RAM
+
+e	REGEQU	r0		; unsigned: table entry flag/number of extra bits
+n	REGEQU	r1		; unsigned: length for copy
+d	REGEQU	r2		; unsigned: index for copy
+w	REGEQU	r3		; unsigned: current window position
+t	REGEQU	r4		; pointer: pointer to table entry
+ml	REGEQU	r5		; unsigned: mask for bl bits
+md	REGEQU	r6		; unsigned: mask for bd bits
+b	REGEQU	r7		; unsigned long: bit buffer
+k	REGEQU	r8		; unsigned: number of bits in bit buffer
+tl	REGEQU	r9		; pointer: literal/length decoder table
+td	REGEQU	r10		; pointer: distance decoder table
+bl	REGEQU	r11		; short: number of bits decoded by tl
+bd	REGEQU	r12		; short: number of bits decoded by td
+inptr	REGEQU	r13		; pointer to unsigned byte: points to input buffer
+outptr	REGEQU	r14		; pointer to output buffer
+slide	REGEQU	r15		; pointer to 32K work area
+mbits	REGEQU	r16		; pointer to mask_bits
+
+bBreak	REGEQU	r17
+bElse2	REGEQU	r18		; branch to "else2"
+bEndif2	REGEQU	r19		; branch to "endif2"
+bEndif1	REGEQU	r20
+outrLp	REGEQU	r21		; for outermost loop
+cWSIZE	REGEQU	r22		; constant value of WSIZE
+c99	REGEQU	r23		; constant value of 99
+c17	REGEQU	r24		; constant value of 17
+count	REGEQU	r25		; loop variable
+arg	REGEQU	r26		; argument for macros
+innrLp	REGEQU	r27		; for branches
+temp	REGEQU	r28
+temp2	REGEQU	r29
+bEndif4	REGEQU	r30
+bReturn	REGEQU	r31
+
+	.globl	e
+	.globl	n
+	.globl	d
+	.globl	w
+	.globl	t
+	.globl	ml
+	.globl	md
+	.globl	b
+	.globl	k
+	.globl	tl
+	.globl	td
+	.globl	bl
+	.globl	bd
+	.globl	inptr
+	.globl	outptr
+	.globl	slide
+	.globl	mbits
+	.globl	c17
+
+;
+; data structure equates
+;
+OFF_E	EQU	0
+OFF_B	EQU	1
+OFF_V_N	EQU	2
+OFF_V_T	EQU	2
+HUFT_SIZE EQU	6
+
+; MACROS: NEEDBITS() and DUMPBITS()
+; these trash temp and temp2
+
+MACRO	NEEDBITS
+	cmp	@1,k
+	jr	PL,ENDWH@@
+	nop
+WH@@:
+		move	k,temp2
+		loadb	(inptr),temp
+		addqt	#1,inptr
+		neg	temp2
+		sh	temp2,temp
+		addqt	#8,k
+		cmp	@1,k
+		jr	MI, WH@@
+		or	temp,b
+ENDWH@@:
+ENDM
+
+MACRO DUMPBITS
+	sh	@1,b
+	sub	@1,k
+ENDM
+
+
+.if 0
+MACRO FLUSH
+	move	@1,count
+	move	slide,temp2
+while@@:
+	cmpq	#0,count
+	jr	EQ,endwh@@
+	subqt	#4,count
+		load	(temp2),temp
+		addqt	#4,temp2
+		store	temp,(outptr)
+		jr	while@@
+		addqt	#4,outptr
+endwh@@:
+ENDM
+.else
+MACRO FLUSH
+wait@@:
+	move	@1,count
+	movei	#B_CMD,temp2			; wait for blitter free
+	load	(temp2),temp
+	btst	#0,temp
+	jr	EQ,wait@@
+	nop
+
+	movei	#A1_BASE,temp2
+	store	outptr,(temp2)
+	add	count,outptr
+	moveq	#0,temp
+	movei	#A1_PIXEL,temp2
+	store	temp,(temp2)
+	movei	#A2_PIXEL,temp2
+	store	temp,(temp2)
+
+	shrq	#2,count			; divide by 4 for 32 bit pixels
+	movei	#B_COUNT,temp2
+	bset	#16,count			; Y value == 1
+	store	count,(temp2)
+	movei	#SRCEN|LFU_A|LFU_AN,temp
+	movei	#B_CMD,temp2
+	store	temp,(temp2)			; start the blitter up
+ENDM
+.endif
+
+	movei	#17,c17
+	movei	#WSIZE,cWSIZE
+	movei	#99,c99
+
+; load up parameters
+	movei	#INP_TL,temp2
+	load	(temp2),tl
+	addqt	#4,temp2
+	load	(temp2),td
+	addqt	#4,temp2
+	load	(temp2),bl
+	addqt	#4,temp2
+	load	(temp2),bd
+
+;  /* make local copies of globals */
+;  b = bb;                       /* initialize bit buffer */
+;  k = bk;
+;  w = wp;                       /* initialize window position */
+
+	movei	#INP_BB,temp2
+	load	(temp2),b
+	addqt	#4,temp2
+	load	(temp2),k
+	addqt	#4,temp2
+	load	(temp2),w
+	addqt	#4,temp2
+	load	(temp2),inptr
+	addqt	#4,temp2
+	load	(temp2),outptr
+	addqt	#4,temp2
+	load	(temp2),slide
+
+;  /* inflate the coded data */
+;  ml = mask_bits[bl];           /* precompute masks for speed */
+;  md = mask_bits[bd];
+
+	movei	#mask_bits,mbits
+	move	bl,temp
+	move	bd,temp2
+	shlq	#2,temp
+	shlq	#2,temp2
+	add	mbits,temp
+	load	(temp),ml
+	add	mbits,temp2
+	load	(temp2),md
+
+	movei	#endif1,bEndif1
+	movei	#endif2,bEndif2
+	movei	#else2,bElse2
+	movei	#break1,bBreak
+	movei	#endif4,bEndif4
+	movei	#return,bReturn
+;
+; set up the blitter for FLUSH operations
+;
+	movei	#B_CMD,temp2
+_CDLOCAL_10_221:
+	load	(temp2),temp
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_10_221
+	nop
+	movei	#A2_BASE,temp2
+	store	slide,(temp2)
+	movei	#PITCH1|PIXEL32|WID8|XADDPHR,temp
+	movei	#A2_FLAGS,temp2
+	store	temp,(temp2)
+	movei	#A1_FLAGS,temp2
+	store	temp,(temp2)
+
+;  while (1)                     /* do until end of block */
+;  {
+
+	movei	#loop,outrLp
+loop:
+
+;    NEEDBITS((unsigned)bl)
+	NEEDBITS	bl
+	nop	; GASM macro boundary scheduling bubble
+
+;    if ((e = (t = tl + ((unsigned)b & ml))->e) > 16)
+	move	b,t
+	moveq	#HUFT_SIZE,temp
+	and	ml,t
+	mult	temp,t
+	add	tl,t
+	loadb	(t),e
+	cmp	c17,e
+	jump	MI,(bEndif1)
+	nop
+_CDLOCAL_5_253:
+;      do {
+;        if (e == 99)
+;          return 1;
+;        DUMPBITS(t->b)
+;        e -= 16;
+;        NEEDBITS(e)
+;      } while ((e = (t = t->v.t + ((unsigned)b & mask_bits[e]))->e) > 16);
+
+		movei	#do1,innrLp
+do1:
+		cmp	c99,e
+		jump	EQ,(bReturn)
+		moveq	#1,temp			; used if we return, ignored otherwise
+
+		move	t,temp2
+		addqt	#OFF_B,temp2
+		loadb	(temp2),arg
+		DUMPBITS arg
+		subqt	#16,e
+		NEEDBITS e
+		moveq	#OFF_V_T,temp2
+		add	t,temp2
+		loadw	(temp2),t
+		addqt	#2,temp2
+		loadw	(temp2),temp
+		shlq	#16,t
+		or	temp,t
+		nop	; GASM scheduling: result dependency
+		move	e,temp
+		shlq	#2,temp
+		add	mbits,temp
+		load	(temp),temp
+		moveq	#HUFT_SIZE,temp2
+		and	b,temp
+		mult	temp2,temp
+		add	temp,t
+		loadb	(t),e
+		cmp	c17,e
+		jump	PL,(innrLp)		; goes to do1
+		nop
+endif1:
+;    DUMPBITS(t->b)
+	move	t,temp2
+	addqt	#OFF_B,temp2
+	loadb	(temp2),arg
+	nop
+	DUMPBITS arg
+
+;    if (e == 16)                /* then it's a literal */
+;    {
+;      slide[w++] = (uch)t->v.n;
+;      if (w == WSIZE)
+;      {
+;        flush(w);
+;        w = 0;
+;      }
+;    }
+	nop	; GASM scheduling: preceding DUMPBITS
+	move	e,temp
+	subq	#16,temp
+	jump	NE,(bElse2)
+	nop
+		move	t,temp2;
+		addqt	#OFF_V_N,temp2
+		loadw	(temp2),temp
+		move	w,temp2
+		addqt	#1,w
+		add	slide,temp2
+		storeb	temp,(temp2)
+		cmp	cWSIZE,w
+		jump	NE,(bEndif2)
+		nop
+			FLUSH	w
+			moveq	#0,w
+		jump	(bEndif2)
+		nop
+;    else                        /* it's an EOB or a length */
+;    {
+
+else2:
+;      /* exit if end of block */
+;      if (e == 15)
+;        break;
+
+	cmpq	#15,e
+	jump	EQ,(bBreak)
+	nop
+
+;      /* get length of block to copy */
+;      NEEDBITS(e)
+;      n = t->v.n + ((unsigned)b & mask_bits[e]);
+;      DUMPBITS(e);
+	NEEDBITS e
+	nop	; GASM macro boundary scheduling bubble
+	move	t,temp2
+	addqt	#OFF_V_N,temp2
+	loadw	(temp2),n
+	move	e,temp
+	shlq	#2,temp
+	add	mbits,temp
+	load	(temp),temp
+	and	b,temp
+	add	temp,n
+	DUMPBITS e
+
+;      /* decode distance of block to copy */
+;      NEEDBITS((unsigned)bd)
+	NEEDBITS bd
+
+;      if ((e = (t = td + ((unsigned)b & md))->e) > 16)
+	moveq	#HUFT_SIZE,temp2
+	move	b,t
+	and	md,t
+	mult	temp2,t
+	add	td,t
+	loadb	(t),e
+	cmp	c17,e
+	jump	MI,(bEndif4)
+	nop
+_CDLOCAL_5_370:
+;        do {
+;          if (e == 99)
+;            return 1;
+;          DUMPBITS(t->b)
+;          e -= 16;
+;          NEEDBITS(e)
+;        } while ((e = (t = t->v.t + ((unsigned)b & mask_bits[e]))->e) > 16);
+		movei	#do5,innrLp
+do5:
+		cmp	c99,e
+		jump	EQ,(bReturn)
+		moveq	#1,temp			; used if we return, ignored otherwise
+
+		move	t,temp2
+		addqt	#OFF_B,temp2
+		loadb	(temp2),arg
+		DUMPBITS arg
+		subqt	#16,e
+		NEEDBITS e
+	nop	; GASM macro boundary scheduling bubble
+		move	e,temp2
+		shlq	#2,temp2
+		add	mbits,temp2
+		load	(temp2),temp2
+		and	b,temp2
+		moveq	#HUFT_SIZE,temp
+		mult	temp,temp2
+		nop	; GASM scheduling: multiply pipeline
+		move	t,temp
+		addqt	#OFF_V_T,temp
+		loadw	(temp),t
+		addqt	#2,temp
+		shlq	#16,t
+		loadw	(temp),temp
+		or	temp,t
+		add	temp2,t
+		loadb	(t),e
+		nop
+		cmp	c17,e
+		jump	PL,(innrLp)		; do5
+		nop
+		
+
+endif4:
+;      DUMPBITS(t->b)
+;      NEEDBITS(e)
+
+	move	t,temp
+	addqt	#OFF_B,temp
+	loadb	(temp),arg
+	DUMPBITS arg
+	NEEDBITS e
+	nop	; GASM macro boundary scheduling bubble
+
+;      d = w - t->v.n - ((unsigned)b & mask_bits[e]);
+	move	w,d
+	move	t,temp2
+	addqt	#OFF_V_N,temp2
+	loadw	(temp2),temp2
+	sub	temp2,d
+	nop	; GASM scheduling: distance dependency
+	move	e,temp2
+	shlq	#2,temp2
+	add	mbits,temp2
+	load	(temp2),temp2
+	and	b,temp2
+	sub	temp2,d
+
+;      DUMPBITS(e)
+	DUMPBITS e
+
+;      /* do the copy */
+;      do {
+	movei	#do6,innrLp
+do6:
+;	d &= WSIZE-1;
+	move	cWSIZE,temp
+	subqt	#1,temp
+	and	temp,d
+	nop	; GASM scheduling: mask dependency
+;	e = WSIZE;
+	move	cWSIZE,e
+;	if (d > w)
+;		e -= d;
+;	else
+;		e -= w;
+	cmp	w,d
+	jr	PL,_CDLOCAL_10_456
+	move	d,temp
+		move	w,temp
+_CDLOCAL_10_456:
+	nop
+	sub	temp,e
+
+;	if (e > n)
+;		e = n;
+	cmp	n,e
+	jr	MI,_CDLOCAL_20_466
+	nop
+		move	n,e
+_CDLOCAL_20_466:
+;	n -= e;
+	sub	e,n	
+	nop	; GASM scheduling: subtract dependency
+	
+	move	slide,temp
+	move	slide,temp2
+	add	d,temp
+	add	w,temp2 
+do7:
+
+;          do {
+;            slide[w++] = slide[d++];
+;          } while (--e);
+		loadb	(temp),arg
+		addqt	#1,temp
+		addqt	#1,d
+		storeb	arg,(temp2)
+		addqt	#1,temp2
+		addqt	#1,w
+		subq	#1,e
+		jr	NE,do7
+		nop
+
+;        if (w == WSIZE)
+;        {
+;          flush(w);
+;          w = 0;
+;        }
+	cmp	cWSIZE,w
+.if 1
+	movei	#nofls,temp2
+	jump	NE,(temp2)
+.else
+	jr	NE,nofls
+.endif
+	nop
+		FLUSH	w
+		moveq	#0,w
+nofls:
+
+;      } while (n);
+	cmpq	#0,n
+	jump	NE,(innrLp)		; do6
+	nop
+
+;    }
+;  }
+	
+endif2:
+	jump	(outrLp)
+	nop
+
+break1:
+;  /* restore the globals from the locals */
+;  wp = w;                       /* restore global window pointer */
+;  bb = b;                       /* restore global bit buffer */
+;  bk = k;
+	movei	#INP_BB,temp2
+	store	b,(temp2)
+	addqt	#4,temp2
+	store	k,(temp2)
+	addqt	#4,temp2
+	store	w,(temp2)
+	addqt	#4,temp2
+	store	inptr,(temp2)
+	addqt	#4,temp2
+	store	outptr,(temp2)
+
+;  return 0
+	moveq	#0,temp
+return:
+	movei	#OUTP_RET,temp2
+	store	temp,(temp2)
+
+; stop the GPU
+	movei	#$8,r30
+	movei	#G_CTRL,r31
+	store	r30,(r31)
+	nop
+	nop
+	nop
+	nop
+
+
+	.align 4
+
+mask_bits:
+	dc.w	$0000,$0000,$0000,$0001,$0000,$0003,$0000,$0007
+	dc.w	$0000,$000F,$0000,$001F,$0000,$003F,$0000,$007F
+	dc.w	$0000,$00FF,$0000,$01FF,$0000,$03FF,$0000,$07FF
+	dc.w	$0000,$0FFF,$0000,$1FFF,$0000,$3FFF,$0000,$7FFF
+	dc.w	$0000,$FFFF
+

@@ -1,0 +1,13 @@
+
+.SUFFIXES: .mdl .bnd .asc
+
+.bnd.mdl:
+	bnd2mdl -flip $*.bnd $*.mdl
+
+.asc.mdl:
+	mkbnd $*.asc arena.clr -t 40
+	findbg $*.bnd $*.bnd
+	bnd2mdl -flip $*.bnd $*.mdl
+.asc.bnd:
+	mkbnd $*.asc arena.clr -t 40
+	findbg $*.bnd $*.bnd

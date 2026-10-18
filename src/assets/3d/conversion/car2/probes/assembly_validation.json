@@ -1,0 +1,29 @@
+{
+  "scope": "Only standalone native CARS/CAR2.MDL; no cartridge patching or gameplay testing",
+  "rmac_accepted_both": true,
+  "baseline_text_bytes": 2772,
+  "edited_text_bytes": 2840,
+  "delta_bytes": 68,
+  "model_data_base": 124,
+  "original_color_bytes": 256,
+  "new_point": [
+    0,
+    20,
+    -36
+  ],
+  "new_normal": [
+    0,
+    32767,
+    0
+  ],
+  "new_divider": [
+    94,
+    31
+  ],
+  "original_cp2_leaf_offset": 676,
+  "edited_cp2_leaf_offset": 710,
+  "original_tree_nodes": 3,
+  "edited_tree_nodes": 3,
+  "original_sha256": "529acb6caed4a83a6e2f8796b60e663f102f331c6a39f2f2b2c61f76cdbe97f6",
+  "edited_sha256": "60e38ef630aa9d3030db3472bf201f897d56ddc21f6bbc7c31f79d11772a89be"
+}

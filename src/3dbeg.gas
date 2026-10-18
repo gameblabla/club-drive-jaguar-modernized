@@ -1,0 +1,123 @@
+;----------------------------------------------------------------------------
+;	3dbeg.gas
+;
+;----------------------------------------------------------------------------
+
+	include "jaguar.inc"
+	include "blit.inc"
+
+; manual link data
+	include "68kequ.inc"
+	include "3d.inc"
+
+
+; global register defines
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+return	REGEQU	R31
+
+; global alternate register defines
+ALTgpudo	REGEQU	R24
+ALTa1base	REGEQU	R25
+ALTa2base	REGEQU	R26
+ALTplayer 	REGEQU	R27
+ALTa1step	REGEQU	R28
+ALTa2step	REGEQU	R29
+ALTdivctrl	REGEQU	R30
+ALTbcmd		REGEQU	R31
+
+	ORG	Overlay
+	; can use up to 3fac (described in 3dds.inc)
+
+	include "3dds.inc"
+
+
+	include	"time.gas"
+
+	MACRO nopCity
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+	ENDM
+	MACRO cutItOut
+		moveq	#@1, temp2
+		movei	#(SEMAPHORE+8), innerLoop
+		movei	#thatsAllFolks, temp
+		jump		(temp)
+		store	temp2, (innerLoop)
+	ENDM
+
+; code start ----------------------------------------------------------------
+	SaveTimer	0
+
+	StartTimer	4
+	movei	#player,temp2
+	load	(temp2),temp2
+	movei	#G_DIVCTRL,temp
+	or	temp2,temp2
+	moveta	temp2,ALTplayer
+	moveta	temp,ALTdivctrl
+	moveq	#0,temp2
+	store	temp2,(temp)		; set G_DIVCTRL to default to integer division
+	movei	#B_CMD,temp2
+	moveta	temp2,ALTbcmd
+	movei	#A1_STEP,temp
+	movei	#A2_STEP,temp2
+	moveta	temp,ALTa1step
+	moveta	temp2,ALTa2step
+	movei	#A1_BASE,temp
+	movei	#A2_BASE,temp2
+	moveta	temp,ALTa1base
+	moveta	temp2,ALTa2base
+
+	movei	#gpu_do,temp
+	loadw	(temp),temp
+	or	temp,temp
+	moveta	temp,ALTgpudo
+	nop
+
+	include	"utime.gas"
+;
+; see if we're really supposed to render
+;
+	movefa	ALTgpudo,temp
+	movei	#thatsAllFolks,temp2
+	btst	#0,temp
+	jump	EQ,(temp2)
+	nop
+
+	include	"sky1.gas"
+	include	"portrot.gas"
+	include "othcarrt.gas"
+;;;	include	"sky2.gas"
+	include	"ortho.gas"
+
+	SaveTimer	4
+
+; jump to the first part of the renderer (the computations)
+		movei	#pcprog,temp
+		movei	#loadIt, temp2
+		jump		(temp2)
+		nop
+
+; halt the GPU --------------------------------------------------------------
+thatsAllFolks:
+; stolen code
+		movei	#G_CTRL, temp2
+		load		(temp2), temp
+		bclr #0, temp
+		bset #1, temp
+		store	temp, (temp2)
+
+_CDLOCAL_10_119:	jr	_CDLOCAL_10_119
+		nop
+
+

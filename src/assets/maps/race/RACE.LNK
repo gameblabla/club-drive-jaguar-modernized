@@ -1,0 +1,254 @@
+#name: race1
+#camera cam1
+#props
+SOUND: -1
+#links
+ground
+race15
+race16a
+race16b
+race2
+race1
+
+#name: race2
+#camera cam2
+#links
+ground
+race15
+race16a
+race16b
+race4
+race1
+race3b
+race3a
+race2
+
+#name: race3a
+#links
+ground
+race6
+race5b
+race5a
+race2
+race4
+race3b
+race3a
+
+#name: race3b
+#links
+ground
+race6
+race5b
+race5a
+race2
+race4
+race3a
+race3b
+
+#name: race4
+#links
+ground
+race2
+race3a
+race3b
+race5b
+race5a
+race4
+
+#name: race5a
+#links
+ground
+race4
+race6
+race5b
+race5a
+
+#name: race5b
+#links
+ground
+race4
+race6
+race5a
+race5b
+
+#name: race6
+#links
+ground
+race8
+race5a
+race5b
+race7b
+race7a
+race6
+
+#name: race7a
+#links
+ground
+race5a
+race5b
+race6
+race8
+race7b
+race7a
+
+#name: race7b
+#links
+ground
+race5a
+race5b
+race6
+race8
+race7a
+race7b
+
+#name: race8
+#camera cam8
+#links
+ground
+race7a
+race7b
+race9
+race8
+
+#name: race9
+#camera cam9
+#props
+SOUND: -2
+#links
+ground
+race12b
+race12a
+race11
+race8
+race10b
+race10a
+race9
+
+#name: race10a
+#links
+ground
+race13
+race12b
+race12a
+race9
+race11
+race10b
+race10a
+
+#name: race10b
+#links
+ground
+race13
+race12b
+race12a
+race9
+race11
+race10a
+race10b
+
+#name: race11
+#camera cam11
+#links
+ground
+race9
+race14b
+race14a
+race13
+race10a
+race10b
+race12b
+race12a
+race11
+
+#name: race12a
+#links
+ground
+race14b
+race14a
+race11
+race13
+race12b
+race12a
+
+#name: race12b
+#links
+ground
+race16b
+race15
+race14b
+race14a
+race11
+race13
+race12a
+race12b
+
+#name: race13
+#links
+ground
+race11
+race15
+race12a
+race12b
+race14b
+race14a
+race13
+
+#name: race14a
+#links
+ground
+race12a
+race12b
+race1
+race16b
+race16a
+race13
+race15
+race14b
+race14a
+
+#name: race14b
+#links
+ground
+race12a
+race12b
+race1
+race16b
+race16a
+race13
+race15
+race14a
+race14b
+
+#name: race15
+#links
+ground
+race12b
+race13
+race1
+race14a
+race14b
+race16b
+race16a
+race15
+
+#name: race16a
+#links
+ground
+race14a
+race14b
+race2
+race15
+race1
+race16b
+race16a
+
+#name: race16b
+#links
+ground
+race14a
+race14b
+race2
+race15
+race1
+race16a
+race16b

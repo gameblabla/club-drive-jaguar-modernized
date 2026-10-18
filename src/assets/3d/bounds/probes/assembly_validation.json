@@ -1,0 +1,31 @@
+{
+  "scope": "Standalone BND intermediate only. Not linked into ROM; no collision runtime parity claim.",
+  "assembler_pass": true,
+  "original_size_bytes": 2638,
+  "edited_size_bytes": 2704,
+  "size_delta_bytes": 66,
+  "native_table_offsets_original": {
+    "dividers": 12,
+    "edges": 228,
+    "points": 800,
+    "normals": 1364,
+    "colors": 1550,
+    "tris": 1806
+  },
+  "native_table_offsets_edited": {
+    "dividers": 12,
+    "edges": 232,
+    "points": 820,
+    "normals": 1390,
+    "colors": 1582,
+    "tris": 1838
+  },
+  "retained_original_points": 94,
+  "retained_original_normals": 31,
+  "retained_color_bytes": 256,
+  "added_edges": 4,
+  "changed_cp_surface_bytes": 34,
+  "plane_area_error": 0.0,
+  "original_sha256": "12e855f515f454a5e7dd277d275783bca457fd23bb77acce0da00b45030980d7",
+  "edited_sha256": "be43763b7091134b1614609c46a6bf9a2a7be03f67b1c81d7ce4421b5b6cbf5c"
+}

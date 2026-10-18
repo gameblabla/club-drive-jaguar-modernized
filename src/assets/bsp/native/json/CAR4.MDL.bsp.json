@@ -1,0 +1,70 @@
+{
+  "schema": "club-bsp",
+  "source_model": "CAR4.MDL",
+  "source_template_sha256": "8360f0cbfcda96a19cabfa437c805b337e2494cfc0f16c5cd3481dc7ddf428c7",
+  "provenance": "2026 symbolic reconstruction from surviving original .MDL tree comments and header",
+  "limitations": [
+    "BSP splitter selection and polygon repartitioning are NOT derived from 3D geometry",
+    "Only existing node types and record sizes are editable",
+    "Leaves reference offsets of existing collision polygon lists, not vertex IDs"
+  ],
+  "valid_cp_offsets": {
+    "0": 0,
+    "2": 1,
+    "590": 2,
+    "676": 3
+  },
+  "divider_count": 40,
+  "nodes": [
+    {
+      "offset": 0,
+      "type": "split",
+      "divider": 39,
+      "first_child": 32,
+      "second_child": 8,
+      "line": 409
+    },
+    {
+      "offset": 8,
+      "type": "split",
+      "divider": 38,
+      "first_child": 24,
+      "second_child": 16,
+      "line": 411
+    },
+    {
+      "offset": 16,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 2,
+      "line": 413,
+      "long_line": 414
+    },
+    {
+      "offset": 24,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 676,
+      "line": 416,
+      "long_line": 417
+    },
+    {
+      "offset": 32,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 590,
+      "line": 419,
+      "long_line": 420
+    }
+  ],
+  "statistics": {
+    "nodes": 5,
+    "splits": 2,
+    "leaves": 3,
+    "cp_indices": [
+      2,
+      3,
+      1
+    ]
+  }
+}

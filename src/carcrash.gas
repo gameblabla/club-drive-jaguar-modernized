@@ -1,0 +1,262 @@
+;
+; car-car collision stuff
+; how it works:
+; our middle struts (see car.dat) provide a
+; bounding box for our car; we compare
+; all of the other car's (transformed) points
+; to that box, to see if a collision happened.
+; This only needs to be done, obviously, if
+; the cars are close
+;
+	CAR_RSHFT	EQU	4
+
+thePlayer	REGEQU	R0
+otherPlayer	REGEQU	R1
+maxx		REGEQU	R2		; max, min for car bounding box (our car)
+minx		REGEQU	R3
+maxy		REGEQU	R4
+miny		REGEQU	R5
+maxz		REGEQU	R7
+minz		REGEQU	R8
+points		REGEQU	R9		; pointer to other car's tPNTS
+count		REGEQU	R10		; counter for other car's points
+ox		REGEQU	R11		; our X,Y,Z
+oy		REGEQU	R12
+oz		REGEQU	R13
+tx		REGEQU	R14		; their X,Y,Z
+ty		REGEQU	R15
+tz		REGEQU	R16
+botloop		REGEQU	R17		; branch address
+doneIT		REGEQU	R18		; branch address
+ourvel		REGEQU	R19		; pointer to our CAR_VELOCITY
+theirvel	REGEQU	R20		; pointer to their CAR_VELOCITY
+nx		REGEQU	R21		; normal vector (difference between our position and theirs)
+ny		REGEQU	R22
+nz		REGEQU	R23
+exp		REGEQU	R24		; exponent for fixed point arithmetic
+
+; r27-r31 reserved for global variables
+
+.if TAGGAME
+
+	movei	#bailout,doneIT
+	movefa	ALTplayer,thePlayer
+
+	movei	#(PLAYER1^PLAYER2),otherPlayer
+	xor	thePlayer,otherPlayer
+
+	move	thePlayer,temp2
+	load	(temp2),ox
+	addqt	#4,temp2
+	load	(temp2),oy
+	addqt	#4,temp2
+	load	(temp2),oz
+
+	move	otherPlayer,temp2
+	load	(temp2),nx
+	addqt	#4,temp2
+	load	(temp2),ny
+	addqt	#4,temp2
+	load	(temp2),nz
+
+; translate the other car's origin to our space
+	sub	ox,nx
+	sub	oy,ny
+	sub	oz,nz
+
+; find approximate distance
+	move	nx,temp
+	move	ny,temp2
+	abs	temp
+	abs	temp2
+	add	temp,temp2
+	move	nz,temp
+	abs	temp
+	add	temp,temp2
+
+	movei	#$140000,temp		; compare to roughly 400
+	cmp	temp,temp2
+	jump	PL, (doneIT)
+	nop
+
+maybecrash:
+
+	movei	#CAR_MODEL,temp2
+	add	otherPlayer,temp2
+	load	(temp2),temp2		; get a pointer to the other guy's car model
+	moveq	#NUM_PNTS,temp
+	add	temp2,temp
+	loadw	(temp),count
+	movei	#ROTPNT_LIST,temp
+	add	temp2,temp
+	load	(temp),points		; get pointer to other guy's rotated points
+
+	movei	#car_dat,temp2		; get our bounding box
+
+	addqt	#4,temp2		; point to first Z
+	loadw	(temp2),minz
+	addqt	#6,temp2
+	loadw	(temp2),maxz
+	addqt	#2,temp2
+	loadw	(temp2),minx
+	addqt	#6,temp2
+	loadw	(temp2),maxx
+	addqt	#8,temp2
+	loadw	(temp2),miny
+	addqt	#6,temp2
+	loadw	(temp2),maxy
+
+; sign extend everything
+	shlq	#16,minz
+	shlq	#16,maxz
+	sharq	#CAR_RSHFT,minz
+	sharq	#CAR_RSHFT,maxz
+	shlq	#16,minx
+	shlq	#16,maxx
+	sharq	#CAR_RSHFT,minx
+	sharq	#CAR_RSHFT,maxx
+	shlq	#16,miny
+	shlq	#16,maxy
+	sharq	#CAR_RSHFT,miny
+	sharq	#CAR_RSHFT,maxy
+
+; translate the bounding box to the other player's coordinates
+	add	nx,minx
+	add	nx,maxx
+	add	ny,miny
+	add	ny,maxy
+	add	nz,minz
+	add	nz,maxz
+
+; add a fudge factor
+.if 0
+	movei	#$00008000,temp
+.else
+	moveq	#1,temp
+	shlq	#16,temp
+.endif
+	sub	temp,minx
+	sub	temp,miny
+	sub	temp,minz
+	add	temp,maxx
+	add	temp,maxy
+	add	temp,maxz
+
+	movei	#chkbot,botloop
+.if 0
+	movei	#chkloop,innerLoop
+.else
+	move	PC,innerLoop
+.endif
+
+chkloop:
+	loadw	(points),tx
+	addqt	#2,points
+	loadw	(points),ty
+	addqt	#2,points
+	loadw	(points),tz
+	addqt	#2,points
+	shlq	#16,tx			; sign extend point
+	shlq	#16,ty
+	shlq	#16,tz
+	sharq	#CAR_RSHFT,tx
+	sharq	#CAR_RSHFT,ty
+	sharq	#CAR_RSHFT,tz
+
+	cmp	minx,tx
+	jump	MI,(botloop)
+	cmp	tx,maxx
+	jump	MI,(botloop)
+	cmp	miny,ty
+	jump	MI,(botloop)
+	cmp	ty,maxy
+	jump	MI,(botloop)
+	cmp	minz,tz
+	jump	MI,(botloop)
+	cmp	tz,maxz
+	jump	MI,(botloop)
+	nop
+;
+; a collision occured here!!
+;
+
+;
+; see if the other guy can tag us
+;
+	movefa	ALTwaittime,temp
+	add	otherPlayer,temp
+	load	(temp),temp2
+	movei	#itCar,temp
+	cmpq	#0,temp2
+	jump	NE,(doneIT)		; nope, no tags allowed
+	nop
+
+	movei	#itCar,botloop
+	load	(botloop),temp
+	nop
+
+	move	temp,temp2
+	xor	thePlayer,temp2
+	xor	otherPlayer,temp2	; flip the "itcar"
+	store	temp2,(botloop)		; save new "itcar"
+
+	move	temp,otherPlayer	; "otherPlayer" is now the guy who has to do the chasing
+
+	move	otherPlayer,temp2
+	addqt	#CAR_VELOCITY,temp2
+	moveq	#0,temp			; zero taggee's velocity
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	movefa	ALTwaittime,temp2
+	add	otherPlayer,temp2
+	movei	#600,temp
+	store	temp,(temp2)		; a 2 second delay
+
+	cmp	thePlayer,otherPlayer	; were we the one tagged?
+	movei	#thatsAllFolks,temp2
+	jump	EQ,(temp2)		; yes: time to stop everything!
+	nop
+
+	jump	(doneIT)
+	nop
+
+	jr	bailout
+	nop
+
+chkbot:
+	subqt	#1,count
+	jump	PL,(innerLoop)
+	nop
+
+bailout:
+
+; end of TAGGAME stuff
+.endif
+
+REGUNDEF	thePlayer
+REGUNDEF	otherPlayer
+REGUNDEF	maxx
+REGUNDEF	minx
+REGUNDEF	maxy
+REGUNDEF	miny
+REGUNDEF	maxz
+REGUNDEF	minz
+REGUNDEF	points
+REGUNDEF	count
+REGUNDEF	ox
+REGUNDEF	oy
+REGUNDEF	oz
+REGUNDEF	tx
+REGUNDEF	ty
+REGUNDEF	tz
+REGUNDEF	loopend
+REGUNDEF	doneIT
+REGUNDEF	ourvel
+REGUNDEF	theirvel
+REGUNDEF	nx
+REGUNDEF	ny
+REGUNDEF	nz
+REGUNDEF	exp

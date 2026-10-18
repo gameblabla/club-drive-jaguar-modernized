@@ -1,0 +1,85 @@
+{
+  "rom_offset_start": "0x13574",
+  "rom_offset_end": "0x1d000",
+  "rom_load_start": "0x813574",
+  "assembled_bytes": 39564,
+  "exact_matching_bytes": 39564,
+  "sha256": "0b14f610e6f55dd67a6f734bbabf0f0ce01d211a2bcd76affaae43cd55fab5fb",
+  "gpu_source_containers": [
+    {
+      "gpu": "3d",
+      "retail_offset": 79224,
+      "bytes": 54,
+      "sha256": "1de1684d7e24f490514179e14e270a17ab2fc0541e0a6866870e2c5aa06ddac9"
+    },
+    {
+      "gpu": "casbeg",
+      "retail_offset": 79280,
+      "bytes": 2696,
+      "sha256": "378a259249131ab2cd89150c21b0869318c9f2bd7ae0c1beb6dc551db27e27fe"
+    },
+    {
+      "gpu": "tagbeg",
+      "retail_offset": 81976,
+      "bytes": 1872,
+      "sha256": "b4e3061e973b329434fdf33a7a56c388d57af726078093cb0d51e43f3476dbac"
+    },
+    {
+      "gpu": "racbeg",
+      "retail_offset": 83848,
+      "bytes": 2460,
+      "sha256": "9f9fd89e8330e28246733ad4488fca0ae0dd3f96335cd3f2acabbe3696a422bf"
+    },
+    {
+      "gpu": "comp",
+      "retail_offset": 86312,
+      "bytes": 3662,
+      "sha256": "2b32f1e2312a71e7c666becefc4fc21512dd431e65b6a12df0096c730edb90ba"
+    },
+    {
+      "gpu": "ren",
+      "retail_offset": 89976,
+      "bytes": 3758,
+      "sha256": "d2cc5bae9d30e8727632582f7d4ba3a904684fc456deb2a2da97104d8bc27be4"
+    },
+    {
+      "gpu": "casend",
+      "retail_offset": 93736,
+      "bytes": 3710,
+      "sha256": "201fffad5668ed462f0f53e20f96a575e29983ab2b4c86f264c82a2f06f639f3"
+    },
+    {
+      "gpu": "tagend",
+      "retail_offset": 97448,
+      "bytes": 3838,
+      "sha256": "8b7a130d0559895eeb96c846ce0f4fa93b417973c8251258bcc61a580af3f667"
+    },
+    {
+      "gpu": "racend",
+      "retail_offset": 101288,
+      "bytes": 3774,
+      "sha256": "a2dcaff142aebb8925c1367002c1851b601856af2cc8d5ea190a4ccdede3aa35"
+    },
+    {
+      "gpu": "gpunzip",
+      "retail_offset": 105064,
+      "bytes": 968,
+      "sha256": "cc2996db84df2b4e85e3da1735e05cd02bef8bdeb4fc08e6549ecc33de27ac9c"
+    },
+    {
+      "gpu": "precomp",
+      "retail_offset": 106032,
+      "bytes": 2740,
+      "sha256": "6f706aae9db76e37b89b525d1303f018b242dfee366bb9e3cf0ed3cb82f6f594"
+    },
+    {
+      "gpu": "preren",
+      "retail_offset": 108776,
+      "bytes": 1310,
+      "sha256": "371920d491867aa79991563857de4b7b1abb3efc9b22f2cb9c6c80571eb2f07d"
+    }
+  ],
+  "68000_rom_disassembled_bytes": 8696,
+  "instruction_annotations": 2567,
+  "caveat": "Separate release-layout block; not yet linked into the bootable ROM; 68000 instructions retained as dc.w and comments. Internal absolute addresses need symbolic relocation before moving code."
+}

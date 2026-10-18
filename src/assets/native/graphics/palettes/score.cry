@@ -1,0 +1,3 @@
+; Recovered from original retail ROM offset $0E9FA4-$0EA070
+scoreb::
+	.incbin "assets/native/rom/fragments/score.bin"

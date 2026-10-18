@@ -1,0 +1,61 @@
+{
+  "polygons": 62,
+  "points": 91,
+  "normals": 32,
+  "dividers": 41,
+  "changed_original_points": 0,
+  "changed_original_normals": 0,
+  "changed_original_dividers": 0,
+  "added_edges": 4,
+  "cp_delta_bytes": 34,
+  "tree_delta_bytes": 68,
+  "compiled_nodes": 5,
+  "new_pointers": {
+    "dividers": 0,
+    "edges": 164,
+    "points": 732,
+    "tris": 1470,
+    "end of tris": 2334,
+    "tree": 2336,
+    "calculated colors": 2376
+  },
+  "cp_offsets": {
+    "0": 0,
+    "1": 2,
+    "2": 624,
+    "3": 710
+  },
+  "source": "CARS/CAR3.BND",
+  "native_target": "CARS/CAR3.MDL",
+  "source_group": 1,
+  "source_index": 1,
+  "runtime_cp": 1,
+  "runtime_index": 0,
+  "original_area": 13951.5,
+  "edited_area": 13951.5,
+  "area_error": 0.0,
+  "verified_unedited_correspondence": 58,
+  "original_merged_faces_preserved": true,
+  "original_tree_node_count": 5,
+  "link_into_game": false,
+  "scope": "Standalone source-to-native geometry authoring only",
+  "source_bnd_sha256": "fcfa2cbd59804700454a5a2516f86fca99d62a1af65939bfd8a54f7c9caaf7f2",
+  "native_mdl_sha256": "8e7c03daf965192af542ef4d7c58ff2fffa021178a0b6f6690e899e577d3c85d",
+  "source_added_edges": 4,
+  "output_hashes": {
+    "CAR3_edited.BND": "fcfa2cbd59804700454a5a2516f86fca99d62a1af65939bfd8a54f7c9caaf7f2",
+    "CAR3_edited.geometry.json": "3a47edd2fde759685d466028a1a1cfd69cac124f24d462d568491d2b6a081079",
+    "CAR3_from_BND.MDL": "8e7c03daf965192af542ef4d7c58ff2fffa021178a0b6f6690e899e577d3c85d",
+    "CAR3_runtime.geometry.json": "7e198593b33f0219962abd8780f5c630a9129683f8c5d13cb34d7c7297bdc07a"
+  },
+  "new_source_point": [
+    0,
+    20,
+    36
+  ],
+  "new_native_point": [
+    0,
+    20,
+    -36
+  ]
+}

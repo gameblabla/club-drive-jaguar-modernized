@@ -1,0 +1,62 @@
+;----------------------------------------------------------------------------
+;	3d.gas
+;
+;----------------------------------------------------------------------------
+
+;	DATA_FORMAT		MOTOROLA
+
+	include "jaguar.inc"
+	include "blit.inc"
+
+; manual link data
+.globl	loadIt
+	include "68kequ.inc"
+
+; global register defines
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+return	REGEQU	R31
+
+	ORG	G_RAM
+
+; code start ----------------------------------------------------------------
+	; load starting routines
+	movei	#bgpprog, temp
+	movei	#loadIt, temp2
+	jump		(temp2)
+	nop
+
+;----------------------------------------------------------------------------
+; blit memory into gpu ram and jump to it
+;	temp - contains address of included gpu file
+;	       (it must be a .bin file, we use the header)
+
+length	REGEQU	R4
+data		REGEQU	R5
+command	REGEQU	R11	; B_CMD
+
+
+loadIt:
+;		movei	#B_CMD,	command
+;		waitForBlitter
+
+		load		(temp), temp2	; get destination address
+		addqt	#4, temp
+		move		temp2, return
+		load		(temp), length	; load length
+		addqt	#4, temp
+
+		addqt	#4, length	; round to word length
+		shrq		#2, length
+
+_CDLOCAL_10_52:
+		load		(temp), data
+		store	data, (temp2)
+		subq		#1, length
+		addqt	#4, temp2
+		jr		PL, _CDLOCAL_10_52
+		addqt	#4, temp
+
+		jump		(return)
+		nop

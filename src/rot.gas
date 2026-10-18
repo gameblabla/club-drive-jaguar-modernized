@@ -1,0 +1,295 @@
+; Rotation Matrix Multiply
+
+	.include "rot.inc"
+;;- Rotation register defines ----------------------------------------------
+;
+;; rotation matrix
+;m0		REGEQU	R0	; matrix[0]		| m0 m1 m2 |
+;m1		REGEQU	R1	; matrix[1]		| m3 m4 m5 |
+;m2		REGEQU	R2	; matrix[2]		| m6 m7 m8 |
+;m3		REGEQU	R3	; matrix[3]
+;m4		REGEQU	R4	; matrix[4]
+;m5		REGEQU	R5	; matrix[5]
+;m6		REGEQU	R6	; matrix[6]
+;m7		REGEQU	R7	; matrix[7]
+;m8		REGEQU	R8	; matrix[8]
+;
+;xo		REGEQU	R9	; origin coords for translation
+;yo		REGEQU	R10
+;zo		REGEQU	R11
+;
+;; computed data
+;resultX	REGEQU	R12
+;resultY	REGEQU	R13
+;resultZ	REGEQU	R14
+;
+;; pointers
+;source	REGEQU	R15
+;dest		REGEQU	R16
+;dest2	REGEQU	R17
+;dest3	REGEQU	R18
+;numPnts	REGEQU	R19
+;
+;x		REGEQU	R20	; original data
+;y		REGEQU	R21
+;z		REGEQU	R22
+;
+;xaz		REGEQU	R20	; edge computed data
+;yaz		REGEQU	R21
+;ze		REGEQU	R22
+;
+;rightSd	REGEQU	R23	; slopes of the edge of the view cone
+;bottomSd	REGEQU	R24
+;
+;dataHi	REGEQU	R25
+;sectors	REGEQU	R26
+;
+;;innerLoop	REGEQU	R27
+;
+;;---------------------------------------------------------------------------
+
+	; read in rotation matrix (optimize for space)
+	movefa	ALTeyex,xo
+	movefa	ALTeyey,yo
+	movefa	ALTeyez,zo
+;		sharq	#12, xo
+;		sharq	#12, yo
+;		sharq	#12, zo
+
+	movefa	ALTxrite,m0
+	movefa	ALTyrite,m1
+	movefa	ALTzrite,m2
+
+	movefa	ALTxdown,m3
+	movefa	ALTydown,m4
+	movefa	ALTzdown,m5
+
+	movefa	ALTxhead,m6
+	movefa	ALTyhead,m7
+	movefa	ALTzhead,m8
+
+	movei	#matLoop, innerLoop
+	movefa	ALTband,temp2
+	movei	#ROTPNT_LIST, temp
+	add	temp2,temp
+	load		(temp), source
+.if 0
+	movei	#tPNTS, dest
+	add	temp2,dest
+	load	(dest),dest
+.else
+	movefa	ALTtpntbase,dest
+.endif
+	movei	#NUM_PNTS, temp
+	add	temp2,temp
+	loadw	(temp), numPnts
+
+	; take into account the origin of the .bnd
+	movei	#XORIG,temp
+	add	temp2,temp
+	load	(temp),dest2		; don't need dest2 yet, so use it as scratch...
+	addqt	#4,temp
+	sub	dest2,xo
+	load	(temp),dest2
+	addqt	#4,temp
+	sub	dest2,yo
+	load	(temp),dest2
+	sub	dest2,zo
+
+.if 0
+	; compute rightSd, bottomSd
+	movei	#18927, rightSd
+	movei	#5619, bottomSd
+;	movei	#18151, rightSd
+;	movei	#8245, bottomSd
+.else
+	movei	#SIDES,bottomSd			; sides depend on number of players
+	load	(bottomSd),rightSd
+	addqt	#4,bottomSd
+	load	(bottomSd),bottomSd
+.if DOSCALE
+	sharq	#1,rightSd
+	sharq	#1,bottomSd
+.endif
+.endif
+
+	; compute the 3 starting dests
+	move		dest, dest2
+	move		dest, dest3
+	subqt	#32, dest
+	subqt	#24, dest2
+	subqt	#16, dest3
+
+	; shift to 18.14 with sign extend
+;	shlq		#16, xo
+;	shlq		#16, yo
+;	shlq		#16, zo
+;	sharq	#2, xo
+;	sharq	#2, yo
+;	sharq	#2, zo
+
+	movei	#G_HIDATA, dataHi
+	loadw	(source), x
+matLoop:
+	; get data
+	addqt	#32, dest
+	addqt	#2, source
+	addqt	#32, dest2
+	loadw	(source), y
+	addqt	#2, source
+	addqt	#32, dest3
+	loadw	(source), z
+
+	; subtract car posn
+	shlq		#16, x
+	shlq		#16, y
+	sharq	#4, x
+	sharq	#4, y
+	sub		xo, x
+	sub		yo, y
+	shlq		#16, z
+	sharq	#4, z
+	sub		zo, z
+	; make 16 bits
+	move		x, temp
+	abs		temp
+	move		y, temp2
+	abs		temp2
+	or		temp2, temp
+	move		z, temp2
+	abs		temp2
+	or		temp2, temp
+	normi	temp, temp2
+	addqt	#9, temp2
+;	moveq	#12, temp2	
+	sha		temp2, x
+	sha		temp2, y
+	sha		temp2, z
+	neg		temp2
+	addqt	#12, temp2
+
+	; do multiply
+	imultn	m3, x	;
+	imacn	m4, y	;
+	imacn	m5, z	;
+	resmac	resultY	;
+	sha		temp2, resultY	; back to 17.15
+	addqt	#2, source
+;	add		yo, resultY	; translate
+	store	resultY, (dataHi)
+
+	imultn	m0, x	;
+	imacn	m1, y	;
+	imacn	m2, z	;
+	resmac	resultX	;
+	sha		temp2, resultX	; back to 17.15
+;	add		xo, resultX	; translate
+	storep	resultX, (dest)
+
+	imultn	m6, x	;
+	imacn	m7, y	;
+	imacn	m8, z	;
+	resmac	resultZ	;
+	sha		temp2, resultZ	; back to 17.15
+;	add		zo, resultZ	; translate
+
+	move		resultZ, yaz	; for normi only
+	move		resultZ, xaz
+	abs		yaz
+	normi	yaz, ze
+	addq		#9, ze		; leave one for sign bit
+	sha		ze, xaz
+	neg		ze
+	move		xaz, yaz
+.if DOSCALE
+	addqt	#14,ze
+.else
+	addqt	#15, ze		; add exp of Sd's
+.endif
+	imult	rightSd, xaz
+	imult	bottomSd, yaz
+
+	sha		ze, xaz		; align with resultX, Y
+	sha		ze, yaz
+	; set sectors
+	cmp		resultX, xaz
+	moveq	#0, sectors
+	jr		PL, noRight
+	neg		xaz
+	bset		#RIGHT_EDGE, sectors
+noRight:
+	cmp		xaz, resultX
+	jr		PL, noLeft
+	neg		xaz
+	bset		#LEFT_EDGE, sectors
+noLeft:
+	cmp		resultY, yaz
+	jr		PL, noBottom
+	neg		yaz
+	bset		#BOTTOM_EDGE, sectors
+noBottom:
+	cmp		yaz, resultY 
+	jr		PL, noTop
+	neg		yaz
+	bset		#TOP_EDGE, sectors
+noTop:
+
+	store	resultZ, (dataHi)
+	storep	sectors, (dest2)
+
+	store	yaz, (dataHi)
+	subq		#1, numPnts
+	storep	xaz, (dest3)
+	jump		NE, (innerLoop)
+	loadw	(source), x
+
+; vector section -----------------------------------------------------------
+	cmp x,x	; wait for last load
+
+	movefa	ALTband,temp2
+	movei	#tVECTORS, dest
+	add	temp2,dest
+	load	(dest), dest
+	movei	#NUM_VECTORS, temp
+	add	temp2,temp
+	loadw	(temp), numPnts
+	JSR_ROT
+
+	.include	"rotc.inc" ; register cleanup
+
+;-------------------------------------------------------------------
+; this is a test
+;	phrase read
+;		loadp	(source), x	; memory access #1 -----------
+;		addqt	#8, source
+;		.several (4?)
+;		move		x, y			; waits for phrase load
+;		load		(dataHi), z	; grab upper word
+;		loadp	(source), y2	; memory access #2 -----------
+;		addqt	#8, source
+;		move		y2, z2		; waits for phrase load
+;		load		(dataHi), x3	; grab upper word
+;		loadp	(source), z3	; memory access #3 -----------
+;		addqt	#8, source
+;		move		z3, x4		; waits for phrase load
+;		load		(dataHi), y4	; grab upper word
+;-------------------------------------------------------------------
+; set up first vert
+;		move		z, x2
+;		;and		lowMask, x	; mult throws out anyway
+;		;and		lowMask, z	; ditto
+;		shrq		#16, y
+;
+;
+; convert to float - adds 6 instructs - ~50% to rot
+;		normi	result, exp
+;		add		#, exp
+;		sha		exp, result
+;		neg		exp
+;		; pack
+;		and		lowMask, result
+;		shlq		#16, exp
+;		or		exp, result
+;
+;
+;

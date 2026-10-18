@@ -1,0 +1,333 @@
+{
+  "schema": "club-asc-vertex",
+  "original": "HOUSE/LNDRY_L3.ASC",
+  "template_sha256": "aa17268dd70ad2a6bde8a754eb015e08fc7d117687839810083d1243fd9ce185",
+  "notes": [
+    "2026 reconstruction. Faces/materials retain surviving text; edit only xyz values.",
+    "CARS/CAR2, CAR3, DRONE are linked to native JSON via fixed-topology vertex deltas.",
+    "Other .ASC sources are editable ASCII sources, NOT yet linked to game world resources."
+  ],
+  "vertices": [
+    {
+      "line": 41,
+      "mesh": "laundryrm",
+      "index": 0,
+      "xyz": [
+        9654.858398,
+        -8335.726563,
+        1837.106567
+      ]
+    },
+    {
+      "line": 42,
+      "mesh": "laundryrm",
+      "index": 1,
+      "xyz": [
+        11107.231445,
+        -7497.189941,
+        1837.106567
+      ]
+    },
+    {
+      "line": 43,
+      "mesh": "laundryrm",
+      "index": 2,
+      "xyz": [
+        9654.858398,
+        -8335.726563,
+        -2172.446289
+      ]
+    },
+    {
+      "line": 44,
+      "mesh": "laundryrm",
+      "index": 3,
+      "xyz": [
+        11107.231445,
+        -7497.189941,
+        -2172.446289
+      ]
+    },
+    {
+      "line": 45,
+      "mesh": "laundryrm",
+      "index": 4,
+      "xyz": [
+        5550.567383,
+        -6015.04834,
+        2812.45459
+      ]
+    },
+    {
+      "line": 46,
+      "mesh": "laundryrm",
+      "index": 5,
+      "xyz": [
+        5550.567383,
+        -6015.04834,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 47,
+      "mesh": "laundryrm",
+      "index": 6,
+      "xyz": [
+        11060.310547,
+        -10854.458008,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 48,
+      "mesh": "laundryrm",
+      "index": 7,
+      "xyz": [
+        11060.310547,
+        -10854.458008,
+        2812.45459
+      ]
+    },
+    {
+      "line": 49,
+      "mesh": "laundryrm",
+      "index": 8,
+      "xyz": [
+        11060.30957,
+        -6015.055176,
+        2812.45459
+      ]
+    },
+    {
+      "line": 50,
+      "mesh": "laundryrm",
+      "index": 9,
+      "xyz": [
+        11060.30957,
+        -6015.055176,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 51,
+      "mesh": "laundryrm",
+      "index": 10,
+      "xyz": [
+        11060.305664,
+        -9093.950195,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 52,
+      "mesh": "laundryrm",
+      "index": 11,
+      "xyz": [
+        11060.306641,
+        -7416.174805,
+        1837.078003
+      ]
+    },
+    {
+      "line": 53,
+      "mesh": "laundryrm",
+      "index": 12,
+      "xyz": [
+        11060.303711,
+        -7416.172363,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 54,
+      "mesh": "laundryrm",
+      "index": 13,
+      "xyz": [
+        11060.305664,
+        -9093.950195,
+        1837.078003
+      ]
+    },
+    {
+      "line": 55,
+      "mesh": "laundryrm",
+      "index": 14,
+      "xyz": [
+        5550.570313,
+        -10854.454102,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 56,
+      "mesh": "laundryrm",
+      "index": 15,
+      "xyz": [
+        5550.570313,
+        -10854.454102,
+        2812.45459
+      ]
+    },
+    {
+      "line": 57,
+      "mesh": "laundryrm",
+      "index": 16,
+      "xyz": [
+        5550.569336,
+        -9093.949219,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 58,
+      "mesh": "laundryrm",
+      "index": 17,
+      "xyz": [
+        5550.567871,
+        -7416.169922,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 59,
+      "mesh": "laundryrm",
+      "index": 18,
+      "xyz": [
+        5550.564453,
+        -9093.952148,
+        1837.078003
+      ]
+    },
+    {
+      "line": 60,
+      "mesh": "laundryrm",
+      "index": 19,
+      "xyz": [
+        5550.562988,
+        -7416.17627,
+        1837.078003
+      ]
+    },
+    {
+      "line": 66,
+      "mesh": "laundryrm",
+      "index": 20,
+      "xyz": [
+        5416.28125,
+        -9093.949219,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 67,
+      "mesh": "laundryrm",
+      "index": 21,
+      "xyz": [
+        5416.279785,
+        -7416.165527,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 68,
+      "mesh": "laundryrm",
+      "index": 22,
+      "xyz": [
+        5416.276367,
+        -9093.952148,
+        1837.078003
+      ]
+    },
+    {
+      "line": 69,
+      "mesh": "laundryrm",
+      "index": 23,
+      "xyz": [
+        5416.274902,
+        -7416.176758,
+        1837.078003
+      ]
+    },
+    {
+      "line": 70,
+      "mesh": "laundryrm",
+      "index": 24,
+      "xyz": [
+        11197.725586,
+        -9093.669922,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 71,
+      "mesh": "laundryrm",
+      "index": 25,
+      "xyz": [
+        11197.723633,
+        -7415.890625,
+        1837.078003
+      ]
+    },
+    {
+      "line": 72,
+      "mesh": "laundryrm",
+      "index": 26,
+      "xyz": [
+        11197.726563,
+        -7415.890137,
+        -2172.476074
+      ]
+    },
+    {
+      "line": 73,
+      "mesh": "laundryrm",
+      "index": 27,
+      "xyz": [
+        11197.725586,
+        -9093.669922,
+        1837.078003
+      ]
+    },
+    {
+      "line": 74,
+      "mesh": "laundryrm",
+      "index": 28,
+      "xyz": [
+        5495.881836,
+        -7489.51709,
+        1837.106567
+      ]
+    },
+    {
+      "line": 75,
+      "mesh": "laundryrm",
+      "index": 29,
+      "xyz": [
+        6780.611328,
+        -8567.53418,
+        1837.106567
+      ]
+    },
+    {
+      "line": 76,
+      "mesh": "laundryrm",
+      "index": 30,
+      "xyz": [
+        5495.881836,
+        -7489.51709,
+        -2172.446777
+      ]
+    },
+    {
+      "line": 77,
+      "mesh": "laundryrm",
+      "index": 31,
+      "xyz": [
+        6780.611328,
+        -8567.53418,
+        -2172.446777
+      ]
+    }
+  ],
+  "lowercase_alias": false
+}

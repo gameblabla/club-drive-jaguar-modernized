@@ -1,0 +1,114 @@
+{
+  "CAR1.MDL": {
+    "nodes": 31,
+    "splits": 15,
+    "leaves": 16,
+    "cp_indices": [
+      9,
+      11,
+      5,
+      4,
+      10,
+      12,
+      3,
+      6,
+      7,
+      8,
+      13,
+      14,
+      15,
+      16,
+      1,
+      2
+    ]
+  },
+  "CAR2.MDL": {
+    "nodes": 3,
+    "splits": 1,
+    "leaves": 2,
+    "cp_indices": [
+      2,
+      1
+    ]
+  },
+  "CAR3.MDL": {
+    "nodes": 5,
+    "splits": 2,
+    "leaves": 3,
+    "cp_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "CAR4.MDL": {
+    "nodes": 5,
+    "splits": 2,
+    "leaves": 3,
+    "cp_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "CAR5.MDL": {
+    "nodes": 3,
+    "splits": 1,
+    "leaves": 2,
+    "cp_indices": [
+      2,
+      1
+    ]
+  },
+  "CAR6.MDL": {
+    "nodes": 31,
+    "splits": 15,
+    "leaves": 16,
+    "cp_indices": [
+      9,
+      11,
+      5,
+      4,
+      10,
+      12,
+      3,
+      6,
+      7,
+      8,
+      13,
+      14,
+      15,
+      16,
+      1,
+      2
+    ]
+  },
+  "CARS/CAR2.MDL": {
+    "nodes": 3,
+    "splits": 1,
+    "leaves": 2,
+    "cp_indices": [
+      2,
+      1
+    ]
+  },
+  "CARS/CAR3.MDL": {
+    "nodes": 5,
+    "splits": 2,
+    "leaves": 3,
+    "cp_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "CARS/DRONE.MDL": {
+    "nodes": 3,
+    "splits": 1,
+    "leaves": 2,
+    "cp_indices": [
+      2,
+      1
+    ]
+  }
+}

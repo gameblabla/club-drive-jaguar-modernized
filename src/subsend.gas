@@ -1,0 +1,114 @@
+;
+;	SUBROUTINE AREA
+;
+; sin, cos
+; sqrt
+; -----------------------------------------------------------------------
+;	sine & cosine   16-bit table lookup Cosine
+;
+;	GIVEN:
+;		temp = Angle (Binary Radians (1 BRAD = PI/1024))
+;		pi2 = PI/2 ($200 in Brads)
+;		sintbl = Ptr to Sine Table
+;
+;	RETURNS:
+;		TEMP = Cos(Angle)*$4000
+;
+;	REGISTER USAGE:
+;		temp, temp2, return
+;
+;
+.if INTERPOLATE
+
+cosine:
+	add	pi2,temp	; Cos(a) = Sin(a + pi/2)
+sine:
+	moveta	r0,temp
+	moveta	r1,temp2
+;	sharq	#16,temp
+	sharq	#16,pi2
+
+	move		temp, r0	; keep quadrant data in temp
+	move		temp, r1
+	sharq		#16,r0
+	shlq		#16,r1
+	shlq		#23, r0		; strip quadrant data
+	shrq		#16,r1
+	btst		#25, temp
+	jr		EQ, _CDLOCAL_10_44
+	shrq		#22, r0		; word address
+		shlq	#1, pi2 ; this is free
+		neg	r0
+		neg	r1
+		add	pi2, r0
+		shrq	#1, pi2 ; this is free
+_CDLOCAL_10_44:
+	add		sintbl, r0
+	loadw	(r0), temp2
+	addqt	#2,r0
+	loadw	(r0),r0
+	sub	temp2,r0
+	mult	r1,r0
+	shrq	#16,r0
+	nop
+	add	r0,temp2
+	movefa	temp,r0
+	movefa	temp2,r1
+	btst		#26, temp
+	jump		EQ, (return)
+	shlq	#16,pi2
+	jump		(return)
+	neg		temp2
+
+.else
+
+cosine:
+	add	pi2,temp	; Cos(a) = Sin(a + pi/2)
+sine:
+	move		temp, temp2	; keep quadrant data in temp
+	shlq		#23, temp2	; strip quadrant data
+	btst		#9, temp
+	jr		EQ, _CDLOCAL_10_76
+	shrq		#22, temp2	; word address
+		shlq	#1, pi2 ; this is free
+		neg	temp2
+		add	pi2, temp2
+		shrq	#1, pi2 ; this is free
+_CDLOCAL_10_76:
+	add		sintbl, temp2
+	btst		#10, temp
+	loadw	(temp2), temp2
+	jump		EQ, (return)
+	nop
+	jump		(return)
+	neg		temp2
+
+.endif
+
+.if 0
+; square root subroutine ------------------------------------------------
+; uses 768 word long table to provide 10 bit - 3 digit accuracy
+; ~20 cycles
+;	args:
+	; temp	- 32-bit unsigned number
+;	returns:
+	; temp	- square root of temp
+;	munges:
+	; r30
+
+sqrt:
+	normi	temp, temp2
+	movei	#(sqrtTabM512), r30
+	addqt	#13, temp2	; size to 1K max word entries
+	bset		#0, temp2		; shift an even amount only
+	sh		temp2, temp
+	neg		temp2		; shift amount for return flight
+	add		r30, temp
+	sharq	#1, temp2		; return shift is half as big
+	bclr		#0, temp
+	addqt	#11, temp2	; scale of table
+	loadw	(temp), temp
+	jump		(return)
+	sh		temp2, temp
+
+.endif

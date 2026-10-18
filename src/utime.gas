@@ -1,0 +1,1052 @@
+;
+; utime.gas: keep track of the user's timer
+;
+; maximum timer value: 9 hours 59 minutes 59.99 seconds
+;
+	.include "joypad.inc"
+
+MAXTIMER	EQU	((9*360000)+(59*6000)+5999)	; force historical GASM arithmetic grouping
+; maximum timer value for which "hundredths" will be displayed
+ONEHOUR		EQU	360000
+
+; set "NEVERHUNDS" to never display hundredths
+NEVERHUNDS	EQU	1
+
+SPEED_SCALE	EQU	$6000
+
+;
+; special characters in the "digit" font
+;
+DIGIT_PERIOD	EQU	16
+DIGIT_COLON	EQU	17
+
+thePlayer	REGEQU	R0
+
+frameptr	REGEQU	R1
+oldframe	REGEQU	R2
+curframe	REGEQU	R3
+curtimer	REGEQU	R4
+; some registers get re-used
+dotptr		REGEQU	R1
+dotx		REGEQU	R2
+doty		REGEQU	R3
+dotz		REGEQU	R4
+; some of them more than once...
+digitw		REGEQU	R2
+
+digit		REGEQU	R5
+curval		REGEQU	R6
+remain		REGEQU	R7
+coord		REGEQU	R8
+divisor		REGEQU	R9
+blitrout	REGEQU	R10
+tempptr		REGEQU	R11
+count		REGEQU	R12
+dohours		REGEQU	R13
+bcmd		REGEQU	R14
+color		REGEQU	R15
+
+xpos		REGEQU	R16
+ypos		REGEQU	R17
+timecolor	REGEQU	R18
+
+vx		REGEQU	R19
+vy		REGEQU	R20
+vz		REGEQU	R21
+
+skipit		REGEQU	R22
+skipflag	REGEQU	R23
+
+xorig		REGEQU	R24
+yorig		REGEQU	R25
+scale		REGEQU	R26
+
+; R27-R31 reserved for global variables
+
+MACRO	JSR_DIGIT
+	move	PC,return
+	jump	(blitrout)
+	addqt	#6,return
+ENDM
+
+MACRO	JSR_HEX
+	move	PC,vy
+	jump	(vz)
+	addqt	#6,vy
+ENDM
+
+MACRO	RTS_HEX
+	jump	(vy)
+	nop
+ENDM
+
+	movefa	ALTplayer,thePlayer
+
+	movei	#blitdig,blitrout
+	movei	#t_around,skipit
+	movei	#framecnt,temp2
+	load	(temp2),curframe
+	movei	#CAR_TOTFRAME,frameptr
+	add	thePlayer,frameptr
+	load	(frameptr),oldframe
+	nop
+	store	curframe,(frameptr)
+	sub	oldframe,curframe
+	addqt	#(CAR_FRAME-CAR_TOTFRAME),frameptr
+	store	curframe,(frameptr)
+
+;
+; see if we're supposed to display the score
+;
+	movefa	ALTgpudo,temp
+	btst	#1,temp			; bit 1 == display score
+	jump	EQ,(skipit)
+	nop
+     
+.if TAGGAME
+	movei	#noscore,tempptr
+	movei	#itCar,temp
+	load	(temp),temp
+
+	movei	#CAR_TIMER,temp2
+	add	thePlayer,temp2
+	load	(temp2),curtimer
+
+	cmp	temp,thePlayer
+	jump	NE,(tempptr)
+	nop
+
+	movefa	ALTgpudo,temp
+	nop
+	btst	#2,temp			; should we do score updating?
+	jump	EQ,(tempptr)		; if not, don't score points
+	nop
+		movei	#scoreinc,tempptr
+		load	(tempptr),tempptr
+		add	curframe,curtimer
+		store	curtimer,(temp2)
+		subqt	#(CAR_TIMER-GAME_DATA),temp2		; go from CAR_TIMER to GAME_DATA
+		loadw	(temp2),temp
+		add	curframe,temp
+		storew	temp,(temp2)
+		addqt	#(SCORE-GAME_DATA),temp2		; go from GAME_DATA to score
+		load	(temp2),temp	; get current score
+		shrq	#2,tempptr	; avoid overflow for 30 second timer
+		mult	curframe,tempptr
+		shlq	#2,tempptr
+		add	tempptr,temp
+		store	temp,(temp2)
+noscore:
+
+.else
+
+;
+; check to see if we're in a bonus world; if we are,
+; then no time should elapse
+;
+	movei	#FLOOR_MODEL,temp
+	add	thePlayer,temp
+	load	(temp),temp			; get pointer to current band
+	or	temp,temp			; wait for load
+	load	(temp),temp			; get band flags
+
+	movei	#CAR_TIMER,temp2
+	add	thePlayer,temp2
+	load	(temp2),curtimer
+	moveq	#0,skipflag
+	btst	#2,temp			; check for "bonus world" flag (we loaded temp with band flags above)
+	jr	NE,notime
+	nop
+	add	curframe,curtimer
+	store	curtimer,(temp2)
+notime:
+
+.endif
+
+;
+; if there's a wait time, count it down
+;
+	movei	#WAIT_TIME,temp2
+	add	thePlayer,temp2
+	load	(temp2),temp
+	nop
+	cmpq	#0,temp
+	jr	EQ,nowait
+	sub	curframe,temp
+		sat16	temp		; assumes no delays longer than $ffff/300 seconds
+		store	temp,(temp2)
+.if RACEGAME
+		moveq	#1,skipflag
+.endif
+nowait:
+
+;
+; blit current car timer info to the window
+; timer info goes:  MM:SS.D if time < 1 hour
+;		  H:MM:SS.D if time >= 1 hour
+;
+; each digit is 8 pixels wide, and each puncuation
+; mark is 4 pixels wide, for a total of
+; 3*4 + 6*8 = 15*4 = 60 pixels wide
+;
+	moveq	#3,temp
+	div	temp,curtimer		; reduce timer to 100ths of a second
+
+; while we're waiting for the divide, make sure the
+; blitter is ready
+	movefa	ALTbcmd,bcmd
+	or	bcmd,bcmd
+_CDLOCAL_10_198:
+	load	(bcmd),temp
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_10_198
+	nop
+	
+	movei	#MAXTIMER,temp
+	movei	#G_REMAIN,remain
+	cmp	curtimer,temp
+	jr	PL,noprob
+	nop
+		move	temp,curtimer
+noprob:
+
+; first, do seconds and hundredths of seconds
+	movei	#6000,divisor
+	div	divisor,curtimer
+; while the division is going on,
+; set up the blitter to point at the correct
+; window on screen
+	movefa	ALTa1base,temp2
+	movei	#dash,temp
+	store	temp,(temp2)
+	addqt	#4,temp2			; for A1_FLAGS
+	movei	#PITCH1|PIXEL8|WID320|XADDPIX,temp
+	store	temp,(temp2)
+
+	movefa	ALTa2base,temp2
+	movei	#digitfont,temp
+	store	temp,(temp2)
+	movei	#PITCH1|PIXEL1|WID160|XADDPIX,temp
+	addqt	#4,temp2			; for A2_FLAGS
+	store	temp,(temp2)
+
+	moveq	#0,temp
+	movei	#A1_FSTEP,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2			; for A1_FPIXEL
+	store	temp,(temp2)
+
+	movefa	ALTa1step,temp2
+	movei	#$0001fff8,temp
+	store	temp,(temp2)
+	movefa	ALTa2step,temp2
+	store	temp,(temp2)
+
+; grab the remainder of the divide as the number of hundredths
+	or	curtimer,curtimer
+	load	(remain),curval
+	btst	#31,curval
+	jr	EQ,_CDLOCAL_20_251
+	nop
+		add	divisor,curval
+_CDLOCAL_20_251:
+
+	moveq	#10,divisor
+	div	divisor,curval
+
+; pick up the Y-X coordinates from the car structure
+	movei	#TIMERPIX,coord
+	add	thePlayer,coord
+	load	(coord),coord
+
+; set up the color: use color 251 for the background,
+; color 252 for a neutral color, 253 for crash and score dots
+; color 254 for player 1, color 255 for player2
+  
+	movei	#$fbfbfbfb,temp
+	movei	#B_DSTD,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+
+	movei	#PLAYER1,temp
+	cmp	thePlayer,temp
+	jr	NE,_CDLOCAL_40_282
+	nop
+		movei	#$fefefefe,color
+.if CASGAME
+		movei	#$fcfcfcfc,timecolor
+.else
+		move	color,timecolor
+.endif
+		jr	_CDLOCAL_41_295
+		nop
+_CDLOCAL_40_282:
+	movei	#$ffffffff,color
+.if CASGAME
+	movei	#itCar,temp
+	load	(temp),temp
+	move	color,timecolor
+	cmp	thePlayer,temp
+	jr	EQ,_CDLOCAL_41_295
+	nop
+		movei	#$fefefefe,timecolor
+.else
+	move	color,timecolor
+.endif
+_CDLOCAL_41_295:
+	movei	#B_PATD,temp2
+	store	timecolor,(temp2)
+	addqt	#4,temp2
+	store	timecolor,(temp2)
+
+	movei	#$00090008,count
+
+	moveq	#3,digitw		; digits are 2^3 == 8 pixels wide
+	neg	digitw
+
+; pick up the 100ths digit
+	or	curval,curval
+	load	(remain),digit
+	nop
+	btst	#31,digit
+	jr	EQ,_CDLOCAL_21_314
+	nop
+		add	divisor,digit
+_CDLOCAL_21_314:
+
+.if RACEGAME
+	cmpq	#0,skipflag
+	movei	#docompass,temp2
+	jr	EQ,showtime
+	nop
+		subqt	#30,coord
+		jump	(temp2)
+		subqt	#30,coord
+showtime:
+.endif
+
+; only do the hundredths digit if there is room
+	movei	#60,dohours
+	sub	curtimer,dohours
+.if NEVERHUNDS = 0
+; now: never do the hundredths digit
+	jr	MI,nohunds
+	nop
+
+	JSR_DIGIT
+	subqt	#8,coord
+
+.endif
+
+nohunds:
+	div	divisor,curval
+; pick up the 10ths digit
+	or	curval,curval
+	load	(remain),digit
+	nop
+	btst	#31,digit
+	jr	EQ,_CDLOCAL_21_350
+	nop
+		add	divisor,digit
+_CDLOCAL_21_350:
+	JSR_DIGIT
+	subqt	#8,coord
+
+; now blit the '.'
+	moveq	#DIGIT_PERIOD,digit
+	JSR_DIGIT
+	subqt	#4,coord
+
+; ones digit for the seconds
+	moveq	#10,divisor
+	div	divisor,curval
+	or	curval,curval
+	load	(remain),digit
+	nop
+	btst	#31,digit
+	jr	EQ,_CDLOCAL_22_369
+	nop
+		add	divisor,digit
+_CDLOCAL_22_369:
+	JSR_DIGIT
+	subqt	#8,coord
+
+; tens digit for seconds
+	move	curval,digit
+	JSR_DIGIT
+	subqt	#8,coord
+; ':'
+	moveq	#DIGIT_COLON,digit
+	movei	#60,divisor
+	div	divisor,curtimer	; set curtimer to hours
+	JSR_DIGIT
+	subqt	#4,coord
+
+; ones digit of minutes
+	load	(remain),curval
+	nop
+	btst	#31,curval
+	jr	EQ,_CDLOCAL_23_391
+	nop
+		add	divisor,curval
+_CDLOCAL_23_391:
+	moveq	#10,divisor
+	div	divisor,curval
+	or	curval,curval
+	load	(remain),digit
+	nop
+	btst	#31,digit
+	jr	EQ,_CDLOCAL_24_401
+	nop
+		add	divisor,digit
+_CDLOCAL_24_401:
+	JSR_DIGIT
+	subqt	#8,coord
+
+; tens digit of minutes
+	move	curval,digit
+	JSR_DIGIT
+	subqt	#8,coord
+
+.if NEVERHUNDS = 0
+	btst	#31,dohours
+	jr	NE,blithour
+	nop
+		subqt	#4,coord
+		movei	#docompass,temp
+		jump	(temp)
+		nop
+.endif
+
+blithour:
+; ':'
+	moveq	#DIGIT_COLON,digit
+	JSR_DIGIT
+	subqt	#4,coord
+; hours
+	move	curtimer,digit
+	JSR_DIGIT
+	subqt	#8,coord
+
+docompass:
+
+; OK, now that we're finished with the timer, let's put up
+; the compass
+	movei	#CAR_HEAD,temp2
+	add	thePlayer,temp2
+	load	(temp2),digit		; "digit" has the angle (0-2047)	(eleven bits)
+	movei	#196,temp		; was 256
+	add	temp,digit
+	shrq	#8,digit
+	moveq	#7,temp			; mask off all but lower bits
+	and	temp,digit
+_CDLOCAL_40_442:
+	load	(bcmd),temp	; wait for the blit
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_40_442
+	nop
+
+	movei	#B_PATD,temp2
+	store	color,(temp2)
+	addqt	#4,temp2
+	store	color,(temp2)
+
+	movefa	ALTa2base,temp2
+	movei	#cmpssfont,temp
+	store	temp,(temp2)
+	movei	#PITCH1|PIXEL1|WID64|XADDPIX,temp
+	addqt	#4,temp2		; move to A2_FLAGS
+	store	temp,(temp2)
+
+	movei	#$00080008,count
+	movei	#78,temp
+	add	temp,coord
+
+	JSR_DIGIT
+
+.if TAGGAME = 0
+
+dolaps:
+	movei	#showcoord,temp
+	loadb	(temp),temp
+	movei	#fps,temp2
+	cmpq	#0,temp
+	jr	EQ,normalcase
+	nop
+; draw the time to draw a frame
+		loadw	(temp2),curval
+		jr	bwaitn
+		nop
+normalcase:
+; draw the "lap number" (or "number of dots") information
+	movei	#GAME_DATA,temp
+	add	thePlayer,temp
+	loadw	(temp),curval
+
+bwaitn:
+	load	(bcmd),temp	; wait for the blit
+	btst	#0,temp
+	jr	EQ,bwaitn
+	nop
+
+	moveq	#10,divisor		; we're going to divide by 10
+	div	divisor,curval
+
+	movei	#tnyfont,temp
+	movefa	ALTa2base,temp2
+	store	temp,(temp2)
+	movei	#PITCH1|PIXEL1|WID96|XADDPIX,temp
+	addqt	#4,temp2		; move to A2_FLAGS
+	store	temp,(temp2)
+	movei	#$00080004,count
+	moveq	#3,digitw
+	neg	digitw
+	movefa	ALTa1step,temp2
+	movei	#$0001FFFC,temp
+	store	temp,(temp2)
+	movefa	ALTa2step,temp2
+	store	temp,(temp2)
+
+	movei	#116,temp
+	add	temp,coord
+
+; grab the remainder of the divide as the number of ones
+	or	curval,curval
+	load	(remain),digit
+	btst	#31,digit
+	jr	EQ,_CDLOCAL_11_519
+	nop
+		add	divisor,digit
+_CDLOCAL_11_519:
+	JSR_DIGIT
+	subqt	#4,coord
+
+	cmpq	#10,curval
+	jr	MI,_CDLOCAL_20_527
+	move	curval,digit
+		moveq	#9,digit
+_CDLOCAL_20_527:
+	cmpq	#0,digit
+	jr	NE,_CDLOCAL_22_532
+	nop
+		moveq	#11,digit	; draw a blank instead
+_CDLOCAL_22_532:
+	JSR_DIGIT
+
+spdometer:
+	movei	#showcoord,temp
+	loadb	(temp),temp
+	movei	#nodebug,temp2
+	cmpq	#0,temp
+	jump	EQ,(temp2)
+	nop
+_CDLOCAL_10_542:
+		load	(bcmd),temp
+		btst	#0,temp
+		jr	EQ,_CDLOCAL_10_542
+		nop
+
+		movei	#PLAYER1,temp
+		cmp	temp,thePlayer
+		jr	NE,_CDLOCAL_82_555
+		nop
+			movei	#HUD1,temp
+			jr	_CDLOCAL_80_557
+			nop
+_CDLOCAL_82_555:
+		movei	#HUD2,temp
+_CDLOCAL_80_557:
+		movefa	ALTa1base,temp2
+		store	temp,(temp2)
+		movei	#PITCH1|PIXEL16|WID64|XADDPIX,temp
+		addqt	#4,temp2		; for A1_FLAGS
+		store	temp,(temp2)
+
+		moveq	#3,digitw		; digits are 8 == 2^3 pixels wide
+		neg	digitw
+	
+		movei	#$0001fff8,temp
+	
+		movefa	ALTa1step,temp2
+		store	temp,(temp2)
+		movefa	ALTa2step,temp2
+		store	temp,(temp2)
+
+		movefa	ALTa2base,temp2
+		movei	#digitfont,temp
+		store	temp,(temp2)
+		movei	#PITCH1|PIXEL1|WID160|XADDPIX,temp
+		addqt	#4,temp2		; for A2_FLAGS
+		store	temp,(temp2)
+	
+		movei	#B_DSTD,temp2
+		moveq	#$0,temp
+		store	temp,(temp2)
+		addqt	#4,temp2
+		store	temp,(temp2)
+		movei	#$00200020,temp
+		movei	#B_PATD,temp2
+		store	temp,(temp2)
+		addqt	#4,temp2
+		store	temp,(temp2)
+	
+		movei	#$00000038,coord
+		movei	#$00090008,count
+
+		movei	#CAMERA_POSN,dotptr
+		add	thePlayer,dotptr
+		load	(dotptr),vx
+		movei	#hexdump,vz
+		JSR_HEX
+		movei	#$000b0038,coord
+		addqt	#4,dotptr
+		load	(dotptr),vx
+		JSR_HEX
+		movei	#$00160038,coord
+		addqt	#4,dotptr
+		load	(dotptr),vx
+		JSR_HEX
+		movei	#radar,temp2
+		jump	(temp2)
+		nop
+nodebug:
+; draw the speedometer (only in non-tag games, tag ones use
+; the HUD for "you're it"
+
+;	movei	#CAR_VELOCITY,temp
+;	add	thePlayer,temp
+;	load	(temp),vx
+;	addqt	#4,temp
+;	load	(temp),vy
+;	addqt	#4,temp
+;	load	(temp),vz
+;
+;	abs	vx
+;	abs	vy
+;	abs	vz
+;
+;; sort the x,y,z components in ascending order
+;	cmp	vx,vy
+;	jr	PL,5$
+;	nop
+;		move	vx,temp
+;		move	vy,vx
+;		move	temp,vy
+;5$:
+;	cmp	vy,vz
+;	jr	PL,15$
+;	nop
+;		move	vz,temp
+;		move	vy,vz
+;		move	temp,vy
+;15$:
+;
+;	shrq	#2,vx
+;	shrq	#2,vy
+;	add	vx,vz
+;	add	vy,vz
+
+	movei	#CAR_TIRE_SPD,temp
+	add	thePlayer,temp
+	load	(temp),vz
+	abs	vz
+	shrq	#13, vz
+
+; now vz contains the (approximate) car speed
+; scale it to something sensible
+;	shrq	#11,vz
+	movei	#SPEED_SCALE,temp
+	mult	temp,vz
+	shrq	#15,vz
+
+;
+; finally, get the digits and blit them up into
+; the appropriate HUD
+;
+	moveq	#10,divisor
+	div	divisor,vz
+
+_CDLOCAL_20_668:
+	load	(bcmd),temp	; wait for the blit
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_20_668
+	nop
+
+	movei	#PLAYER1,temp
+	cmp	temp,thePlayer
+	jr	NE,dohud2
+	nop
+		movei	#HUD1,temp
+		jr	dohud
+		nop
+dohud2:
+		movei	#HUD2,temp
+dohud:
+	movefa	ALTa1base,temp2
+	store	temp,(temp2)
+	movei	#PITCH1|PIXEL16|WID64|XADDPIX,temp
+	addqt	#4,temp2		; for A1_FLAGS
+	store	temp,(temp2)
+
+	movefa	ALTa2base,temp2
+	movei	#speedfont,temp
+	store	temp,(temp2)
+	movei	#PITCH1|PIXEL1|WID192|XADDPIX,temp
+	addqt	#4,temp2		; for A2_FLAGS
+	store	temp,(temp2)
+
+	moveq	#4,digitw		; digits are 16 == 2^4 pixels wide
+	neg	digitw
+
+	movei	#$0001fff0,temp
+
+	movefa	ALTa1step,temp2
+	store	temp,(temp2)
+	movefa	ALTa2step,temp2
+	store	temp,(temp2)
+
+	movei	#B_DSTD,temp2
+	moveq	#$0,temp
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+	movei	#$7fc07fc0,temp
+	movei	#B_PATD,temp2
+	store	temp,(temp2)
+	addqt	#4,temp2
+	store	temp,(temp2)
+
+	movei	#$00000030,coord
+	movei	#$00180010,count
+	moveq	#11,digit		; "mph"
+	JSR_DIGIT
+	subqt	#16,coord
+
+; grab the remainder of the divide as the number of ones
+	or	vz,vz
+	load	(remain),digit
+	btst	#31,digit
+	jr	EQ,_CDLOCAL_10_731
+	nop
+		add	divisor,digit
+_CDLOCAL_10_731:
+
+	div	divisor,vz
+
+; first digit
+	JSR_DIGIT
+	subqt	#16,coord
+
+	or	vz,vz
+	load	(remain),digit
+	btst	#31,digit
+	jr	EQ,_CDLOCAL_20_745
+	nop
+		add	divisor,digit
+_CDLOCAL_20_745:
+
+; second digit
+	cmpq	#0,digit
+	jr	NE,_CDLOCAL_25_755
+	nop
+	cmpq	#0,vz
+	jr	NE,_CDLOCAL_25_755
+	nop
+		moveq	#10,digit
+_CDLOCAL_25_755:
+	JSR_DIGIT
+	subqt	#16,coord
+
+; third digit
+	cmpq	#9,vz
+	jr	MI,vzOK
+	move	vz,digit
+		moveq	#9,digit
+vzOK:
+
+	cmpq	#0,digit
+	jr	NE,_CDLOCAL_35_770
+	nop
+		moveq	#10,digit
+_CDLOCAL_35_770:
+	JSR_DIGIT
+
+.endif
+
+radar:
+
+;
+; Finally: draw the position of the car on radar
+;
+	movei	#MAP_POS,tempptr
+	add	thePlayer,tempptr
+	load	(tempptr),coord
+
+	moveq	#CAR_POSN,temp2
+	add	thePlayer,temp2
+	load	(temp2),ypos		; actually the Z coordinate of the car
+	addqt	#8,temp2
+	load	(temp2),xpos		; actually the X coordinate of the car, since our view is from above
+	neg	ypos
+	neg	xpos
+	movei	#319,remain
+	cmpq	#0,coord
+	jr	EQ,no_erase
+	moveq	#0,temp
+		storeb	temp,(coord)
+		addqt	#1,coord
+		storeb	temp,(coord)
+		add	remain,coord
+		storeb	temp,(coord)
+		addqt	#1,coord
+		storeb	temp,(coord)
+no_erase:
+	movei	#FLOOR_MODEL,temp2
+	add	thePlayer,temp2
+	load	(temp2),temp2
+	movei	#BND_FLAGS,temp
+	add	temp,temp2
+	load	(temp2),temp2
+	moveq	#0,coord
+	btst	#2,temp2		; should we draw this world? If it's a bonus, we shouldn't record position
+	jump	NE,(skipit)
+	store	coord,(tempptr)		; zero last drawn location
+
+	movei	#mapscale,temp
+	load	(temp),scale		; map scale has Y scale, X scale in high and low words
+	movei	#maporig,temp		; origin has Y,X in two words
+	load	(temp),xorig
+	sharq	#16,xpos
+	sharq	#16,ypos
+	imult	scale,xpos		; scale X position
+	rorq	#16,scale
+	imult	scale,ypos		; scale Y position
+.if CASGAME
+	rorq	#16,scale
+.endif
+	sharq	#15,xpos
+	sharq	#15,ypos
+
+	move	xorig,yorig
+	shlq	#16,xorig
+	sharq	#16,yorig		; now temp2 has Y origin
+	sharq	#16,xorig		; coord has X origin
+	add	yorig,ypos
+	add	xorig,xpos
+
+	movei	#320,temp		; width of dashboard
+	imult	temp,ypos
+	movei	#dash,coord
+	add	ypos,coord
+	add	xpos,coord
+
+	store	coord,(tempptr)		; update car draw position
+	subqt	#1,temp			; put 319 into "temp"
+	storeb	color,(coord)
+	addqt	#1,coord
+	storeb	color,(coord)
+	add	temp,coord
+	storeb	color,(coord)
+	addqt	#1,coord
+	storeb	color,(coord)
+
+.if CASGAME
+;
+; draw the powerball on the map, and also check
+; for powerball-car collisions
+	movei	#dotloc,dotptr
+	load	(dotptr),temp
+	addqt	#4,dotptr
+	cmpq	#0,temp
+	jump	EQ,(skipit)
+	nop
+
+	movei	#$fdfdfdfd,color	; power ball color
+	load	(dotptr),dotx		; get dot position
+	addqt	#4,dotptr
+	load	(dotptr),doty
+	addqt	#4,dotptr
+	load	(dotptr),dotz
+	subqt	#12,dotptr
+	move	thePlayer,temp2		; get car position
+	load	(temp2),vx
+	addqt	#4,temp2
+	load	(temp2),vy
+	addqt	#4,temp2
+	load	(temp2),vz
+	sub	dotx,vx			; find distance between dot and car
+	sub	doty,vy
+	sub	dotz,vz
+	abs	vx
+	abs	vy
+	abs	vz
+	cmp	vx,vy
+	jr	PL,_CDLOCAL_10_888
+	nop
+		move	vy,temp
+		move	vx,vy
+		move	temp,vx
+_CDLOCAL_10_888:
+	cmp	vy,vz
+	jr	PL,_CDLOCAL_20_895
+	nop
+		move	vz,temp
+		move	vy,vz
+		move	vz,vy
+_CDLOCAL_20_895:
+	sharq	#2,vx
+	sharq	#2,vy
+	add	vx,vz
+	add	vy,vz			; vz now has the distance
+	movei	#(8192*50),temp
+	cmp	temp,vz
+	movei	#nohit,temp2
+	jump	PL,(temp2)
+	nop
+	; the car has hit the powerball!
+		moveq	#0,color
+		store	color,(dotptr)	; don't allow more collisions with the dot
+		movei	#scoreinc,temp2
+		load	(temp2),temp	; get increment for score
+		movei	#SCORE,temp2
+		add	thePlayer,temp2
+		load	(temp2),vx
+		nop
+		add	temp,vx		; bump up score
+		store	vx,(temp2)
+		subqt	#(SCORE-GAME_DATA),temp2
+		loadw	(temp2),temp
+		nop
+		addqt	#1,temp		; bump up dot number
+		storew	temp,(temp2)
+		movei	#PLAYER2,temp2	; clear timer 2 ( time since last ball)
+		movei	#CAR_TIMER,temp
+		add	temp,temp2
+		store	color,(temp2)  	; color has 0 in it
+		movei	#itCar,temp2
+		store	thePlayer,(temp2)
+nohit:
+
+	move	dotx,ypos		; get position of the currently displayed power ball
+	move	dotz,xpos
+	neg	ypos
+	neg	xpos
+	sharq	#16,xpos
+	sharq	#16,ypos
+	imult	scale,xpos
+	rorq	#16,scale
+	imult	scale,ypos
+	sharq	#15,xpos
+	sharq	#15,ypos
+	add	xorig,xpos
+	add	yorig,ypos
+	movei	#320,temp
+	imult	temp,ypos
+	movei	#dash,coord
+	add	xpos,coord
+	add	ypos,coord
+	subqt	#1,temp			; put "319" into temp
+	storeb	color,(coord)
+	addqt	#1,coord
+	storeb	color,(coord)
+	add	temp,coord
+	storeb	color,(coord)
+	addqt	#1,coord
+	storeb	color,(coord)
+.endif
+	jump	(skipit)		; jumps to t_around
+	nop
+
+; blit the digit represented by "digit" to
+; the screen, in pixel mode
+; assumes that B_PATD and B_DSTD are already set up with the
+; correct colours (foreground color in B_PATD, background
+; in B_DSTD)
+; also assumes that A*_BASE, A*_FLAGS
+; (A2 is source bitmap, 1 bit per pixel character data
+;  A1 is the destination)
+; 
+; that "coords" contains the (Y,X) coordinates
+; (Y in high word, X in low)
+; that "count" has the (Y,X) count (ditto)
+; and that "digitw" has the amount to shift "digit" by
+; to index into the font (e.g. "3" for an 8 bit wide
+; character)
+; Registers trashed: temp, temp2, tempptr
+;
+blitdig:
+
+_CDLOCAL_79_978:
+	load	(bcmd),temp			; see if the blitter is ready
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_79_978
+	nop
+
+	move	digit,temp			; load up the digit pattern data
+	sha	digitw,temp
+
+	movei	#A2_PIXEL,tempptr
+	store	temp,(tempptr)
+
+	movei	#A1_PIXEL,tempptr
+	store	coord,(tempptr)
+
+	movei	#B_COUNT,temp2
+	store	count,(temp2)
+
+	movei	#UPDA1|UPDA2|SRCEN|PATDSEL|BCOMPEN|BKGWREN,temp
+	jump	(return)
+	store	temp,(bcmd)				; starts the blitter
+
+;
+; hexdump: dump the number in "vx" out to the screen, in hex
+;
+hexdump:
+	moveq	#15,curval
+	moveq	#8,divisor
+hexloop:
+	move	vx,digit
+	and	curval,digit
+	shrq	#4,vx
+	JSR_DIGIT
+	subqt	#8,coord
+	subq	#1,divisor
+	movei	#hexloop,temp2
+	jump	NE,(temp2)
+	nop
+	RTS_HEX
+
+t_around:
+
+REGUNDEF	thePlayer
+REGUNDEF	frameptr
+REGUNDEF	oldframe
+REGUNDEF	curframe
+REGUNDEF	curtimer
+REGUNDEF	curval
+REGUNDEF	digit
+REGUNDEF	remain
+REGUNDEF	coord
+REGUNDEF	divisor
+REGUNDEF	blitrout
+REGUNDEF	tempptr
+REGUNDEF	count
+REGUNDEF	dohours
+REGUNDEF	bcmd
+REGUNDEF	color
+
+REGUNDEF	xpos
+REGUNDEF	ypos
+REGUNDEF	timecolor
+
+REGUNDEF	vx
+REGUNDEF	vy
+REGUNDEF	vz
+
+REGUNDEF	skipit
+REGUNDEF	skipflag
+
+REGUNDEF	scale
+REGUNDEF	xorig
+REGUNDEF	yorig

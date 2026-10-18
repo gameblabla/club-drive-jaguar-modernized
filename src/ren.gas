@@ -1,0 +1,168 @@
+;----------------------------------------------------------------------------
+;	ren.gas
+;
+;----------------------------------------------------------------------------
+
+GPU_DOES_BLIT	EQU	1
+
+;	DATA_FORMAT		MOTOROLA
+
+	include "jaguar.inc"
+	include "blit.inc"
+	include	"joypad.inc"
+
+	include "3d.inc"
+	include "68kequ.inc"
+
+; global register defines
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+return	REGEQU	R31
+
+
+	ORG	Overlay
+
+	include "3dds.inc"
+
+	MACRO nopCity
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
+	ENDM
+	MACRO cutItOut
+		moveq	#@1, temp2
+		movei	#(SEMAPHORE+8), innerLoop
+		movei	#thatsAllFolks, temp
+		jump		(temp)
+		store	temp2, (innerLoop)
+	ENDM
+
+	include	"time.gas"
+
+; r0-r2 are scratch registers for outer loop
+gl_curbnd	REGEQU	R0
+gl_bndlist	REGEQU	R1
+gl_player	REGEQU	R2
+
+; code start ----------------------------------------------------------------
+
+; DEBUG - test alignment of a label for texture map stuf
+	.globl		doTrap
+	.globl		odoTrap
+	.globl		odoTexTrap
+
+	movei	#doTrap, temp
+	moveq	#3, temp2
+	and		temp2, temp
+	jr		EQ, _CDLOCAL_4_67
+	nop
+		cutItOut	$12
+_CDLOCAL_4_67:
+; ------------------------------------------------------
+	;some temporary poly strucked stuffing
+;	movei	#$f03e0c, temp
+;	moveq	#1, temp2
+;;	bset		#16, temp2
+;	store	temp2, (temp) ;1
+;	addqt	#16, temp
+;	move		temp2, innerLoop
+;	add		innerLoop, temp2
+;	store	temp2, (temp) ;2
+;	addqt	#16, temp
+;	add		innerLoop, temp2
+;	store	temp2, (temp) ;3
+;	addqt	#16, temp
+;	add		innerLoop, temp2
+;	store	temp2, (temp) ;4
+;	nop
+
+	StartTimer	$14
+
+; start the band counter at the beginning of the current model's list
+
+	movei	#player,gl_player
+	load	(gl_player),gl_player
+	movei	#CAMERA_MODEL,temp
+	add	gl_player,temp
+	load	(temp),temp			; get the world the player is in
+	movei	#BND_LIST,gl_bndlist
+	add	temp,gl_bndlist
+	movei	#CURBND,temp2
+	store	gl_bndlist,(temp2)
+
+renloop:
+;
+; get the next band element
+;
+	movei	#CURBND,temp2
+	load	(temp2),gl_bndlist
+	movei	#GEO_BND_PTR,temp
+	load	(gl_bndlist),gl_curbnd
+	addqt	#4,gl_bndlist
+	movei	#renloopend,return
+	store	gl_bndlist,(temp2)		; save the list pointer
+	cmpq	#0,gl_curbnd			; is the current band 0
+	jump	EQ, (return)
+	nop
+
+	store	gl_curbnd, (temp)		; store the current .bnd pointer
+
+	include "tree.gas"
+
+	movei	#renloop, temp			; go back and compute the next band
+	jump	(temp)
+	nop
+
+renloopend:
+
+	SaveTimer	$14
+
+	; load driving routines
+	; (or playback routines, as appropriate)
+	movei	#gpu_do,temp
+	loadw	(temp),temp
+	movei	#thatsAllFolks,temp2
+	btst	#3,temp			; do collision detection, etc?
+	jump	EQ,(temp2)		; no == go stop the GPU
+	nop
+
+	movei	#egpprog, temp		; default is "3dend" function
+	movei	#loadIt, temp2
+	jump		(temp2)
+	nop
+
+; set sem -------------------------------------------------------------------
+;		; set the semaphore
+;		moveq	#1, temp
+;		movei	#SEMAPHORE, temp2
+;		store	temp, (temp2)
+
+; halt the GPU --------------------------------------------------------------
+thatsAllFolks:
+; stolen code
+		movei	#G_CTRL, temp2
+		load		(temp2), temp
+		bclr #0, temp
+		bset #1, temp
+		store	temp, (temp2)
+
+allGone2:	jr	allGone2
+		nop
+
+;-------------------------------------------------------------------
+	include "surf.gas"
+	include	"drawdot.gas"
+;	include "subs.gas"
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop

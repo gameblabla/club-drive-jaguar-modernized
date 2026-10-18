@@ -1,0 +1,777 @@
+;
+; sky drawing module
+;
+; this module expects a sky which is 640*100, with:
+;   top line is all blue (matches the color in sky1.gas)
+;   a "complete" view of the sky is 384 pixels
+;   the remaining 256 pixels are a repeat of the first 384
+;
+; The screen is
+; 320 pixels wide, which represents a field of view of approximately
+; 60 degrees, or 2048/6 BRADS.
+; So, there are 320/(2048/6) = 1920/2048 = 15/16 pixels per BRAD in the destination.
+;
+; The sky bitmap is 90 degrees + 60 degrees = 150 degrees, or 2560/3 BRADS. (should be 360+60 = 420 degrees)
+; This is stored in 768 pixels; so there are
+;  768/(2560/3) = 0.9 pixels per BRAD in the source
+
+; that means there are (9/10)/(15/16) = 0.96 source pixels per destination pixel
+
+.if 0
+
+SRC_SCALE	EQU	$6000		; pixels per BRAD in source	(15 bit fixed point)
+SD_SCALE	EQU	$6666		; source pixels per dest. pixel
+SCRN_X		EQU	$7FFF		; (320 * SD_SCALE) >> 8	-- remember to renormalize after multiplying
+SCRN_Y1		EQU	$2599		; (94 * SD_SCALE) >> 8	-- remember to renormalize after multiplying
+SCRN_Y2		EQU	$4fff		; (200 * SD_SCALE) >> 8
+SCRN_NORM	EQU	8			; see above
+HORIZ_ADJUST	EQU	639		; we want (HORIZ_ADJUST-512)*SRC_SCALE to be about 100
+SRC_SIZE	EQU	$0063027F	; 640x100 (sky source picture size)
+SRC_FLAGS	EQU	PITCH1|PIXEL16|WID640|XADDINC
+
+.else
+
+SRC_SCALE	EQU	$7332		; pixels per BRAD in source	(15 bit fixed point)
+SD_SCALE	EQU	$7ae0		; source pixels per dest. pixel
+SCRN_X		EQU	$4ccc		; (320 * SD_SCALE) >> 9	-- remember to renormalize after multiplying
+SCRN_Y1		EQU	$168f		; (94 * SD_SCALE) >> 9	-- remember to renormalize after multiplying
+SCRN_Y2		EQU	$2fff		; (200 * SD_SCALE) >> 9
+SCRN_NORM	EQU	9			; see above
+HORIZ_ADJUST	EQU	623		; we want (HORIZ_ADJUST-512)*SRC_SCALE to be about 100
+SRC_SIZE	EQU	$00780300	; 768x120 (sky source picture size)
+SRC_FLAGS	EQU	PITCH1|PIXEL16|WID768|XADDINC
+
+.endif
+
+;
+; ANGLES: in order to view the proper part of the sky, we have to reconstruct the yaw, pitch, and roll
+; angles from the transformation matrix. The information is calculated as follows:
+;    angle in the (x,z) plane (i.e. which direction, relative to the ground, we're looking in):
+;        atan2(zhead,xhead) = arctan(zhead/xhead)
+;    tilt angle (up into the sky):
+;        arccos(yhead)
+;    twist angle (how you're turned sideways)
+;        arccos(yrite)
+
+	include "jaguar.inc"
+	include	"blit.inc"
+	include	"3dds.inc"
+	include	"68kequ.inc"
+
+LFU_REPLACE	EQU	(LFU_AN|LFU_A)
+
+thePlayer	REGEQU	r0
+geoband	REGEQU	r1
+matptr	REGEQU	r2
+xtemp	REGEQU	r5
+ytemp	REGEQU	r6
+pic_x	REGEQU	r7
+pic_y	REGEQU	r8
+xinc	REGEQU	r9
+yinc	REGEQU	r10
+atantemp REGEQU	r11
+tempptr	REGEQU	r12
+mid	REGEQU r13
+basemat	REGEQU	r14
+storeptr	REGEQU r15
+
+pi2	REGEQU	r24
+sintbl	REGEQU	r25
+
+; R27-R31 reserved
+
+	MACRO JSR_ARCTAN
+		movei	#atan,atantemp
+		move	PC,return
+		jump	(atantemp)
+		addqt	#6,return
+	ENDM
+
+	MACRO JSR_ARCCOS
+		movei	#acos,atantemp
+		move	PC,return
+		jump	(atantemp)
+		addqt	#6,return
+	ENDM
+
+	MACRO JSR_ARCSIN
+		movei	#asin,atantemp
+		move	PC,return
+		jump	(atantemp)
+		addqt	#6,return
+	ENDM
+;
+
+	movefa	ALTplayer,thePlayer
+
+	movei	#G_DIVCTRL,temp2	; set up 16.16 division
+	moveq	#1,temp
+	store	temp,(temp2)
+
+
+	moveq	#4,pi2
+	movei	#sn,sintbl
+	shlq	#7,pi2
+;
+; get the car's direction heading
+; (used in other places) and alpha, beta angles
+; (used for the modem)
+;
+; direction heading is atan2(xhead,zhead)
+; alpha is arcsin(-yhead)
+; gamma is atan2(yrite,ydown)
+;
+; get direction heading
+;
+	moveq	#CAR_MATRIX,matptr
+	add	thePlayer,matptr
+	move	matptr,basemat
+	addqt	#12,matptr
+	loadw	(matptr),temp			; xhead
+	addqt	#4,matptr
+	loadw	(matptr),temp2			; zhead
+	shlq	#16,temp
+	sharq	#16,temp
+	shlq	#16,temp2
+	sharq	#16,temp2
+
+	JSR_ARCTAN
+	movei	#CAR_HEAD,storeptr
+	add	thePlayer,storeptr
+	store	temp,(storeptr)
+	addqt	#4,storeptr
+
+	move	basemat,matptr
+	addqt	#14,matptr			; yhead
+	loadw	(matptr),temp
+	shlq	#16,temp
+	sharq	#16,temp
+	neg	temp
+	JSR_ARCSIN
+	storew	temp,(storeptr)
+	addqt	#2,storeptr
+;
+; finally, get gamma
+;
+	move	basemat,matptr
+	addqt	#2,matptr
+	loadw	(matptr),temp			; yrite
+	addqt	#6,matptr
+	loadw	(matptr),temp2			; ydown
+	shlq	#16,temp
+	sharq	#16,temp
+	shlq	#16,temp2
+	sharq	#16,temp2
+	JSR_ARCTAN
+	storew	temp,(storeptr)
+
+;
+; see if we should draw the sky at all, by checking this player's model flags
+;
+	movei	#FLOOR_MODEL,temp
+	add	thePlayer,temp
+	load	(temp),temp		; get current band
+	moveq	#BND_FLAGS,temp2
+	add	temp,temp2
+	load	(temp2),temp2		; get band flags
+	movei	#goaround,temp
+	btst	#1,temp2		; should we draw sky with this band?
+	jump	EQ,(temp)
+	nop
+
+;
+; get the camera's direction heading
+; The matrix is stored as:
+;	xrite	yrite	zrite
+;	xdown	ydown	zdown
+;	xhead	yhead	zhead
+
+	movei	#(CAMERA_MATRIX+12),matptr
+	add	thePlayer,matptr
+
+	loadw	(matptr),temp			; xhead
+	addqt	#4,matptr
+	loadw	(matptr),temp2			; zhead
+	subqt	#2,matptr			; point at yhead
+	shlq	#16,temp
+	sharq	#16,temp
+	shlq	#16,temp2
+	sharq	#16,temp2
+
+;
+; find the (x,z) angle
+;
+	JSR_ARCTAN		; make "temp" the angle (0 to 2047)
+
+	move	temp,pic_x
+
+; scale the angles appropriately
+	bclr	#9,pic_x				; source bitmap angles should be between 0 and 511 (only)
+	bclr	#10,pic_x
+
+	movei	#171,temp
+	add	temp,pic_x				; make pic_x the center of the 60 degree (171*2 BRADs) field of vision
+
+;
+; pic_y is based on the angle with the y axis, the cosine of which is "yhead"
+;
+	loadw	(matptr),temp		; get yhead	(matptr was left pointing at it above)
+	subqt	#14,matptr		; point back at the beginning of the matrix
+
+	shlq	#16,temp
+	sharq	#16,temp
+
+	JSR_ARCCOS
+				; now we have an angle from 0-1024, with 0 being "pointed down", 512 "pointed ahead"
+	move	temp2,pic_y
+	neg	pic_y
+;
+; adjust the horizon
+;
+.if 0
+	movei	#HORIZ_ADJUST,temp2	; 
+	add	temp2,pic_y		; when pointing straight ahead (angle 512) we look at the bottom of the picture
+.else
+	movei	#SKYHIGH,temp2
+	load	(temp2),temp2
+	add	temp2,pic_y
+.endif
+	movei	#SRC_SCALE,temp2
+	imult	temp2,pic_x
+	shlq	#1,pic_x
+
+	imult	temp2,pic_y
+	shlq	#1,pic_y
+
+; finally, calculate the "twist": the cosine of the twist relative to the y axis is yrite
+; in order to get the sine, we need to know whether we're "right side up" or "up side down";
+; ydown tells us this
+
+
+	addqt	#2,matptr	; move from beginning of matrix to yrite
+	loadw	(matptr),yinc	; yrite
+	addqt	#6,matptr	; move to ydown
+	loadw	(matptr),xinc
+	shlq	#16,xinc
+	sharq	#16,xinc
+	shlq	#16,yinc
+	sharq	#16,yinc
+
+	move	yinc,temp	; save the cosine
+
+	JSR_ARCCOS
+	move	temp2,temp
+
+;JSR_SIN		; to get the sine that goes with the cosine
+	movei	#sine,temp2
+	move	PC,return
+	jump	(temp2)
+	addqt	#6,return
+
+	btst	#31,xinc	; should sine be negative?
+	jr	EQ,plussin
+	nop
+		neg	temp2
+
+plussin:
+	move	temp2,xinc
+
+; yinc already has the cosine...
+
+;
+; yinc should be sin(angle); xinc should be cos(angle)
+
+; (pic_x,pic_y) gives the center of the field of view; turn this into the upper left corner
+; by multiplying by appropriate amounts
+;	x' = x * xinc - y * yinc
+;	y' = y * xinc + x * yinc
+
+	movei	#SCRN_X,xtemp		; this is preshifted by 9 to fit in 0.15
+	movei	#splitscrn,temp
+	loadw	(temp),temp
+	movei	#-SCRN_Y1,ytemp
+	cmpq	#0,temp
+	jr	NE,_CDLOCAL_22_296
+	nop
+		movei	#-SCRN_Y2,ytemp
+_CDLOCAL_22_296:
+	imultn	xinc,xtemp
+	imacn	yinc,ytemp
+	resmac	temp
+	sharq	#(14-SCRN_NORM),temp			; 14 because xinc is /4 and SCRN_NORM because SCRN_X is normalized by it
+	sub	temp,pic_x
+	neg	ytemp
+	imultn	yinc,xtemp
+	imacn	xinc,ytemp
+	resmac	temp
+	sharq	#(14-SCRN_NORM),temp
+	sub	temp,pic_y
+
+; make sure blitter is free
+	movei	#B_CMD,temp2
+_CDLOCAL_9_311:
+	load	(temp2),temp
+	btst	#0,temp
+	jr	EQ,_CDLOCAL_9_311
+	nop
+
+; set up the blitter
+; window A1 is the source (the picture)
+; window A2 is the destination (the screen)
+
+	movei	#SKY,temp
+	movei	#A1_BASE,temp2
+	store	temp,(temp2)
+
+	addqt	#4,temp2		; move to A1_FLAGS
+	movei	#SRC_FLAGS,temp
+	store	temp,(temp2)
+
+	addqt	#4,temp2		; move to A1_CLIP
+	movei	#SRC_SIZE,temp			
+	store	temp,(temp2)
+
+	move	pic_y,temp
+	shrq	#16,temp
+	shlq	#16,temp
+	move	pic_x,temp2
+	shrq	#16,temp2
+	or	temp2,temp
+	movei	#A1_PIXEL,temp2
+	store	temp,(temp2)
+
+	move	pic_y,temp
+	shlq	#16,temp
+	move	pic_x,temp2
+	shlq	#16,temp2
+	shrq	#16,temp2
+	or	temp2,temp
+	movei	#A1_FPIXEL,temp2
+	store	temp,(temp2)
+
+
+; SCALE by appropriate amount to match source and destination pixels
+; ASSUMPTIONS: 0 < SD_SCALE <= 1
+; xinc and yinc are predivided by 4
+	movei	#SD_SCALE,temp
+
+	imult	temp,xinc
+	imult	temp,yinc
+	sharq	#13,xinc		; sharq #15 for SD_SCALE, then shl #2 because xinc and yinc are 14 bits
+	sharq	#13,yinc
+
+; set up the X and Y increments in the blitter
+
+	move	yinc,temp
+	shrq	#16,temp
+	shlq	#16,temp
+	move	xinc,temp2
+	shrq	#16,temp2
+	or	temp2,temp
+	movei	#A1_INC,temp2
+	store	temp,(temp2)
+
+	move	yinc,temp
+	shlq	#16,temp
+	move	xinc,temp2
+	shlq	#16,temp2
+	shrq	#16,temp2
+	or	temp2,temp
+	movei	#A1_FINC,temp2
+	store	temp,(temp2)
+
+; X and Y step are calculated as follows:
+; (1) xstep = -320*xinc-yinc
+; (2) ystep = -320*yinc+xinc
+
+	move	xinc,xtemp
+	move	yinc,ytemp
+
+	sharq	#2,xtemp
+	sharq	#2,ytemp
+	movei	#320,temp2
+	imult	temp2,xtemp
+	imult	temp2,ytemp
+	neg	xtemp
+	neg	ytemp
+	shlq	#2,xtemp
+	shlq	#2,ytemp
+	sub	yinc,xtemp
+	add	xinc,ytemp
+
+	move	ytemp,temp
+	move	xtemp,temp2
+	shrq	#16,temp
+	shlq	#16,temp
+	shrq	#16,temp2
+	or	temp2,temp
+
+	movei	#A1_STEP,temp2
+	store	temp,(temp2)
+
+	move	ytemp,temp
+	move	xtemp,temp2
+	shlq	#16,temp
+	shlq	#16,temp2
+	shrq	#16,temp2
+	or	temp2,temp
+
+	movei	#A1_FSTEP,temp2
+	store	temp,(temp2)
+
+
+;
+; set up stuff for the screen
+;
+	movei	#A2_BASE,temp2
+	movei	#PITCH1|PIXEL16|WID320|XADDPIX,temp
+	addqt	#4,temp2			; move to A2_FLAGS
+	store	temp,(temp2)
+	moveq	#0,temp
+	movei	#A2_PIXEL,temp2
+	store	temp,(temp2)
+	movei	#$0001FEC0,temp			; +1y, -320x
+	movei	#A2_STEP,temp2
+	store	temp,(temp2)
+	movei	#screen_addr,temp
+	load	(temp),temp
+	movei	#A2_BASE,temp2
+	store	temp,(temp2)
+
+	movei	#DRAWRECT,temp
+	load	(temp),temp		; get screen size
+	movei	#B_COUNT,temp2
+	store	temp,(temp2)
+;
+; start the blitter
+;
+	movei	#B_CMD,temp2
+	movei	#CLIP_A1|SRCEN|UPDA1F|UPDA1|UPDA2|DSTA2|LFU_REPLACE,temp
+	store	temp,(temp2)
+
+	movei	#goaround,temp
+	jump	(temp)
+	nop
+
+;
+; atan(y,x): find arc tangent of (y/x)
+; y is passed in temp	(14 bit value)
+; x is passed in temp2	(14 bit value)
+; returns a value from 0 to 2048, in temp
+; destroys: temp, temp2, xtemp, ytemp, atantemp,mid, tempptr, innerLoop
+;
+
+hi	REGEQU	xtemp
+lo	REGEQU	ytemp
+quadrant REGEQU	atantemp
+
+atan:
+	movei	#512,hi
+
+	move	temp2,quadrant
+	shrq	#31,quadrant		; quadrant is 0 if x is >= 0, 1 if x < 0
+	btst	#31,temp
+	jr	EQ,plusy
+	moveq	#3,lo
+		xor	lo,quadrant	; if z < 0, flip the bits
+plusy:
+	abs	temp
+	abs	temp2
+	btst	#0,quadrant
+	jr	EQ,noflip
+	nop
+		move	temp,lo		; for quadrants 1 and 3, exchange x and y
+		move	temp2,temp
+		move	lo,temp2
+noflip:
+	mult	hi,quadrant		; now quadrant is the starting angle for the quadrant
+	moveq	#0,lo
+
+	cmpq	#0,temp2
+	jr	NE,atandefined
+	nop
+		move	hi,temp		; hi still has 512 in it
+		jump	(return)
+		add	quadrant,temp
+atandefined:
+
+	cmpq	#0,temp
+	jr	NE,atanplus
+	nop
+		jump	(return)
+		add	quadrant,temp
+atanplus:
+	div	temp2,temp		; temp now contains y/x
+
+; now look up y/x in the tangent table
+
+
+	movei	#atanTab,tempptr
+	movei	#atanloop,innerLoop
+	moveq	#0,mid
+
+atanloop:
+	cmp	hi,lo			; if ((lo-hi >= 0) then return
+	jr	MI,moreatan
+	nop
+		move	mid,temp
+		subqt	#1,temp
+		jump	(return)
+		add	quadrant,temp
+moreatan:
+	move	lo,mid
+	add	hi,mid
+	sharq	#1,mid	; mid = [(hi+lo)/2]
+	move	mid,temp2
+	shlq	#2,temp2
+	add	tempptr,temp2
+	load	(temp2),temp2
+	cmp	temp2,temp	; if (y/x) == table[mid]
+	jr	NE,noteq
+	nop
+		move	mid,temp
+		jump	(return)	; return temp + quadrant
+		add	quadrant,temp
+noteq:
+	jr	MI,less		; else if (y/x) > table[mid]
+	nop
+		move	mid,lo
+		jump	(innerLoop)
+		addqt	#1,lo	;	lo = mid+1
+less:
+	move	mid,hi
+	jump	(innerLoop)
+	subqt	#1,hi		; else hi = mid-1
+
+;
+; arcsin(temp): returns the angle foo (-512 to 512) for which sin(foo) = temp
+;
+asin:
+	move	temp,quadrant
+	abs	temp
+
+	movei	#512,hi
+	moveq	#0,lo
+
+	cmpq	#0,temp
+	jump	EQ,(return)		; sin(0) = 0
+	nop
+; look up temp in the sine table
+	movei	#moreasin,tempptr
+	movei	#asinloop,innerLoop
+	moveq	#0,mid
+
+asinloop:
+	move	hi,mid			; if (hi-lo <= 1)
+	sub	lo,mid
+	cmpq	#2,mid
+	jump	PL,(tempptr)
+	nop
+		move	lo,tempptr
+		move	hi,temp2
+		shlq	#1,tempptr
+		shlq	#1,temp2
+		add	sintbl,tempptr
+		loadw	(tempptr),tempptr
+		add	sintbl,temp2
+		load	(temp2),temp2
+		sub	temp,tempptr
+		sub	temp,temp2
+		abs	tempptr
+		abs	temp2
+		move	lo,mid		; assume return value is "lo"
+		cmp	tempptr,temp2	; if (hi value is closer to temp than lo value)
+		jr	MI,asinlo
+		nop
+			move	hi,mid
+	asinlo:
+		btst	#31,quadrant
+		jr	EQ,asin0
+		move	mid,temp		; set temp to return value
+			neg	temp		; sin(-x) = -sin(x)
+	asin0:
+		jump	(return)
+		nop
+moreasin:
+	move	lo,mid
+	add	hi,mid
+	sharq	#1,mid		; mid = [(hi+lo)/2]
+	move	mid,temp2
+	shlq	#1,temp2	; table has words
+	add	sintbl,temp2
+	loadw	(temp2),temp2
+	cmp	temp2,temp	; if (y/x) == table[mid]
+	jr	NE,sanoteq
+	nop
+		btst	#31,quadrant
+		jr	EQ,asin1
+		move	mid,temp
+			neg	temp
+	asin1:
+		jump	(return)
+		nop
+sanoteq:
+	jr	MI,saless		; else if (y/x) > table[mid]
+	nop
+		move	mid,lo
+		jump	(innerLoop)
+		addqt	#1,lo	;	lo = mid+1
+saless:
+	move	mid,hi
+	jump	(innerLoop)
+	subqt	#1,hi		; else hi = mid-1
+
+
+;
+; arccos(temp): returns the angle foo (0 to 1024) for which cos(foo) = temp
+; value is returned in temp2
+; destroys: temp, temp2, xtemp, ytemp, atantemp,mid, tempptr, innerLoop
+;
+acos:
+	move	temp,quadrant
+	abs	temp
+
+	movei	#512,hi
+	moveq	#0,lo
+
+	cmpq	#0,temp
+	jr	NE,acosnz
+	nop
+		jump	(return)
+		move	hi,temp2
+acosnz:
+
+; look up temp in the sine table
+	movei	#moreacos,tempptr
+	movei	#acosloop,innerLoop
+	moveq	#0,mid
+
+acosloop:
+	move	hi,mid			; if (hi-lo <= 1)
+	sub	lo,mid
+	cmpq	#2,mid
+	jump	PL,(tempptr)
+	nop
+		move	lo,tempptr
+		move	hi,temp2
+		shlq	#1,tempptr
+		shlq	#1,temp2
+		add	sintbl,tempptr
+		loadw	(tempptr),tempptr
+		add	sintbl,temp2
+		load	(temp2),temp2
+		sub	temp,tempptr
+		sub	temp,temp2
+		abs	tempptr
+		abs	temp2
+		move	lo,mid		; assume return value is "lo"
+		cmp	tempptr,temp2	; if (hi value is closer to temp than lo value)
+		jr	MI,acoslo
+		nop
+			move	hi,mid
+	acoslo:
+		moveq	#1,temp2
+		btst	#31,quadrant
+		jr	NE,acos0
+		shlq	#9,temp2		; set temp2 to 512
+			jump	(return)
+			sub	mid,temp2	; set temp2 to 512 - mid
+	acos0:
+		jump	(return)
+		add	mid,temp2
+moreacos:
+	move	lo,mid
+	add	hi,mid
+	sharq	#1,mid		; mid = [(hi+lo)/2]
+	move	mid,temp2
+	shlq	#1,temp2	; table has words
+	add	sintbl,temp2
+	loadw	(temp2),temp2
+	cmp	temp2,temp	; if (y/x) == table[mid]
+	jr	NE,anoteq
+	nop
+		moveq	#1,temp2
+		btst	#31,quadrant
+		jr	NE,acos1
+		shlq	#9,temp2		; set temp2 to 512
+			jump	(return)
+			sub	mid,temp2	; set temp2 to 512 - mid
+	acos1:
+		jump	(return)
+		add	mid,temp2	
+anoteq:
+	jr	MI,aless		; else if (y/x) > table[mid]
+	nop
+		move	mid,lo
+		jump	(innerLoop)
+		addqt	#1,lo	;	lo = mid+1
+aless:
+	move	mid,hi
+	jump	(innerLoop)
+	subqt	#1,hi		; else hi = mid-1
+
+
+;
+;	SUBROUTINE AREA
+;
+; sin, cos
+; -----------------------------------------------------------------------
+;	sine & cosine   16-bit table lookup Cosine
+;
+;	GIVEN:
+;		temp = Angle (Binary Radians (1 BRAD = PI/1024))
+;		pi2 = PI/2 ($200 in Brads)
+;		sintbl = Ptr to Sine Table
+;
+;	RETURNS:
+;		TEMP = Cos(Angle)*$4000
+;
+;	REGISTER USAGE:
+;		temp, temp2, return
+;
+;
+cosine:
+	add	pi2,temp	; Cos(a) = Sin(a + pi/2)
+sine:
+	move		temp, temp2	; keep quadrant data in temp
+	shlq		#23, temp2	; strip quadrant data
+	btst		#9, temp
+	jr		EQ, _CDLOCAL_10_744
+	shrq		#22, temp2	; word address
+		shlq	#1, pi2 ; this is free
+		neg	temp2
+		add	pi2, temp2
+		shrq	#1, pi2 ; this is free
+_CDLOCAL_10_744:
+	add		sintbl, temp2
+	btst		#10, temp
+	loadw	(temp2), temp2
+	jump		EQ, (return)
+	nop
+	jump		(return)
+	neg		temp2
+
+;
+;
+goaround:
+
+;
+; all done, clean up
+;
+	movei	#G_DIVCTRL,temp2	; restore 32 bit division
+	moveq	#0,temp
+	store	temp,(temp2)
+
+
+REGUNDEF	thePlayer
+REGUNDEF	xhead
+REGUNDEF	yhead
+REGUNDEF	zhead
+REGUNDEF	xtemp
+REGUNDEF	ytemp
+REGUNDEF	pic_x
+REGUNDEF	pic_y
+REGUNDEF	xinc
+REGUNDEF	yinc
+REGUNDEF	atantemp
+

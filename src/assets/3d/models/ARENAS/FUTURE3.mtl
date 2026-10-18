@@ -1,0 +1,48 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl AQUA_GLAZE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: AQUA GLAZE
+
+newmtl ATARI
+Kd 0.7 0.7 0.7
+# Original 1994 material name: ATARI
+
+newmtl BLACK_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK MATTE
+
+newmtl BLACK_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK PLASTIC
+
+newmtl BLUE_PLASTIC_50
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLUE PLASTIC 50
+
+newmtl COPPER
+Kd 0.7 0.7 0.7
+# Original 1994 material name: COPPER
+
+newmtl DARK_GRAY_MATTE1
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK GRAY MATTE1
+
+newmtl DARK_GRAY_MATTE2
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK GRAY MATTE2
+
+newmtl GRAY_METALIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY METALIC
+
+newmtl GREEN_MATTE4
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GREEN MATTE4
+
+newmtl RED_NEON
+Kd 0.7 0.7 0.7
+# Original 1994 material name: RED NEON
+
+newmtl WHITE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE MATTE

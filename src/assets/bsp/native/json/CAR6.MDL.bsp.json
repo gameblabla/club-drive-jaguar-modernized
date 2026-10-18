@@ -1,0 +1,304 @@
+{
+  "schema": "club-bsp",
+  "source_model": "CAR6.MDL",
+  "source_template_sha256": "bb92f413bb48b2d2fc4f9c07314536becb6c507e9ec8565cdb6d6bf2254ef140",
+  "provenance": "2026 symbolic reconstruction from surviving original .MDL tree comments and header",
+  "limitations": [
+    "BSP splitter selection and polygon repartitioning are NOT derived from 3D geometry",
+    "Only existing node types and record sizes are editable",
+    "Leaves reference offsets of existing collision polygon lists, not vertex IDs"
+  ],
+  "valid_cp_offsets": {
+    "0": 0,
+    "2": 1,
+    "594": 2,
+    "610": 3,
+    "626": 4,
+    "640": 5,
+    "654": 6,
+    "670": 7,
+    "696": 8,
+    "712": 9,
+    "726": 10,
+    "740": 11,
+    "754": 12,
+    "768": 13,
+    "784": 14,
+    "814": 15,
+    "828": 16
+  },
+  "divider_count": 53,
+  "nodes": [
+    {
+      "offset": 0,
+      "type": "split",
+      "divider": 42,
+      "first_child": 32,
+      "second_child": 8,
+      "line": 446
+    },
+    {
+      "offset": 8,
+      "type": "split",
+      "divider": 43,
+      "first_child": 24,
+      "second_child": 16,
+      "line": 448
+    },
+    {
+      "offset": 16,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 594,
+      "line": 450,
+      "long_line": 451
+    },
+    {
+      "offset": 24,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 2,
+      "line": 453,
+      "long_line": 454
+    },
+    {
+      "offset": 32,
+      "type": "split",
+      "divider": 44,
+      "first_child": 80,
+      "second_child": 40,
+      "line": 456
+    },
+    {
+      "offset": 40,
+      "type": "split",
+      "divider": 45,
+      "first_child": 56,
+      "second_child": 48,
+      "line": 458
+    },
+    {
+      "offset": 48,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 828,
+      "line": 460,
+      "long_line": 461
+    },
+    {
+      "offset": 56,
+      "type": "split",
+      "divider": 46,
+      "first_child": 72,
+      "second_child": 64,
+      "line": 463
+    },
+    {
+      "offset": 64,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 814,
+      "line": 465,
+      "long_line": 466
+    },
+    {
+      "offset": 72,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 784,
+      "line": 468,
+      "long_line": 469
+    },
+    {
+      "offset": 80,
+      "type": "split",
+      "divider": 24,
+      "first_child": 192,
+      "second_child": 88,
+      "line": 471
+    },
+    {
+      "offset": 88,
+      "type": "split",
+      "divider": 47,
+      "first_child": 120,
+      "second_child": 96,
+      "line": 473
+    },
+    {
+      "offset": 96,
+      "type": "split",
+      "divider": 48,
+      "first_child": 112,
+      "second_child": 104,
+      "line": 475
+    },
+    {
+      "offset": 104,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 768,
+      "line": 477,
+      "long_line": 478
+    },
+    {
+      "offset": 112,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 696,
+      "line": 480,
+      "long_line": 481
+    },
+    {
+      "offset": 120,
+      "type": "split",
+      "divider": 27,
+      "first_child": 168,
+      "second_child": 128,
+      "line": 483
+    },
+    {
+      "offset": 128,
+      "type": "split",
+      "divider": 49,
+      "first_child": 144,
+      "second_child": 136,
+      "line": 485
+    },
+    {
+      "offset": 136,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 670,
+      "line": 487,
+      "long_line": 488
+    },
+    {
+      "offset": 144,
+      "type": "split",
+      "divider": 50,
+      "first_child": 160,
+      "second_child": 152,
+      "line": 490
+    },
+    {
+      "offset": 152,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 654,
+      "line": 492,
+      "long_line": 493
+    },
+    {
+      "offset": 160,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 610,
+      "line": 495,
+      "long_line": 496
+    },
+    {
+      "offset": 168,
+      "type": "split",
+      "divider": 51,
+      "first_child": 184,
+      "second_child": 176,
+      "line": 498
+    },
+    {
+      "offset": 176,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 754,
+      "line": 500,
+      "long_line": 501
+    },
+    {
+      "offset": 184,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 726,
+      "line": 503,
+      "long_line": 504
+    },
+    {
+      "offset": 192,
+      "type": "split",
+      "divider": -1,
+      "first_child": 208,
+      "second_child": 200,
+      "line": 506
+    },
+    {
+      "offset": 200,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 626,
+      "line": 508,
+      "long_line": 509
+    },
+    {
+      "offset": 208,
+      "type": "split",
+      "divider": -1,
+      "first_child": 224,
+      "second_child": 216,
+      "line": 511
+    },
+    {
+      "offset": 216,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 640,
+      "line": 513,
+      "long_line": 514
+    },
+    {
+      "offset": 224,
+      "type": "split",
+      "divider": 52,
+      "first_child": 240,
+      "second_child": 232,
+      "line": 516
+    },
+    {
+      "offset": 232,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 740,
+      "line": 518,
+      "long_line": 519
+    },
+    {
+      "offset": 240,
+      "type": "leaf",
+      "unused_word": 0,
+      "cp_offset": 712,
+      "line": 521,
+      "long_line": 522
+    }
+  ],
+  "statistics": {
+    "nodes": 31,
+    "splits": 15,
+    "leaves": 16,
+    "cp_indices": [
+      9,
+      11,
+      5,
+      4,
+      10,
+      12,
+      3,
+      6,
+      7,
+      8,
+      13,
+      14,
+      15,
+      16,
+      1,
+      2
+    ]
+  }
+}

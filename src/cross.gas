@@ -1,0 +1,536 @@
+;for fade GPU code
+CROSS_PRG		equ	$F03000			;start of program
+CROSS_PIC1	equ	$F03F00
+CROSS_PIC1_END	equ	$F03F04
+CROSS_PIC2	equ	$F03F08
+CROSS_CNT		equ	$F03F0C			;crossfade counter (0-16)
+CROSS_DEST	equ	$F03F10
+CROSS_DONE	equ	$F03F14			;1 when crossfade is done
+	include "jaguar.inc"
+
+doneadr			REGEQU	r0
+temp				REGEQU	r1
+temp1			REGEQU	r1
+pic1_adr			REGEQU	r3
+pic1_end			REGEQU	r4
+pic2_adr			REGEQU	r5
+
+dest				REGEQU	r7
+
+origcolors		REGEQU	r8
+newcolors			REGEQU	r9
+
+donelabel			REGEQU	r10
+
+Pixel_a			REGEQU	r12
+Pixel_b			REGEQU	r13
+outpix			REGEQU	r14
+Pixel_a2			REGEQU	r15
+Pixel_b2			REGEQU	r16
+outpix2			REGEQU	r17
+
+mask_1_16			REGEQU	r20
+mask_2_16			REGEQU	r21
+mask_4_16			REGEQU	r22
+mask_8_16			REGEQU	r23
+
+fade_cnt			REGEQU	r25
+
+jump_table_addr	REGEQU	r27
+
+g_hi				REGEQU	r29
+
+	ORG	CROSS_PRG
+
+		movei	#CROSS_DONE,doneadr
+		moveq	#0,temp
+		store	temp,(doneadr)				;initialize done flag
+
+		movei	#CROSS_PIC1,temp
+		load		(temp),pic1_adr			;get the start address
+		addq		#4,temp
+		load		(temp),pic1_end			;get the end address
+		addq		#4,temp
+		load		(temp),pic2_adr
+		addq		#4,temp
+		load		(temp),fade_cnt
+		addq		#4,temp
+		load		(temp),dest
+
+		movei	#%01111011110111110111101111011111,mask_8_16
+		movei	#%00111001110011110011100111001111,mask_4_16
+		movei	#%00011000110001110001100011000111,mask_2_16
+		movei	#%00001000010000110000100001000011,mask_1_16
+
+		movei	#G_HIDATA,g_hi
+		movei	#done,donelabel
+		movei	#jmp_table,temp
+		shlq		#2,fade_cnt
+		add		fade_cnt,temp				;add fade_cnt * 4
+		load		(temp),jump_table_addr
+		rorq		#16,jump_table_addr			;swap the words
+fadeloop:
+		jump		(jump_table_addr)
+		nop
+done:
+		movei	#1,temp
+		store	temp,(doneadr)				;1 indicates program is finished
+
+		movei	#$00000008,R30
+		movei	#G_CTRL,R31
+		store	R30,(R31)					;stop the GPU
+
+		nop
+		nop
+		nop
+		nop
+
+MACRO Get_08_08
+	move	Pixel_a,		outpix		; Start with 16/16
+	shrq #1,			Pixel_a		; Pixel = 8/16
+	shrq #1,			Pixel_b		; Pixel = 8/16
+	and	mask_8_16,	Pixel_a		;
+	and	mask_8_16,	Pixel_b		; For consitency, we get Pixel_a by
+	sub	Pixel_a,		outpix		;   subtracting
+	add	Pixel_b,		outpix
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_a2,		outpix2		; Start with 16/16
+	shrq #1,			Pixel_a2		; Pixel = 8/16
+	shrq #1,			Pixel_b2		; Pixel = 8/16
+	and	mask_8_16,	Pixel_a2		;
+	and	mask_8_16,	Pixel_b2		; For consitency, we get Pixel_a by
+	sub	Pixel_a2,		outpix2		;   subtracting
+	add	Pixel_b2,		outpix2
+ENDM	
+
+MACRO Get_09_07
+	move	Pixel_b,		outpix
+	shrq #1,			Pixel_b
+	shrq #1,			Pixel_a
+	and	mask_8_16,	Pixel_b
+	and	mask_8_16,	Pixel_a
+	sub	Pixel_b,		outpix
+	add	Pixel_a,		outpix
+	shrq #3,			Pixel_b
+	shrq #3,			Pixel_a
+	and	mask_1_16,	Pixel_b
+	and	mask_1_16,	Pixel_a
+	sub	Pixel_b,		outpix
+	add	Pixel_a,		outpix
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_b2,		outpix2
+	shrq #1,			Pixel_b2
+	shrq #1,			Pixel_a2
+	and	mask_8_16,	Pixel_b2
+	and	mask_8_16,	Pixel_a2
+	sub	Pixel_b2,		outpix2
+	add	Pixel_a2,		outpix2
+	shrq #3,			Pixel_b2
+	shrq #3,			Pixel_a2
+	and	mask_1_16,	Pixel_b2
+	and	mask_1_16,	Pixel_a2
+	sub	Pixel_b2,		outpix2
+	add	Pixel_a2,		outpix2
+ENDM	
+
+MACRO Get_10_06
+	move	Pixel_a,		outpix
+	shrq #2,			Pixel_a		; Pixel = 4/16
+	shrq #2,			Pixel_b		; Pixel = 4/16
+	and	mask_4_16,	Pixel_a		;
+	and	mask_4_16,	Pixel_b		;
+	sub	Pixel_a,		outpix
+	add	Pixel_b,		outpix
+	shrq #1,			Pixel_a		; Pixel = 2/16
+	shrq #1,			Pixel_b		; Pixel = 2/16
+	and	mask_2_16,	Pixel_a		;
+	and	mask_2_16,	Pixel_b		;
+	sub	Pixel_a,		outpix
+	add	Pixel_b,		outpix
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_a2,		outpix2
+	shrq #2,			Pixel_a2		; Pixel = 4/16
+	shrq #2,			Pixel_b2		; Pixel = 4/16
+	and	mask_4_16,	Pixel_a2		;
+	and	mask_4_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2
+	add	Pixel_b2,		outpix2
+	shrq #1,			Pixel_a2		; Pixel = 2/16
+	shrq #1,			Pixel_b2		; Pixel = 2/16
+	and	mask_2_16,	Pixel_a2		;
+	and	mask_2_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2
+	add	Pixel_b2,		outpix2
+ENDM	
+
+MACRO Get_11_05
+	move	Pixel_a,		outpix		; Start with 16/16
+	shrq #2,			Pixel_a		; Pixel = 4/16
+	shrq #2,			Pixel_b		; Pixel = 4/16
+	and	mask_4_16,	Pixel_a		;
+	and	mask_4_16,	Pixel_b		;
+	sub	Pixel_a,		outpix
+	add	Pixel_b,		outpix
+	shrq #2,			Pixel_a		; Pixel = 1/16
+	shrq #2,			Pixel_b		; Pixel = 1/16
+	and	mask_1_16,	Pixel_a		;
+	and	mask_1_16,	Pixel_b		;
+	sub	Pixel_a,		outpix
+	add	Pixel_b,		outpix
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_a2,		outpix2		; Start with 16/16
+	shrq #2,			Pixel_a2		; Pixel = 4/16
+	shrq #2,			Pixel_b2		; Pixel = 4/16
+	and	mask_4_16,	Pixel_a2		;
+	and	mask_4_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2
+	add	Pixel_b2,		outpix2
+	shrq #2,			Pixel_a2		; Pixel = 1/16
+	shrq #2,			Pixel_b2		; Pixel = 1/16
+	and	mask_1_16,	Pixel_a2		;
+	and	mask_1_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2
+	add	Pixel_b2,		outpix2
+ENDM	
+
+MACRO Get_12_04
+	move	Pixel_a,		outpix		; Start with 16/16
+	shrq #2,			Pixel_a		; Pixel = 4/16
+	shrq #2,			Pixel_b		; Pixel = 4/16
+	and	mask_4_16,	Pixel_a		;
+	and	mask_4_16,	Pixel_b		;
+	sub	Pixel_a,		outpix		; Leave 12/16
+	add	Pixel_b,		outpix
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_a2,		outpix2		; Start with 16/16
+	shrq #2,			Pixel_a2		; Pixel = 4/16
+	shrq #2,			Pixel_b2		; Pixel = 4/16
+	and	mask_4_16,	Pixel_a2		;
+	and	mask_4_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2		; Leave 12/16
+	add	Pixel_b2,		outpix2
+ENDM	
+
+MACRO Get_13_03
+	move	Pixel_a,		outpix		; Start with 16/16
+	shrq #3,			Pixel_a		; Pixel_a = 2/16
+	shrq #3,			Pixel_b		; Pixel = 2/16
+	and	mask_2_16,	Pixel_a		;
+	and	mask_2_16,	Pixel_b		;
+	sub	Pixel_a,		outpix		; outpix = 14/16
+	add	Pixel_b,		outpix
+	shrq #1,			Pixel_a		; 
+	shrq #1,			Pixel_b		; Pixel = 1/16
+	and	mask_1_16,	Pixel_a		; Pixel_a = 1/16
+	and	mask_1_16,	Pixel_b		;
+	sub	Pixel_a,		outpix		; outpix = 13/16
+	add	Pixel_b,		outpix
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_a2,		outpix2		; Start with 16/16
+	shrq #3,			Pixel_a2		; Pixel_a = 2/16
+	shrq #3,			Pixel_b2		; Pixel = 2/16
+	and	mask_2_16,	Pixel_a2		;
+	and	mask_2_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2		; outpix = 14/16
+	add	Pixel_b2,		outpix2
+	shrq #1,			Pixel_a2		; 
+	shrq #1,			Pixel_b2		; Pixel = 1/16
+	and	mask_1_16,	Pixel_a2		; Pixel_a = 1/16
+	and	mask_1_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2		; outpix = 13/16
+	add	Pixel_b2,		outpix2
+ENDM
+
+MACRO Get_14_02
+	move	Pixel_a,		outpix		; Start with 16/16
+	shrq #3,			Pixel_a		; Pixel_a = 2/16
+	shrq #3,			Pixel_b		; Pixel_b = 2/16
+	and	mask_2_16,	Pixel_a		;
+	and	mask_2_16,	Pixel_b		;
+	sub	Pixel_a,		outpix		; Leave 14/16
+	add	Pixel_b,		outpix		;
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_a2,		outpix2		; Start with 16/16
+	shrq #3,			Pixel_a2		; Pixel_a = 2/16
+	shrq #3,			Pixel_b2		; Pixel_b = 2/16
+	and	mask_2_16,	Pixel_a2		;
+	and	mask_2_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2		; Leave 14/16
+	add	Pixel_b2,		outpix2		;
+ENDM	
+
+MACRO Get_15_01
+	move	Pixel_a,		outpix		; Start with 16/16
+	shrq #4,			Pixel_a		;
+	shrq #4,			Pixel_b		; Pixel = 1/16
+	and	mask_1_16,	Pixel_a		; Get 1/16
+	and	mask_1_16,	Pixel_b		;
+	sub	Pixel_a,		outpix		; Subtract to get 15/16
+	add	Pixel_b,		outpix
+	nop	; GASM first-half pixel pipeline bubble
+
+	move	Pixel_a2,		outpix2		; Start with 16/16
+	shrq #4,			Pixel_a2		;
+	shrq #4,			Pixel_b2		; Pixel = 1/16
+	and	mask_1_16,	Pixel_a2		; Get 1/16
+	and	mask_1_16,	Pixel_b2		;
+	sub	Pixel_a2,		outpix2		; Subtract to get 15/16
+	add	Pixel_b2,		outpix2
+ENDM	
+
+MACRO Get_Pixels1
+	load	(pic1_adr),		Pixel_a
+	load	(pic2_adr),		Pixel_b
+	addq	#4,pic1_adr
+	addq	#4,pic2_adr
+	load	(pic1_adr),		Pixel_a2
+	load	(pic2_adr),		Pixel_b2
+ENDM	
+
+MACRO Get_Pixels2
+	load	(pic1_adr),		Pixel_b
+	load	(pic2_adr),		Pixel_a
+	addq	#4,pic1_adr
+	addq	#4,pic2_adr
+	load	(pic1_adr),		Pixel_b2
+	load	(pic2_adr),		Pixel_a2
+ENDM	
+
+MACRO	Reloop
+	jump	(donelabel)
+	nop
+ENDM
+
+
+
+Loop_16_00:
+		Get_Pixels1
+		store	Pixel_a,(g_hi)
+		storep	Pixel_a2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jr		NE,Loop_16_00				;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_15_01:
+		Get_Pixels1
+		Get_15_01
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)		;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_14_02:
+		Get_Pixels1
+		Get_14_02
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)		;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop           
+
+	
+Loop_13_03:
+		Get_Pixels1
+		Get_13_03
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_12_04:
+		Get_Pixels1
+		Get_12_04
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)		;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_11_05:
+		Get_Pixels1
+		Get_11_05
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_10_06:
+		Get_Pixels1
+		Get_10_06
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_09_07:
+		Get_Pixels1
+		Get_09_07
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_08_08:
+		Get_Pixels1
+		Get_08_08
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)		;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_07_09:
+		Get_Pixels2
+		Get_09_07
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_06_10:
+		Get_Pixels2
+		Get_10_06
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_05_11:
+		Get_Pixels2
+		Get_11_05
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_04_12:
+		Get_Pixels2
+		Get_12_04
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)		;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_03_13:
+		Get_Pixels2
+		Get_13_03
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_02_14:
+		Get_Pixels2
+		Get_14_02
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)		;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_01_15:
+		Get_Pixels2
+		Get_15_01
+		store	outpix,(g_hi)
+		storep	outpix2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jump		NE,(jump_table_addr)		;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+	
+Loop_00_16:
+		Get_Pixels2
+		store	Pixel_a,(g_hi)
+		storep	Pixel_a2,(dest)
+		addq		#4,pic1_adr				;go to next pixel
+		addq		#4,pic2_adr				;go to next pixel
+		cmp		pic1_end,pic1_adr			;see if at end address yet
+		jr		NE,Loop_00_16				;if not, change next pixel
+		addq		#8,dest					;go to next pixel (this can be here instead of NOP)
+		Reloop
+
+
+.phrase
+jmp_table:
+
+dc.w (Loop_16_00 & $ffff), (Loop_16_00 >> 16)
+dc.w (Loop_15_01 & $ffff), (Loop_15_01 >> 16)
+dc.w (Loop_14_02 & $ffff), (Loop_14_02 >> 16)
+dc.w (Loop_13_03 & $ffff), (Loop_13_03 >> 16)
+dc.w (Loop_12_04 & $ffff), (Loop_12_04 >> 16)
+dc.w (Loop_11_05 & $ffff), (Loop_11_05 >> 16)
+dc.w (Loop_10_06 & $ffff), (Loop_10_06 >> 16)
+dc.w (Loop_09_07 & $ffff), (Loop_09_07 >> 16)
+dc.w (Loop_08_08 & $ffff), (Loop_08_08 >> 16)
+dc.w (Loop_07_09 & $ffff), (Loop_07_09 >> 16)
+dc.w (Loop_06_10 & $ffff), (Loop_06_10 >> 16)
+dc.w (Loop_05_11 & $ffff), (Loop_05_11 >> 16)
+dc.w (Loop_04_12 & $ffff), (Loop_04_12 >> 16)
+dc.w (Loop_03_13 & $ffff), (Loop_03_13 >> 16)
+dc.w (Loop_02_14 & $ffff), (Loop_02_14 >> 16)
+dc.w (Loop_01_15 & $ffff), (Loop_01_15 >> 16)
+dc.w (Loop_00_16 & $ffff), (Loop_00_16 >> 16)

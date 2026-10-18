@@ -1,0 +1,52 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BEIGE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BEIGE MATTE
+
+newmtl BLACK_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK PLASTIC
+
+newmtl DARK_BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN MATTE
+
+newmtl DARK_GRAY_LUSTER
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK GRAY LUSTER
+
+newmtl FIREPORTAL
+Kd 0.7 0.7 0.7
+# Original 1994 material name: FIREPORTAL
+
+newmtl FLOOR_COLOR
+Kd 0.7 0.7 0.7
+# Original 1994 material name: FLOOR-COLOR
+
+newmtl GRAY_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY MATTE
+
+newmtl LAMP_POLE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: LAMP POLE
+
+newmtl LAMPSHADE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: LAMPSHADE
+
+newmtl PALM_TREE_TRUNK
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PALM TREE TRUNK
+
+newmtl PIANO
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PIANO
+
+newmtl STAIR_CLR
+Kd 0.7 0.7 0.7
+# Original 1994 material name: STAIR-CLR
+
+newmtl START_LINE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: START-LINE

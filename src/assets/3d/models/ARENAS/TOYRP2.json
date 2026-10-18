@@ -1,0 +1,164 @@
+{
+ "source": "ARENAS/TOYRP2.ASC",
+ "sha256": "7933d998fd52575810f24c288f7bcc0eef0ff208b03259bc302bd4c3e18cd139",
+ "objects": [
+  {
+   "name": "hall",
+   "vertices": [
+    [
+     "-368.656311",
+     "-2601.230957",
+     "133.799118"
+    ],
+    [
+     "-368.656311",
+     "-2601.230469",
+     "566.966614"
+    ],
+    [
+     "-368.65625",
+     "-1532.818848",
+     "126.738991"
+    ],
+    [
+     "-368.65625",
+     "-1532.818726",
+     "570.10614"
+    ],
+    [
+     "456.257568",
+     "-2562.865723",
+     "173.187775"
+    ],
+    [
+     "456.257568",
+     "-2562.86499",
+     "611.238098"
+    ],
+    [
+     "456.257568",
+     "-1495.238037",
+     "173.18718"
+    ],
+    [
+     "456.257568",
+     "-1490.295532",
+     "611.237488"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      7,
+      5,
+      1
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "AQUA GLAZE"
+    },
+    {
+     "vertices": [
+      3,
+      7,
+      1
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "AQUA GLAZE"
+    },
+    {
+     "vertices": [
+      4,
+      0,
+      1
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "AQUA GLAZE"
+    },
+    {
+     "vertices": [
+      5,
+      4,
+      1
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "AQUA GLAZE"
+    },
+    {
+     "vertices": [
+      2,
+      6,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "AQUA GLAZE"
+    },
+    {
+     "vertices": [
+      3,
+      2,
+      7
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "AQUA GLAZE"
+    },
+    {
+     "vertices": [
+      6,
+      2,
+      0
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "WHITE MATTE"
+    },
+    {
+     "vertices": [
+      4,
+      6,
+      0
+     ],
+     "edges": [
+      1,
+      0,
+      1
+     ],
+     "material": "WHITE MATTE"
+    }
+   ],
+   "declared_vertices": 8,
+   "declared_faces": 8
+  }
+ ],
+ "material_names": [
+  "AQUA GLAZE",
+  "WHITE MATTE"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

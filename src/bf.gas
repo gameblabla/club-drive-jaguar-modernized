@@ -1,0 +1,411 @@
+;----------------------------------------------------------------------------
+;	bf.gas
+;		Back Face tests bunches of normals for polygon culling and object
+;	ordering.
+;		Also computes "closeness" to the car's coordinate (which may
+;	differ from the eye coordinate).
+;
+; NOTE: all calculations are done in world coordinates, before points are transformed
+;----------------------------------------------------------------------------
+px		REGEQU	R0	; the plane's canonical point (in the eye coord system)
+py		REGEQU	R1
+pz		REGEQU	R2
+nx		REGEQU	R3	; the plane's normal vector
+ny		REGEQU	R4
+nz		REGEQU	R5
+dividers	REGEQU	R6	; working pointer into dividers
+vectors		REGEQU	R7	; base address of normal list
+points		REGEQU	R8	; base address of points list
+tDividers	REGEQU	R9	; working pointer into tDividers
+numNorms	REGEQU	R10	; loop counter - number of dividers
+six		REGEQU	R11	; a constant value of six
+radius		REGEQU	six	; band radius
+xe		REGEQU	R12
+tempZ	REGEQU	R13
+ze		REGEQU	R14
+normal	REGEQU	R15
+posn		REGEQU	R16
+closeList	REGEQU	R17	; word storage for closeness to all dividers - for collision detect
+
+ex		REGEQU	R18	; coordinate of eye point
+ey		REGEQU	R19
+ez		REGEQU	R20
+
+ox		REGEQU	R21	; coordinate of car center
+oy		REGEQU	R22
+oz		REGEQU	R23
+
+p2x		REGEQU	R24	; temporary vector
+p2y		REGEQU	R25
+p2z		REGEQU	R26
+
+
+; REGISTERS R27-R31 reserved
+
+	moveq	#6, six
+	movefa	ALTband,temp2
+	movei	#ROTPNT_LIST, points
+	add	temp2,points
+	load	(points),points
+	moveq	#NUM_PNTS, vectors
+	add	temp2,vectors
+	loadw	(vectors),vectors
+	movei	#tDIVIDERS, tDividers
+	add	temp2,tDividers
+	load	(tDividers),tDividers
+	movei	#DIVIDER_LIST, temp
+	add	temp2,temp
+	load	(temp), dividers
+	moveq	#NUM_DIVIDERS, temp
+	add	temp2,temp
+	loadw	(temp), numNorms
+	movei	#XORIG,temp
+	add	temp2,temp
+	load	(temp),px		; get center of current band
+	addqt	#4,temp
+	load	(temp),py
+	addqt	#4,temp
+	load	(temp),pz
+
+	movei	#tCLOSE_LIST, closeList
+	add	temp2,closeList
+	load	(closeList),closeList
+
+; load up eye and car coordinates
+	movefa	ALTcarx,ox
+	movefa	ALTcary,oy
+	movefa	ALTcarz,oz
+	movefa	ALTeyex,ex
+	movefa	ALTeyey,ey
+	movefa	ALTeyez,ez
+
+; adjust by band center
+	sub	px,ex
+	sub	py,ey
+	sub	pz,ez
+
+	sub	px,ox
+	sub	py,oy
+	sub	pz,oz
+
+	mult	six,vectors
+	add	points,vectors
+
+	movei	#bfLoop, innerLoop
+	load		(dividers), normal
+bfLoop:
+	addqt	#4,dividers
+
+	move		normal, posn	; split into two vector addresses
+	shrq		#16, posn
+
+	mult		six, normal
+	mult		six, posn
+	add		vectors, normal
+	add		points, posn
+
+	loadw	(posn), px		; get plane point (0.16)
+	addqt	#2, posn
+	loadw	(posn),py
+	addqt	#2,posn
+	loadw	(posn),pz
+	shlq	#16,px			; convert to 20.12
+	shlq	#16,py
+	shlq	#16,pz
+	sharq	#4,px
+	sharq	#4,py
+	sharq	#4,pz
+	move	px,p2x
+	move	py,p2y
+	move	pz,p2z
+
+	sub	ex,px
+	sub	ey,py
+	sub	ez,pz
+	sub	ox,p2x
+	sub	oy,p2y
+	sub	oz,p2z
+
+	move		px, temp2
+	move		py, temp
+	abs		temp2
+  	abs		temp
+	move		pz, tempZ
+	abs		tempZ
+	or		temp2, temp
+							loadw	(normal), nx	; get vector (0.15)
+	or		tempZ, temp
+							addqt	#2, normal
+	normi	temp, xe
+							loadw	(normal), ny
+	addqt	#9, xe
+							addqt	#2, normal
+	sha		xe, px
+	sha		xe, py
+							loadw	(normal), nz
+	sha		xe, pz	;na na
+
+
+	imultn	px, nx		; dot product of two vectors
+	imacn	py, ny
+	imacn	pz, nz
+	resmac	px
+
+	shrq		#31, px		; store sign bit
+	storeb	px, (tDividers)
+
+	; compute closeness to car
+	move		p2x, temp2
+	move		p2y, temp
+	abs		temp2
+	abs		temp
+	move		p2z, tempZ
+	abs		tempZ
+	or		temp2, temp
+	or		tempZ, temp
+	normi	temp,xe
+	addqt	#9,xe
+
+	sha	xe,p2x
+	sha	xe,p2y
+	sha	xe,p2z
+
+	imultn	p2x, nx		; dot product of two vectors
+	imacn	p2y, ny
+	imacn	p2z, nz
+	resmac	p2x
+
+
+	neg		xe
+	addqt	#21, xe		; 20.12x0.15 ->20.0, then *$40; so 15+12-6
+	sha		xe, p2x
+
+	abs		p2x
+	sat16	p2x
+
+	storew	p2x, (closeList)
+	addqt	#2, closeList
+	subq		#1, numNorms
+	addqt	#1, tDividers
+	jump		NE, (innerLoop)
+	load	(dividers),normal
+
+	cmp	normal,normal	; clear final load
+
+bndflags REGEQU	normal
+dist	REGEQU	p2x
+goclip	REGEQU	p2y
+
+REGUNDEF normal
+REGUNDEF p2x
+REGUNDEF p2y
+REGUNDEF p2z
+
+;
+; now check the band's distance to the viewing planes
+;
+	movefa	ALTband,temp2
+	nop
+	load	(temp2),bndflags	; get the band flags
+	movei	#XORIG,temp
+	add	temp,temp2
+	load	(temp2),ox	; put the band's origin in (ox,oy,oz)
+	bclr	#14,bndflags	; clear the "clip behind" flag
+	addqt	#4,temp2
+	load	(temp2),oy
+	addqt	#4,temp2
+	load	(temp2),oz
+	addqt	#4,temp2
+	load	(temp2),radius	; and band's radius in "radius"
+;
+; get camera position into (ex,ey,ez)
+;
+	movefa	ALTplayer,temp2
+	movei	#CAMERA_FLAG,temp
+	add	temp,temp2
+	movefa	ALTeyex,ex
+	movefa	ALTeyey,ey
+	movefa	ALTeyez,ez
+;
+; make sure (ox,oy,oz) for band position is relative to the eye
+; and is an integer
+;
+	sharq	#12,ox
+	sharq	#12,oy
+	sharq	#12,oz
+	sharq	#12,ex
+	sharq	#12,ey
+	sharq	#12,ez
+	sub	ex,ox
+	sub	ey,oy
+	sub	ez,oz
+
+	movei	#doclip,goclip
+	loadw	(temp2),temp		; get CAMERA_FLAG
+	movei	#CAR_MODEL,temp2
+	cmpq	#0,temp			; is it the inside the cockpit view?
+	jr	NE,_CDLOCAL_10_255
+	nop
+		movefa	ALTplayer,temp
+		add	temp,temp2
+		load	(temp2),temp2	; is this the car's model?
+		movefa	ALTband,temp
+		cmp	temp2,temp
+		jump	EQ,(goclip)	; yes -- clip it away
+		nop
+_CDLOCAL_10_255:
+
+;
+; normalize (ox,oy,oz) to (0.16)
+;
+	move	ox,temp
+	move	oy,temp2
+	abs	temp
+	abs	temp2
+	or	temp2,temp
+	move	oz,temp2
+	abs	temp2
+	or	temp2,temp
+	normi	temp,xe
+	addqt	#9,xe
+	sha	xe,ox
+	sha	xe,oy
+	sha	xe,oz
+	neg	xe
+	addqt	#14,xe			; we'll be multiplying by 0.14 numbers
+;
+; see if band is directly behind
+;
+	movefa	ALTxhead,nx
+	movefa	ALTyhead,ny
+	movefa	ALTzhead,nz
+
+	imultn	ox,nx
+	imacn	oy,ny
+	imacn	oz,nz
+	resmac	dist			; gives us a (signed) distance to the plane
+
+	cmpq	#0,dist			; if distance is positive, band is in front of plane -> no clipping
+	jr	PL,noclip1
+	nop
+		sha	xe,dist
+		moveq	#0,temp
+		abs	dist
+		bset	#15,temp
+		cmp	temp,dist		; if backwards distance >= $8000, always clip
+		jump	PL,(goclip)
+		nop
+		mult	dist,dist
+		cmp	radius,dist		; if backwards distance < radius, we can't clip
+		jump	PL,(goclip)
+		nop
+noclip1:
+;
+; next try at a 30 degree angle
+;
+	movei	#$6ed9,temp			; sqrt(3)/2, in 0.15
+	imult	temp,nx
+	imult	temp,ny
+	imult	temp,nz
+	sharq	#15,nx
+	sharq	#15,ny
+	sharq	#15,nz
+	movefa	ALTxrite,px
+	movefa	ALTyrite,py
+	movefa	ALTzrite,pz
+	shlq	#16,px				; sign extend...
+	shlq	#16,py
+	shlq	#16,pz
+	sharq	#17,px				; and divide by 2
+	sharq	#17,py
+	sharq	#17,pz
+	sub	px,nx
+	sub	py,ny
+	sub	pz,nz
+
+; now do the dot product
+
+	imultn	ox,nx
+	imacn	oy,ny
+	imacn	oz,nz
+	resmac	dist			; gives us a (signed) distance to the plane
+
+	cmpq	#0,dist			; if distance is positive, band is in front of plane -> no clipping
+	jr	PL,noclip2
+	nop
+		sha	xe,dist
+		moveq	#0,temp
+		abs	dist
+		bset	#15,temp
+		cmp	temp,dist		; if backwards distance >= $8000, always clip
+		jump	PL,(goclip)
+		nop
+		mult	dist,dist
+		cmp	radius,dist		; if backwards distance < radius, we can't clip
+		jump	PL,(goclip)
+		nop
+noclip2:
+
+; finally try the other 30 degree angle
+	shlq	#1,px
+	shlq	#1,py
+	shlq	#1,pz
+	add	px,nx
+	add	py,ny
+	add	pz,nz
+
+	imultn	ox,nx
+	imacn	oy,ny
+	imacn	oz,nz
+	resmac	dist			; gives us a (signed) distance to the plane
+
+	cmpq	#0,dist			; if distance is positive, band is in front of plane -> no clipping
+	jr	PL,noclip3
+	nop
+		sha	xe,dist
+		moveq	#0,temp
+		abs	dist
+		bset	#15,temp
+		cmp	temp,dist		; if backwards distance >= $8000, always clip
+		jump	PL,(goclip)
+		nop
+		mult	dist,dist
+		cmp	radius,dist		; if backwards distance < radius, we can't clip
+		jump	PL,(goclip)
+		nop
+noclip3:
+
+	jr	storeit
+	nop
+doclip:
+		bset	#14,bndflags			; set the "clip" flag		
+storeit:
+		movefa	ALTband,temp2
+		bclr	#13,bndflags		; clear the "put in list" flag
+		store	bndflags,(temp2)
+
+
+; register cleanup ----------------------------------------------------
+REGUNDEF	px
+REGUNDEF	py
+REGUNDEF	pz
+REGUNDEF	nx
+REGUNDEF	ny
+REGUNDEF	nz
+REGUNDEF	dividers
+REGUNDEF	vectors
+REGUNDEF	points
+REGUNDEF	tDividers
+REGUNDEF	numNorms
+REGUNDEF	six
+REGUNDEF	xe
+REGUNDEF	tempZ
+REGUNDEF	ze
+REGUNDEF	bndflags
+REGUNDEF	posn
+REGUNDEF	dataHi
+REGUNDEF	closeList
+REGUNDEF	dist
+REGUNDEF	finish
+REGUNDEF	radius
+REGUNDEF	goclip

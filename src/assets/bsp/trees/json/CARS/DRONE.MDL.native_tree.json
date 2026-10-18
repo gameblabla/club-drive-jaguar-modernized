@@ -1,0 +1,28 @@
+{
+  "schema": "club-native-tree",
+  "source_model": "CARS/DRONE.MDL",
+  "source_template_sha256": "04eba007f9389398b89856ec0b84a990c1ba6eaa31a151d1c5b2f606b40b9700",
+  "provenance": "Reconstructed in 2026 from Atari .MDL records and GPU tree.gas, not mkbnd",
+  "safety": "Generated .MDL files are separate; clean ROM keeps original tree",
+  "nodes": [
+    {
+      "id": "n0000",
+      "type": "split",
+      "divider": 0,
+      "first": "n0002",
+      "second": "n0001"
+    },
+    {
+      "id": "n0001",
+      "type": "leaf",
+      "flags": 0,
+      "cp_offset": 0
+    },
+    {
+      "id": "n0002",
+      "type": "leaf",
+      "flags": 0,
+      "cp_offset": 438
+    }
+  ]
+}

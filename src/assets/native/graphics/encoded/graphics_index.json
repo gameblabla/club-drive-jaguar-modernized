@@ -1,0 +1,207 @@
+{
+  "reference_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "resources": [
+    {
+      "symbol": "titlebk",
+      "original_filename": "titlebk.jag",
+      "start": 120816,
+      "evidence": "tables.s table at ROM 0x9b74, slot 0",
+      "slot_end": 159056,
+      "slot_length": 38240,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "c635ec560e621430caa682ec19aa628c37f4890c810b69a2d752784865288832"
+    },
+    {
+      "symbol": "rokltrs",
+      "original_filename": "rokltrs.jag",
+      "start": 159056,
+      "evidence": "tables.s table at ROM 0x9b74, slot 1",
+      "slot_end": 211336,
+      "slot_length": 52280,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "dead241cee0835e2a394bc00c9b8f9af50ed698a69992f7cc069a30ce6dc2b43"
+    },
+    {
+      "symbol": "seamap",
+      "original_filename": "seamap.jag",
+      "start": 211336,
+      "evidence": "tables.s table at ROM 0x9b74, slot 2",
+      "slot_end": 252056,
+      "slot_length": 40720,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "5b9aa070fbdca7ef64ff8f53bd80831e62c28f31af8b06a1552711938e83d174"
+    },
+    {
+      "symbol": "mp_bill",
+      "original_filename": "mp_bill.jag",
+      "start": 252056,
+      "evidence": "tables.s table at ROM 0x9b74, slot 4",
+      "slot_end": 253976,
+      "slot_length": 1920,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "b532689e195e269aaf1c51ca0caa0ac2b6279ebc90934da4a99fc9637d154764"
+    },
+    {
+      "symbol": "mp_club",
+      "original_filename": "mp_club.jag",
+      "start": 253976,
+      "evidence": "tables.s table at ROM 0x9b74, slot 3",
+      "slot_end": 259480,
+      "slot_length": 5504,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "01dfe8a60c08163a89b968ba19837991857719b7c23b3df833b949412107afdb"
+    },
+    {
+      "symbol": "credits",
+      "original_filename": "credits.jag",
+      "start": 259480,
+      "evidence": "tables.s table at ROM 0x9b74, slot 5",
+      "slot_end": 286088,
+      "slot_length": 26608,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "ebab4266487d021ff059448075ad45da62eeadf04a2554e043674b8163f099c8"
+    },
+    {
+      "symbol": "loadsf",
+      "original_filename": "loadsf.jag",
+      "start": 286088,
+      "evidence": "play.s loadscrs near ROM 0xb4cc, row 1",
+      "slot_end": 300896,
+      "slot_length": 14808,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "06e5c7cc0de247847e2c5200b43bc7f3bc7e57d76a79d817795bdc23c9c24933"
+    },
+    {
+      "symbol": "loadwst",
+      "original_filename": "loadwst.jag",
+      "start": 300896,
+      "evidence": "play.s loadscrs near ROM 0xb4cc, row 2",
+      "slot_end": 307424,
+      "slot_length": 6528,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "e4889999f70b9bf71081f30e6280e072e8b97d02997dfe52fbb7945d100a2d3e"
+    },
+    {
+      "symbol": "loadhs",
+      "original_filename": "loadhs.jag",
+      "start": 307424,
+      "evidence": "play.s loadscrs near ROM 0xb4cc, row 3",
+      "slot_end": 319984,
+      "slot_length": 12560,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "9c0b9ceb7092aded1a99a8939a30d431a34d1e55486e0963af9fb079d1a91ba8"
+    },
+    {
+      "symbol": "loadvp",
+      "original_filename": "loadvp.jag",
+      "start": 319984,
+      "evidence": "play.s loadscrs near ROM 0xb4cc, row 0",
+      "slot_end": 329208,
+      "slot_length": 9224,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "7afa6b9dd552d230eb8f5fa5410f1b6fb1e82b0ba6abc0500424ea21ea83763d"
+    },
+    {
+      "symbol": "loadtod",
+      "original_filename": "loadtod.jag",
+      "start": 329208,
+      "evidence": "play.s loadscrs near ROM 0xb4cc, row 4",
+      "slot_end": 333240,
+      "slot_length": 4032,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "900324acd446d6823b7b2bb29b4da4630a88c9178dd737831931cfc95a49b7cf"
+    },
+    {
+      "symbol": "loadgrc",
+      "original_filename": "loadgrc.jag",
+      "start": 333240,
+      "evidence": "play.s loadscrs near ROM 0xb4cc, row 5",
+      "slot_end": 339504,
+      "slot_length": 6264,
+      "boundary_confidence": "source-matched next GPU decompressor address",
+      "sha256": "b960c39b8e22e1856189643ed17bc54bb96809ac555b36cccabe4a367702d2f3"
+    },
+    {
+      "symbol": "mp_futm",
+      "original_filename": "mp_fut.m",
+      "start": 347888,
+      "decompressed_length_declared": 1876,
+      "evidence": "tables.s mask table ROM 0x9bd4, row 0",
+      "slot_end": 348536,
+      "slot_length": 648,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "a6a15763784ffb3ed44acc9d087acd8279ee9a149ce99e502dc8fb393c9d3d59"
+    },
+    {
+      "symbol": "mp_sfm",
+      "original_filename": "mp_sf.m",
+      "start": 348536,
+      "decompressed_length_declared": 2712,
+      "evidence": "tables.s mask table ROM 0x9bd4, row 1",
+      "slot_end": 349608,
+      "slot_length": 1072,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "e551274b8468b2d56c03fab747c23e1af9e51c35c533b70a5f36f2428a2a2198"
+    },
+    {
+      "symbol": "mp_wstm",
+      "original_filename": "mp_wst.m",
+      "start": 349608,
+      "decompressed_length_declared": 2548,
+      "evidence": "tables.s mask table ROM 0x9bd4, row 2",
+      "slot_end": 350536,
+      "slot_length": 928,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "7a9675d6cfacf5c99fa2432548e986dd302f8001db730919a303b5b18ddc2830"
+    },
+    {
+      "symbol": "mp_hsm",
+      "original_filename": "mp_hs.m",
+      "start": 350536,
+      "decompressed_length_declared": 3072,
+      "evidence": "tables.s mask table ROM 0x9bd4, row 3",
+      "slot_end": 351488,
+      "slot_length": 952,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "221007ead511abd11bcfcf4a545fea7e049af33fccab34a9d0ed5074ad3c7580"
+    },
+    {
+      "symbol": "mp_hs2m",
+      "original_filename": "mp_hs2.m",
+      "start": 351488,
+      "decompressed_length_declared": 1260,
+      "evidence": "tables.s mask table ROM 0x9bd4, row 4",
+      "slot_end": 351648,
+      "slot_length": 160,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "ea4011248262af8cad118ce296b90d79df3ebc8a09d88dfeea2ce20b0c7eb296"
+    },
+    {
+      "symbol": "mp_bilm",
+      "original_filename": "mp_bill.m",
+      "start": 351648,
+      "decompressed_length_declared": 2304,
+      "evidence": "tables.s mask table ROM 0x9bd4, row 6",
+      "slot_end": 352088,
+      "slot_length": 440,
+      "boundary_confidence": "adjacent verified pointer",
+      "sha256": "67025aff89b03bcb797ff1ea1f39fd24fb5ae0918e0f184c147791e0f259bcac"
+    },
+    {
+      "symbol": "mp_clbm",
+      "original_filename": "mp_club.m",
+      "start": 352088,
+      "decompressed_length_declared": 1600,
+      "evidence": "tables.s mask table ROM 0x9bd4, row 5",
+      "slot_end": 352720,
+      "slot_length": 632,
+      "boundary_confidence": "sound-bank start, pointer boundary inferred",
+      "sha256": "40fb60e97f9a0fa1eebf87aba0b5780ed8b8f0856e13ecba730508526fcd82e1"
+    }
+  ],
+  "notes": [
+    "Offsets verified by CPU data tables and 1994 Makefile source.",
+    "Extraction is the entire fixed address span; the final loading graphic is bounded by sys.s decompressor entry.",
+    "Original .jag compressed graphics format not yet converted to decompressed PNG."
+  ]
+}

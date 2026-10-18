@@ -1,0 +1,45 @@
+{
+  "polygons": 63,
+  "points": 95,
+  "normals": 32,
+  "dividers": 55,
+  "changed_original_points": 0,
+  "changed_original_normals": 0,
+  "changed_original_dividers": 0,
+  "added_edges": 4,
+  "cp_delta_bytes": 34,
+  "tree_delta_bytes": 68,
+  "compiled_nodes": 3,
+  "new_pointers": {
+    "dividers": 0,
+    "edges": 220,
+    "points": 808,
+    "tris": 1570,
+    "end of tris": 2434,
+    "tree": 2436,
+    "calculated colors": 2460
+  },
+  "cp_offsets": {
+    "0": 0,
+    "1": 2,
+    "2": 710
+  },
+  "probe_area_before": 14136.5,
+  "probe_area_after": 14136.5,
+  "probe_area_error": 0.0,
+  "new_point": [
+    0,
+    20,
+    -36
+  ],
+  "new_normal": [
+    0,
+    32767,
+    0
+  ],
+  "new_divider": [
+    94,
+    31
+  ],
+  "new_vertex_id": 95
+}

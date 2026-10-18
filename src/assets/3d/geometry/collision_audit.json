@@ -1,0 +1,39 @@
+{
+  "source": "surviving mktp.c, model.doc, CARS/*.BND, CARS/*.MDL",
+  "status": "checked indexes, normals and BND-to-MDL vertex flip (no BSP regeneration)",
+  "models": {
+    "CAR2": {
+      "vertices": 94,
+      "edges": 143,
+      "normals": 31,
+      "dividers": 54,
+      "polygon_surfaces": 60,
+      "closed_polygon_loops": 60,
+      "max_surface_plane_residual_units": 0.9466,
+      "all_divider_references_valid": true,
+      "mdl_flip_exact": true
+    },
+    "CAR3": {
+      "vertices": 90,
+      "edges": 139,
+      "normals": 31,
+      "dividers": 40,
+      "polygon_surfaces": 60,
+      "closed_polygon_loops": 60,
+      "max_surface_plane_residual_units": 1.0271,
+      "all_divider_references_valid": true,
+      "mdl_flip_exact": true
+    },
+    "DRONE": {
+      "vertices": 68,
+      "edges": 96,
+      "normals": 12,
+      "dividers": 35,
+      "polygon_surfaces": 35,
+      "closed_polygon_loops": 35,
+      "max_surface_plane_residual_units": 0.4623,
+      "all_divider_references_valid": true,
+      "mdl_flip_exact": true
+    }
+  }
+}

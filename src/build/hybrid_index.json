@@ -1,0 +1,348 @@
+{
+  "build_kind": "BOOTABLE RETAIL-DEPENDENT HYBRID (NOT full independent source rebuild)",
+  "reference_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "output_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "cartridge_size": 2097152,
+  "cartridge_entry": "0x802000",
+  "encrypted_boot_block": "retail header unchanged; ROM payload unchanged",
+  "main_68000_modules_compiled": 26,
+  "modules": [
+    {
+      "module": "game",
+      "bytes": 17404
+    },
+    {
+      "module": "sys",
+      "bytes": 29229
+    },
+    {
+      "module": "input",
+      "bytes": 17038
+    },
+    {
+      "module": "title",
+      "bytes": 19992
+    },
+    {
+      "module": "select",
+      "bytes": 35952
+    },
+    {
+      "module": "credits",
+      "bytes": 21935
+    },
+    {
+      "module": "hiscore",
+      "bytes": 35391
+    },
+    {
+      "module": "eeprim",
+      "bytes": 573
+    },
+    {
+      "module": "sound",
+      "bytes": 33477
+    },
+    {
+      "module": "tables",
+      "bytes": 25830
+    },
+    {
+      "module": "remote",
+      "bytes": 20477
+    },
+    {
+      "module": "play",
+      "bytes": 53506
+    },
+    {
+      "module": "mkmat",
+      "bytes": 5255
+    },
+    {
+      "module": "blit",
+      "bytes": 13507
+    },
+    {
+      "module": "gpufix",
+      "bytes": 17989
+    },
+    {
+      "module": "playinp",
+      "bytes": 26422
+    },
+    {
+      "module": "td",
+      "bytes": 24085
+    },
+    {
+      "module": "modem",
+      "bytes": 20879
+    },
+    {
+      "module": "readjoy",
+      "bytes": 11369
+    },
+    {
+      "module": "playdata",
+      "bytes": 19681
+    },
+    {
+      "module": "mktp",
+      "bytes": 1450
+    },
+    {
+      "module": "alloc",
+      "bytes": 1426
+    },
+    {
+      "module": "lattice",
+      "bytes": 10789
+    },
+    {
+      "module": "inflate",
+      "bytes": 7532
+    },
+    {
+      "module": "packet",
+      "bytes": 5084
+    },
+    {
+      "module": "art",
+      "bytes": 29851
+    }
+  ],
+  "gpu_module_results": [
+    {
+      "module": "adjblack",
+      "assembled": true,
+      "asm_source": "adjblack.gas",
+      "size": 66,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "uncomp",
+      "assembled": true,
+      "asm_source": "uncomp.gas",
+      "size": 118,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "lighten",
+      "assembled": true,
+      "asm_source": "lighten.gas",
+      "size": 150,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "cross",
+      "assembled": true,
+      "asm_source": "cross.gas",
+      "size": 1340,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "fade",
+      "assembled": true,
+      "asm_source": "fade.gas",
+      "size": 628,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "gpunzip",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/gpunzip.gas",
+      "size": 960,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "comp",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/comp.gas",
+      "size": 3654,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "precomp",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/precomp.gas",
+      "size": 2732,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "ren",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/ren.gas",
+      "size": 3750,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "preren",
+      "assembled": true,
+      "asm_source": "preren.gas",
+      "size": 1302,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "casbeg",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/casbeg.gas",
+      "size": 2688,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "racbeg",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/racbeg.gas",
+      "size": 2452,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "tagbeg",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/tagbeg.gas",
+      "size": 1864,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "casend",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/casend.gas",
+      "size": 3702,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "racend",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/racend.gas",
+      "size": 3766,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "tagend",
+      "assembled": true,
+      "asm_source": "build/compat_gpu/tagend.gas",
+      "size": 3830,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "3d",
+      "assembled": true,
+      "asm_source": "3d.gas",
+      "size": 46,
+      "embedded_in_retail": true
+    },
+    {
+      "module": "gpustud",
+      "assembled": true,
+      "asm_source": "gpustud.gas",
+      "size": 514,
+      "embedded_in_retail": false
+    },
+    {
+      "module": "gpuhouse",
+      "assembled": true,
+      "asm_source": "gpuhouse.gas",
+      "size": 872,
+      "embedded_in_retail": false
+    },
+    {
+      "module": "gpugara",
+      "assembled": true,
+      "asm_source": "gpugara.gas",
+      "size": 308,
+      "embedded_in_retail": false
+    },
+    {
+      "module": "gpucity",
+      "assembled": true,
+      "asm_source": "gpucity.gas",
+      "size": 308,
+      "embedded_in_retail": false
+    }
+  ],
+  "safe_source_overlays": [
+    {
+      "source": "playdata.s + 4 PNG graphics",
+      "rom_start": 939664,
+      "rom_end": 959088,
+      "bytes": 19424,
+      "changed": 0
+    },
+    {
+      "source": "adjblack.gas",
+      "rom_start": 341992,
+      "rom_end": 342058,
+      "bytes": 66,
+      "changed": 0
+    },
+    {
+      "source": "uncomp.gas",
+      "rom_start": 342072,
+      "rom_end": 342190,
+      "bytes": 118,
+      "changed": 0
+    },
+    {
+      "source": "comp.gas",
+      "rom_start": 86320,
+      "rom_end": 89974,
+      "bytes": 3654,
+      "changed": 0
+    },
+    {
+      "source": "precomp.gas",
+      "rom_start": 106040,
+      "rom_end": 108772,
+      "bytes": 2732,
+      "changed": 0
+    },
+    {
+      "source": "ren.gas",
+      "rom_start": 89984,
+      "rom_end": 93734,
+      "bytes": 3750,
+      "changed": 0
+    },
+    {
+      "source": "preren.gas",
+      "rom_start": 108784,
+      "rom_end": 110086,
+      "bytes": 1302,
+      "changed": 0
+    },
+    {
+      "source": "3d.gas",
+      "rom_start": 79232,
+      "rom_end": 79278,
+      "bytes": 46,
+      "changed": 0
+    }
+  ],
+  "bytes_changed_from_reference": 0,
+  "payload_modified": false,
+  "reconstructed_resource_count": 22,
+  "resource_modifications": [],
+  "recovered_audio_count": 49,
+  "audio_modifications": [],
+  "recovered_cryprompt_pngs": 2,
+  "raw_tail_image_modifications": [],
+  "compiled_audio_bank": {
+    "object": "build/obj/sounds_reconstructed.o",
+    "rom_start": "0x561d0",
+    "rom_end": "0xe5690",
+    "bytes": 586944,
+    "assembled_exactly": true
+  },
+  "retail_fallback_bytes": 2066060,
+  "notes": [
+    "Unresolved worlds/sounds/renderer mean executable and assets outside overlays come from retail ROM.",
+    "An unchanged output has the original retail SHA by design, not because the full game linked from source.",
+    "Editing PNGs and re-running rebuild changes the PLAYDATA region without moving other sections.",
+    "Seven GPU programs verified at original addresses are overlaid without changing retail data.",
+    "Four world-local GPU programs were matched exactly inside decompressed world resources.",
+    "Any editable resource change is recompressed only if it fits the original fixed ROM slot.",
+    "The 42 raw F16 samples and 7 music scores are exact retail recoveries, replaceable in-place if lengths remain constant.",
+    "On payload edits, SDK jagcrypt -u recalculates encrypted header; only emulator boot has been verified, not physical retail Jaguar hardware."
+  ]
+}

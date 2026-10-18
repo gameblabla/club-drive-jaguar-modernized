@@ -1,0 +1,256 @@
+; traverse the polygon ordering tree
+
+	include "tree.inc"
+
+; Registers ------------------------------------------------------------
+cpTree		REGEQU	R0	; the base address of the tree (for base relative addressing) SAVED
+cpBack		REGEQU	R1	; the back subtree -- doesn't need saving
+cpFront		REGEQU	R2	; the front subtree	SAVED
+nodetype	REGEQU	R3	; node type; temporary register, doesn't need saving
+dividers	REGEQU	R4	; actually tDividers
+cpNode		REGEQU	R5	; points to current node, SAVED
+;braround	REGEQU	R6
+divnum		REGEQU	R7	; divider number, don't need to save
+drawtreeadr	REGEQU	R8	; address of the drawtree function, don't need to save
+dataHi		REGEQU	R9	; NOTE: used in surf also!!!
+stack		REGEQU	R10	; the stack pointer - fits into register description
+braround	REGEQU	R11
+geoband		REGEQU	R12	; pointer to current .bnd: passed into surf
+; ----------------------------------------------------------------------
+; stack stuf
+;	upward growing tree - stack pointer must be preserved in called routines
+
+; pass address of routine to jump to in temp2 - pass arg in temp
+MACRO	JSR_TREE
+		store	cpNode, (dataHi)
+		storep	cpFront, (stack)
+		addqt	#8, stack
+		store	cpTree, (dataHi)
+		move		PC, return
+		addqt	#10, return			; adjust return address to end of JSR_TREE macro
+		storep	return, (stack)
+		jump		(temp2)
+		addqt	#8, stack
+			; we're now on the other side
+		load		(temp2), cpTree
+		move	temp2,dataHi
+		loadp	(stack), cpFront
+			or	cpFront, cpFront	;make dataHi valid
+		load		(dataHi), cpNode
+ENDM
+
+.include "tree.inc"
+
+;MACRO	RTS_TREE
+;		subqt	#8, stack
+;		loadp	(stack), temp
+;		movei	#G_HIDATA, temp2
+;		jump		(temp)
+;		subqt	#8, stack
+;ENDM
+		
+; ----------------------------------------------------------------------
+
+		movei	#GP_STACK, stack		; initialize stack pointer
+		movei	#G_HIDATA,dataHi
+
+		movei	#skip_sub,temp			; skip around our subroutine
+		jump	(temp)
+		nop
+
+draw_model:
+		movei	#GEO_BND_PTR,geoband
+		load	(geoband),geoband
+		movei	#TREE, cpTree			; holds the root node
+
+		cmpq	#0,geoband			; is it a null pointer?
+		jr	EQ,ret1				; yes -- skip it
+		nop					; (really we should do a cutItOut)
+		load	(geoband),temp			; get band flags
+		add	geoband,cpTree
+		btst	#14,temp			; check for clipped band
+		jr	EQ,ok1
+		nop
+ret1:
+			RTS_TREE
+ok1:
+		load	(cpTree), cpTree		; get the tree's address
+		movei	#tINITED,temp
+		add	geoband,temp
+		loadw	(temp),temp			; make sure this band is initialized
+		btst	#0,temp
+		jr	NE,ok2
+		nop
+			RTS_TREE			; band not initialized: don't draw it
+ok2:
+		moveq	#0,temp
+		movei	#drawCP,temp2
+		JSR_TREE
+
+		movei	#GEO_BND_PTR,geoband
+		load	(geoband),geoband
+.if 1
+		movei	#tDIVIDERS,dividers
+		add	geoband,dividers
+		load	(dividers),dividers
+.endif
+		moveq	#0,temp				; start with root node (always 0)
+;; fall through
+
+;
+; to draw a tree:
+; if the back subtree is non-empty, draw it
+; if the front subtree is non-empty, draw it
+; we're passed the tree node in cpNode
+
+drawTree:
+		move	PC,drawtreeadr
+		btst	#15,temp				; check for 16 bit negative number
+		jr	EQ,treeOK
+		move	temp,cpNode				; our parameter
+			RTS_TREE
+treeOK:
+		add	cpTree,cpNode				; cpNode is always an offset from the tree base
+.if 0
+;		movei	#GEO_BND_PTR,geoband
+;		load	(geoband),geoband
+		movei	#tDIVIDERS,dividers
+		add	geoband, dividers
+		load	(dividers), dividers
+.endif
+		loadw	(cpNode),nodetype			; get node type
+		addqt	#2,cpNode
+		loadw	(cpNode),divnum
+		movei	#drawit,temp
+		cmpq	#0,nodetype			; if this is a leaf node
+		jump	NE,(temp)			; go draw the corresponding polygon
+		addqt	#2,cpNode
+			loadw	(cpNode),cpFront
+			addqt	#2,cpNode
+			loadw	(cpNode),cpBack
+
+			btst	#15,divnum		; special flag: divider -1 means always draw back, then front
+			move	dividers,temp2
+			jr	NE,normal_tree
+			add	divnum,temp2
+
+			loadb	(temp2),temp			; get sign of dividers
+			or	temp,temp			; test sign bit
+			jr	NE,normal_tree			; this polygon is facing us, do normal stuff
+			move	cpBack,temp			; always executed, but that's OK
+
+	; reverse tree: we must reverse the meanings of front and back
+				move	cpFront,cpBack
+				move	temp,cpFront
+		normal_tree:
+			move	drawtreeadr,temp2
+			move	cpBack,temp
+			move	temp2,cpNode		; will be pushed on stack
+			JSR_TREE			; draw the back subtree
+			move	cpNode,temp2		; cpback has drawtreeadr
+			jump	(temp2)			; draw the front subtree
+			move	cpFront,temp
+
+; leaf nodes come here, to draw their CP and perhaps associated data
+
+	drawit:
+		bclr	#0,nodetype
+		movei	#docp,braround
+		cmpq	#0,nodetype			; is this a "plain" node?
+		jump	EQ,(braround)			; if so, don't need XDRAW
+		subqt	#4,cpNode			; point to the node type again, for xdraw
+			movei	#xdraw,temp2
+			moveq	#0,temp			; we're drawing the back
+			JSR_TREE			; go do xdraw
+	docp:
+		addqt	#4,cpNode
+		load	(cpNode),temp			; get offset of this CP (parameter for drawCP)
+		movei	#drawCP,temp2
+		JSR_TREE				; actually draw the CP
+
+
+		subqt	#2,cpNode			; post-CP flags are in the second word
+		loadw	(cpNode),nodetype		; check node flags for more stuff to draw
+
+		movei	#GEO_BND_PTR,geoband		; geoband may have been trashed by drawCP
+		load	(geoband),geoband
+		movei	#tDIVIDERS,dividers
+		add	geoband, dividers
+		load	(dividers), dividers
+
+		bclr	#0,nodetype
+		movei	#doneit,braround
+		cmpq	#0,nodetype
+		jump	EQ,(braround)
+		nop
+			movei	#xdraw,temp2
+			moveq	#1,temp			; we're drawing the front
+			JSR_TREE
+	doneit:
+		RTS_TREE
+
+;
+; subroutine: draw extra stuff (like the other car, or power pills)
+; parameters: nodetype has a list index; cpNode points to
+; where this came from (it should be zeroed to indicate the node has been
+; drawn)
+
+xdraw:
+
+	moveq	#1,temp
+	storew	temp,(cpNode)				; mark node as drawn
+	movei	#DISPBANDS,cpNode
+	add	nodetype,cpNode				; point to the list of things to draw
+
+xdrawlp:
+	load	(cpNode),nodetype			; get the node marker
+	addqt	#8,cpNode				; skip marker and Z value
+	cmpq	#0,nodetype				; end of list?
+	jr	NE,keepgoing
+	nop
+		RTS_TREE				;	yes -- return
+keepgoing:
+		move	geoband,cpFront		; cpFront is saved on the stack, so this is how we can save geoband
+		movei	#GEO_BND_PTR,temp2
+		store	nodetype,(temp2)	; save the car model as the new rendering model
+
+		move	nodetype,temp		; parameter for draw_model
+		movei	#draw_model,temp2
+		btst	#31,nodetype
+		jr	EQ,notadot
+		bclr	#31,temp
+			movei	#draw_dot,temp2
+notadot:
+		JSR_TREE			; draw the car or dot (as appropriate)
+
+		move	cpFront,geoband
+		movei	#GEO_BND_PTR,temp2
+		store	geoband,(temp2)
+		movei	#tDIVIDERS,dividers
+		add	geoband,dividers
+		load	(dividers),dividers
+		movei	#xdrawlp,temp
+		jump	(temp)
+		nop
+
+;
+; the main code comes here
+;
+
+skip_sub:
+	movei	#draw_model,temp2
+	JSR_TREE
+	nop
+; Register cleanup -----------------------------------------------------
+REGUNDEF	cpTree
+REGUNDEF	cpBack
+REGUNDEF	cpFront
+REGUNDEF	nodetype
+REGUNDEF	cpNode
+REGUNDEF	dividers
+REGUNDEF	divMap
+REGUNDEF	dataHi
+REGUNDEF	divnum
+REGUNDEF	geoband
+; ----------------------------------------------------------------------
+

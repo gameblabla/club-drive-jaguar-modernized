@@ -1,0 +1,189 @@
+[
+  {
+    "name": "3d",
+    "origin": "0xf03000",
+    "code_bytes": 46,
+    "container_bytes": 54,
+    "original_gpu_asm": "build/gpu/3d.bin",
+    "container_file": "build/gpu_link/3d.bin",
+    "verified_retail_header": true,
+    "content_origin": "assembled .GAS source",
+    "sha256": "1de1684d7e24f490514179e14e270a17ab2fc0541e0a6866870e2c5aa06ddac9"
+  },
+  {
+    "name": "gpunzip",
+    "origin": "0xf03000",
+    "code_bytes": 960,
+    "container_bytes": 968,
+    "original_gpu_asm": "build/gpu/gpunzip.bin",
+    "container_file": "build/gpu_link/gpunzip.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "cc2996db84df2b4e85e3da1735e05cd02bef8bdeb4fc08e6549ecc33de27ac9c"
+  },
+  {
+    "name": "adjblack",
+    "origin": "0xf03f80",
+    "code_bytes": 66,
+    "container_bytes": 74,
+    "original_gpu_asm": "build/gpu/adjblack.bin",
+    "container_file": "build/gpu_link/adjblack.bin",
+    "verified_retail_header": true,
+    "content_origin": "assembled .GAS source",
+    "sha256": "ac6e64cc54adb38558afc42b256306266c8b36fa8ee5ce8747a05e54831141dd"
+  },
+  {
+    "name": "uncomp",
+    "origin": "0xf03400",
+    "code_bytes": 118,
+    "container_bytes": 126,
+    "original_gpu_asm": "build/gpu/uncomp.bin",
+    "container_file": "build/gpu_link/uncomp.bin",
+    "verified_retail_header": true,
+    "content_origin": "assembled .GAS source",
+    "sha256": "975fbc68f674dcfd0840e996685962fb6f38824837fd93d52bd546cca0f96acd"
+  },
+  {
+    "name": "lighten",
+    "origin": "0xf03800",
+    "code_bytes": 150,
+    "container_bytes": 158,
+    "original_gpu_asm": "build/gpu/lighten.bin",
+    "container_file": "build/gpu_link/lighten.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "3d92fbecdf536ea6aacf5917eaca03b2f7ff77b0f0012165129cc44f2ea61b90"
+  },
+  {
+    "name": "cross",
+    "origin": "0xf03000",
+    "code_bytes": 1340,
+    "container_bytes": 1348,
+    "original_gpu_asm": "build/gpu/cross.bin",
+    "container_file": "build/gpu_link/cross.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "64d52b7c61ba10344d93a7dd6807ae7efc409df7b7396714e3fb07ec6b9f867a"
+  },
+  {
+    "name": "fade",
+    "origin": "0xf03800",
+    "code_bytes": 628,
+    "container_bytes": 636,
+    "original_gpu_asm": "build/gpu/fade.bin",
+    "container_file": "build/gpu_link/fade.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "170b98f3e8dcdb686782ccbac91cd8c489a06431fa068c1f7625e5194bd4800d"
+  },
+  {
+    "name": "comp",
+    "origin": "0xf03038",
+    "code_bytes": 3654,
+    "container_bytes": 3662,
+    "original_gpu_asm": "build/gpu/comp.bin",
+    "container_file": "build/gpu_link/comp.bin",
+    "verified_retail_header": true,
+    "content_origin": "assembled .GAS source",
+    "sha256": "2b32f1e2312a71e7c666becefc4fc21512dd431e65b6a12df0096c730edb90ba"
+  },
+  {
+    "name": "precomp",
+    "origin": "0xf03038",
+    "code_bytes": 2732,
+    "container_bytes": 2740,
+    "original_gpu_asm": "build/gpu/precomp.bin",
+    "container_file": "build/gpu_link/precomp.bin",
+    "verified_retail_header": true,
+    "content_origin": "assembled .GAS source",
+    "sha256": "6f706aae9db76e37b89b525d1303f018b242dfee366bb9e3cf0ed3cb82f6f594"
+  },
+  {
+    "name": "ren",
+    "origin": "0xf03038",
+    "code_bytes": 3750,
+    "container_bytes": 3758,
+    "original_gpu_asm": "build/gpu/ren.bin",
+    "container_file": "build/gpu_link/ren.bin",
+    "verified_retail_header": true,
+    "content_origin": "assembled .GAS source",
+    "sha256": "d2cc5bae9d30e8727632582f7d4ba3a904684fc456deb2a2da97104d8bc27be4"
+  },
+  {
+    "name": "preren",
+    "origin": "0xf03038",
+    "code_bytes": 1302,
+    "container_bytes": 1310,
+    "original_gpu_asm": "build/gpu/preren.bin",
+    "container_file": "build/gpu_link/preren.bin",
+    "verified_retail_header": true,
+    "content_origin": "assembled .GAS source",
+    "sha256": "371920d491867aa79991563857de4b7b1abb3efc9b22f2cb9c6c80571eb2f07d"
+  },
+  {
+    "name": "casbeg",
+    "origin": "0xf03038",
+    "code_bytes": 2688,
+    "container_bytes": 2696,
+    "original_gpu_asm": "build/gpu/casbeg.bin",
+    "container_file": "build/gpu_link/casbeg.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "378a259249131ab2cd89150c21b0869318c9f2bd7ae0c1beb6dc551db27e27fe"
+  },
+  {
+    "name": "racbeg",
+    "origin": "0xf03038",
+    "code_bytes": 2452,
+    "container_bytes": 2460,
+    "original_gpu_asm": "build/gpu/racbeg.bin",
+    "container_file": "build/gpu_link/racbeg.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "9f9fd89e8330e28246733ad4488fca0ae0dd3f96335cd3f2acabbe3696a422bf"
+  },
+  {
+    "name": "tagbeg",
+    "origin": "0xf03038",
+    "code_bytes": 1864,
+    "container_bytes": 1872,
+    "original_gpu_asm": "build/gpu/tagbeg.bin",
+    "container_file": "build/gpu_link/tagbeg.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "b4e3061e973b329434fdf33a7a56c388d57af726078093cb0d51e43f3476dbac"
+  },
+  {
+    "name": "casend",
+    "origin": "0xf03038",
+    "code_bytes": 3702,
+    "container_bytes": 3710,
+    "original_gpu_asm": "build/gpu/casend.bin",
+    "container_file": "build/gpu_link/casend.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "201fffad5668ed462f0f53e20f96a575e29983ab2b4c86f264c82a2f06f639f3"
+  },
+  {
+    "name": "racend",
+    "origin": "0xf03038",
+    "code_bytes": 3766,
+    "container_bytes": 3774,
+    "original_gpu_asm": "build/gpu/racend.bin",
+    "container_file": "build/gpu_link/racend.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "a2dcaff142aebb8925c1367002c1851b601856af2cc8d5ea190a4ccdede3aa35"
+  },
+  {
+    "name": "tagend",
+    "origin": "0xf03038",
+    "code_bytes": 3830,
+    "container_bytes": 3838,
+    "original_gpu_asm": "build/gpu/tagend.bin",
+    "container_file": "build/gpu_link/tagend.bin",
+    "verified_retail_header": false,
+    "content_origin": "assembled .GAS source",
+    "sha256": "8b7a130d0559895eeb96c846ce0f4fa93b417973c8251258bcc61a580af3f667"
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "schema": "club-drive-validation",
+  "status": "all-regression-and-clean-build-passed",
+  "car2_tests_passed": 32,
+  "assembly_verified": true,
+  "full_source_build_exit_code": 0,
+  "generated_rom_matches_supplied_retail": true,
+  "retail_rom_sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289",
+  "experimental_collision_linked": false,
+  "experiment_only": "CARS/CAR2.BND -> separate CAR2_CONVERSION/probes/CAR2_from_BND.MDL",
+  "files": {
+    "build/native_bnd_to_mdl.py": {
+      "bytes": 7863,
+      "sha256": "b159135a3daa70e5a6956156ed9dc380383e801d2841a3e6ae1198ea05e5316f"
+    },
+    "build/audit_bnd_to_mdl.py": {
+      "bytes": 7253,
+      "sha256": "a14beb09396d33e2fdb3435e02ad7daa76bc125b8d51dce288f39dbfd32f626c"
+    },
+    "build/assemble_bnd_bridge.py": {
+      "bytes": 5693,
+      "sha256": "d3a9596aedc6ac984da3fc604c1c0d505e96a1580e759b572182378155e844f7"
+    },
+    "tests/test_native_bnd_bridge.py": {
+      "bytes": 7018,
+      "sha256": "ef2bde4d1d5cd475d749241ad28a9d97288e9647fb57e1749cba052fff4efbe6"
+    },
+    "CAR2_CONVERSION/probes/CAR2_from_BND.MDL": {
+      "bytes": 13972,
+      "sha256": "d3b9c6ef25af96eec08f856f895d649b2fa1be54be7853cf7c0e3b5b9270307c"
+    },
+    "CAR2_CONVERSION/face_lineage.json": {
+      "bytes": 67865,
+      "sha256": "3e5df733921b76837cd0d10f259a2b2188de6a455cfef65254625fd7e49cda61"
+    },
+    "CAR2_CONVERSION/probes/assembly_validation.json": {
+      "bytes": 694,
+      "sha256": "941cff62c3b4b663beeeb01e7b5e2b6499710d4a2010d3fdbadd687599cf87aa"
+    },
+    "BUILD_STEP_CAR2_MODEL.sh": {
+      "bytes": 1638,
+      "sha256": "e4cd68d9b6a53d61edfad4c2939641719d617284be76e64f21e489cc41f43aa1"
+    },
+    "Club_Drive.j64": {
+      "bytes": 2097152,
+      "sha256": "dd8062993e50cd0bc4b0ca67b04312360fe5b9d2287c8fd53283a011add07289"
+    }
+  }
+}

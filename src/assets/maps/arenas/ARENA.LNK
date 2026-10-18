@@ -1,0 +1,134 @@
+#name: studio
+#camera cameras
+#props
+PORTAL: studio $889543 $321594 $ffdb6114
+PORTAL: studio $ff6bcf32 $320f1f $df96f6
+PORTAL: studio $897097 $321470 $dd5c98
+PORTAL: studio $ff6a6d5e $3212e7 $ffc0bc91
+SOUND: 2
+#links
+studio
+
+#name: garage
+#camera cameras
+#flags 2
+#props
+PORTAL: garage $005d3000 $001c0000 $007e1000
+PORTAL: garage $ff9bc000 $001c0000 $ff659000
+#links
+garage
+
+#name: garace
+#flags 2
+#camera cameras
+#props
+PORTAL: garace $00866400 $001d0767 $00803500
+PORTAL: garace $ff999000 $001d0767 $ff8edc00
+SOUND: -1
+SOUND: -2
+#links
+garace
+
+#name: simp
+#flags 2
+#camera cameras
+#props
+PORTAL: simp $005d3000 $001c0000 $007e1000
+PORTAL: simp $ff9bc000 $001c0000 $ff659000
+SOUND: -1
+SOUND: -2
+#links
+simp
+
+#name: oldwest
+#flags 2
+#props
+PORTAL: oldwest $ffa2efc1 $000aa555 $00423750
+PORTAL: oldwest $ff58758c $000aa5eb $ffb35568
+PORTAL: oldwest $00acd6d8 $000aa5fd $001de76a
+PORTAL: oldwest $00b4c5b0 $000aa653 $ff891564
+#links
+oldwest
+
+#name: west
+#camera cameras
+#flags 2
+#props
+PORTAL: west $00423750 $000aa555 $005d103f
+PORTAL: west $ffb35568 $000aa5eb $00a78a74
+PORTAL: west $001de76a $000aa5fd $ff532928
+PORTAL: west $ff891564 $000aa653 $ff4b3a50
+SURF: $0060050b
+#links
+west
+
+#name: future3
+#props
+PORTAL: future3 $889543 $321594 $ffdb6114
+PORTAL: future3 $ff6bcf32 $320f1f $df96f6
+#links
+future3
+
+#name: future4
+#props
+PORTAL: future4 $ff1fc400 $00243600 $029c2b00
+PORTAL: future4 $00bb6500 $00243600 $02f92000
+#links
+future4
+
+#name: box1
+#flags 2
+#links
+box1
+
+#name: race
+#flags 2
+#links
+race
+
+#name: toyrp1
+#camera arf
+#props
+SOUND: -1
+#links
+toyrp3l2
+toyrp2
+toyrp1
+
+#name: toyrp2
+#camera arf
+#props
+#links
+toyrp1
+toyrp3
+toyrp2
+
+#name: toyrp3
+#camera arf
+#props
+PORTAL: toyrp3 $211a38 $ff8fc7cc $ca8a56
+SOUND: -2
+#links
+toyrp1l2
+toyrp2
+toyrp3
+
+#name: toyrp1l2
+#props
+#links
+toyrp3
+toyrp2
+toyrp1
+
+#name: toyrp3l2
+#props
+PORTAL: toyrp3 $211a38 $ff8fc7cc $ca8a56
+#links
+toyrp1
+toyrp2
+toyrp3
+
+#name: ramps
+#props
+#links
+ramps

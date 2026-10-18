@@ -1,0 +1,24 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BEIGE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BEIGE MATTE
+
+newmtl BLACK_PLASTIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK PLASTIC
+
+newmtl BRASS_VALLEY
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BRASS VALLEY
+
+newmtl BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BROWN MATTE
+
+newmtl DARK_BROWN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: DARK BROWN MATTE
+
+newmtl PALM_TREE_TRUNK
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PALM TREE TRUNK

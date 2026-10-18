@@ -1,0 +1,68 @@
+# Materials from Club Drive original ASCII; Neutral placeholder color; original material names preserved but physical CRY colors not decoded.
+newmtl BEIGE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BEIGE MATTE
+
+newmtl BLACK_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLACK MATTE
+
+newmtl BLUE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: BLUE MATTE
+
+newmtl GRAY_BROWN
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY BROWN
+
+newmtl GRAY_GREEN
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY GREEN
+
+newmtl GRAY_METALIC
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GRAY METALIC
+
+newmtl GREEN_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: GREEN MATTE
+
+newmtl ORANGE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: ORANGE MATTE
+
+newmtl PORTALG
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTALG
+
+newmtl PORTALH
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PORTALH
+
+newmtl PURPLE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: PURPLE MATTE
+
+newmtl RED_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: RED MATTE
+
+newmtl RED_NEON
+Kd 0.7 0.7 0.7
+# Original 1994 material name: RED NEON
+
+newmtl SIGN_A
+Kd 0.7 0.7 0.7
+# Original 1994 material name: SIGN A
+
+newmtl SIGN_B
+Kd 0.7 0.7 0.7
+# Original 1994 material name: SIGN B
+
+newmtl SIGN_C
+Kd 0.7 0.7 0.7
+# Original 1994 material name: SIGN C
+
+newmtl WHITE_MATTE
+Kd 0.7 0.7 0.7
+# Original 1994 material name: WHITE MATTE

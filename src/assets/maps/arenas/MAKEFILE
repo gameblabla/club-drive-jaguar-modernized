@@ -1,0 +1,22 @@
+
+.SUFFIXES: .mdl .bnd .asc
+
+.bnd.mdl:
+	bnd2mdl -link arena.lnk $*.bnd $*.mdl
+
+.asc.mdl:
+	mkbnd $*.asc arena.clr -l jag.lyt -n
+	findbg $*.bnd $*.bnd
+	bnd2mdl -link arena.lnk $*.bnd $*.mdl
+.asc.bnd:
+	mkbnd $*.asc arena.clr -l jag.lyt -n
+	findbg $*.bnd $*.bnd
+
+west.mdl: west.bnd
+	bnd2mdl -split -link arena.lnk -rotate west.bnd west.mdl
+studio.bnd: studio.asc
+	mkbnd $*.asc arena.clr -l stud.lyt
+	findbg $*.bnd $*.bnd
+studio.mdl: studio.bnd
+	bnd2mdl -link arena.lnk $*.bnd $*.mdl
+	

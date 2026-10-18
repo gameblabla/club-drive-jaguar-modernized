@@ -1,0 +1,38 @@
+{
+  "polygons": 63,
+  "points": 95,
+  "normals": 32,
+  "dividers": 55,
+  "changed_original_points": 0,
+  "changed_original_normals": 0,
+  "changed_original_dividers": 0,
+  "added_edges": 4,
+  "cp_delta_bytes": 34,
+  "tree_delta_bytes": 68,
+  "compiled_nodes": 3,
+  "new_pointers": {
+    "dividers": 0,
+    "edges": 220,
+    "points": 808,
+    "tris": 1570,
+    "end of tris": 2434,
+    "tree": 2436,
+    "calculated colors": 2460
+  },
+  "cp_offsets": {
+    "0": 0,
+    "1": 2,
+    "2": 710
+  },
+  "source": "CARS/CAR2.BND",
+  "native_target": "CARS/CAR2.MDL",
+  "source_group": 1,
+  "source_face_index": 0,
+  "native_face_index": 0,
+  "face_area_error": 0.0,
+  "verified_original_face_correspondence": 60,
+  "editable_source": "BND JSON",
+  "link_into_game": false,
+  "output_sha256": "e0c1cd88075304cc4ff6de9a4ab9825dc59cef4135ccca96478869bba1046d9a",
+  "source_bnd_probe_hash": "05e792fb68e1a9e62ff73945312c7b7f57113af38eef7b74fd3b08b11a3b2507"
+}

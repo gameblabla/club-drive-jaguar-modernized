@@ -1,0 +1,5 @@
+TAGGAME		EQU	0
+CASGAME		EQU	0
+RACEGAME	EQU	1
+
+	.include	"3dbeg.gas"

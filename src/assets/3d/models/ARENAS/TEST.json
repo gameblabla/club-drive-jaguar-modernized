@@ -1,0 +1,229 @@
+{
+ "source": "ARENAS/TEST.ASC",
+ "sha256": "f635558d9ee6ad35c1b7da57b4c9726cc26eca0b44e1c1fe552be24b603a236b",
+ "objects": [
+  {
+   "name": "Light01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Camera01",
+   "vertices": [],
+   "faces": [],
+   "declared_vertices": null,
+   "declared_faces": null
+  },
+  {
+   "name": "Object01",
+   "vertices": [
+    [
+     "-24689.152344",
+     "-20310.761719",
+     "-967.301941"
+    ],
+    [
+     "19682.326172",
+     "-20310.763672",
+     "-967.302734"
+    ],
+    [
+     "19682.318359",
+     "21057.419922",
+     "-967.309448"
+    ],
+    [
+     "-24689.154297",
+     "21057.417969",
+     "-967.308716"
+    ],
+    [
+     "-24689.152344",
+     "-20310.761719",
+     "-995.185669"
+    ],
+    [
+     "19682.326172",
+     "-20310.763672",
+     "-995.186462"
+    ],
+    [
+     "19682.318359",
+     "21057.419922",
+     "-995.193176"
+    ],
+    [
+     "-24689.154297",
+     "21057.417969",
+     "-995.192444"
+    ]
+   ],
+   "faces": [
+    {
+     "vertices": [
+      0,
+      1,
+      2
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      0,
+      2,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      0,
+      4,
+      5
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      0,
+      5,
+      1
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      5,
+      6
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      1,
+      6,
+      2
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      6,
+      7
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      2,
+      7,
+      3
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      7,
+      4
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      3,
+      4,
+      0
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      4,
+      7,
+      6
+     ],
+     "edges": [
+      1,
+      1,
+      0
+     ],
+     "material": "GREEN MATTE"
+    },
+    {
+     "vertices": [
+      4,
+      6,
+      5
+     ],
+     "edges": [
+      0,
+      1,
+      1
+     ],
+     "material": "GREEN MATTE"
+    }
+   ],
+   "declared_vertices": 8,
+   "declared_faces": 12
+  }
+ ],
+ "material_names": [
+  "GREEN MATTE"
+ ],
+ "note": "Geometry and material names preserved; not original .BND collision tree or .MDL binary."
+}

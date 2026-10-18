@@ -1,0 +1,2687 @@
+{
+  "schema": "club-native-model",
+  "original": "CARS/DRONE.BND",
+  "template_sha256": "20865a4532bc22719a5fb35e0dc8a5fc37c67e4010ebb0ae07fffc4899de5fb0",
+  "notes": [
+    "2026 reconstruction; native numeric values only; historical comments live in template",
+    "Vertex indices in edge lists are 1-based; polygon edge IDs are 0-based, bit 15 encodes edge direction",
+    "Leave counts unchanged: collision BSP trees, pointer offsets and bounding radius are NOT regenerated",
+    "Faces/OBJ are derived previews; change surfaces[*].values and edges[*].values to edit actual model"
+  ],
+  "groups": {
+    "vertices": [
+      {
+        "line": 145,
+        "group": "vertices",
+        "values": [
+          -54,
+          -6,
+          90
+        ]
+      },
+      {
+        "line": 146,
+        "group": "vertices",
+        "values": [
+          -54,
+          -6,
+          -81
+        ]
+      },
+      {
+        "line": 147,
+        "group": "vertices",
+        "values": [
+          55,
+          -6,
+          -81
+        ]
+      },
+      {
+        "line": 148,
+        "group": "vertices",
+        "values": [
+          55,
+          -6,
+          90
+        ]
+      },
+      {
+        "line": 149,
+        "group": "vertices",
+        "values": [
+          -54,
+          24,
+          90
+        ]
+      },
+      {
+        "line": 150,
+        "group": "vertices",
+        "values": [
+          -54,
+          24,
+          -90
+        ]
+      },
+      {
+        "line": 151,
+        "group": "vertices",
+        "values": [
+          55,
+          24,
+          -90
+        ]
+      },
+      {
+        "line": 152,
+        "group": "vertices",
+        "values": [
+          55,
+          24,
+          90
+        ]
+      },
+      {
+        "line": 153,
+        "group": "vertices",
+        "values": [
+          -40,
+          -34,
+          65
+        ]
+      },
+      {
+        "line": 154,
+        "group": "vertices",
+        "values": [
+          -40,
+          -34,
+          -20
+        ]
+      },
+      {
+        "line": 155,
+        "group": "vertices",
+        "values": [
+          41,
+          -34,
+          -20
+        ]
+      },
+      {
+        "line": 156,
+        "group": "vertices",
+        "values": [
+          41,
+          -34,
+          65
+        ]
+      },
+      {
+        "line": 157,
+        "group": "vertices",
+        "values": [
+          -54,
+          -6,
+          90
+        ]
+      },
+      {
+        "line": 158,
+        "group": "vertices",
+        "values": [
+          -54,
+          -6,
+          -40
+        ]
+      },
+      {
+        "line": 159,
+        "group": "vertices",
+        "values": [
+          55,
+          -6,
+          -40
+        ]
+      },
+      {
+        "line": 160,
+        "group": "vertices",
+        "values": [
+          55,
+          -6,
+          90
+        ]
+      },
+      {
+        "line": 161,
+        "group": "vertices",
+        "values": [
+          30,
+          23,
+          -76
+        ]
+      },
+      {
+        "line": 162,
+        "group": "vertices",
+        "values": [
+          30,
+          23,
+          -37
+        ]
+      },
+      {
+        "line": 163,
+        "group": "vertices",
+        "values": [
+          30,
+          33,
+          -49
+        ]
+      },
+      {
+        "line": 164,
+        "group": "vertices",
+        "values": [
+          30,
+          33,
+          -65
+        ]
+      },
+      {
+        "line": 165,
+        "group": "vertices",
+        "values": [
+          55,
+          23,
+          -76
+        ]
+      },
+      {
+        "line": 166,
+        "group": "vertices",
+        "values": [
+          55,
+          10,
+          -76
+        ]
+      },
+      {
+        "line": 167,
+        "group": "vertices",
+        "values": [
+          55,
+          0,
+          -65
+        ]
+      },
+      {
+        "line": 168,
+        "group": "vertices",
+        "values": [
+          55,
+          0,
+          -49
+        ]
+      },
+      {
+        "line": 169,
+        "group": "vertices",
+        "values": [
+          55,
+          10,
+          -37
+        ]
+      },
+      {
+        "line": 170,
+        "group": "vertices",
+        "values": [
+          55,
+          23,
+          -37
+        ]
+      },
+      {
+        "line": 171,
+        "group": "vertices",
+        "values": [
+          55,
+          33,
+          -49
+        ]
+      },
+      {
+        "line": 172,
+        "group": "vertices",
+        "values": [
+          55,
+          33,
+          -65
+        ]
+      },
+      {
+        "line": 173,
+        "group": "vertices",
+        "values": [
+          55,
+          16,
+          -57
+        ]
+      },
+      {
+        "line": 174,
+        "group": "vertices",
+        "values": [
+          30,
+          23,
+          44
+        ]
+      },
+      {
+        "line": 175,
+        "group": "vertices",
+        "values": [
+          30,
+          23,
+          83
+        ]
+      },
+      {
+        "line": 176,
+        "group": "vertices",
+        "values": [
+          56,
+          23,
+          44
+        ]
+      },
+      {
+        "line": 177,
+        "group": "vertices",
+        "values": [
+          56,
+          10,
+          44
+        ]
+      },
+      {
+        "line": 178,
+        "group": "vertices",
+        "values": [
+          56,
+          0,
+          55
+        ]
+      },
+      {
+        "line": 179,
+        "group": "vertices",
+        "values": [
+          56,
+          0,
+          71
+        ]
+      },
+      {
+        "line": 180,
+        "group": "vertices",
+        "values": [
+          56,
+          10,
+          83
+        ]
+      },
+      {
+        "line": 181,
+        "group": "vertices",
+        "values": [
+          56,
+          23,
+          83
+        ]
+      },
+      {
+        "line": 182,
+        "group": "vertices",
+        "values": [
+          56,
+          33,
+          71
+        ]
+      },
+      {
+        "line": 183,
+        "group": "vertices",
+        "values": [
+          56,
+          33,
+          55
+        ]
+      },
+      {
+        "line": 184,
+        "group": "vertices",
+        "values": [
+          56,
+          16,
+          63
+        ]
+      },
+      {
+        "line": 185,
+        "group": "vertices",
+        "values": [
+          -55,
+          23,
+          -76
+        ]
+      },
+      {
+        "line": 186,
+        "group": "vertices",
+        "values": [
+          -55,
+          10,
+          -76
+        ]
+      },
+      {
+        "line": 187,
+        "group": "vertices",
+        "values": [
+          -55,
+          0,
+          -65
+        ]
+      },
+      {
+        "line": 188,
+        "group": "vertices",
+        "values": [
+          -55,
+          0,
+          -49
+        ]
+      },
+      {
+        "line": 189,
+        "group": "vertices",
+        "values": [
+          -55,
+          10,
+          -37
+        ]
+      },
+      {
+        "line": 190,
+        "group": "vertices",
+        "values": [
+          -55,
+          23,
+          -37
+        ]
+      },
+      {
+        "line": 191,
+        "group": "vertices",
+        "values": [
+          -55,
+          33,
+          -49
+        ]
+      },
+      {
+        "line": 192,
+        "group": "vertices",
+        "values": [
+          -55,
+          33,
+          -65
+        ]
+      },
+      {
+        "line": 193,
+        "group": "vertices",
+        "values": [
+          -55,
+          16,
+          -57
+        ]
+      },
+      {
+        "line": 194,
+        "group": "vertices",
+        "values": [
+          -55,
+          23,
+          44
+        ]
+      },
+      {
+        "line": 195,
+        "group": "vertices",
+        "values": [
+          -55,
+          10,
+          44
+        ]
+      },
+      {
+        "line": 196,
+        "group": "vertices",
+        "values": [
+          -55,
+          0,
+          55
+        ]
+      },
+      {
+        "line": 197,
+        "group": "vertices",
+        "values": [
+          -55,
+          0,
+          71
+        ]
+      },
+      {
+        "line": 198,
+        "group": "vertices",
+        "values": [
+          -55,
+          10,
+          83
+        ]
+      },
+      {
+        "line": 199,
+        "group": "vertices",
+        "values": [
+          -55,
+          23,
+          83
+        ]
+      },
+      {
+        "line": 200,
+        "group": "vertices",
+        "values": [
+          -55,
+          33,
+          71
+        ]
+      },
+      {
+        "line": 201,
+        "group": "vertices",
+        "values": [
+          -55,
+          33,
+          55
+        ]
+      },
+      {
+        "line": 202,
+        "group": "vertices",
+        "values": [
+          -30,
+          23,
+          44
+        ]
+      },
+      {
+        "line": 203,
+        "group": "vertices",
+        "values": [
+          -30,
+          23,
+          83
+        ]
+      },
+      {
+        "line": 204,
+        "group": "vertices",
+        "values": [
+          -30,
+          33,
+          71
+        ]
+      },
+      {
+        "line": 205,
+        "group": "vertices",
+        "values": [
+          -30,
+          33,
+          55
+        ]
+      },
+      {
+        "line": 206,
+        "group": "vertices",
+        "values": [
+          -55,
+          16,
+          63
+        ]
+      },
+      {
+        "line": 207,
+        "group": "vertices",
+        "values": [
+          30,
+          33,
+          55
+        ]
+      },
+      {
+        "line": 208,
+        "group": "vertices",
+        "values": [
+          30,
+          33,
+          71
+        ]
+      },
+      {
+        "line": 209,
+        "group": "vertices",
+        "values": [
+          -29,
+          23,
+          -76
+        ]
+      },
+      {
+        "line": 210,
+        "group": "vertices",
+        "values": [
+          -29,
+          23,
+          -37
+        ]
+      },
+      {
+        "line": 211,
+        "group": "vertices",
+        "values": [
+          -29,
+          33,
+          -49
+        ]
+      },
+      {
+        "line": 212,
+        "group": "vertices",
+        "values": [
+          -29,
+          33,
+          -65
+        ]
+      }
+    ],
+    "normals": [
+      {
+        "line": 214,
+        "group": "normals",
+        "values": [
+          0,
+          -32767,
+          0
+        ]
+      },
+      {
+        "line": 215,
+        "group": "normals",
+        "values": [
+          -32767,
+          0,
+          0
+        ]
+      },
+      {
+        "line": 216,
+        "group": "normals",
+        "values": [
+          0,
+          -9656,
+          -31312
+        ]
+      },
+      {
+        "line": 217,
+        "group": "normals",
+        "values": [
+          32767,
+          0,
+          0
+        ]
+      },
+      {
+        "line": 218,
+        "group": "normals",
+        "values": [
+          0,
+          0,
+          32767
+        ]
+      },
+      {
+        "line": 219,
+        "group": "normals",
+        "values": [
+          0,
+          32767,
+          0
+        ]
+      },
+      {
+        "line": 220,
+        "group": "normals",
+        "values": [
+          -29088,
+          -15085,
+          0
+        ]
+      },
+      {
+        "line": 221,
+        "group": "normals",
+        "values": [
+          0,
+          -19157,
+          -26584
+        ]
+      },
+      {
+        "line": 222,
+        "group": "normals",
+        "values": [
+          29088,
+          -15085,
+          0
+        ]
+      },
+      {
+        "line": 223,
+        "group": "normals",
+        "values": [
+          0,
+          -21931,
+          24346
+        ]
+      },
+      {
+        "line": 224,
+        "group": "normals",
+        "values": [
+          0,
+          24807,
+          21408
+        ]
+      },
+      {
+        "line": 225,
+        "group": "normals",
+        "values": [
+          0,
+          24807,
+          -21408
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "line": 47,
+        "group": "edges",
+        "values": [
+          2,
+          1
+        ]
+      },
+      {
+        "line": 48,
+        "group": "edges",
+        "values": [
+          2,
+          3
+        ]
+      },
+      {
+        "line": 49,
+        "group": "edges",
+        "values": [
+          3,
+          4
+        ]
+      },
+      {
+        "line": 50,
+        "group": "edges",
+        "values": [
+          1,
+          4
+        ]
+      },
+      {
+        "line": 51,
+        "group": "edges",
+        "values": [
+          1,
+          5
+        ]
+      },
+      {
+        "line": 52,
+        "group": "edges",
+        "values": [
+          6,
+          5
+        ]
+      },
+      {
+        "line": 53,
+        "group": "edges",
+        "values": [
+          2,
+          6
+        ]
+      },
+      {
+        "line": 54,
+        "group": "edges",
+        "values": [
+          6,
+          7
+        ]
+      },
+      {
+        "line": 55,
+        "group": "edges",
+        "values": [
+          3,
+          7
+        ]
+      },
+      {
+        "line": 56,
+        "group": "edges",
+        "values": [
+          7,
+          8
+        ]
+      },
+      {
+        "line": 57,
+        "group": "edges",
+        "values": [
+          4,
+          8
+        ]
+      },
+      {
+        "line": 58,
+        "group": "edges",
+        "values": [
+          5,
+          8
+        ]
+      },
+      {
+        "line": 59,
+        "group": "edges",
+        "values": [
+          10,
+          9
+        ]
+      },
+      {
+        "line": 60,
+        "group": "edges",
+        "values": [
+          10,
+          11
+        ]
+      },
+      {
+        "line": 61,
+        "group": "edges",
+        "values": [
+          11,
+          12
+        ]
+      },
+      {
+        "line": 62,
+        "group": "edges",
+        "values": [
+          9,
+          12
+        ]
+      },
+      {
+        "line": 63,
+        "group": "edges",
+        "values": [
+          13,
+          9
+        ]
+      },
+      {
+        "line": 64,
+        "group": "edges",
+        "values": [
+          14,
+          13
+        ]
+      },
+      {
+        "line": 65,
+        "group": "edges",
+        "values": [
+          14,
+          10
+        ]
+      },
+      {
+        "line": 66,
+        "group": "edges",
+        "values": [
+          14,
+          15
+        ]
+      },
+      {
+        "line": 67,
+        "group": "edges",
+        "values": [
+          11,
+          15
+        ]
+      },
+      {
+        "line": 68,
+        "group": "edges",
+        "values": [
+          15,
+          16
+        ]
+      },
+      {
+        "line": 69,
+        "group": "edges",
+        "values": [
+          12,
+          16
+        ]
+      },
+      {
+        "line": 70,
+        "group": "edges",
+        "values": [
+          13,
+          16
+        ]
+      },
+      {
+        "line": 71,
+        "group": "edges",
+        "values": [
+          19,
+          27
+        ]
+      },
+      {
+        "line": 72,
+        "group": "edges",
+        "values": [
+          18,
+          19
+        ]
+      },
+      {
+        "line": 73,
+        "group": "edges",
+        "values": [
+          26,
+          27
+        ]
+      },
+      {
+        "line": 74,
+        "group": "edges",
+        "values": [
+          18,
+          26
+        ]
+      },
+      {
+        "line": 75,
+        "group": "edges",
+        "values": [
+          20,
+          28
+        ]
+      },
+      {
+        "line": 76,
+        "group": "edges",
+        "values": [
+          19,
+          20
+        ]
+      },
+      {
+        "line": 77,
+        "group": "edges",
+        "values": [
+          27,
+          28
+        ]
+      },
+      {
+        "line": 78,
+        "group": "edges",
+        "values": [
+          17,
+          21
+        ]
+      },
+      {
+        "line": 79,
+        "group": "edges",
+        "values": [
+          17,
+          20
+        ]
+      },
+      {
+        "line": 80,
+        "group": "edges",
+        "values": [
+          21,
+          28
+        ]
+      },
+      {
+        "line": 81,
+        "group": "edges",
+        "values": [
+          22,
+          21
+        ]
+      },
+      {
+        "line": 82,
+        "group": "edges",
+        "values": [
+          29,
+          21
+        ]
+      },
+      {
+        "line": 83,
+        "group": "edges",
+        "values": [
+          23,
+          22
+        ]
+      },
+      {
+        "line": 84,
+        "group": "edges",
+        "values": [
+          24,
+          23
+        ]
+      },
+      {
+        "line": 85,
+        "group": "edges",
+        "values": [
+          25,
+          29
+        ]
+      },
+      {
+        "line": 86,
+        "group": "edges",
+        "values": [
+          24,
+          25
+        ]
+      },
+      {
+        "line": 87,
+        "group": "edges",
+        "values": [
+          25,
+          26
+        ]
+      },
+      {
+        "line": 88,
+        "group": "edges",
+        "values": [
+          29,
+          28
+        ]
+      },
+      {
+        "line": 89,
+        "group": "edges",
+        "values": [
+          64,
+          38
+        ]
+      },
+      {
+        "line": 90,
+        "group": "edges",
+        "values": [
+          31,
+          64
+        ]
+      },
+      {
+        "line": 91,
+        "group": "edges",
+        "values": [
+          37,
+          38
+        ]
+      },
+      {
+        "line": 92,
+        "group": "edges",
+        "values": [
+          31,
+          37
+        ]
+      },
+      {
+        "line": 93,
+        "group": "edges",
+        "values": [
+          63,
+          39
+        ]
+      },
+      {
+        "line": 94,
+        "group": "edges",
+        "values": [
+          63,
+          64
+        ]
+      },
+      {
+        "line": 95,
+        "group": "edges",
+        "values": [
+          38,
+          39
+        ]
+      },
+      {
+        "line": 96,
+        "group": "edges",
+        "values": [
+          30,
+          32
+        ]
+      },
+      {
+        "line": 97,
+        "group": "edges",
+        "values": [
+          30,
+          63
+        ]
+      },
+      {
+        "line": 98,
+        "group": "edges",
+        "values": [
+          32,
+          39
+        ]
+      },
+      {
+        "line": 99,
+        "group": "edges",
+        "values": [
+          33,
+          32
+        ]
+      },
+      {
+        "line": 100,
+        "group": "edges",
+        "values": [
+          40,
+          32
+        ]
+      },
+      {
+        "line": 101,
+        "group": "edges",
+        "values": [
+          34,
+          33
+        ]
+      },
+      {
+        "line": 102,
+        "group": "edges",
+        "values": [
+          35,
+          34
+        ]
+      },
+      {
+        "line": 103,
+        "group": "edges",
+        "values": [
+          36,
+          40
+        ]
+      },
+      {
+        "line": 104,
+        "group": "edges",
+        "values": [
+          35,
+          36
+        ]
+      },
+      {
+        "line": 105,
+        "group": "edges",
+        "values": [
+          36,
+          37
+        ]
+      },
+      {
+        "line": 106,
+        "group": "edges",
+        "values": [
+          40,
+          39
+        ]
+      },
+      {
+        "line": 107,
+        "group": "edges",
+        "values": [
+          47,
+          67
+        ]
+      },
+      {
+        "line": 108,
+        "group": "edges",
+        "values": [
+          46,
+          47
+        ]
+      },
+      {
+        "line": 109,
+        "group": "edges",
+        "values": [
+          66,
+          67
+        ]
+      },
+      {
+        "line": 110,
+        "group": "edges",
+        "values": [
+          46,
+          66
+        ]
+      },
+      {
+        "line": 111,
+        "group": "edges",
+        "values": [
+          48,
+          68
+        ]
+      },
+      {
+        "line": 112,
+        "group": "edges",
+        "values": [
+          47,
+          48
+        ]
+      },
+      {
+        "line": 113,
+        "group": "edges",
+        "values": [
+          67,
+          68
+        ]
+      },
+      {
+        "line": 114,
+        "group": "edges",
+        "values": [
+          41,
+          65
+        ]
+      },
+      {
+        "line": 115,
+        "group": "edges",
+        "values": [
+          41,
+          48
+        ]
+      },
+      {
+        "line": 116,
+        "group": "edges",
+        "values": [
+          65,
+          68
+        ]
+      },
+      {
+        "line": 117,
+        "group": "edges",
+        "values": [
+          42,
+          41
+        ]
+      },
+      {
+        "line": 118,
+        "group": "edges",
+        "values": [
+          42,
+          49
+        ]
+      },
+      {
+        "line": 119,
+        "group": "edges",
+        "values": [
+          43,
+          42
+        ]
+      },
+      {
+        "line": 120,
+        "group": "edges",
+        "values": [
+          44,
+          43
+        ]
+      },
+      {
+        "line": 121,
+        "group": "edges",
+        "values": [
+          44,
+          45
+        ]
+      },
+      {
+        "line": 122,
+        "group": "edges",
+        "values": [
+          45,
+          49
+        ]
+      },
+      {
+        "line": 123,
+        "group": "edges",
+        "values": [
+          45,
+          46
+        ]
+      },
+      {
+        "line": 124,
+        "group": "edges",
+        "values": [
+          49,
+          46
+        ]
+      },
+      {
+        "line": 125,
+        "group": "edges",
+        "values": [
+          56,
+          60
+        ]
+      },
+      {
+        "line": 126,
+        "group": "edges",
+        "values": [
+          55,
+          56
+        ]
+      },
+      {
+        "line": 127,
+        "group": "edges",
+        "values": [
+          59,
+          60
+        ]
+      },
+      {
+        "line": 128,
+        "group": "edges",
+        "values": [
+          55,
+          59
+        ]
+      },
+      {
+        "line": 129,
+        "group": "edges",
+        "values": [
+          57,
+          61
+        ]
+      },
+      {
+        "line": 130,
+        "group": "edges",
+        "values": [
+          56,
+          57
+        ]
+      },
+      {
+        "line": 131,
+        "group": "edges",
+        "values": [
+          60,
+          61
+        ]
+      },
+      {
+        "line": 132,
+        "group": "edges",
+        "values": [
+          50,
+          58
+        ]
+      },
+      {
+        "line": 133,
+        "group": "edges",
+        "values": [
+          50,
+          57
+        ]
+      },
+      {
+        "line": 134,
+        "group": "edges",
+        "values": [
+          58,
+          61
+        ]
+      },
+      {
+        "line": 135,
+        "group": "edges",
+        "values": [
+          51,
+          50
+        ]
+      },
+      {
+        "line": 136,
+        "group": "edges",
+        "values": [
+          51,
+          62
+        ]
+      },
+      {
+        "line": 137,
+        "group": "edges",
+        "values": [
+          52,
+          51
+        ]
+      },
+      {
+        "line": 138,
+        "group": "edges",
+        "values": [
+          53,
+          52
+        ]
+      },
+      {
+        "line": 139,
+        "group": "edges",
+        "values": [
+          53,
+          54
+        ]
+      },
+      {
+        "line": 140,
+        "group": "edges",
+        "values": [
+          54,
+          62
+        ]
+      },
+      {
+        "line": 141,
+        "group": "edges",
+        "values": [
+          54,
+          55
+        ]
+      },
+      {
+        "line": 142,
+        "group": "edges",
+        "values": [
+          62,
+          55
+        ]
+      }
+    ],
+    "surfaces": [
+      {
+        "line": 248,
+        "group": "surfaces",
+        "values": [
+          8196,
+          18,
+          11,
+          32777,
+          32775,
+          5,
+          5
+        ]
+      },
+      {
+        "line": 250,
+        "group": "surfaces",
+        "values": [
+          8196,
+          21,
+          32832,
+          32833,
+          60,
+          66,
+          11
+        ]
+      },
+      {
+        "line": 251,
+        "group": "surfaces",
+        "values": [
+          8196,
+          19,
+          32796,
+          32797,
+          24,
+          30,
+          11
+        ]
+      },
+      {
+        "line": 252,
+        "group": "surfaces",
+        "values": [
+          8196,
+          20,
+          32814,
+          47,
+          42,
+          48,
+          11
+        ]
+      },
+      {
+        "line": 253,
+        "group": "surfaces",
+        "values": [
+          8196,
+          22,
+          32850,
+          32851,
+          78,
+          84,
+          11
+        ]
+      },
+      {
+        "line": 254,
+        "group": "surfaces",
+        "values": [
+          8196,
+          29,
+          32828,
+          32829,
+          63,
+          62,
+          10
+        ]
+      },
+      {
+        "line": 255,
+        "group": "surfaces",
+        "values": [
+          8196,
+          27,
+          32792,
+          32793,
+          27,
+          26,
+          10
+        ]
+      },
+      {
+        "line": 256,
+        "group": "surfaces",
+        "values": [
+          8196,
+          28,
+          32810,
+          32811,
+          45,
+          44,
+          10
+        ]
+      },
+      {
+        "line": 257,
+        "group": "surfaces",
+        "values": [
+          8196,
+          30,
+          32846,
+          32847,
+          81,
+          80,
+          10
+        ]
+      },
+      {
+        "line": 258,
+        "group": "surfaces",
+        "values": [
+          8196,
+          33,
+          32835,
+          68,
+          64,
+          32837,
+          12
+        ]
+      },
+      {
+        "line": 259,
+        "group": "surfaces",
+        "values": [
+          8196,
+          31,
+          32799,
+          32,
+          28,
+          32801,
+          12
+        ]
+      },
+      {
+        "line": 260,
+        "group": "surfaces",
+        "values": [
+          8196,
+          32,
+          32817,
+          50,
+          46,
+          32819,
+          12
+        ]
+      },
+      {
+        "line": 261,
+        "group": "surfaces",
+        "values": [
+          8196,
+          34,
+          32853,
+          86,
+          82,
+          32855,
+          12
+        ]
+      },
+      {
+        "line": 263,
+        "group": "surfaces",
+        "values": [
+          8196,
+          0,
+          32768,
+          1,
+          2,
+          32771,
+          0
+        ]
+      },
+      {
+        "line": 264,
+        "group": "surfaces",
+        "values": [
+          8196,
+          2,
+          4,
+          32773,
+          32774,
+          0,
+          1
+        ]
+      },
+      {
+        "line": 265,
+        "group": "surfaces",
+        "values": [
+          8196,
+          9,
+          6,
+          7,
+          32776,
+          32769,
+          2
+        ]
+      },
+      {
+        "line": 266,
+        "group": "surfaces",
+        "values": [
+          8196,
+          10,
+          8,
+          9,
+          32778,
+          32770,
+          3
+        ]
+      },
+      {
+        "line": 267,
+        "group": "surfaces",
+        "values": [
+          8196,
+          17,
+          10,
+          32779,
+          32772,
+          3,
+          4
+        ]
+      },
+      {
+        "line": 269,
+        "group": "surfaces",
+        "values": [
+          8198,
+          3,
+          77,
+          61,
+          65,
+          32836,
+          32838,
+          71,
+          14
+        ]
+      },
+      {
+        "line": 270,
+        "group": "surfaces",
+        "values": [
+          8198,
+          6,
+          95,
+          79,
+          83,
+          32854,
+          32856,
+          89,
+          14
+        ]
+      },
+      {
+        "line": 271,
+        "group": "surfaces",
+        "values": [
+          8197,
+          7,
+          32857,
+          32858,
+          32859,
+          92,
+          93,
+          14
+        ]
+      },
+      {
+        "line": 272,
+        "group": "surfaces",
+        "values": [
+          8195,
+          8,
+          32861,
+          94,
+          32863,
+          14
+        ]
+      },
+      {
+        "line": 273,
+        "group": "surfaces",
+        "values": [
+          8197,
+          4,
+          32839,
+          32840,
+          32841,
+          74,
+          75,
+          14
+        ]
+      },
+      {
+        "line": 274,
+        "group": "surfaces",
+        "values": [
+          8195,
+          5,
+          32843,
+          76,
+          32845,
+          14
+        ]
+      },
+      {
+        "line": 275,
+        "group": "surfaces",
+        "values": [
+          8198,
+          11,
+          32806,
+          32807,
+          37,
+          36,
+          34,
+          32803,
+          13
+        ]
+      },
+      {
+        "line": 276,
+        "group": "surfaces",
+        "values": [
+          8197,
+          12,
+          41,
+          32798,
+          32794,
+          32808,
+          38,
+          13
+        ]
+      },
+      {
+        "line": 277,
+        "group": "surfaces",
+        "values": [
+          8195,
+          13,
+          35,
+          33,
+          32809,
+          13
+        ]
+      },
+      {
+        "line": 278,
+        "group": "surfaces",
+        "values": [
+          8198,
+          14,
+          32824,
+          32825,
+          55,
+          54,
+          52,
+          32821,
+          13
+        ]
+      },
+      {
+        "line": 279,
+        "group": "surfaces",
+        "values": [
+          8197,
+          15,
+          59,
+          32816,
+          32812,
+          32826,
+          56,
+          13
+        ]
+      },
+      {
+        "line": 280,
+        "group": "surfaces",
+        "values": [
+          8195,
+          16,
+          53,
+          51,
+          32827,
+          13
+        ]
+      },
+      {
+        "line": 283,
+        "group": "surfaces",
+        "values": [
+          8196,
+          1,
+          32780,
+          13,
+          14,
+          32783,
+          0
+        ]
+      },
+      {
+        "line": 284,
+        "group": "surfaces",
+        "values": [
+          8196,
+          23,
+          32784,
+          32785,
+          18,
+          12,
+          6
+        ]
+      },
+      {
+        "line": 285,
+        "group": "surfaces",
+        "values": [
+          8196,
+          24,
+          32786,
+          19,
+          32788,
+          32781,
+          7
+        ]
+      },
+      {
+        "line": 286,
+        "group": "surfaces",
+        "values": [
+          8196,
+          25,
+          20,
+          21,
+          32790,
+          32782,
+          8
+        ]
+      },
+      {
+        "line": 287,
+        "group": "surfaces",
+        "values": [
+          8196,
+          26,
+          22,
+          32791,
+          16,
+          15,
+          9
+        ]
+      }
+    ],
+    "collision_dividers": [
+      {
+        "line": 10,
+        "group": "collision_dividers",
+        "values": [
+          1,
+          0
+        ]
+      },
+      {
+        "line": 11,
+        "group": "collision_dividers",
+        "values": [
+          9,
+          0
+        ]
+      },
+      {
+        "line": 12,
+        "group": "collision_dividers",
+        "values": [
+          0,
+          1
+        ]
+      },
+      {
+        "line": 13,
+        "group": "collision_dividers",
+        "values": [
+          48,
+          1
+        ]
+      },
+      {
+        "line": 14,
+        "group": "collision_dividers",
+        "values": [
+          41,
+          1
+        ]
+      },
+      {
+        "line": 15,
+        "group": "collision_dividers",
+        "values": [
+          44,
+          1
+        ]
+      },
+      {
+        "line": 16,
+        "group": "collision_dividers",
+        "values": [
+          61,
+          1
+        ]
+      },
+      {
+        "line": 17,
+        "group": "collision_dividers",
+        "values": [
+          50,
+          1
+        ]
+      },
+      {
+        "line": 18,
+        "group": "collision_dividers",
+        "values": [
+          53,
+          1
+        ]
+      },
+      {
+        "line": 19,
+        "group": "collision_dividers",
+        "values": [
+          1,
+          2
+        ]
+      },
+      {
+        "line": 20,
+        "group": "collision_dividers",
+        "values": [
+          2,
+          3
+        ]
+      },
+      {
+        "line": 21,
+        "group": "collision_dividers",
+        "values": [
+          24,
+          3
+        ]
+      },
+      {
+        "line": 22,
+        "group": "collision_dividers",
+        "values": [
+          28,
+          3
+        ]
+      },
+      {
+        "line": 23,
+        "group": "collision_dividers",
+        "values": [
+          28,
+          3
+        ]
+      },
+      {
+        "line": 24,
+        "group": "collision_dividers",
+        "values": [
+          35,
+          3
+        ]
+      },
+      {
+        "line": 25,
+        "group": "collision_dividers",
+        "values": [
+          39,
+          3
+        ]
+      },
+      {
+        "line": 26,
+        "group": "collision_dividers",
+        "values": [
+          39,
+          3
+        ]
+      },
+      {
+        "line": 27,
+        "group": "collision_dividers",
+        "values": [
+          3,
+          4
+        ]
+      },
+      {
+        "line": 28,
+        "group": "collision_dividers",
+        "values": [
+          4,
+          5
+        ]
+      },
+      {
+        "line": 29,
+        "group": "collision_dividers",
+        "values": [
+          19,
+          5
+        ]
+      },
+      {
+        "line": 30,
+        "group": "collision_dividers",
+        "values": [
+          62,
+          5
+        ]
+      },
+      {
+        "line": 31,
+        "group": "collision_dividers",
+        "values": [
+          47,
+          5
+        ]
+      },
+      {
+        "line": 32,
+        "group": "collision_dividers",
+        "values": [
+          56,
+          5
+        ]
+      },
+      {
+        "line": 33,
+        "group": "collision_dividers",
+        "values": [
+          12,
+          6
+        ]
+      },
+      {
+        "line": 34,
+        "group": "collision_dividers",
+        "values": [
+          13,
+          7
+        ]
+      },
+      {
+        "line": 35,
+        "group": "collision_dividers",
+        "values": [
+          10,
+          8
+        ]
+      },
+      {
+        "line": 36,
+        "group": "collision_dividers",
+        "values": [
+          11,
+          9
+        ]
+      },
+      {
+        "line": 37,
+        "group": "collision_dividers",
+        "values": [
+          18,
+          10
+        ]
+      },
+      {
+        "line": 38,
+        "group": "collision_dividers",
+        "values": [
+          63,
+          10
+        ]
+      },
+      {
+        "line": 39,
+        "group": "collision_dividers",
+        "values": [
+          46,
+          10
+        ]
+      },
+      {
+        "line": 40,
+        "group": "collision_dividers",
+        "values": [
+          55,
+          10
+        ]
+      },
+      {
+        "line": 41,
+        "group": "collision_dividers",
+        "values": [
+          16,
+          11
+        ]
+      },
+      {
+        "line": 42,
+        "group": "collision_dividers",
+        "values": [
+          29,
+          11
+        ]
+      },
+      {
+        "line": 43,
+        "group": "collision_dividers",
+        "values": [
+          40,
+          11
+        ]
+      },
+      {
+        "line": 44,
+        "group": "collision_dividers",
+        "values": [
+          49,
+          11
+        ]
+      }
+    ]
+  },
+  "preview": {
+    "faces": [
+      {
+        "surface_index": 0,
+        "vertices": [
+          5,
+          8,
+          7,
+          6
+        ],
+        "flags": 8192,
+        "normal": 18,
+        "color": 5
+      },
+      {
+        "surface_index": 1,
+        "vertices": [
+          68,
+          48,
+          47,
+          67
+        ],
+        "flags": 8192,
+        "normal": 21,
+        "color": 11
+      },
+      {
+        "surface_index": 2,
+        "vertices": [
+          28,
+          20,
+          19,
+          27
+        ],
+        "flags": 8192,
+        "normal": 19,
+        "color": 11
+      },
+      {
+        "surface_index": 3,
+        "vertices": [
+          39,
+          63,
+          64,
+          38
+        ],
+        "flags": 8192,
+        "normal": 20,
+        "color": 11
+      },
+      {
+        "surface_index": 4,
+        "vertices": [
+          61,
+          57,
+          56,
+          60
+        ],
+        "flags": 8192,
+        "normal": 22,
+        "color": 11
+      },
+      {
+        "surface_index": 5,
+        "vertices": [
+          67,
+          47,
+          46,
+          66
+        ],
+        "flags": 8192,
+        "normal": 29,
+        "color": 10
+      },
+      {
+        "surface_index": 6,
+        "vertices": [
+          27,
+          19,
+          18,
+          26
+        ],
+        "flags": 8192,
+        "normal": 27,
+        "color": 10
+      },
+      {
+        "surface_index": 7,
+        "vertices": [
+          38,
+          64,
+          31,
+          37
+        ],
+        "flags": 8192,
+        "normal": 28,
+        "color": 10
+      },
+      {
+        "surface_index": 8,
+        "vertices": [
+          60,
+          56,
+          55,
+          59
+        ],
+        "flags": 8192,
+        "normal": 30,
+        "color": 10
+      },
+      {
+        "surface_index": 9,
+        "vertices": [
+          65,
+          41,
+          48,
+          68
+        ],
+        "flags": 8192,
+        "normal": 33,
+        "color": 12
+      },
+      {
+        "surface_index": 10,
+        "vertices": [
+          21,
+          17,
+          20,
+          28
+        ],
+        "flags": 8192,
+        "normal": 31,
+        "color": 12
+      },
+      {
+        "surface_index": 11,
+        "vertices": [
+          32,
+          30,
+          63,
+          39
+        ],
+        "flags": 8192,
+        "normal": 32,
+        "color": 12
+      },
+      {
+        "surface_index": 12,
+        "vertices": [
+          58,
+          50,
+          57,
+          61
+        ],
+        "flags": 8192,
+        "normal": 34,
+        "color": 12
+      },
+      {
+        "surface_index": 13,
+        "vertices": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "flags": 8192,
+        "normal": 0,
+        "color": 0
+      },
+      {
+        "surface_index": 14,
+        "vertices": [
+          1,
+          5,
+          6,
+          2
+        ],
+        "flags": 8192,
+        "normal": 2,
+        "color": 1
+      },
+      {
+        "surface_index": 15,
+        "vertices": [
+          2,
+          6,
+          7,
+          3
+        ],
+        "flags": 8192,
+        "normal": 9,
+        "color": 2
+      },
+      {
+        "surface_index": 16,
+        "vertices": [
+          3,
+          7,
+          8,
+          4
+        ],
+        "flags": 8192,
+        "normal": 10,
+        "color": 3
+      },
+      {
+        "surface_index": 17,
+        "vertices": [
+          4,
+          8,
+          5,
+          1
+        ],
+        "flags": 8192,
+        "normal": 17,
+        "color": 4
+      },
+      {
+        "surface_index": 18,
+        "vertices": [
+          49,
+          46,
+          47,
+          48,
+          41,
+          42
+        ],
+        "flags": 8192,
+        "normal": 3,
+        "color": 14
+      },
+      {
+        "surface_index": 19,
+        "vertices": [
+          62,
+          55,
+          56,
+          57,
+          50,
+          51
+        ],
+        "flags": 8192,
+        "normal": 6,
+        "color": 14
+      },
+      {
+        "surface_index": 20,
+        "vertices": [
+          62,
+          51,
+          52,
+          53,
+          54
+        ],
+        "flags": 8192,
+        "normal": 7,
+        "color": 14
+      },
+      {
+        "surface_index": 21,
+        "vertices": [
+          62,
+          54,
+          55
+        ],
+        "flags": 8192,
+        "normal": 8,
+        "color": 14
+      },
+      {
+        "surface_index": 22,
+        "vertices": [
+          49,
+          42,
+          43,
+          44,
+          45
+        ],
+        "flags": 8192,
+        "normal": 4,
+        "color": 14
+      },
+      {
+        "surface_index": 23,
+        "vertices": [
+          49,
+          45,
+          46
+        ],
+        "flags": 8192,
+        "normal": 5,
+        "color": 14
+      },
+      {
+        "surface_index": 24,
+        "vertices": [
+          29,
+          25,
+          24,
+          23,
+          22,
+          21
+        ],
+        "flags": 8192,
+        "normal": 11,
+        "color": 13
+      },
+      {
+        "surface_index": 25,
+        "vertices": [
+          29,
+          28,
+          27,
+          26,
+          25
+        ],
+        "flags": 8192,
+        "normal": 12,
+        "color": 13
+      },
+      {
+        "surface_index": 26,
+        "vertices": [
+          29,
+          21,
+          28
+        ],
+        "flags": 8192,
+        "normal": 13,
+        "color": 13
+      },
+      {
+        "surface_index": 27,
+        "vertices": [
+          40,
+          36,
+          35,
+          34,
+          33,
+          32
+        ],
+        "flags": 8192,
+        "normal": 14,
+        "color": 13
+      },
+      {
+        "surface_index": 28,
+        "vertices": [
+          40,
+          39,
+          38,
+          37,
+          36
+        ],
+        "flags": 8192,
+        "normal": 15,
+        "color": 13
+      },
+      {
+        "surface_index": 29,
+        "vertices": [
+          40,
+          32,
+          39
+        ],
+        "flags": 8192,
+        "normal": 16,
+        "color": 13
+      },
+      {
+        "surface_index": 30,
+        "vertices": [
+          9,
+          10,
+          11,
+          12
+        ],
+        "flags": 8192,
+        "normal": 1,
+        "color": 0
+      },
+      {
+        "surface_index": 31,
+        "vertices": [
+          9,
+          13,
+          14,
+          10
+        ],
+        "flags": 8192,
+        "normal": 23,
+        "color": 6
+      },
+      {
+        "surface_index": 32,
+        "vertices": [
+          10,
+          14,
+          15,
+          11
+        ],
+        "flags": 8192,
+        "normal": 24,
+        "color": 7
+      },
+      {
+        "surface_index": 33,
+        "vertices": [
+          11,
+          15,
+          16,
+          12
+        ],
+        "flags": 8192,
+        "normal": 25,
+        "color": 8
+      },
+      {
+        "surface_index": 34,
+        "vertices": [
+          12,
+          16,
+          13,
+          9
+        ],
+        "flags": 8192,
+        "normal": 26,
+        "color": 9
+      }
+    ],
+    "unresolved_polygon_cycles": []
+  }
+}

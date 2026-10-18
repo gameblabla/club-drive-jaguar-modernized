@@ -1,0 +1,19 @@
+
+	; wait for CPU screen clear
+	movei	#(SEMAPHORE+12),temp
+_CDLOCAL_11_3:
+	load		(temp),temp2
+	or		temp2,temp2
+	jr		NE,_CDLOCAL_11_3
+	nop
+
+		movei	#G_CTRL, temp2
+		load		(temp2), temp
+		bclr #0, temp		; stop the GPU
+;		bset		3, temp
+		bset #1, temp		; start the cpu
+		store	temp, (temp2)
+
+allGone:	jr	allGone
+		nop
+

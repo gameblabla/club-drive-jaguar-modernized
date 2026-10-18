@@ -1,0 +1,341 @@
+;----------------------------------------------------------------------------
+;	comp.gas
+;
+;----------------------------------------------------------------------------
+
+DOASPECT	EQU	1
+DOSCALE		EQU	1
+
+	include "jaguar.inc"
+	include "blit.inc"
+
+	include "3d.inc"
+	include "68kequ.inc"
+
+; global register defines
+innerLoop	REGEQU	R27
+temp		REGEQU	R28
+temp2	REGEQU	R29
+return	REGEQU	R31
+
+; ALTERNATE REGISTER USAGE
+; 
+; global alternate register usage
+ALTxrite	REGEQU	R11
+ALTxdown	REGEQU	R12
+ALTxhead	REGEQU	R13
+ALTyrite	REGEQU	R14
+ALTydown	REGEQU	R15
+ALTyhead	REGEQU	R16
+ALTzrite	REGEQU	R17
+ALTzdown	REGEQU	R18
+ALTzhead	REGEQU	R19
+
+ALTcarx		REGEQU	R20
+ALTcary		REGEQU	R21
+ALTcarz		REGEQU	R22
+ALTeyex		REGEQU	R23
+ALTeyey		REGEQU	R24
+ALTeyez		REGEQU	R25
+
+ALTtpntbase	REGEQU	R26
+ALTplayer	REGEQU	R27
+ALTbndindex	REGEQU	R30
+ALTband		REGEQU	R31
+
+; registers used in outer loop
+; (these may be reused inside the loop by any
+; modules, so they must be reloaded after any
+; .include)
+
+gl_curbnd	REGEQU	R0
+gl_bndlist	REGEQU	R1
+gl_player	REGEQU	R2
+gl_temp		REGEQU	R3
+gl_tx		REGEQU	R4
+gl_ty		REGEQU	R5
+gl_tz		REGEQU	R6
+
+MACRO	JSR_ROT
+		movei	#rotVects, temp2
+		move		PC,return
+		jump		(temp2)
+		addq		#6,return	; Determine Return Address
+ENDM
+
+	ORG	Overlay
+
+	include "3dds.inc"
+
+	include	"time.gas"
+
+	MACRO cutItOut
+		moveq	#@1, temp2
+		movei	#(SEMAPHORE+8), innerLoop
+		movei	#thatsAllFolks, temp
+		jump		(temp)
+		store	temp2, (innerLoop)
+	ENDM
+
+; code start ----------------------------------------------------------------
+
+
+	movei	#TPNTADDR,temp
+	moveta	temp,ALTtpntbase
+;
+; form the union of all bands for which calculations are necessary
+; these can come from:
+;	mobile bands (e.g. the cars)
+;	the floor list
+;	the camera list
+
+	movei	#player,gl_player
+	load	(gl_player),gl_player
+	movei	#BANDS,gl_bndlist
+	moveta	gl_bndlist,ALTbndindex
+	moveta	gl_player,ALTplayer
+;
+; load and save car and camera positions
+;
+	movei	#CAMERA_POSN,temp2
+	add	gl_player,temp2
+	load	(temp2),gl_tx
+	addqt	#4,temp2
+	load	(temp2),gl_ty
+	addqt	#4,temp2
+	load	(temp2),gl_tz
+	addqt	#4,temp2
+	or	gl_tz,gl_tz
+	moveta	gl_tx,ALTeyex
+	moveta	gl_ty,ALTeyey
+	moveta	gl_tz,ALTeyez
+;
+; now load up the camera matrix
+;
+	loadw	(temp2),gl_tx
+	addqt	#2,temp2
+	loadw	(temp2),gl_ty
+	addqt	#2,temp2
+	loadw	(temp2),gl_tz
+	addqt	#2,temp2
+	moveta	gl_tx,ALTxrite
+	moveta	gl_ty,ALTyrite
+	moveta	gl_tz,ALTzrite
+	loadw	(temp2),gl_tx
+	addqt	#2,temp2
+	loadw	(temp2),gl_ty
+	addqt	#2,temp2
+	loadw	(temp2),gl_tz
+	addqt	#2,temp2
+	moveta	gl_tx,ALTxdown
+	moveta	gl_ty,ALTydown
+	moveta	gl_tz,ALTzdown
+	loadw	(temp2),gl_tx
+	addqt	#2,temp2
+	loadw	(temp2),gl_ty
+	addqt	#2,temp2
+	loadw	(temp2),gl_tz
+	addqt	#2,temp2
+	moveta	gl_tx,ALTxhead
+	moveta	gl_ty,ALTyhead
+	moveta	gl_tz,ALTzhead
+
+	move	gl_player,temp2
+	load	(temp2),gl_tx
+	addqt	#4,temp2
+	load	(temp2),gl_ty
+	addqt	#4,temp2
+	load	(temp2),gl_tz
+	or	gl_tz,gl_tz
+	moveta	gl_tx,ALTcarx
+	moveta	gl_ty,ALTcary
+	moveta	gl_tz,ALTcarz
+
+; put the car bands in the list
+	movei	#PLAYER1+CAR_MODEL,temp2
+	load	(temp2),temp
+	movei	#PLAYER2+CAR_MODEL,temp2
+	load	(temp2),temp2
+	nop
+	store	temp,(gl_bndlist)
+	addqt	#4,gl_bndlist
+	movei	#twoplayer,temp
+	loadw	(temp),temp
+	cmpq	#0,temp
+	jr	EQ,nostore
+	nop
+		store	temp2,(gl_bndlist)
+		addqt	#4,gl_bndlist
+nostore:
+
+; add any other mobile bands
+	movei	#mbands,temp2
+	load	(temp2),temp
+	addqt	#8,temp2
+	cmpq	#0,temp
+	jr	EQ,nomband
+	nop
+		store	temp,(gl_bndlist)
+		addqt	#4,gl_bndlist
+.if 1
+		load	(temp2),temp
+		cmpq	#0,temp
+		jr	EQ,nomband
+		nop
+		store	temp,(gl_bndlist)
+		addqt	#4,gl_bndlist
+.endif
+nomband:
+;
+; copy all the floor's models into the list
+; (set bit 13 of all models' flags to indicate that we've included them in the list)
+	movei	#FLOOR_MODEL,temp2
+	add	gl_player,temp2
+	load	(temp2),gl_curbnd
+	movei	#BND_LIST,temp2
+	add	gl_curbnd,temp2
+_CDLOCAL_10_196:
+	load	(temp2),gl_temp
+	addqt	#4,temp2
+	cmpq	#0,gl_temp
+	jr	EQ,_CDLOCAL_20_209
+	nop
+	load	(gl_temp),temp
+	bset	#13,temp
+	store	temp,(gl_temp)
+	store	gl_temp,(gl_bndlist)
+	jr	_CDLOCAL_10_196
+	addqt	#4,gl_bndlist
+
+_CDLOCAL_20_209:
+
+;
+; if the camera is different from the floor, add its list, too
+;
+	movei	#CAMERA_MODEL,temp2
+	add	gl_player,temp2
+	load	(temp2),temp2
+	movei	#sameband,temp
+	cmp	temp2,gl_curbnd
+	jump	EQ,(temp)
+	nop
+		movei	#BND_LIST,temp
+		add	temp,temp2
+_CDLOCAL_30_223:
+		load	(temp2),gl_temp
+		addqt	#4,temp2
+		cmpq	#0,gl_temp
+		jr	EQ,_CDLOCAL_40_237
+		nop
+		load	(gl_temp),temp
+		btst	#13,temp
+		jr	NE,_CDLOCAL_30_223
+		bset	#13,temp
+		store	temp,(gl_temp)
+		store	gl_temp,(gl_bndlist)
+		jr	_CDLOCAL_30_223
+		addqt	#4,gl_bndlist
+_CDLOCAL_40_237:
+;
+; copy all the camera models that haven't already been visited (i.e. with bit 13 clear)
+; to the list (there will be a lot of overlap)
+		load	(temp2),temp2
+sameband:
+	moveq	#0,temp
+	store	temp,(gl_bndlist)
+
+
+;
+; now walk the band list
+;
+comploop:
+	movefa	ALTbndindex,gl_bndlist
+	load	(gl_bndlist),gl_curbnd
+	addqt	#4,gl_bndlist
+	moveta	gl_bndlist,ALTbndindex
+	moveta	gl_curbnd,ALTband
+	cmpq	#0,gl_curbnd
+	jr	NE,_CDLOCAL_10_262
+	nop
+		movei	#comploopend,temp2
+		jump	(temp2)
+		nop
+_CDLOCAL_10_262:
+	movei	#GEO_BND_PTR,temp2
+	store	gl_curbnd,(temp2)
+
+	include	"mktp.gas"
+	include "bf.gas"
+;
+; the rest of the calculations can be skipped if the band is "far enough" behind
+; the viewing plane
+;
+	movefa	ALTband,temp
+	load	(temp),temp
+	movei	#comploop,temp2
+	btst	#14,temp
+	jump	NE,(temp2)
+	nop
+;
+; save tPNTS for this band
+;
+	movefa	ALTband,temp
+	movei	#tPNTS,temp2
+	add	temp,temp2
+	movefa	ALTtpntbase,temp
+	nop
+	store	temp,(temp2)
+
+	include "rot.gas"
+	include "shade.gas"
+	include "clp.gas"
+	include "3to2.gas"
+	include "edge.gas"
+
+	movei	#comploop,temp
+	jump	(temp)
+	nop
+
+comploopend:
+
+
+	SaveTimer	$08
+
+	; if there are animation routines, load them
+	movei	#animateprg,temp
+	load	(temp),temp
+	movei	#loadIt,temp2
+	cmpq	#0,temp
+	jump	NE,(temp2)
+	nop
+	; load pre-rendering routines
+	movei	#prprog, temp
+	jump		(temp2)
+	nop
+
+	include "subscomp.gas"
+
+; set sem -------------------------------------------------------------------
+;		; set the semaphore
+;		moveq	#1, temp
+;		movei	#SEMAPHORE, temp2
+;		store	temp, (temp2)
+
+; halt the GPU --------------------------------------------------------------
+thatsAllFolks:
+; stolen code
+		movei	#G_CTRL, temp2
+		load		(temp2), temp
+		bclr #0, temp
+		bset #1, temp
+		store	temp, (temp2)
+
+_CDLOCAL_10_332:	jr	_CDLOCAL_10_332
+		nop
+
+;-------------------------------------------------------------------
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop

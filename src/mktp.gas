@@ -1,0 +1,492 @@
+;
+; Calculate edge normals for newly created world
+;
+normals		REGEQU	r0
+dividers	REGEQU	r1
+edges		REGEQU	r2
+points		REGEQU	r3
+polys		REGEQU	r4
+tPolys		REGEQU	r5
+polyBase	REGEQU	r6
+numCPs		REGEQU	r7
+i		REGEQU	r8
+cp		REGEQU	r9
+numSides	REGEQU	r10
+nx		REGEQU	r11
+ny		REGEQU	r12
+nz		REGEQU	r13
+avgX		REGEQU	r14
+avgY		REGEQU	r15
+avgZ		REGEQU	r16
+pnt		REGEQU	r17
+pntLast		REGEQU	r18
+distance	REGEQU	r19
+maxDistance	REGEQU	r20
+bnd		REGEQU	r21
+pnt0		REGEQU	r22
+pnt1		REGEQU	r23
+pnt2		REGEQU	r24
+outerLoop	REGEQU	r25
+endLoop		REGEQU	r26
+; regs r27-r29 reserved for global use
+temp3		REGEQU	r30
+temp1		REGEQU	r31
+; alternate register usage
+vx		REGEQU	r0
+vy		REGEQU	r1
+vz		REGEQU	r2
+ALTpnt0		REGEQU	r3		; for points[pntLast]
+ALTpnt1		REGEQU	r4
+ALTpnt2		REGEQU	r5
+ALTminx		REGEQU	r6
+ALTmaxx		REGEQU	r7
+ALTminy		REGEQU	r8
+ALTmaxy		REGEQU	r9
+ALTminz		REGEQU	r10
+ALTmaxz		REGEQU	ALTband		; make sure we restore it!
+;
+; alternate registers r11-r31 reserved for global use
+;
+
+	movefa	ALTband,bnd
+
+	movei	#mtp_done,outerLoop
+
+
+	movei	#BND_MATRIX,pnt0
+	add	bnd,pnt0
+	loadw	(pnt0),pnt0		; check for matrix
+
+	movei	#tINITED,temp2		; is this band already initialized properly?
+	add	bnd,temp2
+	loadw	(temp2),temp
+
+	cmpq	#0,pnt0			; is this a rotating band?
+	jr	NE,initit		; if so, always initialize
+	nop
+
+	btst	#0,temp			; otherwise, check for being already inited
+	jump	NE,(outerLoop)		; and branch accordingly
+	nop
+
+initit:
+	moveq	#1,pnt1			; set bit 0 of the tINITED flags
+	storew	pnt1,(temp2)
+
+	load	(bnd),temp		; get band flags
+	btst	#0,temp			; collisions possible?
+	jump	NE,(outerLoop)		; no: skip everything else
+	nop
+
+	movei	#G_DIVCTRL,temp2
+	moveq	#0,temp
+	store	temp,(temp2)
+
+	moveq	#NUM_CPS,temp2		; numCPs = bnd->numcps
+	add	bnd,temp2
+	loadw	(temp2),numCPs
+	nop
+
+	movei	#ROTPNT_LIST,temp2		; normals = bnd->points+3*bnd->numpnts
+	add	bnd,temp2
+	load	(temp2),normals
+	moveq	#NUM_PNTS,temp2
+	add	bnd,temp2
+	loadw	(temp2),temp2
+	moveq	#6,temp
+	mult	temp,temp2
+	move	normals,points		; points = bnd->points - 3
+	add	temp2,normals
+	subqt	#6,points
+
+	movei	#DIVIDER_LIST,temp2	; dividers = bnd->dividers
+	add	bnd,temp2
+	load	(temp2),dividers
+
+	movei	#EDGE_LIST,temp2	; edges = bnd->edges
+	add	bnd,temp2
+	load	(temp2),edges
+
+	movei	#tPOLYS,temp2		; tPolys = bnd->tpolys + 5
+	add	bnd,temp2
+	load	(temp2),tPolys
+	nop
+	addqt	#10,tPolys
+
+	movei	#SURF_LIST,temp2	; polyBase = polys = bnd->surfs
+	add	bnd,temp2
+	load	(temp2),polys
+	moveq	#0,cp
+	move	polys,polyBase
+
+					;	for (cp=0; cp<numCPs; cp++) {
+
+	cmp	numCPs,cp
+	jump	PL,(outerLoop)		; outerLoop still contains mtp_done
+	nop
+
+	movei	#forlp,outerLoop
+	movei	#endforlp,endLoop
+	movei	#innerfor,innerLoop
+
+forlp:
+	loadw	(polys),numSides	;		while ((numSides = (*polys++) & 0x0f) != 0) {
+	addqt	#2,polys
+	moveq	#15,temp
+	and	temp,numSides
+;	cmpq	#0,numSides
+	jump	EQ,(endLoop)
+	nop
+	loadw	(polys),temp		;			i = 3*dividers[1+2*(*polys++)];
+	addqt	#2,polys
+	shlq	#1,temp
+	addqt	#1,temp
+	shlq	#1,temp			; for index
+	add	dividers,temp
+	loadw	(temp),i
+	moveq	#6,temp
+	mult	temp,i
+					;			/* get normal */
+					;			nx = normals[i];
+	move	i,temp2
+	add	normals,temp2
+	loadw	(temp2),nx
+	addqt	#2,temp2
+	loadw	(temp2),ny		;			ny = normals[i+1];
+	addqt	#2,temp2
+	loadw	(temp2),nz		;			nz = normals[i+2];
+
+	nop
+					;			pntLast = 3 * edges[2*(polys[0]&0x7fff) + ((polys[0]<0) ? 1:0)];
+	loadw	(polys),temp
+	moveq	#6,temp2
+	btst	#15,temp
+	jr	EQ,nega0
+	bclr	#15,temp
+		shlq	#2,temp
+		jr	posi0
+		addqt	#2,temp
+nega0:
+	shlq	#2,temp
+posi0:
+	add	edges,temp
+	loadw	(temp),pntLast
+	nop
+	mult	temp2,pntLast
+
+	move	pntLast,temp		; prepare the "points[pntLast]" array
+	add	points,temp
+	loadw	(temp),pnt0
+	addqt	#2,temp
+	loadw	(temp),pnt1
+	addqt	#2,temp
+	loadw	(temp),pnt2
+	shlq	#16,pnt0
+	shlq	#16,pnt1
+	sharq	#17,pnt0		; divide coordinates by 2 to avoid overflow in 15 bit signed cross product
+	sharq	#17,pnt1
+	shlq	#16,pnt2
+	moveta	pnt0,ALTpnt0
+	sharq	#17,pnt2
+	moveta	pnt1,ALTpnt1
+	moveta	pnt2,ALTpnt2
+
+	moveta	pnt0,ALTminx
+	moveta	pnt1,ALTminy
+	moveta	pnt2,ALTminz
+	moveta	pnt0,ALTmaxx
+	moveta	pnt1,ALTmaxy
+	moveta	pnt2,ALTmaxz
+
+	moveq	#0,avgX
+	moveq	#0,avgY
+	moveq	#0,avgZ
+
+	moveq	#0,i			;			for (i=0; i<numSides; i++) {
+innerfor:
+
+	move	i,temp
+	shlq	#1,temp
+	add	polys,temp		;				pnt = 3 * edges[2*(polys[i]&0x7fff) + ((polys[i]>=0) ? 1:0)];
+	loadw	(temp),temp
+	moveq	#6,temp2
+	btst	#15,temp
+	jr	NE,negative
+	bclr	#15,temp
+		shlq	#2,temp
+		jr	positive
+		addqt	#2,temp
+negative:
+	shlq	#2,temp
+positive:
+	add	edges,temp
+	loadw	(temp),pnt
+	mult	temp2,pnt
+
+	move	pnt,temp2		;				avgX += points[pnt];
+	add	points,temp2
+
+	loadw	(temp2),pnt0
+	addqt	#2,temp2
+	loadw	(temp2),pnt1		;				avgY += points[pnt+1];
+	addqt	#2,temp2
+	loadw	(temp2),pnt2		;				avgZ += points[pnt+2];
+	shlq	#16,pnt0
+	shlq	#16,pnt1
+	shlq	#16,pnt2
+	sharq	#17,pnt0
+	sharq	#17,pnt1
+	sharq	#17,pnt2
+	add	pnt0,avgX
+	add	pnt1,avgY
+	add	pnt2,avgZ
+					;				/* cross prod for edge vector */
+					;				vx = ny*(points[pnt+2]-points[pntLast+2]) - nz*(points[pnt+1]-points[pntLast+1]);
+					; we saved points[pntLast+n] in the alternate register bank
+	movefa	ALTpnt1,temp1
+	movefa	ALTpnt2,temp2
+	nop
+	neg	temp2
+	add	pnt2,temp2
+	sub	pnt1,temp1
+	imultn	ny,temp2
+	imacn	nz,temp1
+	resmac	temp
+	moveta	temp,vx
+	nop
+	movefa	ALTpnt0,temp
+	movefa	ALTpnt2,temp2	
+	neg	temp			;				vy = nz*(points[pnt  ]-points[pntLast  ]) - nx*(points[pnt+2]-points[pntLast+2]);
+	add	pnt0,temp
+	sub	pnt2,temp2
+	imultn	nz,temp
+	imacn	nx,temp2
+	resmac	temp2
+
+	moveta	temp2,vy
+	movefa	ALTpnt1,temp1
+	movefa	ALTpnt0,temp
+	neg	temp1			;				vz = nx*(points[pnt+1]-points[pntLast+1]) - ny*(points[pnt  ]-points[pntLast  ]);
+	add	pnt1,temp1
+	sub	pnt0,temp
+	imultn	nx,temp1
+	imacn	ny,temp
+	resmac	temp2
+	moveta	temp2,vz
+					;				ve = normi(vx, vy, vz);
+	movefa	vx,temp
+	movefa	vy,temp1
+;;;	movefa	vz,temp2		; not necessary, temp2 is already OK
+	abs	temp
+	abs	temp1
+	abs	temp2
+	or	temp1,temp
+	or	temp2,temp
+	jr	NE,vnonzero
+	nop
+		movei	#32767,temp
+		moveta	temp,vy
+vnonzero:
+	normi	temp,temp3
+	addqt	#9,temp3
+					;				tPolys[i*3  ] = (int)(vx >> ve);
+					;				tPolys[i*3+1] = (int)(vy >> ve);
+					;				tPolys[i*3+2] = (int)(vz >> ve);
+	movefa	vx,temp
+	movefa	vy,temp1
+	movefa	vz,temp2
+
+	sha	temp3,temp
+	sha	temp3,temp1
+	sha	temp3,temp2
+
+	moveq	#6,temp3
+	mult	i,temp3
+	add	tPolys,temp3
+	storew	temp,(temp3)
+	addqt	#2,temp3
+	storew	temp1,(temp3)
+	addqt	#2,temp3
+	storew	temp2,(temp3)
+
+					;				/* next = last point */
+					;				pntLast = pnt;
+	move	pnt,pntLast
+	moveta	pnt0,ALTpnt0
+	moveta	pnt1,ALTpnt1
+	moveta	pnt2,ALTpnt2
+
+; see if the new (x,y,z) are maxima or minima
+	movefa	ALTmaxx,temp
+	movefa	ALTminx,temp2
+	cmp	temp,pnt0
+	jr	MI,minx
+	nop
+		jr	maxy	
+		moveta	pnt0,ALTmaxx
+minx:
+	cmp	pnt0,temp2
+	jr	MI,maxy
+	nop
+		moveta	pnt0,ALTminx
+
+maxy:
+	movefa	ALTmaxy,temp
+	movefa	ALTminy,temp2
+	cmp	temp,pnt1
+	jr	MI,miny
+	nop
+		jr	maxz	
+		moveta	pnt1,ALTmaxy
+miny:
+	cmp	pnt1,temp2
+	jr	MI,maxz
+	nop
+		moveta	pnt1,ALTminy
+
+maxz:
+	movefa	ALTmaxz,temp
+	movefa	ALTminz,temp2
+	cmp	temp,pnt2
+	jr	MI,minz
+	nop
+		jr	donemax	
+		moveta	pnt2,ALTmaxz
+minz:
+	cmp	pnt2,temp2
+	jr	MI,donemax
+	nop
+		moveta	pnt2,ALTminz
+
+donemax:
+
+	addqt	#1,i
+	cmp	numSides,i		; } end of inner for loop
+	jump	MI,(innerLoop)
+	nop
+
+
+					;			/* find center */
+					;			tPolys[-3] = (int)(avgX /= numSides);
+	movefa	ALTmaxx,avgX
+	movefa	ALTminx,pnt0
+	movefa	ALTmaxy,avgY
+	movefa	ALTminy,pnt1
+	movefa	ALTmaxz,avgZ
+	movefa	ALTminz,pnt2
+
+	add	pnt0,avgX				; max and min were already divided by 2 (see above),
+	add	pnt1,avgY				; so this really does find the average of max and min
+	add	pnt2,avgZ				;( median of points )
+
+	move	tPolys,temp2
+	subqt	#6,temp2
+
+	storew	avgX,(temp2)
+	addqt	#2,temp2
+
+	storew	avgY,(temp2)		;			tPolys[-2] = (int)(avgY /= numSides);
+	addqt	#2,temp2
+					;			tPolys[-1] = (int)(avgZ /= numSides);
+
+	storew	avgZ,(temp2)
+
+
+					;			/* find radius */
+					;			/* (actually, approximate it using the min and max stuff we found above)
+	movefa	ALTmaxx,pnt0
+	movefa	ALTmaxy,pnt1
+	movefa	ALTmaxz,pnt2
+	shlq	#1,pnt0
+	shlq	#1,pnt1
+	shlq	#1,pnt2
+	sub	avgX,pnt0
+	sub	avgY,pnt1
+	sub	avgZ,pnt2
+	abs	pnt0
+	abs	pnt1
+	abs	pnt2	
+	movei	#$80,temp			; $80 == car radius (before squaring); correct for this
+	add	temp,pnt0
+	add	temp,pnt1
+	add	temp,pnt2
+
+	imultn	pnt0,pnt0
+	imacn	pnt1,pnt1
+	imacn	pnt2,pnt2
+	resmac	maxDistance
+
+					;			*((long *)(tPolys-5)) = maxDistance + CAR_RADIUS;
+;	movei	#2*CAR_RADIUS,temp
+;	add	temp,maxDistance
+
+	move	tPolys,temp2
+	subqt	#10,temp2
+	rorq	#16,maxDistance
+	storew	maxDistance,(temp2)
+	addqt	#2,temp2
+	rorq	#16,maxDistance
+	storew	maxDistance,(temp2)
+					;			tPolys += 5 + (3*numSides);  /* don't bother long aligning */
+	moveq	#6,temp2
+	mult	numSides,temp2
+	addqt	#10,temp2
+	add	temp2,tPolys
+					;			polys += 1 + numSides;
+	add	numSides,polys
+	add	numSides,polys
+	addqt	#2,polys
+
+	jump	(outerLoop)		;	}	/* end of while loop */
+	nop
+endforlp:
+	addqt	#1,cp
+enterloop:
+	cmp	numCPs,cp
+	jump	MI,(outerLoop)
+	nop
+
+mtp_done:
+
+	moveta	bnd,ALTband
+
+REGUNDEF	normals
+REGUNDEF	edges
+REGUNDEF	points
+REGUNDEF	polys
+REGUNDEF	tPolys
+REGUNDEF	polyBase
+REGUNDEF	numCPs
+REGUNDEF	i
+REGUNDEF	cp
+REGUNDEF	numSides
+REGUNDEF	nx
+REGUNDEF	ny
+REGUNDEF	nz
+REGUNDEF	avgX
+REGUNDEF	avgY
+REGUNDEF	avgZ
+REGUNDEF	pnt
+REGUNDEF	pntLast
+REGUNDEF	distance
+REGUNDEF	maxDistance
+REGUNDEF	bnd
+REGUNDEF	pnt0
+REGUNDEF	pnt1
+REGUNDEF	pnt2
+REGUNDEF	outerLoop
+REGUNDEF	endLoop
+REGUNDEF	temp3
+REGUNDEF	temp1
+REGUNDEF	vx
+REGUNDEF	vy
+REGUNDEF	vz
+REGUNDEF	ALTpnt0
+REGUNDEF	ALTpnt1
+REGUNDEF	ALTpnt2
+REGUNDEF	ALTminx
+REGUNDEF	ALTmaxx
+REGUNDEF	ALTminy
+REGUNDEF	ALTmaxy
+REGUNDEF	ALTminz
+REGUNDEF	ALTmaxz

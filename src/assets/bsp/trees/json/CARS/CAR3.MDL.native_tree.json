@@ -1,0 +1,41 @@
+{
+  "schema": "club-native-tree",
+  "source_model": "CARS/CAR3.MDL",
+  "source_template_sha256": "e23d9af99b38d15a7207e7c383c4fd889201f72caf9326875917e3de313277f5",
+  "provenance": "Reconstructed in 2026 from Atari .MDL records and GPU tree.gas, not mkbnd",
+  "safety": "Generated .MDL files are separate; clean ROM keeps original tree",
+  "nodes": [
+    {
+      "id": "n0000",
+      "type": "split",
+      "divider": 39,
+      "first": "n0004",
+      "second": "n0001"
+    },
+    {
+      "id": "n0001",
+      "type": "split",
+      "divider": 38,
+      "first": "n0003",
+      "second": "n0002"
+    },
+    {
+      "id": "n0002",
+      "type": "leaf",
+      "flags": 0,
+      "cp_offset": 2
+    },
+    {
+      "id": "n0003",
+      "type": "leaf",
+      "flags": 0,
+      "cp_offset": 676
+    },
+    {
+      "id": "n0004",
+      "type": "leaf",
+      "flags": 0,
+      "cp_offset": 590
+    }
+  ]
+}

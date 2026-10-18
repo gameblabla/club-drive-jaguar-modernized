@@ -1,0 +1,98 @@
+	include "eq.s"
+
+LIGHTEN_AMOUNT	equ	6			;amount to add to each color
+
+doneadr	REGEQU	r0
+temp		REGEQU	r1
+cur_adr	REGEQU	r3
+end_adr	REGEQU	r4
+
+red		REGEQU	r8
+blue		REGEQU	r9
+green	REGEQU	r10
+
+loop		REGEQU	r12
+nextadr	REGEQU	r13
+
+num1f	REGEQU	r20
+num3f	REGEQU	r21
+numffff	REGEQU	r22
+
+	ORG	LIGHTEN_PRG
+
+		movei	#LIGHTEN_DONE,doneadr		;address in GPU ram
+		moveq	#0,temp					;0 = not done
+		store	temp,(doneadr)				;initialize done flag
+
+		movei	#LIGHTEN_START,temp			;address in GPU ram
+		load		(temp),cur_adr				;get the start address
+		addq		#4,temp
+		load		(temp),end_adr				;get the end address
+		movei	#ltnloop,loop				;address of beginning of loop
+		movei	#next,nextadr				;address of end of loop
+
+		movei	#31,num1f
+		movei	#63,num3f
+		movei	#$FFFF,numffff
+ltnloop:
+		loadw	(cur_adr),red				;get the pixel to lighten
+		and		numffff,red				;erase high word
+		jump		EQ,(nextadr)				;if 0, don't change it so it stays transparent
+
+		move		red,blue					;*** OK if this is done after the jump
+		move		red,green
+
+		shrq		#11,red					;need to get bits 11-15
+		and		num1f,red					;erase all but 5 bits
+		addq		#LIGHTEN_AMOUNT,red			;add amount of red
+		cmp		num1f,red					;maximum 5 bit value for red is $1F
+		jr		MI,label1					;if < maximum, go to blue
+;		nop
+		shrq		#6,blue					;need to get bits 6-10
+		nop		; GASM scheduling bubble after JR delay slot
+		move		num1f,red					;if > maximum red, use maximum red
+label1:
+;		shrq		#6,blue					;need to get bits 6-10
+		and		num1f,blue				;erase all but 5 bits
+		addq		#LIGHTEN_AMOUNT,blue		;add amount of blue
+		cmp		num1f,blue				;maximum 5 bit value for blue is $1F
+		jr		MI,label2					;if < maximum, go to green
+;		nop
+		and		num3f,green				;need bits 0-5 for green, erase all but 6 bits
+		nop		; GASM scheduling bubble after JR delay slot
+		move		num1f,blue				;if > maximum blue, use maximum blue
+label2:
+;		and		num3f,green				;need bits 0-5 for green, erase all but 6 bits
+		addq		#LIGHTEN_AMOUNT*2,green		;add amount * 2 to green because green is 6 bits instead of 5
+		cmp		num3f,green				;maximum 6 bit value for green is $3F
+		jr		MI,label3					;if < maximum, continue
+;		nop
+		shlq		#5,red					;shift to make room for 5 bits of blue
+		nop		; GASM scheduling bubble after JR delay slot
+		move		num3f,green				;if > maximum green, use maximum green
+label3:
+;		shlq		#5,red					;shift to make room for 5 bits of blue
+		or		blue,red					;add new blue value
+		shlq		#6,red					;shift to make room for 6 bits of green
+		or		green,red					;add new green value
+		storew	red,(cur_adr)				;save new pixel color
+next:
+		addq		#2,cur_adr				;go to next pixel
+		cmp		end_adr,cur_adr			;see if at end address yet
+		jump		CS,(loop)					;if not, change next pixel
+		nop
+
+		movei	#1,temp
+		store	temp,(doneadr)				;1 indicates program is finished
+
+;stop the GPU
+		movei	#$00000008,R30
+		movei	#G_CTRL,R31
+		store	R30,(R31)
+
+		nop
+		nop
+		nop
+		nop
+
+

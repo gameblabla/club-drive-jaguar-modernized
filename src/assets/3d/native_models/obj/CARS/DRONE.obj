@@ -1,0 +1,142 @@
+# Club Drive Jaguar native model: reconstructed 2026
+# Vertex coordinates are original signed 16-bit words
+# This is a visual OBJ export, not the Jaguar BSP/collision tree
+o CARS_DRONE_BND
+v -54 -6 90
+v -54 -6 -81
+v 55 -6 -81
+v 55 -6 90
+v -54 24 90
+v -54 24 -90
+v 55 24 -90
+v 55 24 90
+v -40 -34 65
+v -40 -34 -20
+v 41 -34 -20
+v 41 -34 65
+v -54 -6 90
+v -54 -6 -40
+v 55 -6 -40
+v 55 -6 90
+v 30 23 -76
+v 30 23 -37
+v 30 33 -49
+v 30 33 -65
+v 55 23 -76
+v 55 10 -76
+v 55 0 -65
+v 55 0 -49
+v 55 10 -37
+v 55 23 -37
+v 55 33 -49
+v 55 33 -65
+v 55 16 -57
+v 30 23 44
+v 30 23 83
+v 56 23 44
+v 56 10 44
+v 56 0 55
+v 56 0 71
+v 56 10 83
+v 56 23 83
+v 56 33 71
+v 56 33 55
+v 56 16 63
+v -55 23 -76
+v -55 10 -76
+v -55 0 -65
+v -55 0 -49
+v -55 10 -37
+v -55 23 -37
+v -55 33 -49
+v -55 33 -65
+v -55 16 -57
+v -55 23 44
+v -55 10 44
+v -55 0 55
+v -55 0 71
+v -55 10 83
+v -55 23 83
+v -55 33 71
+v -55 33 55
+v -30 23 44
+v -30 23 83
+v -30 33 71
+v -30 33 55
+v -55 16 63
+v 30 33 55
+v 30 33 71
+v -29 23 -76
+v -29 23 -37
+v -29 33 -49
+v -29 33 -65
+# flags=0x2000, original_vector=18, color_word=5
+f 5 8 7 6
+# flags=0x2000, original_vector=21, color_word=11
+f 68 48 47 67
+# flags=0x2000, original_vector=19, color_word=11
+f 28 20 19 27
+# flags=0x2000, original_vector=20, color_word=11
+f 39 63 64 38
+# flags=0x2000, original_vector=22, color_word=11
+f 61 57 56 60
+# flags=0x2000, original_vector=29, color_word=10
+f 67 47 46 66
+# flags=0x2000, original_vector=27, color_word=10
+f 27 19 18 26
+# flags=0x2000, original_vector=28, color_word=10
+f 38 64 31 37
+# flags=0x2000, original_vector=30, color_word=10
+f 60 56 55 59
+# flags=0x2000, original_vector=33, color_word=12
+f 65 41 48 68
+# flags=0x2000, original_vector=31, color_word=12
+f 21 17 20 28
+# flags=0x2000, original_vector=32, color_word=12
+f 32 30 63 39
+# flags=0x2000, original_vector=34, color_word=12
+f 58 50 57 61
+# flags=0x2000, original_vector=0, color_word=0
+f 1 2 3 4
+# flags=0x2000, original_vector=2, color_word=1
+f 1 5 6 2
+# flags=0x2000, original_vector=9, color_word=2
+f 2 6 7 3
+# flags=0x2000, original_vector=10, color_word=3
+f 3 7 8 4
+# flags=0x2000, original_vector=17, color_word=4
+f 4 8 5 1
+# flags=0x2000, original_vector=3, color_word=14
+f 49 46 47 48 41 42
+# flags=0x2000, original_vector=6, color_word=14
+f 62 55 56 57 50 51
+# flags=0x2000, original_vector=7, color_word=14
+f 62 51 52 53 54
+# flags=0x2000, original_vector=8, color_word=14
+f 62 54 55
+# flags=0x2000, original_vector=4, color_word=14
+f 49 42 43 44 45
+# flags=0x2000, original_vector=5, color_word=14
+f 49 45 46
+# flags=0x2000, original_vector=11, color_word=13
+f 29 25 24 23 22 21
+# flags=0x2000, original_vector=12, color_word=13
+f 29 28 27 26 25
+# flags=0x2000, original_vector=13, color_word=13
+f 29 21 28
+# flags=0x2000, original_vector=14, color_word=13
+f 40 36 35 34 33 32
+# flags=0x2000, original_vector=15, color_word=13
+f 40 39 38 37 36
+# flags=0x2000, original_vector=16, color_word=13
+f 40 32 39
+# flags=0x2000, original_vector=1, color_word=0
+f 9 10 11 12
+# flags=0x2000, original_vector=23, color_word=6
+f 9 13 14 10
+# flags=0x2000, original_vector=24, color_word=7
+f 10 14 15 11
+# flags=0x2000, original_vector=25, color_word=8
+f 11 15 16 12
+# flags=0x2000, original_vector=26, color_word=9
+f 12 16 13 9

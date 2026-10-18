@@ -1,0 +1,729 @@
+{
+  "schema": "club-native-collision",
+  "source_model": "CAR1.MDL",
+  "source_template_sha256": "2dbaee9f126cfbe8a9c938162ce54b189f844ebef7bf3cba24c88bec4e9090bd",
+  "provenance": "2026 reconstructed native .MDL tables and directed edge bits; NOT Atari mkbnd",
+  "limitations": "Original point/normal/divider tables and CP memberships only; no Jaguar runtime replacement",
+  "cp_lists": [
+    {
+      "cp_index": 0,
+      "polygons": []
+    },
+    {
+      "cp_index": 1,
+      "polygons": [
+        {
+          "vertices": [
+            5,
+            8,
+            7,
+            6
+          ],
+          "flags": 8192,
+          "divider": 17,
+          "color": 4
+        },
+        {
+          "vertices": [
+            6,
+            7,
+            12,
+            11
+          ],
+          "flags": 8192,
+          "divider": 17,
+          "color": 4
+        },
+        {
+          "vertices": [
+            68,
+            64,
+            63,
+            67
+          ],
+          "flags": 8256,
+          "divider": 39,
+          "color": 24
+        },
+        {
+          "vertices": [
+            69,
+            65,
+            64,
+            68
+          ],
+          "flags": 8256,
+          "divider": 18,
+          "color": 25
+        },
+        {
+          "vertices": [
+            66,
+            58,
+            65,
+            69
+          ],
+          "flags": 8256,
+          "divider": 41,
+          "color": 26
+        },
+        {
+          "vertices": [
+            83,
+            55,
+            54,
+            82
+          ],
+          "flags": 8256,
+          "divider": 38,
+          "color": 24
+        },
+        {
+          "vertices": [
+            84,
+            56,
+            55,
+            83
+          ],
+          "flags": 8256,
+          "divider": 18,
+          "color": 25
+        },
+        {
+          "vertices": [
+            81,
+            49,
+            56,
+            84
+          ],
+          "flags": 8256,
+          "divider": 40,
+          "color": 26
+        },
+        {
+          "vertices": [
+            46,
+            80,
+            39,
+            45
+          ],
+          "flags": 8256,
+          "divider": 39,
+          "color": 24
+        },
+        {
+          "vertices": [
+            47,
+            79,
+            80,
+            46
+          ],
+          "flags": 8256,
+          "divider": 18,
+          "color": 25
+        },
+        {
+          "vertices": [
+            40,
+            38,
+            79,
+            47
+          ],
+          "flags": 8256,
+          "divider": 41,
+          "color": 26
+        },
+        {
+          "vertices": [
+            35,
+            27,
+            26,
+            34
+          ],
+          "flags": 8256,
+          "divider": 38,
+          "color": 24
+        },
+        {
+          "vertices": [
+            29,
+            25,
+            28,
+            36
+          ],
+          "flags": 8256,
+          "divider": 40,
+          "color": 26
+        },
+        {
+          "vertices": [
+            36,
+            28,
+            27,
+            35
+          ],
+          "flags": 8256,
+          "divider": 18,
+          "color": 25
+        },
+        {
+          "vertices": [
+            69,
+            68,
+            67,
+            66
+          ],
+          "flags": 8256,
+          "divider": 12,
+          "color": 27
+        },
+        {
+          "vertices": [
+            84,
+            83,
+            82,
+            81
+          ],
+          "flags": 8256,
+          "divider": 13,
+          "color": 27
+        },
+        {
+          "vertices": [
+            80,
+            79,
+            38,
+            39
+          ],
+          "flags": 8256,
+          "divider": 6,
+          "color": 28
+        },
+        {
+          "vertices": [
+            27,
+            28,
+            25,
+            26
+          ],
+          "flags": 8256,
+          "divider": 5,
+          "color": 28
+        },
+        {
+          "vertices": [
+            3,
+            10,
+            12,
+            7,
+            8
+          ],
+          "flags": 8192,
+          "divider": 7,
+          "color": 1
+        },
+        {
+          "vertices": [
+            3,
+            8,
+            4,
+            18
+          ],
+          "flags": 8192,
+          "divider": 14,
+          "color": 2
+        },
+        {
+          "vertices": [
+            2,
+            17,
+            6,
+            11,
+            9
+          ],
+          "flags": 8192,
+          "divider": 20,
+          "color": 6
+        },
+        {
+          "vertices": [
+            1,
+            5,
+            6,
+            17
+          ],
+          "flags": 8192,
+          "divider": 0,
+          "color": 0
+        },
+        {
+          "vertices": [
+            2,
+            9,
+            10,
+            3
+          ],
+          "flags": 8192,
+          "divider": 19,
+          "color": 5
+        },
+        {
+          "vertices": [
+            2,
+            3,
+            18
+          ],
+          "flags": 8192,
+          "divider": 42,
+          "color": 30
+        },
+        {
+          "vertices": [
+            17,
+            2,
+            18,
+            4
+          ],
+          "flags": 8192,
+          "divider": 42,
+          "color": 30
+        },
+        {
+          "vertices": [
+            70,
+            63,
+            64,
+            65,
+            58,
+            59
+          ],
+          "flags": 8256,
+          "divider": 3,
+          "color": 28
+        },
+        {
+          "vertices": [
+            70,
+            59,
+            60,
+            61,
+            62
+          ],
+          "flags": 8256,
+          "divider": 4,
+          "color": 28
+        },
+        {
+          "vertices": [
+            70,
+            62,
+            63
+          ],
+          "flags": 8256,
+          "divider": 3,
+          "color": 28
+        },
+        {
+          "vertices": [
+            48,
+            44,
+            43,
+            42,
+            41,
+            40
+          ],
+          "flags": 8256,
+          "divider": 10,
+          "color": 27
+        },
+        {
+          "vertices": [
+            48,
+            47,
+            46,
+            45,
+            44
+          ],
+          "flags": 8256,
+          "divider": 11,
+          "color": 27
+        },
+        {
+          "vertices": [
+            48,
+            40,
+            47
+          ],
+          "flags": 8256,
+          "divider": 11,
+          "color": 27
+        },
+        {
+          "vertices": [
+            57,
+            54,
+            55,
+            56,
+            49,
+            50
+          ],
+          "flags": 8256,
+          "divider": 1,
+          "color": 28
+        },
+        {
+          "vertices": [
+            57,
+            50,
+            51,
+            52,
+            53
+          ],
+          "flags": 8256,
+          "divider": 2,
+          "color": 28
+        },
+        {
+          "vertices": [
+            57,
+            53,
+            54
+          ],
+          "flags": 8256,
+          "divider": 1,
+          "color": 28
+        },
+        {
+          "vertices": [
+            37,
+            33,
+            32,
+            31,
+            30,
+            29
+          ],
+          "flags": 8256,
+          "divider": 8,
+          "color": 27
+        },
+        {
+          "vertices": [
+            37,
+            36,
+            35,
+            34,
+            33
+          ],
+          "flags": 8256,
+          "divider": 9,
+          "color": 27
+        },
+        {
+          "vertices": [
+            37,
+            29,
+            36
+          ],
+          "flags": 8256,
+          "divider": 9,
+          "color": 27
+        },
+        {
+          "vertices": [
+            4,
+            8,
+            5,
+            1
+          ],
+          "flags": 8192,
+          "divider": 15,
+          "color": 3
+        },
+        {
+          "vertices": [
+            74,
+            73,
+            71,
+            72
+          ],
+          "flags": 8256,
+          "divider": 16,
+          "color": 29
+        },
+        {
+          "vertices": [
+            78,
+            77,
+            75,
+            76
+          ],
+          "flags": 8256,
+          "divider": 16,
+          "color": 29
+        },
+        {
+          "vertices": [
+            17,
+            4,
+            1
+          ],
+          "flags": 8192,
+          "divider": 42,
+          "color": 30
+        }
+      ]
+    },
+    {
+      "cp_index": 2,
+      "polygons": [
+        {
+          "vertices": [
+            9,
+            11,
+            12,
+            10
+          ],
+          "flags": 8192,
+          "divider": 21,
+          "color": 7
+        }
+      ]
+    },
+    {
+      "cp_index": 3,
+      "polygons": [
+        {
+          "vertices": [
+            15,
+            13,
+            14,
+            16
+          ],
+          "flags": 8192,
+          "divider": 22,
+          "color": 8
+        }
+      ]
+    },
+    {
+      "cp_index": 4,
+      "polygons": [
+        {
+          "vertices": [
+            15,
+            17,
+            2
+          ],
+          "flags": 40960,
+          "divider": 23,
+          "color": 9
+        }
+      ]
+    },
+    {
+      "cp_index": 5,
+      "polygons": [
+        {
+          "vertices": [
+            15,
+            2,
+            13
+          ],
+          "flags": 40960,
+          "divider": 24,
+          "color": 10
+        }
+      ]
+    },
+    {
+      "cp_index": 6,
+      "polygons": [
+        {
+          "vertices": [
+            13,
+            2,
+            3,
+            14
+          ],
+          "flags": 40960,
+          "divider": 25,
+          "color": 11
+        }
+      ]
+    },
+    {
+      "cp_index": 7,
+      "polygons": [
+        {
+          "vertices": [
+            14,
+            3,
+            18
+          ],
+          "flags": 40960,
+          "divider": 26,
+          "color": 12
+        },
+        {
+          "vertices": [
+            14,
+            18,
+            16
+          ],
+          "flags": 40960,
+          "divider": 27,
+          "color": 13
+        }
+      ]
+    },
+    {
+      "cp_index": 8,
+      "polygons": [
+        {
+          "vertices": [
+            19,
+            15,
+            16,
+            20
+          ],
+          "flags": 8192,
+          "divider": 28,
+          "color": 14
+        }
+      ]
+    },
+    {
+      "cp_index": 9,
+      "polygons": [
+        {
+          "vertices": [
+            1,
+            17,
+            19
+          ],
+          "flags": 8192,
+          "divider": 29,
+          "color": 15
+        }
+      ]
+    },
+    {
+      "cp_index": 10,
+      "polygons": [
+        {
+          "vertices": [
+            16,
+            18,
+            20
+          ],
+          "flags": 8192,
+          "divider": 30,
+          "color": 16
+        }
+      ]
+    },
+    {
+      "cp_index": 11,
+      "polygons": [
+        {
+          "vertices": [
+            19,
+            17,
+            15
+          ],
+          "flags": 8192,
+          "divider": 31,
+          "color": 17
+        }
+      ]
+    },
+    {
+      "cp_index": 12,
+      "polygons": [
+        {
+          "vertices": [
+            20,
+            18,
+            4
+          ],
+          "flags": 8192,
+          "divider": 32,
+          "color": 18
+        }
+      ]
+    },
+    {
+      "cp_index": 13,
+      "polygons": [
+        {
+          "vertices": [
+            1,
+            19,
+            20,
+            4
+          ],
+          "flags": 40960,
+          "divider": 33,
+          "color": 19
+        }
+      ]
+    },
+    {
+      "cp_index": 14,
+      "polygons": [
+        {
+          "vertices": [
+            24,
+            22,
+            21,
+            23
+          ],
+          "flags": 8192,
+          "divider": 34,
+          "color": 20
+        },
+        {
+          "vertices": [
+            4,
+            1,
+            22,
+            24
+          ],
+          "flags": 8192,
+          "divider": 35,
+          "color": 21
+        }
+      ]
+    },
+    {
+      "cp_index": 15,
+      "polygons": [
+        {
+          "vertices": [
+            21,
+            22,
+            1
+          ],
+          "flags": 8192,
+          "divider": 36,
+          "color": 22
+        }
+      ]
+    },
+    {
+      "cp_index": 16,
+      "polygons": [
+        {
+          "vertices": [
+            4,
+            24,
+            23
+          ],
+          "flags": 8192,
+          "divider": 37,
+          "color": 23
+        }
+      ]
+    }
+  ]
+}
