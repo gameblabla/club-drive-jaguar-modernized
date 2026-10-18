@@ -8,6 +8,10 @@ were recovered from a retail ROM so it could build
 The assembly, source data, build scripts, and source comments are preserved where available. 
 See `ASSET_ORIGINS.txt` for provenance and reproduction limitations.
 
+You can compile it using the precompiled toolkit here :
+[https://github.com/gameblabla/jaguar-sdk/releases/tag/1](https://github.com/gameblabla/jaguar-sdk/releases/tag/1)
+
+
 ## Source tree
 
 ```text
