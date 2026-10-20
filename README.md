@@ -42,10 +42,6 @@ staging directories are created. Generated files are written to build outputs.
 assembly, linking and verification stages without wrapper scripts or asset staging.
 
 
-`src/build.sh` is the single cartridge build script. It runs the resource,
-assembly, linking and verification stages without wrapper scripts or asset staging.
-
-
 Requires Python 3, the Jaguar RMAC/Linux SDK, and a user-supplied retail ROM ZIP
 for validation. No cartridge or SDK is included.
 
